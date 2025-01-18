@@ -1,0 +1,150 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_packing_list_DTO;
+@{
+    ViewBag.Title = "TranPackingList Edit";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <input type="hidden" id="tran_packing_list_id" value="@Model.tran_packing_list_id">
+
+
+
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title"> Packing List Edit</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">Packing List</h6>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Packing List No</label>
+                            <input style="width:100%" readonly asp-for="packing_list_no" type="text" class="border-#d1cccc-200 form-control " />
+                            <span asp-validation-for="packing_list_no" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Packing List Date</label>
+                            <input style="width:100%" asp-for="packing_list_date" type="date" class="border-#d1cccc-200 form-control " />
+                            <span asp-validation-for="packing_list_date" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note</label>
+                            <input style="width:100%" asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+                            <span asp-validation-for="note" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-12" style="margin-bottom:5px;text-align:left;">
+                        <button type="button" class="btn btn-primary " onclick="AddPackingListtoTable(this);"><i class="fa fa-file-open"></i>&nbsp;&nbsp;ADD Plan&nbsp;&nbsp;</button>
+                    </div>
+                </div>
+                <div class="row" id="divTablePacking" style="display:none">
+                    <div class="col-md-12">
+                        <table style="font-size:9px;" id="DTPListOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                            <thead>
+                                <tr>
+
+                                    <th><label class="labelNormal">SL No</label></th>
+                                    <th><label class="labelNormal">Techpack</label></th>
+                                    <th><label class="labelNormal">Style Code</label></th>
+                                    <th><label class="labelNormal">Color</label></th>
+                                    <th><label class="labelNormal">Size</label></th>
+                                    <th><label class="labelNormal">Order M.Unit</label></th>
+                                    <th><label class="labelNormal">Total Order Quantity</label></th>
+                                    <th><label class="labelNormal">Packing Quantity</label></th>
+                                    <th><label class="labelNormal">Note</label></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+                        <button type="button" class="btn btn-success " id="btnSaveTranPackingList" onclick="SaveTranPackingList(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+
+
+
+</form>
+
+
+
+
+

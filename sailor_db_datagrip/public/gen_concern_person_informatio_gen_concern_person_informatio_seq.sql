@@ -1,0 +1,12 @@
+create sequence gen_concern_person_informatio_gen_concern_person_informatio_seq;
+
+alter sequence gen_concern_person_informatio_gen_concern_person_informatio_seq owner to postgres;
+
+alter sequence gen_concern_person_informatio_gen_concern_person_informatio_seq owned by gen_concern_person_information.gen_concern_person_information_id;
+
+grant select, update, usage on sequence gen_concern_person_informatio_gen_concern_person_informatio_seq to anon;
+
+grant select, update, usage on sequence gen_concern_person_informatio_gen_concern_person_informatio_seq to authenticated;
+
+grant select, update, usage on sequence gen_concern_person_informatio_gen_concern_person_informatio_seq to service_role;
+

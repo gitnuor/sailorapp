@@ -1,0 +1,12 @@
+create sequence tran_tech_pack_embellishment__tran_tech_pack_embellishment__seq;
+
+alter sequence tran_tech_pack_embellishment__tran_tech_pack_embellishment__seq owner to postgres;
+
+alter sequence tran_tech_pack_embellishment__tran_tech_pack_embellishment__seq owned by tran_tech_pack_embellishment_info.tran_tech_pack_embellishment_info_id;
+
+grant select, update, usage on sequence tran_tech_pack_embellishment__tran_tech_pack_embellishment__seq to anon;
+
+grant select, update, usage on sequence tran_tech_pack_embellishment__tran_tech_pack_embellishment__seq to authenticated;
+
+grant select, update, usage on sequence tran_tech_pack_embellishment__tran_tech_pack_embellishment__seq to service_role;
+

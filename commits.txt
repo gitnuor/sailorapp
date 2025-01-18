@@ -1,0 +1,2743 @@
+commit 03b55d751798d5a3fa7f418914312df0e2663b89
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Feb 25 09:51:50 2024 +0600
+
+    fabric allocation done
+
+commit a8bf247735be674f6a25ce9c6834410241a20fdc
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 24 21:03:11 2024 +0300
+
+    sync
+
+commit 47c683b477e8e0e39ed45d41a6c3e74f0533b540
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 24 20:24:44 2024 +0300
+
+    fabric allocation
+
+commit 1876aef6ed5d694a3e04e06f6bdf330b56c83858
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 24 13:14:23 2024 +0600
+
+    edit load
+
+commit e9860756151401c17de9e32b06b4fb734dde9c90
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Feb 23 21:49:32 2024 +0300
+
+    add fabric alloc
+
+commit dafdbf505d0004243312783b6e46894d1d891000
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Feb 22 21:39:14 2024 +0300
+
+    sync
+
+commit ec7e60f1ad1d14f159b137e6d8c18af3098ca4d5
+Merge: 99ed6fe4 03968c77
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Feb 22 17:12:47 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 99ed6fe42a2959d49934e76a77e396ae92828394
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Feb 22 17:12:43 2024 +0600
+
+    fab alloc
+
+commit 03968c77dfe94d835a6e0bd49bef799ba11034c6
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Thu Feb 22 12:32:06 2024 +0600
+
+    accesoriesReq
+
+commit 9f97f21083d0f94ff678933ce7acd103193b1a0b
+Merge: c8a85567 6117787d
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Thu Feb 22 12:31:54 2024 +0600
+
+    updated staged
+
+commit c8a855679454f63108b17de478596b04c1ae3937
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Thu Feb 22 12:28:47 2024 +0600
+
+    updated requsition
+
+commit 6117787d6711b45dbbce85bb31ea658ce3278d81
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Feb 22 12:28:24 2024 +0600
+
+    sync
+
+commit 09704aff7f36c29f341ed3d84e6d464186525803
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 21 20:37:10 2024 +0300
+
+    sync
+
+commit d5118d00e31af517c5fad88917520eb71ab4b30c
+Merge: ba879ee6 211ba697
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Feb 20 12:15:10 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit ba879ee61e93bc21eafbe09140f5214a63355c91
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Feb 20 12:15:03 2024 +0600
+
+    fabric requisition for merchandiser
+
+commit 211ba697587cbdb5584ba1a85d9418da6e09b7a3
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 20:53:20 2024 +0300
+
+    fabric alloc ongoing
+
+commit 0dc954c3719f7e678a1e0bd9b48ebf4affff30f4
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 17:15:00 2024 +0600
+
+    dd
+
+commit 8d2049642ecc58fe5bfe34bf05be37aa1328f77f
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 16:41:44 2024 +0600
+
+    fabric booking start
+
+commit aab8a598e7bb9c6c299c471101615a9dff81339e
+Merge: 03dcfeb4 bc36aa6f
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 12:17:29 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 03dcfeb4c6fe36c88e355f2c640091efb6a30c02
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 12:17:25 2024 +0600
+
+    sync
+
+commit bc36aa6fa90e397e000f5fbcd9d0f1e0475429a4
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 12:16:58 2024 +0600
+
+    error free
+
+commit 8ee98d6df5484a1d58fcfd6cb408e0dc5531802d
+Merge: 606b0edd 129baf85
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 12:02:29 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 606b0eddc120cdae1421b2764fc538553c0998b9
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 12:02:25 2024 +0600
+
+    remove unnecessary usings
+
+commit 129baf85295d357d056dac34e3a93e8ff21646c2
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 12:02:01 2024 +0600
+
+    sync
+
+commit e53c7e6fad6e0783dffb981ba2f52b54ab7b94b9
+Merge: 8779075e fbc967c6
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 11:57:12 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 8779075e424a53fef95df1e922a018e93901278b
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 11:57:07 2024 +0600
+
+    updated
+
+commit fbc967c66cbdb93c327d3a1bf765dae53c7fb4ba
+Merge: 113bb859 308a8bdb
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 11:56:48 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 113bb8598ca5f7c53be5582b701836cc3f4e4914
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 11:56:45 2024 +0600
+
+    sync
+
+commit 308a8bdbb52bd322959171b6daeedd5ed714306b
+Merge: 8a93f829 85e50070
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 11:54:28 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 8a93f829776e8a3492ba18ff8f7a6b4b2bf2af21
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 11:54:24 2024 +0600
+
+    updated
+
+commit 85e5007065b5eaa610a957ea3811bd274ad6ea76
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 11:53:39 2024 +0600
+
+    sync
+
+commit 584cf0fae993e2c56883e08566f96d96ec339329
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 11:48:12 2024 +0600
+
+    view updated
+
+commit 5310e1b7da908f7a949fe043e98a35542f3bd596
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 11:27:50 2024 +0600
+
+    partial fixed
+
+commit 752c27f8a8479e185c388f2421c4fcd66f345c36
+Merge: e0985b18 3b79cdc9
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 11:15:21 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit e0985b18cd8c65f00b0ff0dc79aa463a274fd1e8
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 11:15:16 2024 +0600
+
+    updated fabric req
+
+commit 3b79cdc9ecdca2a7ee5009131c5bd275a954eda4
+Merge: a9420bc6 1d0c1b23
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 11:14:47 2024 +0600
+
+    synxc
+
+commit a9420bc605c5b78176c1174970b69494a49436a6
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 11:14:27 2024 +0600
+
+    sync
+
+commit 1d0c1b237b9374d6201257eff96bfe56827c9592
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 11:05:04 2024 +0600
+
+    updated
+
+commit 01e1c28d44a390c2126ec6a99c9594b6caecd1db
+Merge: 89fbc1ac 2ba21886
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 10:57:19 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 89fbc1acf344e7046e27e15345ea68939dff5bd0
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 19 10:57:13 2024 +0600
+
+    updated pr for merchandiser
+
+commit 2ba2188667d6f07e24a3ef54903b50733b43fb42
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 19 10:52:28 2024 +0600
+
+    sync
+
+commit 7fce35010690406b54031c0e250cc8acf56bad2e
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Feb 18 20:42:42 2024 +0300
+
+    new tables
+
+commit 61a2e8d9b02f1f4e5ee481e011b2de015f83b5fb
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Feb 18 17:13:38 2024 +0600
+
+    sync
+
+commit e9d47f19046186dbc63961bf1d2997fe0811bb0c
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 17 20:34:52 2024 +0300
+
+    final
+
+commit 51b90baa102bde509d23d979d65d4c0767d621e3
+Merge: ea8343dd a477247e
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 17 13:08:25 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit ea8343dd42f71a4f73db0657cbf0861dd106361b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 17 13:08:21 2024 +0600
+
+    teck pack ack final commit
+
+commit a477247e5173c28c1b0ba2b1879e879b9ff719c0
+Merge: 0ac3b908 9c3565b0
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Sat Feb 17 13:03:17 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 0ac3b9089a119fda1d83bb7c93f7832f6f3ce46e
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Sat Feb 17 13:03:12 2024 +0600
+
+    pr_updated
+
+commit 9c3565b0e149928837b3c1314d7a75f1b5051315
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Feb 16 17:26:25 2024 +0300
+
+    CCF
+    
+    TECK PACK ACK
+
+commit 8ffcb515d249a1acf197c1a46de6c3e86eb01a68
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Feb 15 12:19:47 2024 +0600
+
+    teck pack view
+
+commit e94c29c948f29499938513aebd2e21748c4a95f7
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 14 20:19:31 2024 +0300
+
+    teck pack modify
+
+commit 1973f72ce91e53086ceb3c33a3a87b4b0f265a89
+Merge: b76765a4 2d287953
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 14 17:15:45 2024 +0600
+
+    sync
+
+commit b76765a4aa80953a4cfe5bb52f343bacd4e863af
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 14 17:14:54 2024 +0600
+
+    sybnc
+
+commit 2d28795315af87316d0c806e7ab44591dbc12832
+Merge: e7ec2816 3918b428
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Wed Feb 14 12:19:52 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit e7ec2816b4a46016bba7ae0bc6d2aed6d6106375
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Wed Feb 14 12:19:35 2024 +0600
+
+    openpr_fabric_booking_designmanagement
+
+commit 3918b4280fb2e1b1d695879ddd335f5a2aaa117e
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Feb 13 19:42:27 2024 +0300
+
+    bug
+
+commit ee462398d2be0d29f10064911e6e16305f71949c
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Feb 13 17:23:32 2024 +0600
+
+    sync
+
+commit 5785879b7ae7335d20032aed898da08575e159cf
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 12 16:53:33 2024 +0600
+
+    sync
+
+commit b531781289b3648b79f8f1a8880fd09768ee5e50
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 12 16:53:09 2024 +0600
+
+    modify pre costing, sample order and techpack
+
+commit ca1f5ae92e53caef8e7c93223a3849b9234f4c58
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 12 12:52:32 2024 +0600
+
+    sync
+
+commit 995ff1f8c7558b8d0b1140649ae772f764d5b35b
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Feb 11 19:55:29 2024 +0300
+
+    bug fix
+
+commit 71ff4837f57bf3d85b85c8cca62b423d52ae5c1e
+Merge: 2669e550 5771711d
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Feb 11 17:14:51 2024 +0600
+
+    sync
+
+commit 2669e55069c14ca7e090cf146816864559c01806
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Feb 11 17:14:14 2024 +0600
+
+    pre costing modification
+
+commit 5771711df605aa3cfd8eb498fe5ba198ba1da57f
+Merge: 75472c4d 962547bf
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Sun Feb 11 15:05:02 2024 +0600
+
+    merged
+
+commit 75472c4d27769989e988e67d218ef51d85f09762
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Sun Feb 11 15:03:00 2024 +0600
+
+    openPR fabric Requisition
+
+commit 962547bfdf3128a2fc6fbaca83db1ec72cf2258a
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 10 13:10:14 2024 +0600
+
+    upload
+
+commit 5bcafd2aaffb7c8755ee3d36f1f3e40b76ec37fd
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Feb 8 17:02:54 2024 +0600
+
+    teck pack ack without view
+
+commit 1ff87ee4e5889f7fe5c3757c1e59dfddec253860
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 7 21:05:05 2024 +0300
+
+    teck pack ack
+
+commit 9f7f4c246266e1c5cbc3431c27213a50428e839e
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 7 17:13:09 2024 +0600
+
+    db
+
+commit 76d1520bf20591795a9a2e76f6ff7d51fab400ee
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 7 17:08:45 2024 +0600
+
+    bug fix
+
+commit 57829f160b7f53f3f87287de2b55465556f9a3a4
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 7 15:55:48 2024 +0600
+
+    final commit mapping
+
+commit 6f81067c9144fd75e58a6a98f464957afce0c7e8
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 7 15:49:29 2024 +0600
+
+    final mapping
+
+commit d2543de46c4dc59f59b37f1a147b57cd9a9dea11
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Feb 7 15:13:06 2024 +0600
+
+    structure segment mapping
+
+commit 0a43cdeb6ff300f379b19aad481edbe9166bd88b
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Feb 6 21:13:45 2024 +0300
+
+    mapping
+
+commit 16bc10ad1abc57231c8f00e7a6b5d599e66594ba
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Feb 6 17:13:48 2024 +0600
+
+    mapping struct
+
+commit 8e5b22340fab73483208f7e27ab14cf9f363df62
+Merge: 62988b0a 4fec080d
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Feb 6 15:09:52 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 62988b0a8e4dd439d048b71c6262b9e228fc5b87
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Feb 6 15:09:48 2024 +0600
+
+    item stucture sub group
+
+commit 4fec080d739c076701bd4833b30423688771000d
+Merge: fd396e35 f05cba59
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Feb 6 15:06:31 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit fd396e359c7aa42b93d6a3d13452cbf906826c4f
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Feb 6 15:06:25 2024 +0600
+
+    fabricbooking updated
+
+commit f05cba59b92ff0714805b1ccf1bb10a408ef3774
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Feb 6 13:33:32 2024 +0600
+
+    supplier finalized
+
+commit 73ade987d95317a0c7c450b1aea2401d6a5150e3
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 5 21:05:38 2024 +0300
+
+    suppler update
+
+commit c1c724e5d4984d71e1b0fc9fb614d965f127c1df
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 5 17:08:39 2024 +0600
+
+    suppplier update load
+
+commit 72c43c2b16f12c539433c94f307f9d31d96e163e
+Merge: 35ba0d05 9b0bda37
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 5 09:27:46 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 35ba0d0588e0e62e3423a10a309695449259e181
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Feb 5 09:27:33 2024 +0600
+
+    sync
+
+commit 9b0bda377c82dedbdc9d5359f3b2ee695bb84eb6
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Mon Feb 5 09:27:30 2024 +0600
+
+    appsetting
+
+commit a5d0472bbec920407950f9dea9d61fcfa38213df
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Feb 4 20:43:12 2024 +0300
+
+    BUG
+
+commit d2295eb36d29a7f43094e811a64628153c8a53dc
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Feb 4 17:13:59 2024 +0600
+
+    supplier add done
+
+commit 04292692e97e6461b4e5d0cc9715f049b83f5cf9
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 3 20:53:28 2024 +0300
+
+    suppler
+
+commit fe734e6a19e6784e617c52c4a756a6aae9f11ac9
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 3 20:04:28 2024 +0300
+
+    business plan fix
+
+commit b550698cddbf19b999aa3f6f59c66aa0a9605fb1
+Merge: 3b1ebb30 3d1958f1
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 3 12:49:20 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 3b1ebb30b64fddbe57fd0c4408966316d33180bd
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 3 12:49:14 2024 +0600
+
+    bp changes
+
+commit 3d1958f1b6c43d7aad9d22a203da811621272a2a
+Merge: 3f15f414 d565b22c
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Sat Feb 3 12:48:27 2024 +0600
+
+    fabric PR
+
+commit 3f15f414c7a71bbf35fc00ba99f24b52eccaca85
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Sat Feb 3 12:47:26 2024 +0600
+
+    fabricPRFor Designer
+
+commit d565b22c1881f0ddb018bd466f7cea9b3e28ead5
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Feb 3 08:55:33 2024 +0600
+
+    bug
+
+commit 1b6e3ca03cd9febc59f9e301e13111bffac2d699
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Feb 1 22:32:16 2024 +0300
+
+    suppler
+
+commit 3ca38bd4eeea71eee87f5ca932d88fab62e3b5c3
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Feb 1 17:09:54 2024 +0600
+
+    supplier add ongoing
+
+commit bccb0d18f918ac60ccca1f19ec9391212a5ee433
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Feb 1 16:10:43 2024 +0600
+
+    sync
+
+commit bc072436f08220d145067425f31953115c50deb0
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 31 21:26:03 2024 +0300
+
+    suppler
+
+commit f4ce5cc88d571177b45e5dc84bfb0a808bc0c897
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 31 17:13:12 2024 +0600
+
+    sync
+
+commit 4d767fed854d3ad08657c73448fd311fd8c142d0
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 31 16:56:21 2024 +0600
+
+    ff
+
+commit a0c6cf36c2023f4582f93c4e6f7376182e77a576
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 31 16:20:31 2024 +0600
+
+    sync
+
+commit 2375eadd99717c8a700aeee3a3fbf540c379ca0c
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 31 16:19:54 2024 +0600
+
+    start supplier
+
+commit e613afdd7a727263110c16e1692cbbfe8ff905db
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 31 10:19:23 2024 +0600
+
+    bug
+
+commit 90172011da4f825f2b00f03c4ec8d820e55d9f69
+Merge: 6ad3ada4 6c2e3416
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 31 10:18:09 2024 +0600
+
+    bug fix
+
+commit 6ad3ada44550b05edfd114e6e56e42c22bf939a6
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 31 10:17:06 2024 +0600
+
+    bug
+
+commit 6c2e3416a2ddcbbe2cd4bdb12c28a85076d2464b
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Wed Jan 31 10:16:52 2024 +0600
+
+    icons of app-header
+
+commit f57685eaabe0f619764c68305c1ecce07c580f14
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Wed Jan 31 10:03:59 2024 +0600
+
+    app-header-icon changed
+
+commit bcfec805baaf8196a684b0299360c13a409ae6fc
+Merge: 190df775 2ca0f50a
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Wed Jan 31 10:03:49 2024 +0600
+
+    design class addition
+
+commit 190df7750c90738590eb84748b27ac1ab44d0907
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Wed Jan 31 10:01:00 2024 +0600
+
+    design class addition
+
+commit 2ca0f50a131292526edcd76bde2871291f04d212
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 30 21:17:04 2024 +0300
+
+    db
+
+commit 7e06714541c35196044b4ff3dce994836357af6d
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 30 21:01:07 2024 +0300
+
+    bug
+
+commit 182c0e3a2c3564c1aacb18d9cf5ebca64f239174
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 30 17:08:53 2024 +0600
+
+    bug fix
+
+commit 8cfa7253621e07581f0d685eff7798fe98a61ac5
+Merge: a239dd38 bb38bd39
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 30 10:26:30 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit a239dd3899d74901356b5eecd5005172c4f5eea6
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 30 10:26:26 2024 +0600
+
+    buf fix
+
+commit bb38bd39b087f0ae77641f79078b4a67c09b59b6
+Merge: a9b905d1 573468b1
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Jan 30 10:13:48 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit a9b905d1e9f5f93b14241b98a5f688b68873dd1b
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Jan 30 10:13:43 2024 +0600
+
+    classChangeDesignReview
+
+commit 573468b15bafd9ad74b7bc55af10e03c822f74da
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 30 10:08:50 2024 +0600
+
+    bug fix
+
+commit b702acde0c0b19424c034547b6de973dcf75fc32
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 30 10:01:00 2024 +0600
+
+    bug
+
+commit eb216d5b74c505af2965ffdfd4b51f835af0e7b9
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Jan 29 20:50:05 2024 +0300
+
+    bug fx
+
+commit 609a0746a509d1dc500e06a7869813060ea069fe
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Jan 29 17:13:27 2024 +0600
+
+    bug fix
+
+commit cc21f86adb6a58c38a4af534c390204056e97282
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Jan 28 20:19:10 2024 +0300
+
+    bug fxed
+
+commit 9498435e07d143d009a1b316a82a0857a3fb7bdd
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Jan 28 16:37:43 2024 +0600
+
+    bug fix
+
+commit 835bb12054cfab9a619ba4b1f19395a047efd211
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Jan 27 21:26:13 2024 +0300
+
+    hhh
+
+commit 0090916e07e0026a143cb2bc0387984d9eeea81a
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Jan 27 13:23:38 2024 +0300
+
+    fix pre costing
+
+commit 563137011e66c74e1c2ed43fe24643968229dab0
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Jan 27 13:12:37 2024 +0600
+
+    bug fix
+
+commit e3f56430e2a9e9d1abdfdd5ea41e3b54d5301f7a
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Jan 25 22:58:44 2024 +0300
+
+    bug
+
+commit 277972ed5f21f6dcfd58157fdefe8efdfbe5913a
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Jan 25 16:38:40 2024 +0600
+
+    bug fix
+
+commit e1933b721de6ceaeb7801fde6b24a6cd77d751cb
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Jan 25 15:31:39 2024 +0600
+
+    bp final
+
+commit dd6d881f67fae5f25425b27637fd41159c454024
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 24 17:12:56 2024 +0600
+
+    df
+
+commit b0acc783316349eff6b83acaf4cb9543ef9c4f7c
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 24 17:12:43 2024 +0600
+
+    bp
+
+commit f3b05f2c6427c3ccd6e0215e589130b10c4cb97b
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 23 20:38:12 2024 +0300
+
+    db script to delete
+
+commit cb466e794e1076ea7abbf4d25d3f98921f5c1ca3
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 23 20:36:51 2024 +0300
+
+    range plan done
+
+commit 341069c96cf23bc6f800e2576900bef28f88c6c1
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 23 17:11:32 2024 +0600
+
+    fix ui
+
+commit ffba193d49f6483d9280dae06547ad5e3974ed0c
+Merge: 271d929f 105534c2
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 23 16:43:05 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 271d929fef038e57f68877341f5fec1e724c6dc8
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 23 16:42:56 2024 +0600
+
+    new themes and role permission
+
+commit 105534c2c9c32e387c7e1ac373c6c83b2252e14c
+Merge: 6b5d49cb e84c9948
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Jan 23 15:36:50 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 6b5d49cb8fdc58e7d477c990f925d46fcafb0f37
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Jan 23 15:36:40 2024 +0600
+
+    designer review_updated
+
+commit e84c99486f7b392987e3a45ddbbdf70b3397c882
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Jan 22 21:21:26 2024 +0300
+
+    role permission
+
+commit f69ac5851f73da8056782cb44b4b1f293a7a8492
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Jan 22 17:10:13 2024 +0600
+
+    Role Permission Add
+
+commit cea39c30c4cfc77da861b66d50f1cf878a7acffb
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Jan 21 20:53:54 2024 +0300
+
+    sync
+
+commit d5f826181cd3663502a04a792157dc980b147373
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Jan 21 20:52:31 2024 +0300
+
+    user form
+
+commit 45e879ac8ea564edef0a824238fa5dfcf5f74a86
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Jan 21 17:09:12 2024 +0600
+
+    generator finalize
+
+commit 5c46e08bd7330e123e8708d5d99a7f1b961140a0
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Jan 20 20:26:44 2024 +0300
+
+    GENERATOR
+
+commit 4d26422d120c33bb61c5b655f8bf7846ba6642fe
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Jan 20 14:49:42 2024 +0600
+
+    mvc generator
+
+commit 4b048caf0b075bd49a7d9e71bdaf60ef0bc34a8b
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Jan 19 12:44:09 2024 +0300
+
+    owinrole_landing
+
+commit dcdf514a72d646d1973d0731affddf9aaa2a3758
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Jan 18 21:58:54 2024 +0300
+
+    controller generator
+
+commit 105a2bd2275ff4b92dcad9487ffa62bbc0f563e7
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Jan 18 17:10:48 2024 +0600
+
+    sync
+
+commit 07d68632f185579a381a2a0ff8defa46e4e89c89
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 17 20:40:04 2024 +0300
+
+    techpack edit load
+
+commit 8f751699b8be3a77f4c840d9fb0a96f36ceeba28
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 17 17:05:26 2024 +0600
+
+    tech pack add load
+
+commit d3a4a03541b20c9b467e1e38e84795bb4a90fbad
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 16 20:45:36 2024 +0300
+
+    d
+
+commit 7a9b06307da8fef9aafab70e1e4e49885e42923e
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 16 20:32:47 2024 +0300
+
+    pre costing edit done
+
+commit 900c5d1e03c09d7b29ca0a961d47acb0cf8b51b3
+Merge: 90f6b553 9b8bc5b0
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 16 17:11:47 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 90f6b553b82b5ca60c62ad1d734e6bf1da3c6d08
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 16 17:11:43 2024 +0600
+
+    pre costing edit load
+
+commit 9b8bc5b042c590788cedbb3367dc710531db356d
+Merge: 09a818fa f49ab8ce
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Jan 16 15:30:46 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 09a818fab34546c060657f8354ef68c31e458749
+Author: Nishadur Rahman Evan <nishad@epylliongroup.com>
+Date:   Tue Jan 16 15:30:17 2024 +0600
+
+    ...
+
+commit f49ab8cee7ecd707fbca3843f0a185a3d2c57e43
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 16 14:57:52 2024 +0600
+
+    pre costing add optimize
+
+commit d55f482719afb224202c7e0fb6d6b5d65cead37a
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Jan 15 20:49:48 2024 +0300
+
+    pre costing start
+
+commit d64d1289c8036a3989e12b53294c5e37e1de31d0
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Jan 15 20:44:51 2024 +0300
+
+    sample order final
+
+commit f6e8d8c1fad26660bf72e86f1bc31325323270bb
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Jan 15 17:12:33 2024 +0600
+
+    sample order loading ongoing
+
+commit 12cbe76eec21484738e91a7fccd6c1fe3eadd691
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Jan 15 08:54:57 2024 +0600
+
+    sync
+
+commit b466355862d308a33dee9005cc88b47b8f17b171
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Jan 14 19:28:21 2024 +0300
+
+    sample order edit load
+
+commit 66d7e4f550312b3ffa3e21380fd03da32b6855f5
+Merge: 988f76b9 6f6ea643
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Jan 14 17:10:50 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 988f76b90fefc8f3385b76d2f93c1b1e80cce364
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Jan 14 17:10:46 2024 +0600
+
+    sample order load fix
+
+commit 6f6ea64385d3a79b8abd93755df51a583f7d34d6
+Merge: 0143ed72 17216ce6
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Jan 14 11:30:44 2024 +0600
+
+    mergerd 14.01.2024_version 1.1
+
+commit 0143ed72dab1756311c5b16600ff9e63b496ead8
+Merge: 13f0ecf8 2ac4f8f3
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Jan 14 11:29:32 2024 +0600
+
+    merged 14.01.2024
+
+commit 17216ce67d12d06b8f1e5ade606ae53fce8c5e92
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Jan 13 19:59:44 2024 +0300
+
+    va update final
+
+commit 38375fadff33f6152faec621979d1cbe857e81fe
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Jan 13 13:12:08 2024 +0600
+
+    TRAN_VA UPDATE
+
+commit dbadc83445074ab704af3719a9c2801de6852d34
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Jan 12 20:53:40 2024 +0300
+
+    fix
+
+commit 69eb9169617437f91d917f7dc5065fd4e1e76a2f
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Jan 12 20:53:03 2024 +0300
+
+    va back end fix
+
+commit bd4bc629138462f8a5bf5971803b797ef7abc7a5
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Jan 11 19:35:08 2024 +0300
+
+    tech pack done
+
+commit 361c1c7b3076482e030660c7b60f8c87186095f0
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Jan 11 17:11:52 2024 +0600
+
+    tech pack
+
+commit c413ad6644ba4836e3f982c5baacd2bd624ff8f1
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 10 17:12:33 2024 +0600
+
+    tech pack add failed
+
+commit b24906aa7d04e52a2848788b91abbe8f4b97b42d
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 9 13:35:11 2024 +0600
+
+    tech pack
+
+commit 13f0ecf8ddc29d9bfb04227813f8ec310988f124
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Tue Jan 9 12:19:44 2024 +0600
+
+    ..
+
+commit 2ac4f8f35cf77baf68cf9090152cd57833a9cb94
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Jan 4 19:01:22 2024 +0300
+
+    tech pack edit load
+
+commit 3a4f53c8caaf276354caeb0a85d731d23f78c31d
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Jan 4 16:09:03 2024 +0600
+
+    bug fix
+
+commit 22a172430b079a0ab54aeae765c5e10dce723cf9
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 3 23:17:05 2024 +0300
+
+    bug fix
+
+commit 8af3c941182a34a3bf97548e864756af2766b71b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 3 17:12:12 2024 +0600
+
+    tecg
+
+commit 703f40431576c904907925fbef1f5112538ab292
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 3 16:42:51 2024 +0600
+
+    bug fix
+
+commit 61afddc27634299996de2d9462194550b31cf33c
+Merge: 51b107e3 cf51f5e9
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 3 13:04:58 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 51b107e3f4180e2bd38fcdc4ce022d8314477dac
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 3 13:04:52 2024 +0600
+
+    sync proj
+
+commit cf51f5e9a9d949058ae750af4fe35318763771f0
+Merge: 40654e04 ac451a81
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Jan 3 10:15:32 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 40654e04e52508b4f42babcfd6a9988e3ef8d45f
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Jan 3 10:15:23 2024 +0600
+
+    minor bug fix
+
+commit ac451a81ec5b3d08c8014a396a42ff3904fbc8a1
+Merge: 14951c50 62bec4dc
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 3 08:51:20 2024 +0600
+
+    techpack edit start
+
+commit 14951c500ef7feebcba4bbd9a8c868f972f80d78
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Jan 3 08:50:46 2024 +0600
+
+    tech edit
+
+commit 62bec4dc52e80e33bf51c84e8d0af1598a3616d2
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 2 22:37:13 2024 +0300
+
+    tech pack add done
+
+commit c0ccf9983d01ecf770290d45617366544576cbe2
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 2 18:12:25 2024 +0600
+
+    add finishing
+
+commit 1ef87dfd26dd5b16430104b303f0120e3a35aaf0
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 2 16:31:44 2024 +0600
+
+    tech update
+
+commit 2abca9c41a8b95e0119feef415ae4ae352f2f0db
+Merge: c40e0e9c 1aa48f99
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 2 14:02:47 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit c40e0e9cb2df3813675bfd90dd60b49306c1b67a
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Jan 2 14:02:42 2024 +0600
+
+    save tech pack
+
+commit 1aa48f997ea4c602db93b281f9b72374e6932a8b
+Merge: 8aceba0d a1222441
+Author: noruzzamankhan216 <154655652+noruzzamankhan216@users.noreply.github.com>
+Date:   Tue Jan 2 09:49:02 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 8aceba0d69ab5572607fb7e47661049ea90a6693
+Author: noruzzamankhan216 <154655652+noruzzamankhan216@users.noreply.github.com>
+Date:   Tue Jan 2 09:48:54 2024 +0600
+
+    add supplier pages
+
+commit a1222441bb1bacf68615071e7e685462e122d893
+Merge: 202aa752 bdf30c43
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Tue Jan 2 09:03:03 2024 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 202aa752736b5319fec3fa641800bccf9d719a96
+Merge: 4deb4773 ff6adac1
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Tue Jan 2 09:02:57 2024 +0600
+
+    merged
+
+commit bdf30c43b46f88149c3a2f90937c4db4f882bfd7
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Jan 1 17:08:55 2024 +0600
+
+    teck pack
+
+commit 4deb4773aa752b8246d1c57285ce22e97d9f5744
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Mon Jan 1 16:58:18 2024 +0600
+
+    range plan done
+
+commit ff6adac18dbbb1fc95cf27ea8ca1e31c94b250c6
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 31 16:58:53 2023 +0600
+
+    tech pack add
+
+commit 06a4a77336e47024dff567aa249284eca5772a52
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 31 12:44:13 2023 +0600
+
+    dev settings
+
+commit 526428b1d459f50e49a97e38590148b45798070e
+Merge: b8a2fd2c 41cac7c8
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 31 12:43:26 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit b8a2fd2c021bc451f1f0728686d904c9cd5cd950
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 31 12:43:22 2023 +0600
+
+    bug fix
+
+commit 41cac7c85059ff0823f9a224390f93f69c6e9e54
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Dec 31 11:07:05 2023 +0600
+
+    design review popup issue fixed
+
+commit e0830b54b597d4d479b07e2bb838b022ee5c6c0f
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Dec 31 10:19:58 2023 +0600
+
+    mergerd select2 controller
+
+commit 144f3e4da594330370c08ab6ec0a93598f84717c
+Merge: 489f5fcf dfdd2581
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Dec 31 10:19:39 2023 +0600
+
+    merge
+
+commit 489f5fcf5db4d8008483a3aa4c0c5c81bf1ecf32
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Dec 31 10:11:38 2023 +0600
+
+    Redis cache counter for select 2
+
+commit dfdd25819346626a5e455bc953cc41dc998505f7
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 30 20:47:49 2023 +0300
+
+    techj add
+
+commit 430fbf15d5aadd8ce08f47197777aac4a10ca59f
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 30 13:08:52 2023 +0600
+
+    sync
+
+commit c7e8b82ecb076513cac42faa6b08eca40fa41ea7
+Merge: 229f1432 49eec868
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 30 12:54:13 2023 +0600
+
+    sync
+
+commit 229f14323cf1f14b1273979f09d2399d1ddcd8fc
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 30 12:53:08 2023 +0600
+
+    synxc
+
+commit 49eec868d341698ddbeca244caa6434a5115a6e7
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sat Dec 30 12:50:10 2023 +0600
+
+    bug fix in tran_va_plan
+
+commit 287d71a79fb211017328fcba76b7fb54ae219f51
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sat Dec 30 10:09:59 2023 +0600
+
+    .
+
+commit 6c0bf02a5f4f4c888d74dd932a78d55bb676ce72
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sat Dec 30 10:07:37 2023 +0600
+
+    bp edit/view optimize
+
+commit 0e420b4b8603ba528ff3b7bd93248b80d7957889
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 30 08:59:36 2023 +0600
+
+    fix
+
+commit 3b1095d34f675d135c4e6c90ec0e5148057b91f9
+Merge: 9a33244c e1fc8cfe
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 17:15:28 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 9a33244c4f07be4a14d3decf3291fe31948f92eb
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 17:15:24 2023 +0600
+
+    tech paxck
+
+commit e1fc8cfec88af3888c80e15a53a8ec30b66154d2
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Thu Dec 28 17:09:15 2023 +0600
+
+    minor updates with filter section
+
+commit 9165d451b17129343aa219fde239b748ec8a1184
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 17:01:23 2023 +0600
+
+    new bp_rpc
+
+commit 4edcdfc62226c45ce075266aab8c4317bfb81a2f
+Merge: 4420f614 8d7aa238
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 11:38:52 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 4420f6149892bff390619dbae787638907cdc8de
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 11:38:48 2023 +0600
+
+    sync
+
+commit 8d7aa2380d4661dd53ceca8c6b5b1b6cead2ec0f
+Merge: e73fefa9 d2b68101
+Author: noruzzamankhan216 <154655652+noruzzamankhan216@users.noreply.github.com>
+Date:   Thu Dec 28 11:36:54 2023 +0600
+
+    sync
+
+commit e73fefa9a0e5dc868e1b216dc312599e4878bfbc
+Author: noruzzamankhan216 <154655652+noruzzamankhan216@users.noreply.github.com>
+Date:   Thu Dec 28 11:35:33 2023 +0600
+
+    rename build error
+
+commit d2b6810107139d9c5c9c5c8e40e2c45198d4cb8b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 11:21:42 2023 +0600
+
+    gen_branch info
+
+commit f5d434dfd5942d037dca4bc68d9beff48c329ec8
+Author: noruzzamankhan216 <154655652+noruzzamankhan216@users.noreply.github.com>
+Date:   Thu Dec 28 11:16:58 2023 +0600
+
+    location change
+
+commit 01034b4965d5fc13857db50030b3b241c9f2e2ea
+Merge: a073bda1 d66f83a4
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 11:14:52 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit a073bda19a3c60feb7351e2f3f84839e17c697e0
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 11:14:48 2023 +0600
+
+    sync
+
+commit d66f83a4200886741eb78f3ab3317874c57acdd2
+Author: noruzzamankhan216 <154655652+noruzzamankhan216@users.noreply.github.com>
+Date:   Thu Dec 28 11:14:02 2023 +0600
+
+    rename and add rest of yable
+
+commit d19c6db618327f5fac149195c115e459dfcc85ba
+Merge: acd42f37 1128dfd1
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 09:31:21 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit acd42f3707361fe038a2c44015523da1c91571ee
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 09:31:18 2023 +0600
+
+    appset
+
+commit 1128dfd19ec5ae70dbceee0eb48c79aae89c6aa7
+Merge: f70c436a 918ff9b9
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Thu Dec 28 09:30:14 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit f70c436a7461ee164154e12a2a9dc62213c1cf22
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Thu Dec 28 09:30:07 2023 +0600
+
+    business plan update sp updated
+
+commit 918ff9b9c12e84d53a32111263399156c14fd378
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 09:29:05 2023 +0600
+
+    ddd
+
+commit 4fdb653747835978d7c605c8313612fc4be9aa05
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 28 09:26:44 2023 +0600
+
+    supplier backend
+
+commit 5939a040f02d1bdb81a76577ea394fbc5d3255e0
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 27 20:05:55 2023 +0300
+
+    business plan update backend
+
+commit 9a133587e04247fcc19cef08cce41a5dbdda6217
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 27 19:06:28 2023 +0300
+
+    supplier backend
+
+commit ce2a850a8d80a78af65a30ee22d8ba908d72c70b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 27 17:15:59 2023 +0600
+
+    updated
+
+commit 09f786d19c5a22686c2377956e9f2245f5aebc3a
+Merge: 79e8bb9c 66497c49
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 27 16:52:50 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 79e8bb9c7bfc923b25d5aa31e9de18402ee60c1a
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 27 16:52:46 2023 +0600
+
+    tech pack ready
+
+commit 66497c493e6ccabd8a6c2eb9dfa59cc0adfda4ef
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 27 12:20:28 2023 +0600
+
+    successfully inserted through sp
+
+commit 34e8f55967b9bd84ba031afbc5cc284aebcbdcfc
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 27 11:03:08 2023 +0600
+
+    connectionstring
+
+commit a61c3340210c3050be2736057f2728ab1948b7dc
+Merge: 57b7d80f dc9e8492
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 27 11:02:30 2023 +0600
+
+    sync
+
+commit 57b7d80f86f3cf6ad210d23ee57a285f907ea70e
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 27 11:00:34 2023 +0600
+
+    updated Asssettings
+
+commit dc9e84923096a0958271dbaea67714793b3e36f6
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 27 10:52:47 2023 +0600
+
+    re-arrange
+
+commit 54676722bff7aec9a91a5454a92f2fe18f30bbab
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 27 10:08:06 2023 +0600
+
+    dev apps
+
+commit 60162afe1f5c82b01f42e9c95d1dacb56ef0e5a5
+Merge: 7e1bd53b ac67df78
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 27 10:07:01 2023 +0600
+
+    change
+
+commit 7e1bd53b47ee95a5804f6fbf432f29ae82a992df
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 27 10:06:39 2023 +0600
+
+    appset
+
+commit ac67df78b604d7110e27472170c231309622ae0b
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 27 09:33:13 2023 +0600
+
+    connection string for mongo/ log report
+
+commit 134c1b25fe98a09dd1b84ffbf6e63932c5db2618
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 26 22:13:13 2023 +0300
+
+    rnd on bp
+
+commit 6dc37505e1e3dae7b2d40697c19f94abda4aa857
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 26 22:01:03 2023 +0300
+
+    rnd on postgre
+
+commit ed156e537940cf1b0ea2c12a76b4eafac30d0546
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 26 19:45:25 2023 +0300
+
+    tegch pack landing
+
+commit 7227db18382874582e2895cbff6cbe1834505e75
+Merge: 226ccac7 27f0d24d
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Tue Dec 26 16:31:50 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 226ccac777ca0bc9d7a1a235504a53d11fa72fa8
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Tue Dec 26 16:31:42 2023 +0600
+
+    design review update
+
+commit 27f0d24dd0de61e19362c84cc86eecdc91ed1a73
+Merge: e7d6bcbb f44cf00f
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 26 16:28:28 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit e7d6bcbb73ed52692195e88f3dca28b8cfdf2f7d
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 26 16:28:24 2023 +0600
+
+    sdf
+
+commit f44cf00f2c8fe60ea3031a593735ba046b19c5b7
+Author: noruzzamankhan216 <154655652+noruzzamankhan216@users.noreply.github.com>
+Date:   Tue Dec 26 16:27:40 2023 +0600
+
+    sds
+
+commit ca830ae04f59a2213733997f0e1036bb0cd80f3e
+Merge: edec28eb 095b43b8
+Author: noruzzamankhan216 <154655652+noruzzamankhan216@users.noreply.github.com>
+Date:   Tue Dec 26 16:26:46 2023 +0600
+
+    profile
+
+commit edec28eb05bfed4bdc1ab2d4fc4a76297e66ae40
+Author: noruzzamankhan216 <154655652+noruzzamankhan216@users.noreply.github.com>
+Date:   Tue Dec 26 16:26:01 2023 +0600
+
+    user profile
+
+commit 095b43b857c4cd39d35defe28b84e6df28179c00
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 26 15:41:21 2023 +0600
+
+    supabase json rnd
+
+commit ad54c95795702adc736635c9701f1bc8d5597e1d
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 26 08:53:21 2023 +0600
+
+    db con
+
+commit 4d0c46d6c2b1af5ca7c38b9fb5f137a10c6f7940
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 25 13:44:37 2023 +0300
+
+    dfgd
+    
+    dfg
+
+commit 0f12c408702431137e9e7b6028a2d4af10b066b5
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 24 21:49:44 2023 +0300
+
+    cmoiit
+
+commit 6573298c98cb4a8e947ba9169ccb9ae1cce79362
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 24 17:22:08 2023 +0600
+
+    finalizing
+
+commit 2202db663b0349027a862e697cbbc884e64f6a0b
+Merge: fea6e441 30091183
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 23 12:43:52 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit fea6e4414288140a8afc06643af56134c1b0d0fa
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 23 12:43:48 2023 +0600
+
+    pre costing edit done
+
+commit 30091183736b6f1005998f76c4de782107650d70
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sat Dec 23 11:55:05 2023 +0600
+
+    DesignReview
+
+commit 6be6c0a29d5e3eab8b9988b2cda1b50039c1bdb0
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Dec 22 21:57:56 2023 +0300
+
+    pre costing update
+
+commit 060b3a2d7ef1cb78a5709631536dd21118a9ac74
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Dec 22 13:18:01 2023 +0300
+
+    pre costing edit
+
+commit a2a1460f72ea5b49239a8f4df4e0ee734d6cb46b
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 21 16:33:55 2023 +0300
+
+    pre costing-edit load done
+
+commit 1c2333b7cdabaaff7194341d481eae08f1b9150a
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Thu Dec 21 16:02:30 2023 +0600
+
+    segment setup pagenation and desigreview added
+
+commit 18883691d7c9d013f082f93dc4b8d37562840d23
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 21 12:31:50 2023 +0600
+
+    pre costing edit
+
+commit 11d41bdf85d4163a52cfff3a54c6646e3519e4ae
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 21 09:53:37 2023 +0600
+
+    designer review db files
+
+commit 1688a9e1f25f6fb4ee71abc4fc1607ce2c73d5f5
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 21 09:32:29 2023 +0600
+
+    temp
+
+commit ca2d71ed8973c544d7797f9427ef03c0a14681c6
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 20 21:32:19 2023 +0300
+
+    pre costing edit start
+
+commit 9ad2c51ec9f3e48581dedfe666c1d5c0fc0d0f0e
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 20 17:09:04 2023 +0600
+
+    pre costrinng end
+
+commit 885f2c801a84745b11a9489240516bfe28dda3da
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 20 16:41:10 2023 +0600
+
+    precosting
+
+commit dfd5b2c4cab1efe37594bf9fdb32f049f1744599
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 20 09:57:40 2023 +0600
+
+    appSettings
+
+commit c54567ec10d00cf9b9bf249f1ad41eb419ad07ba
+Merge: d47ca87a 7cf9fef9
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 20 09:44:40 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit d47ca87ab2a714b5938d76307b6127392de57518
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 20 09:44:36 2023 +0600
+
+    dddd
+
+commit 7cf9fef9c40a72ccf8f2daec748e5fc9dea1cae5
+Merge: cff84c71 f9f48819
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 20 09:30:56 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit cff84c71a43334a297ac2ef8829ff4aa6bf3f4b0
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 20 09:30:47 2023 +0600
+
+    Value addition updateAsync Converted
+
+commit 1ecf6a7df87dbe75b896f3ae2e1c5b8ab5d6f05e
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 20 09:28:34 2023 +0600
+
+    Revert "Value Addition UpdateAsync converted"
+    
+    This reverts commit e4cfa6b72572a494c4336a726d2783b1e51c5580.
+
+commit e4cfa6b72572a494c4336a726d2783b1e51c5580
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Wed Dec 20 09:28:05 2023 +0600
+
+    Value Addition UpdateAsync converted
+
+commit f9f488196a97664fb87a189d5ae45c112727fd40
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 20 09:26:29 2023 +0600
+
+    prec
+
+commit 69a09b422064a09c7dddf1b74a03f720cb303354
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 19 17:11:30 2023 +0600
+
+    bug fix sample order
+
+commit 18127a5bee2b3ed9c1af15ad59783a6e5a0d1522
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 19 16:40:49 2023 +0600
+
+    bug fix
+
+commit fb675538b4b1b146a25d7e7f828ea56d9b284df8
+Merge: 2ce3f5a0 ea2020ce
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Tue Dec 19 15:18:13 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 2ce3f5a0e96b6ee4f704bff741ca18080ed3ffe2
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Tue Dec 19 15:18:05 2023 +0600
+
+    Value Addition update SP
+
+commit ea2020ce3903cea7c1acc1fc3732449f67d79e5b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 19 14:25:17 2023 +0600
+
+    bug fix
+
+commit 0718895bde603eb62b65b2f9363137a92af23542
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 18 23:56:18 2023 +0300
+
+    furnishing
+
+commit a52aa06bece6c390840cde6bcc55b46cd4dcc1d6
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 18 18:44:25 2023 +0600
+
+    prec
+
+commit b49c5b87ffa4a7120277d05349f01f59a331e29b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 18 18:41:19 2023 +0600
+
+    pre costing
+
+commit aa8f8b3fde75526c82489256c1f4faa272a78e5b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 18 17:13:01 2023 +0600
+
+    pre costing add
+
+commit 3b2003f0a00021fc0c1b70b1f3a1c8b2d0baf7f8
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 17 21:02:46 2023 +0300
+
+    precosting
+
+commit 18b1846fe2baa67ac2bcca9a2df4964d13043fb7
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 17 17:10:43 2023 +0600
+
+    precosting add
+
+commit e604b2253e53dd3abb39f7cc10cac6a98ad427c5
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Dec 17 09:05:59 2023 +0600
+
+    business plan backend updated
+
+commit 8c711a49f45fce4278cb0ca5b3f4e32c42a08dbc
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Dec 15 09:54:07 2023 +0300
+
+    prec
+
+commit a63ef988bc89d9c4942ecf6cae7ce8571dbbce69
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 14 21:55:20 2023 +0300
+
+    pre-costing
+
+commit d932f75641d6c6ea6ded842ef8f92a72f9f00040
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 14 17:01:47 2023 +0600
+
+    pre-costing backend
+
+commit 4e70fa96906dfca69d5ff2dcf88080dee6d1315b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 12 17:12:22 2023 +0600
+
+    pre cost
+
+commit 2ff6941d23c3ec328244bde54f05d2e5bdd79615
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 11 20:35:48 2023 +0300
+
+    pre-costing
+
+commit 7956464e35620b678e44a14da2f565eef5083905
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 11 17:10:49 2023 +0600
+
+    select2 composition
+
+commit bacd2a2bda54263d74bef4ace1bf1cbad14370fe
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 11 12:50:34 2023 +0300
+
+    pre costing-1
+
+commit f28dcbd42a4ef2c3ebea35617e9062463c4c9ac6
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 11 09:38:51 2023 +0300
+
+    pre costing cont
+
+commit efd7d0916955095aa03842ab0d5bb6b05c0fd5b4
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 11 09:28:16 2023 +0600
+
+    precosting
+
+commit 8ed15c490655bd92758e3fdcf538aac176ffff3b
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 10 21:41:38 2023 +0300
+
+    pre-consting going on
+
+commit ea170ea346f448ad43b5903f12187bf1939f03ba
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 10 16:55:22 2023 +0600
+
+    precosting-initial
+
+commit e0cc46c8046ccb2acd3e9f87fb0a4606ea98cc36
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Dec 10 15:13:16 2023 +0600
+
+    proj file added for rnd
+
+commit 9c6ebdbc10e423e46093d0909cb495026050dfde
+Merge: f81e9c04 f13640c6
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 10 15:09:34 2023 +0600
+
+    sync
+
+commit f81e9c046de4bfdcc240db1ff57d2e730ca92009
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 10 15:08:05 2023 +0600
+
+    sample order final commmit
+
+commit f13640c68b4a7b84c1ba831ecb29753dbe2a648a
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Dec 10 15:07:35 2023 +0600
+
+    syns
+
+commit 218100890dc96b131f526b19ca0612adbf831c17
+Author: rahmanevan <nishad@epylliongroup.com>
+Date:   Sun Dec 10 15:07:13 2023 +0600
+
+    rnd proj
+
+commit 9dd306355b5f3b5cd8b2cf806a1bc9121877790b
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 9 21:19:09 2023 +0300
+
+    segment
+
+commit 7eae09d415e79cb14af032026f3514114e7f57d1
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 9 13:06:14 2023 +0600
+
+    new segment setup
+
+commit 1a1d62d101ae4aa9d127bbf16630e86411a3bbad
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Dec 8 20:12:55 2023 +0300
+
+    config
+
+commit 1bfb20fefed176f6749619070df863f57c485796
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Dec 8 19:49:33 2023 +0300
+
+    final bom
+
+commit bf0f64e50ce2d26ae099b42b5e8094043c8a306d
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 7 21:25:37 2023 +0300
+
+    ggg
+
+commit 418b8bc56bf9a759a2191900fa95810d471f2233
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 7 17:13:01 2023 +0600
+
+    bom fin
+
+commit f4d2c7ade5d39b0789656c9a7d2d7488ad83108d
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Dec 7 16:40:29 2023 +0600
+
+    bom finalize
+
+commit 0eacb9e1fdacae94d5b936a72a19364c0ad4fb05
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 6 20:13:39 2023 +0300
+
+    upldate save
+
+commit f81826556e2edfc00ccb14f11507adf1b3085f95
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Dec 6 17:11:22 2023 +0600
+
+    dddd
+
+commit b8c1e9ca04d455ab9bd5934d385874f85ec7976f
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 5 21:49:54 2023 +0300
+
+    finish for now
+
+commit 0d625aafa6b8324ded0e968082895b16d2721469
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Dec 5 17:09:41 2023 +0600
+
+    bom
+
+commit 35b9554265f52f8b2e6f56df36e8676da8c21c9f
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 4 20:55:40 2023 +0300
+
+    jhj
+
+commit 9c766d244a1ddb5d9cab8b01532a2548d9d0cd31
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 4 20:54:18 2023 +0300
+
+    ff
+
+commit 908771fe17a4df9ae5e429f8b18480b08e3522f9
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 4 17:10:37 2023 +0600
+
+    contrinue
+
+commit c7d265ebd06c56f5b707b1c6f824a3cf8bbd9747
+Merge: 34414a4f 4279275e
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 4 08:50:29 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 34414a4fb2a940de8ed158c10dde70105c08a5e4
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Dec 4 08:50:23 2023 +0600
+
+    ty
+
+commit 4279275e393ef8eaf8468b4134096206c6c490e4
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 3 20:31:11 2023 +0300
+
+    sample order
+
+commit 57c5d8a930e25674d22ec0613557768a04f08b46
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Dec 3 13:20:26 2023 +0600
+
+    hchee
+
+commit f56da2247c0c3091a12029174dc0a28823f8d9f2
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 2 21:02:30 2023 +0300
+
+    finalize
+
+commit 8277c6c66cd55f15d6adc021abd1ac1307d53c37
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Dec 2 13:08:50 2023 +0600
+
+    desinger
+
+commit 7cec86e87229c282e7b26fa7299d0ea46063e38f
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Dec 1 20:22:21 2023 +0300
+
+    designer distributioon
+
+commit 68c6f10cee7560848136ea4d188ae30e942936be
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 30 21:18:16 2023 +0300
+
+    ddd
+
+commit d2242950a544e4b68a35b370b5a312e35b920660
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 30 20:39:21 2023 +0300
+
+    designer distribution
+
+commit 2cc225f88cb8f2c777b32adf189c224b8e7b82b4
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 30 17:11:09 2023 +0600
+
+    dfdg
+
+commit 8ef4c87c78cf0bd7d99706559e27779ee901c4de
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 30 15:18:02 2023 +0600
+
+    start design distribute
+
+commit 89c459b94cc9039c0ba3e9759ad12e83693cddf9
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 30 09:08:23 2023 +0600
+
+    ert
+
+commit 00eeb44cde665f768cecb47359e68c9d964675ef
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 29 20:23:25 2023 +0300
+
+    finalize style breakdown
+
+commit b6a13c26f861e57b0687a8441dd7d9961672b762
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 29 15:41:14 2023 +0600
+
+    plan style info
+
+commit a2a6cfa7afe8d3509831acf5ff99be360aecb4e3
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 28 20:58:20 2023 +0300
+
+    sodfgof
+
+commit ad55b2218ba7e63f431dc693ce0ab4bc9edff593
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 28 18:39:28 2023 +0300
+
+    ok
+
+commit 0ac9429a3498dd0118d14395d5cdd07be6801df5
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 28 17:09:31 2023 +0600
+
+    update is pending
+
+commit b79357b6d58ba541821acbe8607342f42faa8c80
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 28 17:04:42 2023 +0600
+
+    vs style edit delete
+
+commit e84d3b1c9e11dc3a6477b06d37ffcc27282d94aa
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 27 17:11:26 2023 +0600
+
+    sss
+
+commit c7cec33f038f7f1bacbecf6fa4b24f39aa52aad3
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 27 16:35:06 2023 +0600
+
+    style break edit start
+
+commit 9adfbbc747cdc12b66a856e326fd36f2f228905b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 27 14:26:32 2023 +0600
+
+    furnish
+
+commit 18e219b14d29a3059188fdf321c1a493e9470356
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Nov 26 22:38:43 2023 +0300
+
+    finalize all
+
+commit e0621408b74fc06b7f229ab942828dd042ec353d
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Nov 26 16:37:27 2023 +0600
+
+    commit
+
+commit b1acbb84a9b72efc975836043573d65a403ab791
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Nov 25 22:14:03 2023 +0300
+
+    save done
+    
+    save done
+
+commit 30ad533f0e037c728e4175b021d702f561c53062
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Nov 25 13:09:59 2023 +0600
+
+    dd
+
+commit 360aff93ef02d0be30a3b5913c5992677a20b3d9
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Nov 25 13:08:39 2023 +0600
+
+    task conti
+
+commit bdfe3a07aaf88b32681844b532a81029aa38992c
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Nov 24 21:35:59 2023 +0300
+
+    hff
+
+commit af885deff9f68b2cc035f6cc77f4e66bd2a06f76
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 23 21:06:01 2023 +0300
+
+    va cont
+
+commit 097c19374c22565ba01cf719ac9aa8f688b37d32
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 23 17:15:23 2023 +0600
+
+    comd
+
+commit 2ec425a4705178b9a2f664b96387292d3bd7bcee
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 22 19:56:42 2023 +0300
+
+    continue va
+
+commit 73ea842928ec81b9c01b9842ebcc515d53b56bff
+Merge: 96f26245 caccacf8
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 22 19:43:15 2023 +0300
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 96f26245eeb31ec5461c674bfba4402558af701a
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 22 19:43:01 2023 +0300
+
+    NEW TASBLES
+
+commit caccacf8f748d8ef1a22282a8cea7ee8c9dbdfb3
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 22 16:44:22 2023 +0600
+
+    va plan
+
+commit d42ac41ba65f7724302cbd06b566ef5e6417e1d1
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 21 20:53:26 2023 +0300
+
+    NEW VA MODULE
+    
+    NEW VA MODULE
+
+commit dbbbaa862a60deb64bf0087a5fd4fe660d4af691
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 21 16:22:36 2023 +0600
+
+    new va module
+
+commit dd1addff58ddfce91619fa00a90d8556cc20c9ab
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 21 12:30:05 2023 +0600
+
+    range plan finalize
+
+commit e25a92e3eac93de358d5d31b360990fc4e4b5b32
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 20 21:37:34 2023 +0300
+
+    bugs
+
+commit 92662eb0c0f760afd7872de84852af101e12d7d4
+Merge: 603899ea 0b0d28e8
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 20 19:26:31 2023 +0300
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 603899eaea414814e57dbe257a8e77c5a5c8ea19
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 20 19:26:28 2023 +0300
+
+    range plan bug
+
+commit 0b0d28e81943698245f1e6ab55d8260425241328
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 20 17:14:06 2023 +0600
+
+    change
+
+commit 432fd144ece976d503dc4d7f22511201f7fbd73e
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Nov 19 21:18:43 2023 +0300
+
+    finalizing bp rp product
+
+commit c3f04c27468f418eb1a262f5a4a7d41312798b9a
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Nov 19 16:58:00 2023 +0600
+
+    rp_ setyup
+
+commit fa8575e8c7beb2c6d678a7859a331b8b57a7978d
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Nov 18 20:55:29 2023 +0300
+
+    product ongoing
+
+commit b3d9f4da4ca3a70dc04032a79b1ec18cacda558a
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Nov 17 20:22:21 2023 +0300
+
+    product page start
+
+commit 84b496794c70744390b08d605062724cf6b18b83
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Nov 17 18:32:42 2023 +0300
+
+    range plan approval finished
+
+commit db7720154f6428c94816e3d62b2a87f7eaeed5b0
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Nov 17 16:44:52 2023 +0300
+
+    submit for approval
+
+commit edb32d80d024f352b6e938b2691f3e15c9177a0a
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 16 17:10:17 2023 +0600
+
+    rp ongoig approval
+
+commit ea772b99c7f0ed30d203cae30aa095a737fa06f5
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 15 21:43:47 2023 +0300
+
+    rp_landing add
+
+commit a332c1bc1fed0410c18546a9909cada64b53fe53
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 15 17:09:42 2023 +0600
+
+    rp_approval
+
+commit 42a1e8635799fec6a794c58d636d1d7647fab696
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 14 21:50:03 2023 +0300
+
+    saveingfg
+
+commit caa1e84340a8751d0a70ff1b9e3b2f0eae0eaf77
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 14 17:10:48 2023 +0600
+
+    rp saving and update
+
+commit ade2f46b251d3745acee97ba0c9149a8ec5f95ce
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 13 21:11:30 2023 +0300
+
+    rp
+    
+    rp_Saved
+
+commit 49229fd05425ff5d22c7fc40b2c258bdfad1b464
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 13 20:35:02 2023 +0300
+
+    rp_continue
+
+commit d9749281b5828dcc6a4f3cc2f00fae3bce2eeada
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 13 17:07:13 2023 +0600
+
+    rp_ongoing
+
+commit fd079412fb13ecad00b65599f922cfdc3ba4fc08
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Nov 12 17:01:15 2023 +0600
+
+    rp_loaded _data
+
+commit ca74d2fc7f2f6dee4d4b9ee48bd7141ce8144a86
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Nov 11 13:09:23 2023 +0600
+
+    range plan ongoing
+
+commit 26d4341a7cba7fcf5ccba5153fb07923ac3540b9
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Nov 10 19:59:25 2023 +0300
+
+    all style backend
+
+commit ea213abb439cac034ffa7e62ab4fe580419d92f1
+Merge: 58c3f83e 4523b566
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Nov 10 18:24:09 2023 +0300
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 58c3f83eb3a0ee385fadfd5121ce542a442d4b4c
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Nov 10 18:23:46 2023 +0300
+
+    project help moduel gen
+
+commit 4523b566bded694ff2da4343cb3f2667a85f783a
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 9 16:47:42 2023 +0600
+
+    bp approval
+
+commit 55bd326ab545004a9d93294d00c379dcf86e0979
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 8 21:05:10 2023 +0300
+
+    furnishing bp
+
+commit e18c4d92acfdd7a8fe3e5a87bbdd40e594bd4fb1
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 8 17:14:26 2023 +0600
+
+    commit update
+
+commit c6ed153ce0a0e8941427faadcf2982086101e978
+Merge: b80ef086 ef0bc627
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 8 09:07:56 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit b80ef0867cab2f4017d460d1aedc12bec89d976b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 8 09:07:51 2023 +0600
+
+    rr
+
+commit ef0bc6271bf82894dc391db294cf400f13cf4928
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 8 00:13:38 2023 +0300
+
+    event _add
+
+commit c69e10c8ce614519eef926a391d924b5eff053f8
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Nov 7 17:00:10 2023 +0600
+
+    bp_planing_final
+
+commit 54ce5ae6b2e7382d2b2921a1c047998c926b8a9e
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Nov 6 20:45:40 2023 +0600
+
+    edit bp
+
+commit 675c04e04537f5c5a3ad309b9bc50de3781b6680
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Nov 5 21:31:38 2023 +0300
+
+    gg
+
+commit 8993c4aa0fca107d93058396913f1d792c9ff306
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sun Nov 5 21:30:27 2023 +0300
+
+    task continue
+
+commit 16fc480f66e83994ac4f4112035167c960de52e0
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Nov 5 17:10:48 2023 +0600
+
+    bp_ongoing
+
+commit f4aaabce8f7bba636392f2c952e9fb0eaeaac33e
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Sat Nov 4 20:44:28 2023 +0300
+
+    preparing data at js
+
+commit 350cc342fc40518917e10051a9eebca54f8d214b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sat Nov 4 12:59:35 2023 +0600
+
+    load outlet
+
+commit 8bdc4c9d0193d6f84278111f38adc0b21f7a1776
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Fri Nov 3 21:51:55 2023 +0300
+
+    bp design
+
+commit bc33663a45c076dc018f5553d83c0d466a32c252
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 2 17:07:16 2023 +0600
+
+    datatabales and supabase with paging
+
+commit a90623a5a24c910c10d92c217aab211ca7d53032
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Tue Oct 31 17:46:24 2023 +0600
+
+    Business Plan
+
+commit 62e8f1c593e6c3a64585ba5395eb36c68ac8ba59
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Nov 2 11:27:09 2023 +0600
+
+    log off
+
+commit c0a46bfecbdfc640c6a12a1c8f5cba347979ae91
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 1 20:27:08 2023 +0300
+
+    claim fix
+
+commit d42f168a78f0152dc563e9ace3b79677123deeb6
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Nov 1 17:07:24 2023 +0600
+
+    treat
+
+commit 4c759e1a12abb6d24f904a71773223f2ef180a72
+Author: Arifur Rahman Khan <arifur.rahman@epylliongroup.com>
+Date:   Tue Oct 31 20:05:34 2023 +0300
+
+    TESTING LOGIN
+
+commit f1a781ab100c9829e2491fb48c0aed2559850fbf
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Oct 31 16:49:12 2023 +0600
+
+    check login
+
+commit 373020c4937cfadf40caa3ed644c51f77a2cb4e4
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Oct 31 16:23:08 2023 +0600
+
+    user login
+
+commit e1c5377a501b1bd1fb90173a93f414cc36b2f9ec
+Merge: d687e0e8 bf0ea37b
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Oct 31 16:15:38 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit d687e0e81af3349d1721d0fad37a6b72c995da43
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Tue Oct 31 16:15:34 2023 +0600
+
+    user login
+
+commit bf0ea37b2181090c421e4d8939ff4bc708a690dc
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Mon Oct 30 12:46:33 2023 +0600
+
+    All table query updated
+
+commit 447935e97205dc5de64e91052283036443bb4070
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Sun Oct 29 13:36:32 2023 +0600
+
+    Application Id remove from Menu
+
+commit 6e68c42eb984d7f4a6daed84c7653468fb492193
+Merge: 5b834ca4 53e0ce38
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Oct 29 12:53:01 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 5b834ca46cd0572e45e99ee28fd8443dcc41cd5e
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Sun Oct 29 12:52:53 2023 +0600
+
+    mongo and redis from dev server
+
+commit 53e0ce38b3e610d31997a3bfdb83c85309f6d353
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Thu Oct 26 16:56:38 2023 +0600
+
+    Business plan
+
+commit 1b7a21e1f95a4893bd0a8dd0229b4b347dcf7be2
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Thu Oct 26 12:58:45 2023 +0600
+
+    Encription
+
+commit 9a13841fae607981e2bad5ea5da8ecd1483cdc89
+Merge: 30b965e2 7a4d6bce
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Thu Oct 26 12:53:36 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 30b965e27cdb36147ac98d3e1eba7e3dcf8f5afa
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Thu Oct 26 12:53:31 2023 +0600
+
+    Not necessary encription dll
+
+commit 7a4d6bce59899d5153867faf6c9b0bc2edc8af22
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Thu Oct 26 12:00:21 2023 +0600
+
+    error handling
+
+commit f2a6d68b21c439a88a3f32c56903b7327a4f3f91
+Merge: e0348a84 430558a0
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Wed Oct 25 12:41:49 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit e0348a84df5ddc8c31eb08a84960a12259f287f6
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Wed Oct 25 12:41:44 2023 +0600
+
+    Serilog with MongoDB
+
+commit 430558a0cc7d0b694ae496d71eae8743afef0ccb
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Oct 25 12:33:51 2023 +0600
+
+    redis server infor dynamic
+
+commit d30709d7098bf1404408b1e5052da7982e4fec0d
+Merge: 6d3114e9 9ce5ebf1
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Oct 25 09:45:10 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 6d3114e91fe815ae0f176eed8b9cf1355f4ae403
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Wed Oct 25 09:45:06 2023 +0600
+
+    new db
+
+commit 9ce5ebf11c5f34a0aed7154d46382406accbebad
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Mon Oct 23 17:06:36 2023 +0600
+
+    Range Plan Insert Update
+
+commit 2e2540a1272be2f5866abb10d1eace1e6f5a98de
+Merge: 7df1ce0a 8dd4bac8
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Mon Oct 23 15:59:03 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 7df1ce0a7ec29b47a17a6ff5111ba8845da9b6a4
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Mon Oct 23 15:58:58 2023 +0600
+
+    Redis
+
+commit 8dd4bac8597e6ea7e8c92025fe05da8416d5109b
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Mon Oct 23 15:53:04 2023 +0600
+
+    Range Plan Interface
+
+commit 64523a2481b38a6ec23946a2b15bee48974c677c
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Mon Oct 23 12:42:18 2023 +0600
+
+    Remove Extra File
+
+commit 6ef2a038ceee6064d98cae2595231f6e97e016d3
+Merge: 227f3af6 b4b7ab10
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Oct 23 12:31:03 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 227f3af64380b51046d41d6e96c94fd6848260fb
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Oct 23 12:31:00 2023 +0600
+
+    menu fix
+
+commit b4b7ab10773116ffca1f59b8a87504cc8b362d23
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Mon Oct 23 11:30:45 2023 +0600
+
+    year added
+
+commit a0eaa65d2035c348fb7fe42c0b2e27e901ebf78f
+Merge: 3cd837e3 42963e05
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Oct 23 10:55:41 2023 +0600
+
+    Merge branch 'main' of https://github.com/epyllion80/sailor
+
+commit 3cd837e35179ace32af874acf9d7c42b5f95623e
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Oct 23 10:55:29 2023 +0600
+
+    test
+
+commit 42963e0552333f82d26ae32ad147a9640ebb3a93
+Merge: 4ee681e0 6d55329d
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Mon Oct 23 10:49:59 2023 +0600
+
+    test
+
+commit 4ee681e053f76a45e27eec32486ae0d172d3a0d2
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Mon Oct 23 10:48:52 2023 +0600
+
+    test
+
+commit 6d55329db6109f7170f2965e54fc71e3ae66c44e
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Mon Oct 23 10:46:39 2023 +0600
+
+    Range Plan Page
+
+commit efe91a6c975b2e8e714353a87b157dec205e819d
+Author: razuahammed <razuahammed@epylliongroup.com>
+Date:   Mon Oct 23 10:32:26 2023 +0600
+
+    test com
+
+commit 30915122fba1383b912cda04caf622b87860d233
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Mon Oct 23 10:27:39 2023 +0600
+
+    Range Plan Update
+
+commit f4213ad954e7be56d2af47f1b23164c4710eb610
+Author: mutasimip <mutasim@epylliongroup.com>
+Date:   Mon Oct 23 10:20:19 2023 +0600
+
+    test
+
+commit 0e4eae1451a71ea57c705d0718c1b4bc55864a73
+Author: kalpabd <career.mutasim@gmail.com>
+Date:   Mon Oct 23 10:15:44 2023 +0600
+
+    RangePlan
+
+commit 1445704f288a3e5731cf81a1c020cbfa0e835874
+Author: epyllion80 <arifur.rahman@epylliongroup.com>
+Date:   Mon Oct 23 10:13:35 2023 +0600
+
+    test coomin from vs
+
+commit e48ba917fab8f40ec6b15d6c0399caed4f1251f0
+Author: ArifurKhan <bonny1982@gmail.com>
+Date:   Mon Oct 23 09:44:56 2023 +0600
+
+    sidebar menu fix
+
+commit d5e84e0a549278ad0fbbf8440a44cc76bf8a3adb
+Author: ArifurKhan <bonny1982@gmail.com>
+Date:   Mon Oct 23 09:34:31 2023 +0600
+
+    test commit
+
+commit ed91ec183e339d7c0e06d01dcf03d678c8b8feca
+Author: ArifurKhan <bonny1982@gmail.com>
+Date:   Mon Oct 23 09:33:05 2023 +0600
+
+    commit test
+
+commit f4892eb4432eb31ed1aa95baad5fd1a251c5aa30
+Author: ArifurKhan <bonny1982@gmail.com>
+Date:   Mon Oct 23 09:25:23 2023 +0600
+
+    init commit
+
+commit 1826725da1692ad3f1b735dd0e28adb950aa9215
+Author: epyllion80 <148736409+epyllion80@users.noreply.github.com>
+Date:   Mon Oct 23 09:12:18 2023 +0600
+
+    Create .gitignore

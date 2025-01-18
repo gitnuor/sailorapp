@@ -1,0 +1,512 @@
+﻿@page "/Index"
+@{
+    ViewBag.Title = "Event Configuration";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<script type="text/javascript">
+    localStorage.setItem("pageName", "ViewBag.PageName");
+    localStorage.setItem("menuId", "ViewBag.MenuId");
+</script>
+@*
+ *@
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Event Configuration</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year</label>
+
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                            {
+                                                ddlId = "fiscal_year_id",
+                                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.fiscal_year_list)),
+                                                selectedvalue = "",
+                                                cssclass = "form-control",
+                                                enable = true,
+                                                isRequired = true,
+                                                placeholder = "Select Fiscal Year"
+                                            })
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+
+                                    <button style="margin-top:30px;" type="button" class="btn btn-primary" id="btnNewEvenConfig"><i class="fa fa-plus"></i>&nbsp;New Event Plan</button>
+
+                                </div>
+
+                                <div class="col-md-2">
+
+                                    <button style="margin-top:30px;" type="button" class="btn btn-success" id="btnCopyEvenConfig"><i class="fa fa-plus"></i>&nbsp;Copy Event Plan to</button>
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year</label>
+
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                            {
+                                                ddlId = "Copy_fiscal_year_id",
+                                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.fiscal_year_list)),
+                                                selectedvalue = "",
+                                                cssclass = "form-control",
+                                                enable = true,
+                                                isRequired = true,
+                                                placeholder = "Select Fiscal Year"
+                                            })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="DTSeasonEventConfig" class="table table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><label class="labelNormal ">Season</label></th>
+                                        @*  // <th><label class="labelNormal ">Sequence</label></th> *@
+                                        <th><label class="labelNormal  ">Event Title</label></th>
+                                        <th><label class="labelNormal  ">Start Date</label></th>
+                                        <th><label class="labelNormal  ">End Date</label></th>
+
+                                        <th style="width:200px"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+<div id="modalcontainer_common" class="modal fade hidden-print" role="dialog">
+    <div class="modal-dialog" style="width: 50% !important; max-width: 50% !important; ">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px;padding:10px;background-color: #318db6;color: white;">
+                <h5 class="modal-title">New Event Configuration</h5>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        function jsdatatableloaded() {
+            $("#DTSeasonEventConfig .btnEdit").click(function () {
+
+                try {
+                    setTimeout(function () {
+                        showLoader("Loading..........");
+                    }, 0);
+                    ajaxGetHandler("/SeasonEventConfig/SeasonEventConfigEdit", { input: $(this).attr("event_id") }, function (response) {
+                        hideLoader();
+                        $('#modalcontent-common').html(response);
+
+                        $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+
+                        $('#modalcontainer_common').modal("show");
+
+                        RegisterEditFormEvents();
+
+
+                    }, false);
+
+
+
+                } catch (e) {
+                    hideLoader();
+                }
+
+            });
+        }
+
+        $('#btnCopyEvenConfig').click(function () {
+            try {
+                showLoader("Loading..........");
+                ajaxGetHandler("/SeasonEventConfig/LoadfiscalyearDataForCopy", { input: btoa($("#fiscal_year_id").val()), from_year: $("#fiscal_year_id option:selected").text().split('-')[0], to_year: $("#Copy_fiscal_year_id option:selected").text().split('-')[0] }, function (response) {
+                    hideLoader();
+
+                    $('#modalcontent-common').html(response);
+
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+
+                    $('#modalcontainer_common').modal("show");
+                    var selectedValue = $('#Copy_fiscal_year_id').val();
+
+
+                    var selectedText = $('#Copy_fiscal_year_id option:selected').text();
+
+
+                    $('#fiscal_year_id_copy').val(selectedValue);
+                    $('#fiscal_year_text_copy').val(selectedText);
+
+                    
+
+
+                    
+
+
+
+                    RegisterEvents();
+
+
+                }, false);
+
+            } catch {
+                hideLoader();
+            }
+        })
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+        function loadData() {
+
+            var dt_search = {
+
+                filterId: '#DTSeasonEventConfig_filter input[type=search]',
+                tableId: "#DTSeasonEventConfig"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val()
+            };
+            var dt = $(dt_search.tableId).DataTable({
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search Event',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+
+                // pageLength: 5,
+                "ajax": $.fn.dataTable.json({ url: "/SeasonEventConfig/GetSeasonEventConfigData", data: input }),
+                "buttons": {
+                    "buttons": [
+                        {
+                            text: '<i class="fas fa-plus-square" aria-hidden="true"></i> Add',
+                            className: 'btn btn-primary mr-1',
+                            action: function (e, dt, node, config) {
+                                location.href = "/BusinessPlan/AddNew";
+                            }
+                        },
+                    ]
+                },
+                columnDefs: [
+
+                    { targets: 1, "visible": true, "sortable": true },
+                    { targets: 2, "visible": true, "sortable": false },
+                    { targets: 3, "visible": true, "sortable": false },
+
+                ],
+                "columns": [
+
+                    { "data": "season_name", "name": "season_name", "autoWidth": true },
+                    //{ "data": "event_sequence", "name": "event_sequence", "autoWidth": true },
+                    { "data": "event_title", "name": "gross_sales", "autoWidth": true },
+                    { "data": "str_startdate", "name": "gross_sales", "autoWidth": true },
+                    { "data": "str_enddate", "name": "gross_sales", "autoWidth": true },
+
+                    {
+                        "data": "datatablebuttonscode", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    }
+                ]
+            });
+        }
+
+
+        function RegisterEvents() {
+
+            $("#modalcontainer_common #btnAddEvents").click(function () {
+
+                $("#btnAddEvents").find(".fa-save").attr("class", "fa fa fa-refresh fa-spin");
+                $("#btnAddEvents").prop("enabled", false);
+
+                var request = {
+                    season_id: parseInt($("#ddl_season").val()),
+                    fiscal_year_id: parseInt($("#ddl_fiscal_year_id").val()),
+                    event_title: $("#event_title").val(),
+                    start_date: $("#start_date").val(),
+                    end_date: $("#end_date").val(),
+                    //event_sequence: $("#event_sequence").val()
+                };
+
+                ajaxPostObjectHandler("/SeasonEventConfig/SaveSeasonEventConfig", request, function (response) {
+
+                    if (response.status_Code == "200") {
+                        loadData();
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+                            $('#modalcontent-common').html("");
+                            $('#modalcontainer_common').modal("hide");
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+                            $("#btnAddEvents").prop("enabled", true);
+                            $("#btnAddEvents").find(".fa-save").attr("class", "fa fa fa-save");
+                        });
+                    }
+                }, true);
+
+
+            });
+
+
+
+            $("#modalcontainer_common #btnCancel").click(function () {
+
+                $('#modalcontainer_common').modal("hide");
+
+                $('#modalcontent-common').html("");
+
+            });
+
+
+
+        }
+
+        function ChangeStartEndDate(elem)
+        {
+            
+
+            let selectedDate = new Date($(elem).val());
+            selectedDate.setDate(selectedDate.getDate() + 1);
+            let nextDay = selectedDate.toISOString().split('T')[0];
+            $(elem).closest("tr").next().find(".start_date").val(nextDay);
+
+        }
+
+        function UpdateCopySeasonEventConfig(btn) {
+
+            copyDetails = [];
+
+            $.each($("#DTtranCopySeasonData tbody tr"), function (key, val) {
+
+                var obj = {
+                    fiscal_year_id: $('#fiscal_year_id_copy').val(),
+                    season_id: check_textbox_value($(this).find(".season_id")),
+
+                    event_title: check_textbox_value($(this).find(".event_title")),
+                    start_date: check_textbox_value($(this).find(".start_date")),
+                    end_date: check_textbox_value($(this).find(".end_date")),
+
+                };
+                copyDetails.push(obj);
+
+
+            });
+
+            var obj_CopySeasonEVentConfig = {
+                seasonEventConficList: copyDetails
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/SeasonEventConfig/UpdateSeasonEventConfigCopy", obj_CopySeasonEVentConfig, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+
+                if (response.status_Code == "200") {
+
+                    loadData();
+
+
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup(); listAttachments = []; DeleteList = []; copyDetails = [];
+                        $('#modalcontainer_common').modal("hide");
+
+                        $('#modalcontent-common').html("");
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+
+        function RegisterEditFormEvents() {
+            $("#modalcontainer_common #btnUpdateEvents").click(function () {
+                showLoader("Saving..........");
+
+
+                $("#btnUpdateEvents").find(".fa-save").attr("class", "fa fa fa-refresh fa-spin");
+                $("#btnUpdateEvents").prop("enabled", false);
+
+                var request = {
+                    event_id: parseInt($("#event_id").val()),
+                    season_id: parseInt($("#ddl_season").val()),
+                    fiscal_year_id: parseInt($("#ddl_fiscal_year_id").val()),
+                    event_title: $("#event_title").val(),
+                    start_date: $("#start_date").val(),
+                    end_date: $("#end_date").val(),
+
+                    // event_sequence: $("#event_sequence").val(),
+
+                };
+
+                ajaxPostObjectHandler("/SeasonEventConfig/UpdateSeasonEventConfig", request, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+                    if (response.status_Code == "200") {
+                        loadData();
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+                            $('#modalcontent-common').html("");
+                            $('#modalcontainer_common').modal("hide");
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+                            $("#btnUpdateEvents").prop("enabled", true);
+                            $("#btnUpdateEvents").find(".fa-save").attr("class", "fa fa fa-save");
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+
+            });
+
+            $("#modalcontainer_common #btnCancel").click(function () {
+
+                $('#modalcontainer_common').modal("hide");
+
+                $('#modalcontent-common').html("");
+
+            });
+        }
+
+        $(function () {
+
+
+            $("#btnNewEvenConfig").click(function () {
+
+                try {
+
+                    showLoader("Loading..........");
+
+                    ajaxGetHandler("/SeasonEventConfig/SeasonEventConfigNew", { input: btoa($("#fiscal_year_id").val()) }, function (response) {
+                        hideLoader();
+
+                        $('#modalcontent-common').html(response);
+
+                        $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+
+                        $('#modalcontainer_common').modal("show");
+
+                        RegisterEvents();
+
+
+                    }, false);
+
+
+
+                } catch (e) {
+                    hideLoader();
+                }
+
+            });
+
+
+
+
+
+            $("#fiscal_year_id").change(function () {
+
+                loadData();
+
+            });
+            loadData();
+        });
+    </script>
+
+}

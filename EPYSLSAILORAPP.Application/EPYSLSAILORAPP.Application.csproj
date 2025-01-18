@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CustomIdentityManagers\CustomAuthorization\**" />
+    <EmbeddedResource Remove="CustomIdentityManagers\CustomAuthorization\**" />
+    <None Remove="CustomIdentityManagers\CustomAuthorization\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DTO\Styles\style_embellishment_DTO.cs" />
+    <Compile Remove="DTO\TranTables\tran_va_product_embellishment_mapping_DTO.cs" />
+    <Compile Remove="Interface\Styles\IStyleembellishmentService.cs" />
+    <Compile Remove="Interface\Tran_DesignMgt\IDraftPRService.cs" />
+    <Compile Remove="Interface\Tran_MerchandisingMgt\IDraftPRService.cs" />
+    <Compile Remove="Interface\Tran_Tables\ITranvaproductembellishmentmappingService.cs" />
+	  
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="DTO\TestTransport\GenTranEdit.cshtml" />
+    <None Remove="DTO\TestTransport\GenTranLanding.cshtml" />
+    <None Remove="DTO\TestTransport\GenTranNew.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="DTO\TestTransport\GenTranEdit.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="DTO\TestTransport\GenTranLanding.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="DTO\TestTransport\GenTranNew.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.151" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.24" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="7.0.13" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.13" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EPYSLSAILORAPP.Domain\EPYSLSAILORAPP.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTO\Configuration\" />
+    <Folder Include="Interface\Configuration\" />
+    <Folder Include="Interface\NewFolder\" />
+  </ItemGroup>
+
+</Project>

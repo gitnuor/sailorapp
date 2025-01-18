@@ -1,0 +1,252 @@
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_sewing_detail_plan_DTO;
+@{
+    ViewBag.Title = "Sewing Plan";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<div class="col-md-12">
+
+
+    <input type="hidden" id="techpack_id" value="@Model.techpack_id">
+
+
+    <div class="box">
+        <div class="row">
+            <div class="col-md-4" style="padding-top:5px;">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Line Number</label>
+
+                    @await Component.InvokeAsync("GenericDropdownList", new
+                        {
+                            ddlId = "ddl_line_no",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.LineNumber)),
+                            selectedvalue = "",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = true,
+                            placeholder = "--Line--"
+                        })
+                </div>
+
+            </div>
+
+            <div class="col-md-4" style="padding-top:5px;">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Color</label>
+
+                    @await Component.InvokeAsync("GenericDropdownList", new
+                        {
+                            ddlId = "ddl_color",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.Colors)),
+                            selectedvalue = "",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = true,
+                            placeholder = "--Color--"
+                        })
+
+                </div>
+            </div>
+
+
+            <div class="col-md-4" style="padding-top:5px;">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Batch No</label>
+
+                    <select id="ddl_batch" class="form-control " onchange="getSizeWiseQuantity(this);">
+                        <option value="" selected>--Select Batch---</option>
+                    </select>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row" id="divSizeOutput" style="display:none">
+            <div class="col-md-12">
+
+                <table style="font-size:9px;" id="DTSizeOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th><label class="labelNormal">Size</label></th>
+                            <th><label class="labelNormal">Cutting Quantity</label></th>
+                            <th><label class="labelNormal">Allocated Quantity</label></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-10"></div>
+            <div class="col-md-1" style="text-align:right">
+                <button type="button" class="btn btn-primary  btnSaveNext" onclick="AddPlan(this)">Done</button>
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+    $('#ddl_color').on('change', function () {
+        var color_code = $(this).val();
+
+        var techpack_id = $("#techpack_id").val();
+
+        ajaxGetHandler("/SewingAllocationPlan/GetColorWiseBatch?techpack_id=" + techpack_id + "&p_color_code=" + encodeURIComponent(color_code), null, function (data) {
+            $('#ddl_batch').empty();
+            $('#ddl_batch').append($('<option>', {
+                value: 0,
+                text: "Select Event",
+                selected: "selected"
+            }));
+
+            for (var i = 0; i < data.length; i++) {
+
+                $('#ddl_batch').append($('<option>', {
+                    value: data[i].tran_cutting_color_batch_id,
+                    text: data[i].batch_no,
+                    size: data[i].batch_summery_string
+                }));
+            }
+
+            $('#ddltop_event').val(0);
+
+        }, true, function () { hideLoader(); }, true);
+
+    });
+
+    function getSizeWiseQuantity(e) {
+
+
+
+        var selectedOption = e.options[e.selectedIndex];
+
+
+        var sizeData = selectedOption.getAttribute("size");
+        var sizeArray = JSON.parse(sizeData);
+
+        console.log(sizeArray);
+
+
+        $("#divSizeOutput").show();
+
+        var table = document.getElementById("DTSizeOutput").getElementsByTagName('tbody')[0];
+        table.innerHTML = '';
+        sizeArray.forEach(function (item) {
+            var newRow = table.insertRow(table.rows.length);
+
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+
+
+
+
+            cell1.innerHTML = "<input disabled type='text'class='form-control size' value=" + item.size_name + ">";
+
+            cell2.innerHTML = "<input disabled type='number'class='form-control cut_qty' value=" + item.total_quantity + ">";
+            cell3.innerHTML = `<input type='number'  class= 'form-control alloc_quantity'> `;
+            cell4.innerHTML = `<input type='number'  class= 'form-control style_product_size_group_detid' value=` + item.style_product_size_group_detid + `>`;
+            cell4.style.display = "none";
+        });
+
+
+    }
+    function AddPlan(e) {
+        $("#divTablePlan").show();
+        var total_quantity = 0;
+        var all_size = '';
+        var line = $('#ddl_line_no').val();
+        var linename = $('#ddl_line_no option:selected').text();
+        var color = $('#ddl_color').val();
+        var batchId = $('#ddl_batch').val();
+        var batchname = $('#ddl_batch option:selected').text();
+
+        $.each($("#DTSizeOutput tbody tr"), function (key, val) {
+
+            var obj = {
+                style_product_size_group_detid: $(this).closest("tr").find(".style_product_size_group_detid").val(),
+                size_name: $(this).closest("tr").find(".size").val(),
+                cutting_quantity: $(this).closest("tr").find(".cut_qty").val(),
+                allocated_quantity: $(this).closest("tr").find(".alloc_quantity").val(),
+            };
+            tran_sewing_allocation_plan_details_size.push(obj);
+            total_quantity = total_quantity + parseInt($(this).closest("tr").find(".alloc_quantity").val());
+            all_size = all_size + ',' + $(this).closest("tr").find(".size").val();
+            obj = {};
+
+        });
+
+
+
+        var table = document.getElementById("DTPlanOutput").getElementsByTagName('tbody')[0];
+
+
+        var newRow = table.insertRow(table.rows.length);
+
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+        var cell4 = newRow.insertCell(3);
+        var cell5 = newRow.insertCell(4);
+        var cell6 = newRow.insertCell(5);
+        var cell7 = newRow.insertCell(6);
+        var cell8 = newRow.insertCell(7);
+        var cell9 = newRow.insertCell(8);
+        var cell10 = newRow.insertCell(9);
+
+        cell1.innerHTML = "<input disabled type='number' class='form-control line_id' value=" + line + ">";
+        cell1.style.display = "none";
+        cell2.innerHTML = "<input disabled type='text' class='form-control line_name' value=" + linename + ">";
+        cell3.innerHTML = `<input type='text' disabled class= 'form-control color' value=` + color + `>`;
+        cell3.style.display = "none";
+        cell4.style.background = color;
+        cell5.innerHTML = "<input disabled type='number' class='form-control batch_id' value=" + batchId + ">";
+        cell5.style.display = "none";
+        cell6.innerHTML = `<input type='text' disabled class= 'form-control batch_name' value=` + batchname + `>`;
+        cell7.innerHTML = `<input type='text' disabled class= 'form-control all_size' value=` + all_size + `>`;
+        cell8.innerHTML = `<input type='number' disabled class= 'form-control total_alloc_quantity' value=` + total_quantity + `>`;
+        cell9.innerHTML = "<button type='button' onclick='DeleteBatch(this)'  class='btn btn-danger btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></button>";
+        cell10.innerHTML = `<input type='text' disabled class= 'form-control tran_sewing_allocation_plan_details_size' value=` + JSON.stringify(tran_sewing_allocation_plan_details_size) + `>`;
+        cell10.style.display = "none";
+        closePopup_detl();
+
+
+
+    }
+
+
+    function closePopup_detl() {
+        $('#modalcontent_plan').html("");
+        $('#modalcontainer_plan').modal("hide");
+        $('#modalcontainer_plan').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+</script>
+
+
+
+
+

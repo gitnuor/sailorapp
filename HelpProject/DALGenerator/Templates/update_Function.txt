@@ -1,0 +1,22 @@
+CREATE procedure {TableName}_update(
+  {InputParamsWithType}
+)
+language plpgsql
+as
+$$
+
+DECLARE
+  
+    {NewIDVariables}
+
+BEGIN
+    {UpdateQuery}
+
+    {UpdateQuery_Details}
+
+   EXCEPTION
+    WHEN OTHERS THEN
+        RAISE EXCEPTION 'Error inserting data into  {TableName}%', SQLERRM;
+END;
+
+$$;

@@ -1,0 +1,257 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_sewing_input_DTO;
+@{
+    ViewBag.Title = "TranSewingInput Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Sewing Input Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sewing Allocation Number</label>
+                        <input style="width:100%" readonly asp-for="sewing_allocation_number" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sewing Allocation Date</label>
+                        <input style="width:100%" readonly asp-for="sewing_allocation_date" type="date" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+
+
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techpack Number</label>
+                        <input style="width:100%" readonly asp-for="techpack_number" type="text" class="border-#d1cccc-200 form-control " />
+                        <input type="hidden" id="techpack_id" value="@Model.techpack_id">
+                        <input type="hidden" id="tran_sewing_allocation_plan_id" value="@Model.tran_sewing_allocation_plan_id">
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Merchandiser</label>
+                        <input style="width:100%" readonly asp-for="merchandiser_name" type="text" class="border-#d1cccc-200 form-control" />
+
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;"> Product Category</label>
+                        <input style="width:100%" readonly asp-for="style_item_product_category" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Line Number</label>
+
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "ddl_line_no",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.LineNumber)),
+                                selectedvalue = "",
+                                cssclass = "form-control",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "--Line--"
+                            })
+                    </div>
+                </div>
+                <div class="col-md-4" style="margin-top: 3%;">
+                    <button type="button" class="btn btn-primary " id="btnAddLineTable" onclick="AddLineTable(this);"><i class="fa fa-file-open"></i>&nbsp;Add Line</button>
+                </div>
+            </div>
+            <div class="row" id="divTablePlan" style="display:none">
+
+                <div class="col-md-12">
+
+                    <table style="font-size:9px;" id="DTPlanOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th><label class="labelNormal">Line No</label></th>
+                                <th><label class="labelNormal">Color</label></th>
+                                <th><label class="labelNormal">Batch</label></th>
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">Allocated Qty</label></th>
+                                <th><label class="labelNormal">Already Inputted</label></th>
+                                <th><label class="labelNormal">New Input Quantity</label></th>
+                                <th><label class="labelNormal">Balance</label></th>
+                                <th><label class="labelNormal">Remove</label></th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                <button type="button" class="btn btn-success " id="btnSaveTranSewingInput" onclick="SaveTranSewingInput(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+
+
+
+</form>
+
+
+
+<script>
+    function AddLineTable(btn) {
+        var tran_sewing_allocation_plan_id = $("#tran_sewing_allocation_plan_id").val();
+        var production_line_id = $("#ddl_line_no").val();
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/TranSewingInput/AddLine?tran_sewing_allocation_plan_id=" + tran_sewing_allocation_plan_id + "&production_line_id=" + production_line_id, null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 0);
+         
+            $("#divTablePlan").show();
+            var table = document.getElementById("DTPlanOutput").getElementsByTagName('tbody')[0];
+
+            data.data.forEach(function (item) {
+                var newRow = table.insertRow(table.rows.length);
+
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+                var cell6 = newRow.insertCell(5);
+                var cell7 = newRow.insertCell(6);
+                var cell8 = newRow.insertCell(7);
+                var cell9 = newRow.insertCell(8);
+                var cell10 = newRow.insertCell(9);
+                var cell11 = newRow.insertCell(10);
+                var cell12 = newRow.insertCell(11);
+                var cell13 = newRow.insertCell(12);
+
+                cell1.innerHTML = "<input disabled type='number' class='form-control production_line_id' value=" + item.production_line_id + ">";
+                cell1.style.display = "none";
+                cell2.innerHTML = "<input disabled type='text' class='form-control line_name' value=" + item.line_name + ">";
+                cell3.innerHTML = `<input type='text' disabled class= 'form-control color_code' value=` + item.color_code + `>`;
+                cell3.style.display = "none";
+                cell4.style.background = item.color_code;
+                cell5.innerHTML = "<input disabled type='number' class='form-control batch_id' value=" + item.batch_id + ">";
+                cell5.style.display = "none";
+                cell6.innerHTML = `<input type='text' disabled class= 'form-control batch_name' value=` + item.batch_no + `>`;
+                cell7.innerHTML = `<input type='text' disabled class= 'form-control style_product_size_group_detid' value=` + item.style_product_size_group_detid + `>`;
+                cell7.style.display = "none";
+                cell8.innerHTML = `<input type='text' disabled class= 'form-control size_name' value=` + item.size_name + `>`;
+                cell9.innerHTML = `<input type='number' disabled class= 'form-control allocated_quantity' value=` + item.allocated_quantity + `>`;
+                cell10.innerHTML = `<input type='number' disabled class= 'form-control already_inputed' value=` + item.already_inputed + `>`;
+                cell11.innerHTML = `<input type='number'  class= 'form-control input_quantity' onfocusout="Calculatebalance(this)">`;
+                cell12.innerHTML = `<input type='number' disabled class= 'form-control balance' value=` + item.balance + `>`;
+                cell13.innerHTML = "<button type='button' onclick='DeleteLine(this)'  class='btn btn-danger btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></button>";
+            });
+
+
+            });
+
+
+    }
+
+    function DeleteLine(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+   
+
+    }
+
+    function Calculatebalance(e) {
+        var qnty = e.value;
+        var alloc = $(e).closest("tr").find(".allocated_quantity").val();
+        var alrd = $(e).closest("tr").find(".already_inputed").val();
+        $(e).closest("tr").find(".balance").val(alloc - alrd - qnty);
+
+
+    }
+</script>

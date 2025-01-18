@@ -1,0 +1,301 @@
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+using EPYSLSAILORAPP.Infrastructure.Services.Common;
+using EPYSLSAILORAPP.Application.DTO;
+using System.Security.Claims;
+using EPYSLSAILORAPP.Application.Interface;
+using BDO.Core.Base;
+using Web.Core.Frame.Helpers;
+using EPYSLSAILORAPP.Application.Interface.Common;
+using EPYSLSAILORAPP.Domain.RPC;
+using EPYSLSAILORAPP.SystemServices;
+using EPYSLSAILORAPP.Domain.DTO;
+using ServiceStack;
+using Serilog.Context;
+
+using EPYSLSAILORAPP.Infrastructure.Services;
+using EPYSLSAILORAPP.Domain.Entity;
+
+namespace EPYSLSAILORAPP.Controllers
+{
+    public class {TableName}Controller : ExtendedBaseController
+    {
+        private readonly ILogger<{TableName}Controller> _logger;
+       
+        private readonly I{TableName}Service _{TableName}Service;
+       
+        private readonly IRPCDbService _rpc_db_service;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _contextAccessor;
+          private readonly IConfiguration _configuration;
+        private HelperService objHelperService;
+
+        public IActionResult Index()
+        {
+            _logger.LogInformation("Hello from inside {TableName}Controller !");
+            return View();
+        }
+
+        public {TableName}Controller(
+           IMapper mapper, ILogger<{TableName}Controller> logger, IHttpContextAccessor contextAccessor, IConfiguration configuration,
+            I{TableName}Service {TableName}Service,
+            IRPCDbService rpc_db_service):base(contextAccessor, configuration)
+        {
+            _mapper = mapper;
+
+            _logger = logger;
+            _rpc_db_service = rpc_db_service;
+            _contextAccessor = contextAccessor;
+            _{TableName}Service = {TableName}Service;
+                _configuration = configuration;
+            
+
+       
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> {TableName}Landing()
+        {
+
+            return View("~/Views/{FolderName}{TableName}/{TableName}Landing.cshtml");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> {TableName}New()
+        {
+            {EntityName}_DTO model = new {EntityName}_DTO();
+
+            return PartialView("~/Views/{FolderName}{TableName}/_{TableName}New.cshtml", model);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> {TableName}Edit(string {PrimaryColumn})
+        {
+
+            string decoded_{PrimaryColumn} = clsUtil.DecodeString({PrimaryColumn});
+
+            {EntityName}_DTO model = new {EntityName}_DTO();
+
+             var objmodel = await _{TableName}Service.GetSingleAsync(Convert.ToInt64(decoded_{PrimaryColumn}));
+
+             model = JsonConvert.DeserializeObject<{EntityName}_DTO>(JsonConvert.SerializeObject(objmodel));
+
+            return PartialView("~/Views/{FolderName}{TableName}/_{TableName}Edit.cshtml", model);
+
+        }
+
+         [HttpGet]
+        public async Task<IActionResult> {TableName}View(string {PrimaryColumn})
+        {
+
+            string decoded_{PrimaryColumn} = clsUtil.DecodeString({PrimaryColumn});
+
+            {EntityName}_DTO model = new {EntityName}_DTO();
+
+            var objmodel  = await _{TableName}Service.GetSingleAsync(Convert.ToInt64(decoded_{PrimaryColumn}));
+
+            model = JsonConvert.DeserializeObject<{EntityName}_DTO>(JsonConvert.SerializeObject(objmodel));
+
+            return PartialView("~/Views/{FolderName}{TableName}/_{TableName}View.cshtml", model);
+
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Get{TableName}Data(DtParameters request)
+        {
+
+            var records = await _{TableName}Service.GetAllPagedDataAsync(request);
+
+            var index = request.Start + 1;
+            var data = (from t in records
+                        select new
+                        {
+                            row_index = index++,
+							{AllColumns}
+                       
+                          datatablebuttonscode = "<div style='text-align:center;' role='toolbar' >" +
+                            "<button type='button' onclick='Edit{TableName}(this)' style='width: 120px;' class='btn btn-secondary btnEdit'  {PrimaryColumn}='" + clsUtil.EncodeString(t.{PrimaryColumn}.ToString()) + "'>Edit</button>" +
+                            "<button type='button' onclick='View{TableName}(this)' style='width: 120px;' class='btn btn-secondary btnView'  {PrimaryColumn}='" + clsUtil.EncodeString(t.{PrimaryColumn}.ToString()) + "'>View</button>"+
+							"<button type='button' onclick='Delete{TableName}(\""+ clsUtil.EncodeString(t.{PrimaryColumn}.ToString()) + "\")' style='width: 120px;' class='btn btn-danger btnDelete'>Delete</button>" +
+							"</div>"
+                       }).ToList();
+            var ret_obj = new AjaxResponse(records.Count, data);
+            return Json(ret_obj);
+
+        }
+
+         [HttpPost]
+        public async Task<IActionResult> GetJoined{TableName}Data(DtParameters request)
+        {
+
+            var records = await _{TableName}Service.GetAllJoined_{TableName}Async( request.Start,request.Length);
+
+            var index = request.Start + 1;
+            var data = (from t in records
+                        select new
+                        {
+                            row_index = index++,
+                            {AllJoinedColumns}
+                       
+                          datatablebuttonscode = "<div style='text-align:center;' role='toolbar' >" +
+                            "<button type='button' onclick='Edit{TableName}(this)' style='width: 120px;' class='btn btn-secondary btnEdit'  {PrimaryColumn}='" + clsUtil.EncodeString(t.{PrimaryColumn}.ToString()) + "'>Edit</button>" +
+                            "<button type='button' onclick='View{TableName}(this)' style='width: 120px;' class='btn btn-secondary btnView'  {PrimaryColumn}='" + clsUtil.EncodeString(t.{PrimaryColumn}.ToString()) + "'>View</button>"+
+							"<button type='button' onclick='Delete{TableName}(\""+ clsUtil.EncodeString(t.{PrimaryColumn}.ToString()) + "\")' style='width: 120px;' class='btn btn-danger btnDelete'>Delete</button>" +
+							"</div>"
+                          
+                        }).ToList();
+            var ret_obj = new AjaxResponse(records.Count, data);
+            return Json(ret_obj);
+
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> Save{TableName}([FromBody] {EntityName}_DTO request)
+        {
+  
+
+            var ret = true;
+
+                
+                    request.added_by = sec_object.userid.Value;
+
+                    request.date_added = DateTime.Now;
+                
+               
+            
+
+            try
+            {
+                var model = JsonConvert.DeserializeObject<{EntityName}_entity>(JsonConvert.SerializeObject(request));
+                
+                ret = await _{TableName}Service.SaveAsync(model);
+                
+                return Json(new ResultEntity
+                {
+                    Status_Code = (ret == true ? "200" : "400"),
+                    Status_Result = (ret == true ? "Successful" : "Data Saving Failed")
+                });
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+               
+                using (LogContext.PushProperty("SpecialLogType", true))
+                {
+                    _logger.LogError(ex.ToString());
+                }
+
+                return Json(new ResultEntity
+                {
+                    Status_Code = (ret == true ? "200" : "400"),
+                     Status_Result = (ret == true ? "Operation Failed" : ex.Message)
+                });
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update{TableName}([FromBody] {EntityName}_DTO request)
+        {
+            var ret = true;
+
+            
+
+                request.added_by = sec_object.userid.Value;
+
+                request.date_added = DateTime.Now;
+
+                request.updated_by = sec_object.userid.Value;
+
+                request.date_updated = DateTime.Now;
+            
+
+            try
+            {
+                var model = JsonConvert.DeserializeObject<{EntityName}_entity>(JsonConvert.SerializeObject(request));
+               
+                ret = await _{TableName}Service.UpdateAsync(model);
+
+                return Json(new ResultEntity
+                {
+                    Status_Code = (ret == true ? "200" : "400"),
+                    Status_Result = (ret == true ? "Successful" : "Data Saving Failed")
+                });
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                using (LogContext.PushProperty("SpecialLogType", true))
+                {
+                    _logger.LogError(ex.ToString());
+                }
+                return Json(new ResultEntity
+                {
+                    Status_Code = (ret == true ? "200" : "400"),
+                    Status_Result = (ret == true ? "Operation Failed" : ex.Message)
+                });
+            }
+
+          
+        }
+		
+		
+
+  [HttpPost]
+  public async Task<IActionResult> Delete{TableName}([FromBody] {EntityName}_DTO request)
+  {
+    
+
+      var ret = true;
+
+   
+          request.added_by = sec_object.userid.Value;
+
+          request.date_added = DateTime.Now;
+          
+      
+
+      try
+      {
+
+          string decoded_{PrimaryColumn} = clsUtil.DecodeString(request.strMasterID);
+
+          request.{PrimaryColumn} = Convert.ToInt64(decoded_{PrimaryColumn});
+
+          ret = await _{TableName}Service.DeleteAsync(request.{PrimaryColumn}.Value);
+
+          return Json(new ResultEntity
+          {
+              Status_Code = (ret == true ? "200" : "400"),
+              Status_Result = (ret == true ? "Successful" : "Data Deletion Failed")
+          });
+      }
+      catch (Exception ex)
+      {
+          ret = false;
+
+          using (LogContext.PushProperty("SpecialLogType", true))
+          {
+              _logger.LogError(ex.ToString());
+          }
+
+          return Json(new ResultEntity
+          {
+              Status_Code = (ret == true ? "200" : "400"),
+              Status_Result = (ret == true ? "Operation Failed" : ex.Message)
+          });
+      }
+
+  }
+
+
+    }
+}

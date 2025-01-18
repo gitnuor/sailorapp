@@ -1,0 +1,130 @@
+﻿@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_plan_allocate_style_DTO;
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="form-group">
+
+            <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Embellishment*</label>
+            @await Component.InvokeAsync("S2Embellishment", new
+            {
+            ddlId = "ddl_s2embellishment",
+            selectedvalue = "",
+            cssclass = "form-control ddl_s2embellishment",
+            isRequired = false,
+            isReadOnly = false,
+            placeholder = "Select Embellishment",
+            preloaded="'"+JsonConvert.SerializeObject(Model.List_Embellishment)+"'",
+            model_parentid="modalcontainer_common",
+            isMultiple=true
+            })
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Sub-Category*</label>
+
+            @await Component.InvokeAsync("GenericDropdownList", new
+            {
+            ddlId = "ddl_item_product_sub_category",
+            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.List_ProductSubCategory)),
+            selectedvalue = Model.style_item_product_sub_category_id.ToString(),
+            cssclass = "form-control ddl_item_product_sub_category",
+            enable = true,
+            isRequired = true,
+            placeholder = "Select Sub Category"
+            })
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Quantity</label>
+
+            <input style="width:100%;text-align:right;" onchange="txtStyleQuantityChange(this)" value="@Model.style_quantity" type="number" min="0" class="border-gray-200 rounded-sm text-sm txtStyleQuantity"  />
+
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Color Code</label>
+
+            <input style="width:100%" type="text" value="@Model.color_code_gen" class="border-gray-200 rounded-sm text-sm txtStyleColorCode" />
+
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Total Given Size Quantity</label>
+
+            <input style="width:100%" value="@Model.style_quantity" disabled type="number" class="border-gray-200 rounded-sm text-sm txtTotalGivenSizeQuantity" />
+
+        </div>
+
+    </div>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-3">
+
+        <button type="button" class="btn btn-primary btnAddColor" onclick="btnAddColorClick(this);" style="margin-left: 0px;width:150px;margin-top:32px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Color</button>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table id="dtid" class="dtcolorcodestyle table dataTable table-striped table-bordered no-footer" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>
+                        <label class="  labelNormal">SL</label>
+                    </th>
+                    <th>
+                        <label class="labelNormal  ">Color Code</label>
+                    </th>
+
+                    @foreach (var objSize in Model.List_ColorInfo[0].List_ColorSizeInfo)
+                    {
+                        <th style="text-align:right">
+                            <label class="labelNormal ">@objSize.style_product_size</label>
+                        </th>
+                    }
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var color_index = 0;
+                }
+                @foreach (var objColor in Model.List_ColorInfo)
+                {
+                    string tr_id = color_index == 0 ? "tr_first" : "";
+                    <tr id="@tr_id">
+
+                        <td class="row_sl" style="text-align: center;">@color_index.ToString()</td>
+                        <td style="text-align: left;">
+                            <input type="color" class="border-gray-200 rounded-sm txtColorPicker" value="@objColor.color_code" style="width:30%;float:left;" onchange="LoadColorFromBox(this)" />
+                            <input value="@objColor.color_code" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" type="text" tran_va_plan_detl_style_id="@objColor.tran_va_plan_detl_style_id" tran_va_plan_detl_style_color_id="@objColor.tran_va_plan_detl_style_color_id" class="border-gray-200 rounded-sm txtColorCode" style="width:65%;float:right;" />
+                        </td>
+
+                        @foreach (var objSize in objColor.List_ColorSizeInfo)
+                        {
+                            <td>
+                                <input value="@objSize.style_color_size_quantity" style_product_size_group_detid="@objSize.style_product_size_group_detid" tran_va_plan_detl_style_color_id="@objSize.tran_va_plan_detl_style_color_id" tran_va_plan_detl_style_color_size_id="@objSize.tran_va_plan_detl_style_color_size_id" style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="@objSize.style_product_size_group_detid" onchange="ColorSizeQuantityChanged(this)" class="border-gray-200 rounded-sm txtColorSizeQuantity" />
+                            </td>
+                        }
+
+                    </tr>
+
+                    color_index++;
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+
+</div>

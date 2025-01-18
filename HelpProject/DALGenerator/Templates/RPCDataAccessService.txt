@@ -1,0 +1,61 @@
+
+using EPYSLSAILORAPP.Application.Interface;
+using EPYSLSAILORAPP.Domain.Entity;
+using EPYSLSAILORAPP.Application.DTO;
+using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Supabase;
+using EPYSLSAILORAPP.Domain.Statics;
+using static Dapper.SqlMapper;
+using Newtonsoft.Json;
+
+
+namespace EPYSLSAILORAPP.Infrastructure.Services
+{
+
+    public class RPC{TableName}Service : IRPC{TableName}Service
+    {
+
+        private readonly IConfiguration _configuration;
+        private readonly Client? _connectionSupabse;
+        private readonly IMapper _mapper;
+
+        public RPC{TableName}Service(IConfiguration configuration, IMapper mapper)
+        {
+
+            _mapper = mapper;
+            _configuration = configuration;
+            HttpClient httpClient = new HttpClient();
+            var supabaseKey = _configuration.GetValue<string>("supabaseKey");
+            var supabaseUrl = _configuration.GetValue<string>("supabaseUrl");
+            httpClient.DefaultRequestHeaders.Add("apikey", supabaseKey);
+            _connectionSupabse = new Client(supabaseUrl, supabaseKey, new SupabaseOptions { AutoConnectRealtime = false });
+        }
+
+
+        public async Task<List<rpc_{EntityName}_DTO>> GetAll{EntityName}Async({all_param_declaration})
+        {
+            try
+            {
+                await _connectionSupabse.InitializeAsync();
+
+               var objFilter = new Dictionary<string, object>();
+
+                {all_params}
+
+                var response = await _connectionSupabse.Rpc("{EntityName}", objFilter);
+
+                return  JsonConvert.DeserializeObject<List<rpc_{EntityName}_DTO>>(response.Content);
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }
+
+       
+    }
+
+}

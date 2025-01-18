@@ -1,0 +1,182 @@
+delete from public.tran_return_challan_receive_details;
+    delete from public.tran_return_challan_received;
+
+delete from public.tran_return_challan_details;
+    delete from public.tran_return_challan;
+
+delete from public.tran_outlet_receive_note_details;
+    delete from public.tran_outlet_receive_note;
+
+delete from public.tran_delivery_outlet_challan_details;
+    delete from public.tran_delivery_outlet_challan;
+
+
+delete from public.tran_distribution_plan_outlet_details;
+       delete from public.tran_distribution_plan_details;
+            delete from public.tran_distribution_plan;
+
+delete from public.tran_finish_product_receive_details;
+    delete from public.tran_finish_product_receive;
+	
+delete from public.tran_shop_floor_return_details;
+   delete from public.tran_shop_floor_return;
+
+delete from public.tran_packing_list_details;
+     delete from public.tran_packing_list;
+
+delete from public.tran_barcode;
+
+delete from public.tran_final_inspection_details;
+       delete from public.tran_final_inspection;
+
+delete from public.tran_finishing_production_process;
+delete from public.tran_finishing_receive;
+delete from public.tran_embellish_receive;
+delete from public.tran_embellish_delivery_challan;
+delete from public.tran_sub_contract_received;
+delete from public.tran_sub_contract_request;
+
+delete from public.tran_mcd_requisition_slip;
+
+delete from public.tran_sewing_output_details;
+    delete from public.tran_sewing_output;
+
+delete from public.tran_sewing_input_details;
+    delete from public.tran_sewing_input;
+
+delete from public.tran_sewing_allocation_plan_details_size;
+     delete from public.tran_sewing_allocation_plan_details;
+        delete from public.tran_sewing_allocation_plan;
+
+delete from  public.tran_cutting_color_batch_garment_part_bundle;
+delete from public.tran_cutting_color_batch_garment_part_details;
+delete from public.tran_cutting_color_batch_garment_part;
+delete from public.tran_cutting_color_batch_fabric_details;
+delete from public.tran_cutting_color_batch;
+delete from public.tran_cutting_color;
+delete from public.tran_cutting;
+
+delete from public.tran_pp_meeting;
+
+delete from public.tran_production_process_define;
+
+
+
+
+delete from public.tran_mcd_requisition_issue_details;
+    delete from public.tran_mcd_requisition_issue;
+
+ delete from public.tran_mcd_purchase_return;
+
+
+delete from public.tran_mcd_receive;
+
+delete from public.tran_scm_bill_submission;
+
+delete from public.tran_scm_po_details;
+   delete from public.tran_scm_po;
+
+delete from public.tran_fabric_allocation_req;
+
+delete from public.tran_service_work_order;
+
+delete from public.tran_purchase_requisition;
+       delete from public.tran_purchase_requisition_dtl;
+
+
+DELETE  FROM public.tran_tech_pack;
+delete from public.tran_plan_allocate;
+DELETE  FROM public.tran_designer_review;
+DELETE  FROM public.tran_pre_costing;
+DELETE  FROM public.tran_sample_order;
+DELETE  FROM public.tran_range_plan;
+DELETE  FROM public.tran_bp_year;
+
+
+
+
+delete from public.gen_item_stock_master;
+
+delete from public.gen_item_master;
+
+
+insert into style_item_product(
+  style_item_product_name ,style_item_type_id,style_product_type_id,style_item_origin_id,style_gender_id,style_master_category_id,added_by,date_added,fiscal_year_id,style_product_size_group_id
+)
+select style_item_product_name ,style_item_type_id,style_product_type_id,style_item_origin_id,style_gender_id,style_master_category_id,added_by,date_added,6,style_product_size_group_id from style_item_product where fiscal_year_id=1
+
+
+    ---create json object
+  select jsonb_agg(jsonb_build_object('unit_name', gisg.unit_name,
+                                         'gen_unit_id', gisg.gen_unit_id
+         ))
+     INTO genunitlist
+     from public.gen_unit gisg;
+
+ "C:/Program Files/PostgreSQL/16/bin/pg_dump.exe" --dbname=postgres --schema=public --table=public.\"gen_outlet\" --table=public.\"gen_season\" --table=public.\"gen_season_event_config\" --table=public.\"gen_season_event_config_detl\" --table=public.\"tran_bp_year\" --table=public.\"tran_bp_event\" --table=public.\"tran_bp_event_month\" --table=public.\"tran_bp_event_month_outlet\" --file=C:\Users\arifur.rahman\sailor_live_ver2-2024_03_11_11_14_15-dump.sql --clean --username=postgres.yssxprddxkmifpiamsdu --host=aws-0-ap-southeast-1.pooler.supabase.com --port=5432
+pg_dump process finished
+
+SELECT
+    column_name,
+    format_type(i, NULL) AS data_type,
+    CASE
+        WHEN j = 'i' THEN 'INPUT'
+        ELSE 'OUTPUT'
+    END
+FROM (
+    SELECT
+        unnest(proargnames) AS column_name,
+        unnest(proallargtypes) AS i, unnest(proargmodes) j
+           ,*
+    FROM
+        pg_proc
+    WHERE
+        proname = 'fn_get_calendar_chart_data' -- Replace with your function name
+) AS function_columns;
+
+CREATE OR REPLACE FUNCTION public.spname(
+    year_id_filter bigint
+)
+    RETURNS TABLE
+            (
+                stylesize_list_json         text,
+            )
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS
+$BODY$
+DECLARE
+    total_rows bigint;
+    data       record;
+Begin
+    RETURN QUERY
+        WITH cte_saved AS (
+        select query 1 --already saved
+            ),
+
+             cte_final AS (select *
+                           from cte_saved
+                           union
+                           select query 2--new data
+                           )
+
+
+        SELECT *,
+               COUNT(*) OVER () AS total_rows
+        FROM cte_final
+        OFFSET ((currnet_page - 1) * page_size) ROWS FETCH NEXT page_size ROWS ONLY;
+
+
+END;
+$BODY$;
+
+
+
+--maintainence 1st october 2024
+SELECT  calls, total_exec_time, rows,
+       100.0 * total_exec_time / sum(total_exec_time) OVER () as percentage,query
+FROM pg_stat_statements
+ORDER BY total_exec_time DESC;

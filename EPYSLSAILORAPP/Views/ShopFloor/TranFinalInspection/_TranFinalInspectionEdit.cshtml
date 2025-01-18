@@ -1,0 +1,254 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_final_inspection_DTO;
+@{
+    ViewBag.Title = "TranFinalInspection Edit";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Final Inspection Add</h6>  
+            <div class="row">
+
+                <div class="col-md-10"> </div>
+                <div class="col-md-2" style="text-align:right">
+                    <button type="button" class="btn btn-primary" onclick="SendForApproval(this);"><i class="fa fa-file-open"></i>Send For Approval</button>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techpack</label>
+                        <input style="width:100%" readonly asp-for="techpack_number" type="text" class="border-#d1cccc-200 form-control " />
+                        <input type="hidden" id="techpack_id" value="@Model.techpack_id">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Final Inspection No</label>
+                        <input style="width:100%" readonly asp-for="final_inspection_no" type="text" class="border-#d1cccc-200 form-control " />
+                       
+                        <input type="hidden" id="tran_final_inspection_id" value="@Model.tran_final_inspection_id">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Final Inspection Date</label>
+                        <input style="width:100%" asp-for="final_inspection_date" type="date" class="border-#d1cccc-200 form-control " />
+                        
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techapack Date</label>
+                        <input style="width:100%" readonly asp-for="techpack_date" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Season</label>
+                        <input style="width:100%" readonly asp-for="event_title" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Product Category</label>
+                        <input style="width:100%" readonly asp-for="style_item_product_name" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Code</label>
+                        <input style="width:100%" readonly asp-for="teckpack_style_code" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Merchandiser</label>
+                        <input style="width:100%" readonly asp-for="merchandiser_name" type="text" class="border-#d1cccc-200 form-control" />
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Designer</label>
+                        <input style="width:100%" readonly asp-for="designer_name" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note</label>
+                        <input style="width:100%" asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="note" class="text-danger"></span>
+                    </div>
+                </div>
+
+           
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <table style="font-size:9px;" id="DTinspectionDetails" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th><label class="labelNormal">Color</label></th>
+                            <th><label class="labelNormal">Finishing Quantity</label></th>
+                            <th><label class="labelNormal">Already Inspected Quantity</label></th>
+                            <th><label class="labelNormal">Inspection Quantity</label></th>
+                            <th><label class="labelNormal">Balance Quantity</label></th>
+                            <th><label class="labelNormal">Proposed MRP</label></th>
+                            <th><label class="labelNormal">Final MRP</label></th>
+                            <th><label class="labelNormal">Note</label></th>
+
+
+
+                        </tr>
+                    </thead>
+           
+                    <tbody>
+                            @{
+                                int count = 1;
+                            }
+                            @foreach (var obj in Model.TranFinalInspectionDetails_List)
+                            {
+                            <tr>
+                                <th style="display:none"><input type='text' disabled class='form-control color_code' value=@obj.color_code></th>
+                                <th style="background-color:@obj.color_code"></th>
+                                <td><input type='number' disabled class='form-control production_qty' value=@obj.production_qty></td>
+                                <td><input type='number' disabled class='form-control already_inspected_quantity' value=@obj.already_inspected_quantity></td>
+                                <td><input type='number' class='form-control inspection_qty' value="@obj.inspection_qty" onfocusout="CalculateRemainingedit(this)"></td>
+                                <td><input type='number' disabled class='form-control balance_qty' value="@obj.balance_qty"></td>
+                                <td><input type='number' class='form-control proposed_mrp' value="@obj.proposed_mrp" onfocusout="CalculateFinalMRPedit(this)"></td>
+                                <td><input type='number' disabled class='form-control final_mrp' value=@obj.final_mrp></td>
+                                <td><input type='text'  class='form-control note' value=@obj.note></td>
+                            </tr>
+
+                                count++;
+                            }
+
+
+                    </tbody>
+               
+                </table>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-10"> </div>
+            <div class="col-md-2" style="text-align:right">
+                <button type="button" class="btn btn-success " onclick="UpdateTranFinalInspection(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+
+
+</form>
+
+
+
+
+
+
+<script>
+
+  
+    function CalculateRemainingedit(e) {
+        var inspection_quantity = parseInt($(e).closest("tr").find(".inspection_qty").val());
+        var production_quantity = parseInt($(e).closest("tr").find(".production_qty").val());
+        var already_inspected_quantity = parseInt($(e).closest("tr").find(".already_inspected_quantity").val());
+        $(e).closest("tr").find(".balance_qty").val(parseInt(production_quantity - inspection_quantity - already_inspected_quantity));
+    }
+    function CalculateFinalMRPedit(e) {
+
+        $(e).closest("tr").find(".final_mrp").val(parseInt(e.value));
+    }
+</script>
+
+
+

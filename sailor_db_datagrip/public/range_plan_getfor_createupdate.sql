@@ -1,0 +1,151 @@
+create function range_plan_getfor_createupdate(year_id_filter bigint, event_id_filter bigint)
+    returns TABLE(is_separate_price boolean, event_id bigint, tran_range_plan_event_id bigint, is_finalized boolean, tran_bp_event_id bigint, tran_bp_year_id bigint, total_rangeplan_mrp_value numeric, total_rangeplan_quantity bigint, total_rangeplan_cpu_value numeric, style_product_size_group_id bigint, is_submitted boolean, is_approved boolean, approved_by bigint, approve_date timestamp with time zone, approve_remarks text, remarks text, bp_yearly_gross_sales numeric, event_gross_sales numeric, range_plan_id bigint, range_plan_detail_id bigint, range_plan_quantity bigint, mrp_per_pc_value numeric, mrp_value numeric, cpu_per_pc_value numeric, cpu_value numeric, priority_id bigint, prev_year_quantity bigint, prev_year_efficiency numeric, style_item_product_name character varying, style_item_type_name character varying, style_product_type_name character varying, style_item_origin_name text, style_gender_name text, master_category_name character varying, added_by bigint, date_added timestamp with time zone, updated_by bigint, date_updated timestamp with time zone, style_item_product_id bigint, style_item_type_id bigint, style_product_type_id bigint, style_item_origin_id bigint, style_gender_id bigint, style_master_category_id bigint)
+    language plpgsql
+as
+$$
+
+ Begin
+ RETURN QUERY
+ 
+WITH cte_saved AS (
+    select
+	
+spsg.is_separate_price,
+tbe.event_id,
+trpe.tran_range_plan_event_id,
+	trpe.is_finalized,
+trpe.tran_bp_event_id,
+tby.tran_bp_year_id,
+trpe.total_mrp_value as total_rangeplan_mrp_value ,
+trpe.total_range_plan_quantity as total_rangeplan_quantity,
+trpe.total_cpu_value as total_rangeplan_cpu_value,
+vp.style_product_size_group_id,
+rp.is_submitted,
+    rp.is_approved,
+    rp.approved_by,
+    rp.approve_date,
+    rp.approve_remarks,
+	rp.remarks,
+
+tby.gross_sales as bp_yearly_gross_sales,
+tbe.event_gross_sales,
+
+rpd.range_plan_id,rpd.range_plan_detail_id,
+
+rpd.range_plan_quantity,
+rpd.mrp_per_pc_value,
+rpd.mrp_value,
+rpd.cpu_per_pc_value,
+rpd.cpu_value,
+rpd.priority_id,
+rpd.prev_year_quantity,
+rpd.prev_year_efficiency,
+
+vp.style_item_product_name, 
+vp.style_item_type_name, 
+vp.style_product_type_name, 
+vp.style_item_origin_name, 
+vp.style_gender_name, 
+
+vp.master_category_name, 
+rpd.added_by, rpd.date_added, 
+rpd.updated_by, 
+rpd.date_updated, 
+vp.style_item_product_id, 
+vp.style_item_type_id, 
+vp.style_product_type_id, 
+vp.style_item_origin_id, 
+vp.style_gender_id, 
+vp.style_master_category_id
+
+from vw_style_item_product vp
+inner join public.style_product_size_group spsg 
+on spsg.style_product_size_group_id=vp.style_product_size_group_id
+left outer join tran_range_plan_details rpd on rpd.style_item_product_id=vp.style_item_product_id
+
+left outer join tran_range_plan rp on rp.range_plan_id=rpd.range_plan_id
+left outer join tran_bp_year tby on tby.fiscal_year_id=vp.fiscal_year_id
+left outer join tran_bp_event tbe on tbe.tran_bp_year_id=tby.tran_bp_year_id
+and rpd.tran_bp_event_id=tbe.tran_bp_event_id
+left outer join public.tran_range_plan_events trpe 
+on  trpe.tran_bp_event_id=tbe.tran_bp_event_id
+
+where vp.fiscal_year_id	=year_id_filter
+
+and tbe.event_id=event_id_filter
+)
+
+select * from cte_saved
+union
+select
+spsg.is_separate_price,
+tbe.event_id,
+(select inr.tran_range_plan_event_id from public.tran_range_plan_events inr 
+ where inr.tran_bp_event_id=tbe.tran_bp_event_id) tran_range_plan_event_id,
+NULL as is_finalized,
+tbe.tran_bp_event_id,
+tby.tran_bp_year_id,
+0 as total_rangeplan_mrp_value ,
+0 as total_rangeplan_quantity,
+0 as total_rangeplan_cpu_value,
+vp.style_product_size_group_id,
+NULL as is_submitted,
+   NULL as is_approved,
+    NULL as approved_by,
+    NULL as approve_date,
+    '' as approve_remarks,
+	'' as remarks,
+
+tby.gross_sales as bp_yearly_gross_sales,
+tbe.event_gross_sales,
+
+NULL as range_plan_id,NULL as range_plan_detail_id,
+
+NULL as range_plan_quantity,
+NULL as mrp_per_pc_value,
+NULL as mrp_value,
+NULL as cpu_per_pc_value,
+NULL as cpu_value,
+NULL as priority_id,
+NULL as prev_year_quantity,
+NULL as prev_year_efficiency,
+
+vp.style_item_product_name, 
+vp.style_item_type_name, 
+vp.style_product_type_name, 
+vp.style_item_origin_name, 
+vp.style_gender_name, 
+
+vp.master_category_name, 
+NULL as  added_by, NULL as date_added, 
+NULL as updated_by, 
+NULL as date_updated, 
+vp.style_item_product_id, 
+vp.style_item_type_id, 
+vp.style_product_type_id, 
+vp.style_item_origin_id, 
+vp.style_gender_id, 
+vp.style_master_category_id
+
+from vw_style_item_product vp
+inner join public.style_product_size_group spsg 
+on spsg.style_product_size_group_id=vp.style_product_size_group_id
+
+left outer join tran_bp_year tby on tby.fiscal_year_id=vp.fiscal_year_id
+left outer join tran_bp_event tbe on tbe.tran_bp_year_id=tby.tran_bp_year_id
+
+where vp.fiscal_year_id	=year_id_filter
+
+and tbe.event_id=event_id_filter and vp.style_item_product_id not in (select t.style_item_product_id from cte_saved t);
+	
+END;
+$$;
+
+alter function range_plan_getfor_createupdate(bigint, bigint) owner to postgres;
+
+grant execute on function range_plan_getfor_createupdate(bigint, bigint) to anon;
+
+grant execute on function range_plan_getfor_createupdate(bigint, bigint) to authenticated;
+
+grant execute on function range_plan_getfor_createupdate(bigint, bigint) to service_role;
+

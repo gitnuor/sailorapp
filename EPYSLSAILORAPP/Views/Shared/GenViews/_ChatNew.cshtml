@@ -1,0 +1,59 @@
+﻿@using Newtonsoft.Json;
+
+@{
+  
+    Layout = null;
+}
+<div class="card card-outline card-primary">
+    <div class="card-header text-center">
+        <a class="h1"><b>New Group Message</b></a>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Chat Group</label>
+
+                    @await Component.InvokeAsync("S2GenChatGroup", new
+                    {
+                    ddlId = "ddl_Chat_Group",
+                    selectedvalue = "",
+                    cssclass = "form-control ddl_Chat_Group",
+                    isRequired = false,
+                    isReadOnly = false,
+                    placeholder = "Select Chat Group",
+                    preloaded="",
+                    model_parentid="modalcontainer_chat"
+                    })
+                </div>
+            </div>
+          
+        </div>
+      
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Message</label>
+
+
+                    <input type="text" id="txtMessage" class="form-control" />
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <button style="width:100%" type="button" class="btn btn-primary  " id="btnSend" onclick="SendGroupChat(this);"><i class="fa fa-file-pen"></i>&nbsp;Send</button>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /.card-body -->
+</div>
+

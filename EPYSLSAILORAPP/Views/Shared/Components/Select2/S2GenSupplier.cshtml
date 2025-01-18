@@ -1,0 +1,149 @@
+@{
+
+    Layout = null;
+}
+@{
+    string selectid = ViewBag.selectid;
+    int delay = 2;
+    int minimumInputLength = 0;
+    bool isReadOnly = ViewBag.isReadOnly;
+
+    string strisReadOnly = isReadOnly.ToString().ToLower();
+
+    bool isRequired = ViewBag.isRequired;
+
+
+    string placeholder = ViewBag.placeholder;
+    string ddlcss = ViewBag.ddlcss;
+
+
+    if (isRequired == true)
+    {
+        <select selectedvalue="@ViewBag.data" name="@selectid" id="@selectid" class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box"
+                data-val="true" data-val-required="Please Select">
+            <option>@placeholder</option>
+        </select>
+        <span class="field-validation-valid text-danger" data-valmsg-for="@selectid" data-valmsg-replace="true"></span>
+    }
+    else
+    {
+        <select selectedvalue="@ViewBag.data" name="@selectid" id="@selectid" class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box">
+            <option>@placeholder</option>
+        </select>
+
+    }
+}
+
+
+<script type="text/javascript">
+
+    var model_parentid = '@ViewBag.model_parentid';
+    
+    function LoadGenSupplierDropDownByClassForTechpackID(tech_pack_id, model_parentid, ddlclass) {
+
+        $.each($('.' + ddlclass), function (key, val) {
+
+
+            var select2Options = returnSelect2Options();
+            select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+            select2Options.minimumInputLength = @minimumInputLength;
+            select2Options.multiple = false;
+            select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid) : null,
+                select2Options.disabled = @strisReadOnly.ToLower();
+            select2Options.ajax.url = '/Select2/GenSupplierInformationDetailList', select2Options.ajax.type = 'GET';
+            select2Options.ajax.data = function (params) {
+                return {
+
+                    pageSize: 10,
+                    pageNum: params.page || 1,
+                    searchTerm: params.term || "",
+                    tech_pack_id: tech_pack_id
+                };
+            };
+            select2Options.ajax.processResults = function (data, params) {
+                params.page = params.page || 1;
+
+                if (data.data != null) {
+                    return {
+                        results: $.map(data.data, function (obj) {
+                            return { id: obj.id, text: obj.text, contact_person: obj.contact_person, office_address: obj.office_address };
+                        }),
+                        pagination: {
+                            more: (params.page * 10) < data.recordstotal
+                        }
+                    }
+                };
+            };
+            //params
+
+            $("#" + $(val).attr("id")).select2(
+                select2Options
+            );
+
+            if ($(val).attr("selectedvalue")) {
+
+                setTimeout(function () {
+                    $("#" + $(ddl).attr("id")).empty();
+                    $("#" + $(val).attr("id")).append('<option value="' + JSON.parse($(val).attr("selectedvalue")).id + '" selected="selected"">' + JSON.parse($(val).attr("selectedvalue")).text + '</option>');
+                    $("#" + $(val).attr("id")).select2(select2Options);
+                    $("#" + $(val).attr("id")).trigger('change');
+                }, 0);
+
+            }
+
+
+        })
+
+
+    }
+
+    $(function () {
+
+        var select2Options = returnSelect2Options();
+        select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+        select2Options.minimumInputLength = @minimumInputLength;
+        select2Options.multiple = false;
+        select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid) : null,
+            select2Options.disabled = @strisReadOnly.ToLower();
+        select2Options.ajax.url = '/Select2/GenSupplierInformationDetailList', select2Options.ajax.type = 'GET';
+        select2Options.ajax.data = function (params) {
+            return {
+                pageSize: 10,
+                pageNum: params.page || 1,
+                searchTerm: params.term || ""
+            };
+        };
+        select2Options.ajax.processResults = function (data, params) {
+            params.page = params.page || 1;
+
+            if (data.data != null) {
+                return {
+                    results: $.map(data.data, function (obj) {
+                        return { id: obj.id, text: obj.text, contact_person: obj.contact_person, office_address: obj.office_address };
+                    }),
+                    pagination: {
+                        more: (params.page * 10) < data.recordstotal
+                    }
+                }
+            };
+        };
+       
+
+       $('#@selectid').select2(
+            select2Options
+        );
+
+        if ($('#@selectid').attr("selectedvalue")) {
+
+               $('#@selectid').append('<option value="' + JSON.parse($('#@selectid').attr("selectedvalue")).id + '" selected="selected"">' + JSON.parse($('#@selectid').attr("selectedvalue")).text + '</option>');
+               $('#@selectid').select2(select2Options);
+               $('#@selectid').trigger('change');
+          
+        }
+
+    });
+
+</script>
+
+
+

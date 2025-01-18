@@ -1,0 +1,1047 @@
+﻿@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@using System.Text.RegularExpressions
+@inject AutoMapper.IMapper _mapper;
+@model EPYSLSAILORAPP.Application.DTO.Tran_DesignMgt.tran_tech_pack_DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+</style>
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <input type="hidden" asp-for="designer_member_id">
+    <input type="hidden" asp-for="tran_techpack_id">
+    <input type="hidden" asp-for="tran_designer_review_id">
+    <input type="hidden" asp-for="tran_va_plan_detl_id">
+    <input type="hidden" asp-for="tran_sample_order_id">
+    <input type="hidden" asp-for="techpack_number">
+    <div class="card">
+        <div class="card-header">
+
+            <div class="row">
+                <div class="col-md-6" style="margin-bottom: 5px;text-align:left;">
+                    <h3 class="card-title">Tech Pack Acknoledge</h3>
+                </div>
+                <div class="col-md-6" style="margin-bottom: 5px;text-align:right;">
+                    <button style="width:300px;" type="button" class="btn btn-primary" id="btnTechPackAck" onclick="TechPackAck(this);"><i class="fa fa-file-open"></i>&nbsp;Acknowledge</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body" style="max-height:500px;overflow-y:scroll;">
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <img style="width:100%;height:60px;" src="~/images/sailor.png" />
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            DESIGNER NAME
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.team_member_marketing_name" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            SEASON
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.season_name" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            FISCAL YEAR
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.year_name" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            LABEL
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            TECH PACK NO
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.techpack_number" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            MERCHANT
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.merchant_name" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            SUPPLIER NAME
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="OWN" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            STYLE CODE
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.style_code" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            MASTER CATEGORY
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.master_category_name" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            CATEGORY NAME
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            PRODUCT SEGMENT
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            GENDER
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.style_gender_name" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            PRODUCT COMPOSITION
+                        </div>
+
+                        <div class="col-md-6">
+                            @if (Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.obj_product_composition != null)
+                            {
+                                <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.obj_product_composition.product_composition" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+                            }
+                            else
+                            {
+                                <input disabled value="" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                            }
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            FABRICATION
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <input disabled value="@ViewBag.Fabrication" type="text" class="border-#d1cccc-200 form-control  " />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            BODY FABRIC/MCD CODE
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            COLORS
+                        </div>
+
+                        <div class="col-md-6">
+
+
+                            @foreach (var objColor in Model.TechPack_ColorList)
+                            {
+                                string pattern = @"#\w+";
+
+                                Match match = Regex.Match(@objColor.color_code, pattern);
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="color" class="border-gray-200 rounded-sm txtColorPicker" value="@match.Value" style="width:30%;float:left;" onchange="LoadColorFromBox(this)" />
+                                        <input value="@objColor.color_code" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" type="text" class="border-gray-200 rounded-sm txtColorCode" style="width:65%;float:right;" />
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            SAMPLE SIZE
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <input disabled value="@ViewBag.allSampleSize" type="text" class="border-#d1cccc-200 form-control  " />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            SPI
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.spi" type="text" class="border-#d1cccc-200 form-control  " />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            FIT NAME
+                        </div>
+
+                        <div class="col-md-6">
+                            @if (Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.objt_fit_name != null)
+                            {
+                                <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.objt_fit_name.fit_info" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+                            }
+                            else
+                            {
+                                <input disabled value="" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                            }
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            PATTERN
+                        </div>
+
+                        <div class="col-md-6">
+                            @if (Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.obj_pattern != null)
+                            {
+                                <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.obj_pattern.pattern_info" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+                            }
+                            else
+                            {
+                                <input disabled value="" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                            }
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            SLEEVE/LENGTH
+                        </div>
+
+                        <div class="col-md-6">
+                            @if (Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.obj_sleeve_details != null)
+                            {
+                                <input disabled value="@Model.rpc_proc_sp_get_tech_pack_data_edit_DTO.obj_sleeve_details.sleeve_info" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+                            }
+                            else
+                            {
+                                <input disabled value="" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                            }
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            EMBELLISHMENT
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@ViewBag.All_Embellishments" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            FABRIC COMPOSITION
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@ViewBag.FabricComposition" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            ISSUE DATE
+                        </div>
+
+                        <div class="col-md-6">
+                            <input disabled value="@Model.techpack_date.Value.ToString("dd-MMM-yyyy")" type="text" class="border-#d1cccc-200 form-control  color_code_gen" />
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            BOTTOM FABRRIC MCD/COLOR
+                        </div>
+
+                        <div class="col-md-6">
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            DOPATT FABRIC MCD/COLOR
+                        </div>
+
+                        <div class="col-md-6">
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            @{
+                var frontimages = Model.List_base64String_File.Where(p => p.imagetype == EPYSLSAILORAPP.Domain.Image_Position_Type.Front.ToString()).ToList();
+                var backimages = Model.List_base64String_File.Where(p => p.imagetype == EPYSLSAILORAPP.Domain.Image_Position_Type.Back.ToString()).ToList();
+                var tsimages = Model.List_base64String_Techpack_File.Where(p => p.imagetype == EPYSLSAILORAPP.Domain.Image_Position_Type.TechSheet.ToString()).ToList();
+                var embell_images = Model.List_base64String_Techpack_File.Where(p => p.imagetype == EPYSLSAILORAPP.Domain.Image_Position_Type.Embellishment.ToString()).ToList();
+                var measurement_images = Model.List_base64String_Techpack_File.Where(p => p.imagetype == EPYSLSAILORAPP.Domain.Image_Position_Type.Measurement_Chart.ToString()).ToList();
+
+            }
+            <div class="row">
+
+                <div class="col-md-2">
+
+                    @{
+                        if (frontimages.Count() > 0)
+                        {
+                            var firstiamge = frontimages.FirstOrDefault().base64string;
+
+                            <img onclick="ShowImage(this);" style="width: 100%; height: 200px;" src="@firstiamge" />
+
+
+                        }
+                    }
+
+                </div>
+                <div class="col-md-2">
+                    @{
+                        if (frontimages.Count() > 1)
+                        {
+                            var secondiamge = frontimages[1].base64string;
+
+                            <img onclick="ShowImage(this);" style="width: 100%; height: 200px;" src="@secondiamge" />
+
+
+                        }
+                    }
+                </div>
+                <div class="col-md-2">
+
+                    @{
+                        if (backimages.Count() > 0)
+                        {
+                            var firstbackiamge = backimages.FirstOrDefault().base64string;
+
+                            <img onclick="ShowImage(this);" style="width: 100%; height: 200px;" src="@firstbackiamge" />
+
+
+                        }
+                    }
+                </div>
+                <div class="col-md-6">
+
+                    <table style="font-size:10px;" id="DTCheckList" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th><label class="labelNormal">Check List</label></th>
+
+                                <th><label class="labelNormal">Status</label></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">Productin Availability Path</label>
+
+                                </td>
+                                <td>
+                                    <select asp-for="production_availability_path" class="form-control production_availability_path">
+                                        <option value="Inhouse Production">Inhouse Production</option>
+                                        <option value="Sub-Contract">Sub-Contract</option>
+                                        <option value="Full FOB">Full FOB</option>
+                                        <option value="Trading">Trading</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">Vat</label>
+
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.vat,"Yes")
+                                            <label for="html">Yes</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.vat,"No")
+                                            <label for="css">No</label>
+                                        </div>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">Photoshoot</label>
+
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.photoshoot,"Yes")
+                                            <label for="html">Yes</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.photoshoot,"No")
+                                            <label for="css">No</label>
+                                        </div>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">E-Com</label>
+
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.e_com,"Yes")
+                                            <label for="html">Yes</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.e_com,"No")
+                                            <label for="css">No</label>
+                                        </div>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">Sample OK</label>
+
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.sample_ok,"Yes")
+                                            <label for="html">Yes</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.sample_ok,"No")
+                                            <label for="css">No</label>
+                                        </div>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">Follow Style</label>
+
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.follow_style,"Yes")
+                                            <label for="html">Yes</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.follow_style,"No")
+                                            <label for="css">No</label>
+                                        </div>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">Need Production Approval</label>
+
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.need_production_approval,"Yes")
+                                            <label for="html">Yes</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.need_production_approval,"No")
+                                            <label for="css">No</label>
+                                        </div>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">Iron</label>
+
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.iron,"Yes")
+                                            <label for="html">Yes</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.iron,"No")
+                                            <label for="css">No</label>
+                                        </div>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">Fabric Allocation</label>
+
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.fabric_allocation,"Yes")
+                                            <label for="html">Yes</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.RadioButtonFor(m => m.fabric_allocation,"No")
+                                            <label for="css">No</label>
+                                        </div>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="labelNormal" style="">Additional Comments </label>
+
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" asp-for="additional_comments" />
+                                </td>
+                            </tr>
+                        </tbody>
+
+
+
+                    </table>
+
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    @{
+                        if (tsimages.Count() > 0)
+                        {
+                            var first_ts_iamge = tsimages.FirstOrDefault().base64string;
+
+                            <img onclick="ShowImage(this);" style="width: 100%; height: 800px;" src="@first_ts_iamge" />
+
+                        }
+                    }
+
+                </div>
+
+
+            </div>
+            @{
+                <div class="row">
+
+                    <div class="col-md-12">
+
+
+                        @if (tsimages.Count() > 1)
+                        {
+                            var second_ts_iamge = tsimages[1].base64string;
+
+                            <img onclick="ShowImage(this);" style="width: 100%; height: 800px;" src="@second_ts_iamge" />
+
+                        }
+
+
+                    </div>
+
+
+                </div>
+            }
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    @{
+                        if (embell_images.Count() > 0)
+                        {
+                            var first_embell_images = embell_images.FirstOrDefault().base64string;
+
+                            <img onclick="ShowImage(this);" style="width: 100%; height: 800px;" src="@first_embell_images" />
+
+                        }
+                    }
+
+                </div>
+
+
+            </div>
+            @{
+                <div class="row">
+
+                    <div class="col-md-12">
+
+
+                        @if (embell_images.Count() > 1)
+                        {
+                            var second_embell_images = embell_images[1].base64string;
+
+                            <img onclick="ShowImage(this);" style="width: 100%; height: 800px;" src="@second_embell_images" />
+
+                        }
+
+
+                    </div>
+
+
+                </div>
+            }
+            @{
+                <div class="row">
+
+                    <div class="col-md-12">
+
+
+                        @if (measurement_images.Count() > 0)
+                        {
+                            var first_measurement_iamge = measurement_images.FirstOrDefault().base64string;
+
+                            <img onclick="ShowImage(this);" style="width: 100%; height: 800px;" src="@first_measurement_iamge" />
+
+                        }
+
+
+                    </div>
+
+                </div>
+            }
+            @{
+                <div class="row">
+
+                    <div class="col-md-12">
+
+
+                        @if (measurement_images.Count() > 1)
+                        {
+                            var second_measurement_iamge = measurement_images[1].base64string;
+
+                            <img onclick="ShowImage(this);" style="width: 100%; height: 800px;" src="@second_measurement_iamge" />
+
+                        }
+
+
+                    </div>
+
+                </div>
+            }
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box">
+                                @{
+                                    var color_index = 1;
+                                }
+                                <table style="font-size:10px;" id="DTTranFabricDetails" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th><label class="labelNormal "> SL</label></th>
+
+                                            <th><label class="labelNormal "> Description</label></th>
+                                            <th><label class="labelNormal "> Material</label></th>
+
+                                            <th style="width:300px;"><label class="labelNormal">Material Type & Composition</label></th>
+                                            <th><label class="labelNormal ">Placement</label></th>
+                                            @foreach (var objColor in Model.TechPack_ColorList)
+                                            {
+                                                <th><label class="labelNormal ">Combo-@color_index <br />Material Code/Color</label></th>
+                                                <th><label class="labelNormal ">Con/Pc</label></th>
+                                                <th><label class="labelNormal "> Total Qnty</label></th>
+
+                                                color_index++;
+                                            }
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            var sl = 1;
+                                            Int64? total_quantity = 0;
+                                            foreach (var objdet in Model.List_PreCostingDet)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <label class="labelNormal ">@sl.ToString()</label>
+                                                    </td>
+                                                    <td>
+                                                        <label class="labelNormal ">@objdet.structure_group_name</label>
+                                                    </td>
+                                                    <td>
+                                                        <label class="labelNormal ">@objdet.sub_group_name</label>
+                                                    </td>
+                                                    <td>
+                                                        <label class="labelNormal ">@objdet.all_segment_text</label>
+                                                    </td>
+
+                                                    <td>
+                                                        @{
+                                                            var placementtext = "";
+
+                                                            if (objdet.List_placement_info != null)
+                                                            {
+                                                                foreach (var objdetpl in objdet.List_placement_info)
+                                                                {
+                                                                    placementtext += objdetpl.placement + " + ";
+                                                                }
+                                                            }
+
+                                                            foreach (var objColor in Model.TechPack_ColorList)
+                                                            {
+                                                                total_quantity += objColor.List_ColorSize.Sum(p => p.style_color_size_quantity);
+                                                            }
+
+                                                            var total_req = total_quantity * objdet.order_quantity;
+
+                                                        }
+                                                        <label class="labelNormal ">@placementtext</label>
+                                                    </td>
+
+                                                    @foreach (var objColor in Model.TechPack_ColorList)
+                                                        {
+                                                        string pattern = @"#\w+";
+
+                                                        Match match = Regex.Match(@objColor.color_code, pattern);
+                                                        <td>
+                                                            <input type="color" class="border-gray-200 rounded-sm txtColorPicker" value="@match.Value" style="width:35%;float:left;" onchange="LoadColorFromBox(this)" />
+                                                            <input value="@objColor.color_code" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" type="text"  class="border-gray-200 rounded-sm txtColorCode" style="width:60%;float:right;" />
+                                                        </td>
+                                                        <td>
+                                                            @{
+                                                                var qnty = objColor.List_ColorSize.Sum(p => p.style_color_size_quantity).Value;
+                                                                var totalqnty = objdet.order_quantity * qnty;
+                                                            }
+                                                            <label class="labelNormal ">@objdet.order_quantity @objdet.measurement_unit</label>
+                                                        </td>
+                                                        <td>
+                                                            <label class="labelNormal ">@totalqnty.Value.ToString("#.##") @objdet.measurement_unit</label>
+                                                        </td>
+
+                                                        }
+                       
+                                                </tr>
+
+                                                sl++;
+
+                                            }
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <table id="dtcolorcodestyle" class="dtcolorcodestyle table dataTable table-striped table-bordered no-footer" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label class="  labelNormal">SL</label>
+                                </th>
+                                <th>
+                                    <label class="labelNormal  ">Color Code</label>
+                                </th>
+
+                                @foreach (var objSize in Model.Color_Group_Details)
+                                {
+                                    <th style="text-align:right">
+                                        <label class="labelNormal ">@objSize.style_product_size</label>
+                                    </th>
+                                }
+                                <th>
+                                    <label class="labelNormal  ">Total QTY</label>
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                color_index = 1;
+                                total_quantity = 0;
+                            }
+                            @foreach (var objColor in Model.TechPack_ColorList)
+                            {
+                                string tr_id = color_index == 1 ? "tr_first" : "";
+                                var row_total = objColor.List_ColorSize.Sum(p => p.style_color_size_quantity).Value;
+                                total_quantity += row_total;
+                                string pattern = @"#\w+";
+
+                                Match match = Regex.Match(@objColor.color_code, pattern);
+                                <tr id="@tr_id">
+
+                                    <td class="row_sl" style="text-align: center;">@color_index.ToString()</td>
+                                    <td style="text-align: left;">
+                                        <input type="color" class="border-gray-200 rounded-sm txtColorPicker" value="@match.Value" style="width:30%;float:left;" onchange="LoadColorFromBox(this)" />
+                                        <input value="@objColor.color_code" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" type="text" tran_va_plan_detl_style_color_id="@objColor.tran_va_plan_detl_style_color_id" class="border-gray-200 rounded-sm txtColorCode" style="width:65%;float:right;" />
+                                    </td>
+
+                                    @foreach (var objSize in objColor.List_ColorSize)
+                                    {
+                                        <td>
+                                            <input onchange="ColorSizeQuantityChanged(this);" value="@objSize.style_color_size_quantity" style_product_size_group_detid="@objSize.style_product_size_group_detid" style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="@objSize.style_product_size_group_detid" class="border-gray-200 rounded-sm txtColorSizeQuantity" />
+                                        </td>
+
+                                    }
+                                    <td>
+                                        <input disabled value="@row_total.ToString("#.##")" style="text-align: right;width:100%" type="number" min="0" class="border-gray-200 rounded-sm " />
+                                    </td>
+                                </tr>
+
+                                color_index++;
+                            }
+                            <tr>
+
+                                <td class="row_sl" style="text-align: center;" colspan="2">G. TOTAL QTY</td>
+
+
+                                @foreach (var objSize in Model.Color_Group_Details)
+                                {
+                                    <td>
+                                    </td>
+
+                                }
+                                <td>
+                                    <input disabled value="@total_quantity.Value.ToString("#.##")" style="text-align: right;width:100%" type="number" min="0" class="border-gray-200 rounded-sm " />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+
+</form>
+
+
+<script>
+    var saved_images = '@Html.Raw(JsonConvert.SerializeObject(Model.List_base64String_Techpack_File))';
+
+    var saved_image_list = JSON.parse(saved_images);
+
+    listAttachments = listAttachments.concat(saved_image_list);
+
+</script>
+
+
+
+

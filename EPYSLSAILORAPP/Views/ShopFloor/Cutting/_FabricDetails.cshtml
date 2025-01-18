@@ -1,0 +1,120 @@
+@using Newtonsoft.Json;
+@model List<EPYSLSAILORAPP.Domain.DTO.fabric_details_DTO>;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<form method="POST" id="frmAddFabric" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;" id="DTTranFabricDetailsList" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                      
+                            <th><label class="labelNormal">Select</label></th>
+                            <th><label class="labelNormal">Fabric Code</label></th>
+                            <th><label class="labelNormal">Fabric Name</label></th>
+                            <th><label class="labelNormal">M.Unit</label></th>
+                            <th><label class="labelNormal">Booking Quantity</label></th>
+                            <th><label class="labelNormal">Received  Quantity</label></th>
+                            <th><label class="labelNormal">Cutting Input Quantity</label></th>
+                            <th><label class="labelNormal">Number of Lay</label></th>
+                      
+                       
+                 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                        }
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td style="text-align:center"><input type='checkbox' class='form-control is_select' style="height:15px;width:15px;"></td>
+                                <td><input type='text' disabled class='form-control item_id' value="@obj.gen_item_master_id"></td>
+                                <td><input type='text' disabled class='form-control item_name' value="@obj.item_name"></td>
+                                <td><input type='text' disabled class='form-control measurement_unit' value="@obj.measurement_unit"></td>
+                                <td style="display:none"><input type='text' class='form-control measurement_unit_detail_id' value="@obj.measurement_unit_detail_id"></td>
+                                <td><input type='text' disabled class='form-control booking_quantity' value="@obj.booking_quantity"></td>
+                                <td><input type='text' disabled class='form-control issue_quantity' value="@obj.issue_quantity"></td>
+                                <td><input type='number'  class='form-control input_quantity'></td>
+                                <td><input type='number'  class='form-control no_of_lay'></td>
+                               
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2" style="text-align:right">
+            <button type="button" class="btn btn-success" onclick="AddFabric();"><i class="fa fa-save"></i>&nbsp;&nbsp;Add</button>
+
+        </div>
+      
+    </div>
+
+</form>
+
+<script>
+
+    $(".addFabricRow").click(function () {
+        
+        // Select input fields in the same row
+        var itemName = $(this).closest("tr").find(".item_id").val();
+        var itemId = $(this).closest("tr").find(".gen_item_id").val();
+        var munitId = $(this).closest("tr").find(".gen_munit_id").val();
+        var gen_subGroup_id = $(this).closest("tr").find(".gen_subGroup_id").val();
+
+        var measurementUnit = $(this).closest("tr").find(".form-control").eq(6).val(); // Assuming measurement unit input is the second input
+        var avlStockQty = $(this).closest("tr").find(".form-control").eq(8).val();
+        var bookingQty = $(this).closest("tr").find(".form-control").eq(9).val();
+        // Construct HTML for new row
+        var newRowHtml = "<tr>" +
+
+            "<td><input type='text' style='width: 500px;' value='" + itemName + "'></td>" +
+            "<td style='display:none'>" + itemId + "</td>" +
+            "<td><input type='text' style='width: 80px;' value='" + measurementUnit + "'></td>" +
+            "<td style='display:none'>" + munitId + "</td>" +
+            "<td><input type='text' style='width: 80px;'></td>" +
+            "<td><input type='text' style='width: 70px;' value='" + avlStockQty + "'></td>" +
+            "<td><input type='text' style='width: 70px;' value='" + bookingQty + "'></td>" +
+            "<td><input type='text' style='width: 70px;'></td>" +
+            "<td><input type='text' style='width: 70px;'></td>" +
+            "<td><input type='text' style='width: 100px;'></td>" +
+            "<td style='display:none'>" + gen_subGroup_id + "</td>" +
+            //"<td> <button class='btn btn-danger' aria - hidden='false' onclick = 'deleteRow(this)' > <i class='fa fa-trash' aria - hidden='true' > </i></button ></td>" +
+            "<td><button onclick='deleteRow(this)'> <i class='fa fa-trash fa-x text-danger' style='font-size:large'></i></button ></td>" +
+            "</tr>";
+
+        // Append new row to the tbody of the data table
+        $("#modalcontainer #DTTranFabricDetailRow tbody").append(newRowHtml);
+    });
+
+    function deleteRow(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+</script>
+
+
+
+
+

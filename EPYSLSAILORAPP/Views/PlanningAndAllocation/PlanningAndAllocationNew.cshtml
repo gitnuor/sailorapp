@@ -1,0 +1,1519 @@
+﻿@model EPYSLSAILORAPP.Domain.DTO.tran_va_plan_DTO;
+@{
+    ViewBag.Title = "Style Breakdown";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+
+    
+
+</style>
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <input id="hd_range_plan_id" type="hidden" value="@Model.tran_range_plan_id" />
+        <input id="hd_va_plan_id" type="hidden" value="@Model.tran_va_plan_id" />
+        <input id="hd_encoded_fiscal_year" type="hidden" value="@ViewBag.encoded_fiscal_year" />
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Style Breakdown</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        @await Component.InvokeAsync("DataFilter")
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                            <table style="font-size:12px;" id="DTTranPlanningAndAllocation" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead style="text-align:center">
+                                    <tr>
+                                        @*      <th></th> *@
+                                        <th><label class="labelNormal">SL</label></th>
+                                        <th style="width:200px;"><label class="labelNormal  ">Product</label></th>
+                                        <th><label class="labelNormal ">Total QTY</label></th>
+                                        <th><label class="labelNormal ">Added QTY</label></th>
+                                        <th><label class="labelNormal ">Remaining QTY</label></th>
+                                        <th><label class="labelNormal ">Draft Styles</label></th>
+                                        <th><label class="labelNormal ">Submitted Styles</label></th>
+                                        <th><label class="labelNormal ">Approved Style</label></th>
+                                        <th><label class="labelNormal ">Rejected Style</label></th>
+                                        <th style="width:100px;"><label class="labelNormal ">Style Setup</label></th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+<div class="content">
+
+    <!-- Start::main-content -->
+    <div class="main-content">
+        <div id="pageId">
+            <div class="row" id="divTblId">
+
+                <div class="col-span-12">
+                    <div id="toolbarId" class="master-toolbar" style="font-size: 13px;">
+                        <div class="box" style="margin-top: 10px;background-color: aliceblue;">
+                        </div>
+                    </div>
+                    <div class="box">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="modalcontainer_common" class="modal fade hidden-print" role="dialog">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Style Setup
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @* <script src="~/scripts/businessplanning/PlanningAndAllocation.js" asp-append-version="true"></script> *@
+    <script>
+        var dt_source;
+        var obj_detailList = [];
+        var all_styles = [];
+        var total_PlanningAndAllocation_mrp_value = 0;
+        var total_PlanningAndAllocation_cpu_value = 0;
+        var total_PlanningAndAllocation_quantity = 0;
+        var bp_yearly_gross_sales = 0;
+        var bp_event_gross_sales = 0;
+        var tran_va_plan_id = 0;
+        var tran_va_plan_event_id = 0;
+
+        function jsdatatableloaded() {
+            if (dt_source.rows().data().length > 0) {
+                $("#txtTotalBusinessPlan").val(dt_source.rows().data()[0].bp_yearly_gross_sales);
+                $("#txtTotalEventPlan").val(dt_source.rows().data()[0].event_gross_sales);
+                $("#txtTotalRangeQuantity").val(dt_source.rows().data()[0].total_rangeplan_quantity);
+
+                $("#txtTotalAddedQntity").val(dt_source.rows().data()[0].totaladded);
+                $("#txtTotalNotAddedQntity").val(dt_source.rows().data()[0].totalnotadded);
+            }
+        }
+
+        function LoadPlanData() {
+            var dt_search = {
+
+                filterId: '#DTTranPlanningAndAllocation_filter input[type=search]',
+                tableId: "#DTTranPlanningAndAllocation"
+
+            };
+           
+
+            var input = {
+
+                range_plan_id: $("#hd_range_plan_id").val(),
+
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+
+                filter_option: $("#ddlFilterOption").val()
+            };
+
+            dt_source = $(dt_search.tableId).DataTable({
+
+                layout: {
+
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+
+
+
+                "ajax": $.fn.dataTable.json({ url: "/PlanningAndAllocation/GetTranPlanningAndAllocationYearData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                //scrollX: true,
+                scrollCollapse: true,
+                //scrollY: '200px',
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 8, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 9, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', dataIndex);
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+                    var total = 0;
+                    $.each($(row).find(".clsStyle"), function (key, val) {
+                        total += parseInt($(val).attr("style_quantity"));
+                    });
+
+                    if (total == data.range_plan_quantity) {
+                        $(row).find(".BtnStyleSetup").remove();
+                    }
+
+                    $(row).find("td").eq(4).text(parseInt(data.range_plan_quantity) - parseInt(data.total_added));
+
+                    if (parseInt($(row).find("td").eq(4).text()) < 0) {
+                        $(row).find(".BtnStyleSetup").css("display", "none");
+                    }
+                },
+                "columns": [ //,
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    // { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "range_plan_quantity", "name": "range_plan_quantity", "autoWidth": true },
+                    { "data": "total_added", "name": "total_added", "autoWidth": true },
+                    { "data": "total_added", "name": "total_added", "autoWidth": true },
+
+
+                    { "data": "strAllDraftStyles", "name": "strAllDraftStyles", "autoWidth": true },
+                    { "data": "strAllSubmittedStyles", "name": "strAllSubmittedStyles", "autoWidth": true },
+                    { "data": "strAllApprovedStyles", "name": "strAllApprovedStyles", "autoWidth": true },
+                    { "data": "strAllRejectedStyles", "name": "strAllRejectedStyles", "autoWidth": true },
+
+                    { "data": "strBtnStyleSetup", "name": "strBtnStyleSetup", "autoWidth": true },
+
+                ],
+
+            });
+        }
+
+
+
+
+        function BtnStyleClickView(btn, ISVIEW) {
+
+         
+            var style_code = $(btn).parent().parent().find(".txt_style_code_gen").val();
+            var no_of_style = $(btn).parent().parent().find(".ddlNoOfStyle").val();
+
+            if (no_of_style == "0") {
+                showErrorAlert("Alert", "Select Number of Style First", "OK", function () {
+
+                    $(btn).parent().parent().find(".ddlNoOfStyle").focus();
+
+                });
+                return;
+            }
+
+            var style_product = $(btn).parent().parent().find("td:eq(2)").text();
+            var range_plan_qnty = $(btn).parent().parent().find("td:eq(3)").text();
+
+            var objStyle = {
+                row_index: $(btn).parent().parent().attr("row_index"),
+                tran_va_plan_detl_style_id: $(btn).attr("tran_va_plan_detl_style_id"),
+                no_of_style: $(btn).parent().parent().find(".ddlNoOfStyle").val(),
+                style_code_gen: $(btn).parent().parent().find(".txt_style_code_gen").val(),
+                style_item_product_id: $(btn).attr("style_item_product_id"),
+                range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                style_product: $(btn).parent().parent().find("td:eq(2)").text(),
+
+                range_plan_detail_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_detail_id,
+                range_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_id,
+                tran_range_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_range_plan_event_id,
+
+                tran_va_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_event_id,
+                is_view: ISVIEW,
+                str_style_size: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].strjsonSizeList
+            }
+
+            try {
+                setTimeout(function () {
+                    showLoader("Loading..........");
+                }, 0);
+                //  ajaxGetHandler("/PlanningAndAllocation/StyleSetupNew?range_plan_qnty=" + range_plan_qnty + "&style_product=" + style_product + "&style_code=" + style_code + "&no_of_style=" + no_of_style + "&product_id=" + $(btn).attr("style_item_product_id"), null, function (data) {
+                ajaxGetHandler("/PlanningAndAllocation/StyleSetupView?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    var otherstyles = all_styles.
+                        filter(p => p.tran_va_plan_detl_style_id != $("#ddl_s2embellishment").val());
+
+                    var added_style_count = otherstyles.reduce(function (sum, obj) {
+                        return sum + obj.style_quantity;
+                    }, 0);
+
+                    $("#txtAddedStyleQnty").val(added_style_count);
+                    $("#txtRemainingStyleQnty").val(parseInt($("#txtRangePlanQnty").val()) - added_style_count);
+
+                    $($(".dtcolorcodestyle")[0]).find("input[type=number]:eq(0)").trigger("change");
+
+
+
+                    $("#modalcontent-common #ddlstyle").removeAttr("disabled");
+
+                    // LoadStyleDetails($("#hd_current_style_id"));
+
+                    if (ISVIEW == 1) {
+                        $(".btnUpdateDeleteStyleInfo").css("display", "none");
+                        MakePopupReadOnly("modalcontent-common", "btnModalClose");
+                    }
+                    else {
+                        $(".btnUpdateDeleteStyleInfo").css("display", "");
+                        $(".btnUpdateDeleteStyleInfo").removeAttr("disabled");
+                    }
+
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function BtnStyleClickEdit(btn) {
+
+            var style_code = $(btn).parent().parent().find(".txt_style_code_gen").val();
+            var no_of_style = $(btn).parent().parent().find(".ddlNoOfStyle").val();
+
+            if (no_of_style == "0") {
+                showErrorAlert("Alert", "Select Number of Style First", "OK", function () {
+
+                    $(btn).parent().parent().find(".ddlNoOfStyle").focus();
+
+                });
+                return;
+            }
+
+            var style_product = $(btn).parent().parent().find("td:eq(1)").text();
+            var range_plan_qnty = $(btn).parent().parent().find("td:eq(2)").text();
+
+            var objStyle = {
+                row_index: $(btn).parent().parent().attr("row_index"),
+
+                no_of_style: $(btn).parent().parent().find(".ddlNoOfStyle").val(),
+                style_code_gen: $(btn).parent().parent().find(".txt_style_code_gen").val(),
+                style_item_product_id: $(btn).attr("style_item_product_id"),
+                range_plan_qnty: $(btn).parent().parent().find("td:eq(2)").text(),
+                style_product: $(btn).parent().parent().find("td:eq(1)").text(),
+
+                range_plan_detail_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_detail_id,
+                range_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_id,
+                tran_range_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_range_plan_event_id,
+
+                tran_va_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_event_id,
+                is_view: 0,
+                str_style_size: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].strjsonSizeList
+            }
+
+            try {
+                setTimeout(function () {
+                    showLoader("Loading..........");
+                }, 0);
+                //  ajaxGetHandler("/PlanningAndAllocation/StyleSetupNew?range_plan_qnty=" + range_plan_qnty + "&style_product=" + style_product + "&style_code=" + style_code + "&no_of_style=" + no_of_style + "&product_id=" + $(btn).attr("style_item_product_id"), null, function (data) {
+                ajaxGetHandler("/PlanningAndAllocation/StyleSetupEdit?input=" + JSON.stringify(objStyle), null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    var otherstyles = all_styles.
+                        filter(p => p.tran_va_plan_detl_style_id != $("#hd_current_style_id").val());
+
+                    var added_style_count = otherstyles.reduce(function (sum, obj) {
+                        return sum + obj.style_quantity;
+                    }, 0);
+
+                    $("#txtAddedStyleQnty").val(added_style_count);
+                    $("#txtRemainingStyleQnty").val(parseInt($("#txtRangePlanQnty").val()) - added_style_count);
+
+
+                    $($(".dtcolorcodestyle")[0]).find("input[type=number]:eq(0)").trigger("change");
+
+                    $("#ddlstyle").val("0");
+                    $("#ddlstyle").trigger("change");
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function BtnStyleClickEditSingle(btn, isedit) {
+
+            var style_code = $(btn).parent().parent().find(".txt_style_code_gen").val();
+
+            var style_product = $(btn).parent().parent().find("td:eq(1)").text();
+            var range_plan_qnty = $(btn).parent().parent().find("td:eq(2)").text();
+
+            var objStyle = {
+                row_index: $(btn).parent().parent().attr("row_index"),
+
+                no_of_style: $(btn).parent().parent().find(".ddlNoOfStyle").val(),
+                style_code_gen: $(btn).parent().parent().find(".txt_style_code_gen").val(),
+                style_item_product_id: $(btn).attr("style_item_product_id"),
+                tran_va_plan_detl_style_id: $(btn).attr("tran_va_plan_detl_style_id"),
+                range_plan_qnty: $(btn).parent().parent().find("td:eq(2)").text(),
+                style_product: $(btn).parent().parent().find("td:eq(1)").text(),
+
+                range_plan_detail_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_detail_id,
+                range_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_id,
+                tran_range_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_range_plan_event_id,
+
+                tran_va_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_event_id,
+                is_view: 0,
+                str_style_size: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].strjsonSizeList
+            }
+
+            try {
+                setTimeout(function () {
+                    showLoader("Loading..........");
+                }, 0);
+
+                ajaxGetHandler("/PlanningAndAllocation/StyleSetupEdit?input=" + JSON.stringify(objStyle), null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    var otherstyles = all_styles.
+                        filter(p => p.tran_va_plan_detl_style_id != $("#ddl_s2embellishment").val());
+
+                    var added_style_count = otherstyles.reduce(function (sum, obj) {
+                        return sum + obj.style_quantity;
+                    }, 0);
+
+                    $("#txtAddedStyleQnty").val(added_style_count);
+
+                    $("#txtRemainingStyleQnty").val(parseInt($("#txtRangePlanQnty").val()) - added_style_count);
+
+                    $($(".dtcolorcodestyle")[0]).find("input[type=number]:eq(0)").trigger("change");
+
+                    $('#modalcontent-common #ddlstyle').val($("#hd_current_style_id").val());
+                    $('#modalcontent-common #ddlstyle').trigger("change");
+
+                    if (isedit == 0) {
+
+                    }
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+
+        function btnAddColorClick(btn) {
+
+            if ($(btn).closest(".box").find(".txtStyleQuantity").val().length == 0) {
+                $(btn).closest(".box").find(".txtStyleQuantity").css("border", "1px solid red");
+                //$(btn).closest(".box").find(".ddlColorQuantity").val('0');
+                $(btn).closest(".box").find(".txtStyleQuantity").focus();
+
+                return;
+            }
+
+            var current_row_count = $("#dtdtcolorcodestyle tbody tr:visible").length;
+
+            var row_html = $("#dtdtcolorcodestyle tbody tr:eq(0)").clone().removeAttr("id").removeAttr("style");
+
+            $(row_html).find("input").val("0");
+            $(row_html).find("input").attr("tran_va_plan_detl_style_color_id", "0");
+            $(row_html).find("input").attr("tran_va_plan_detl_style_color_size_id", "0");
+
+            $("#dtdtcolorcodestyle tbody").append(row_html);
+
+            $(row_html).find(".ddl_color").attr("name", "ddl_color" + (current_row_count + 1));
+            $(row_html).find(".ddl_color").attr("id", "ddl_color" + (current_row_count + 1));
+            $(row_html).find(".ddl_color").addClass("ddl_color" + (current_row_count + 1));
+
+            RegisterS2ColorByElement($(row_html).find(".ddl_color"));
+
+            var rowindex = 1;
+
+            $("#dtdtcolorcodestyle ").find("tbody tr:visible").each(function (index, element) {
+
+                $(element).find("td:eq(0)").text(rowindex);
+                //$(element).find(".txtColorCode").val(colorcode + rowindex);
+                rowindex++;
+            });
+
+            //checkCompleteness($(btn).closest(".box"));
+
+        }
+
+        function txtStyleQuantityChange(current_element) {
+
+            if (all_styles.filter(p => p.style_code == $(current_element).val()).length > 0) {
+                showErrorAlert("Alert", "Style Code Exists", "OK", function () {
+                    $(current_element).css("border", "1px solid red");
+                    return;
+                });
+            }
+
+            $(current_element).css("border", "");
+
+            $(current_element).closest(".box").find(".dtcolorcodestyle input[type=number]").val('0');
+            $("#txtTotalGivenSizeQuantity").val("0");
+
+            var txtRemainingStyleQnty = $("#modalcontent-common #txtRemainingStyleQnty").val();
+
+            var total = getTotalByClassInsideTable("#modalcontent-common ", "txtStyleQuantity");
+
+            if (total > parseFloat(txtRemainingStyleQnty)) {
+                showErrorAlert("Alert", "Style Quantity Exceeds Remaining Style Quantity", "OK", function () {
+                    $(current_element).val('0');
+                    return;
+                });
+            }
+
+            $($(".dtcolorcodestyle")[0]).find("input[type=number]:eq(0)").trigger("change");
+
+        }
+
+        function DeleteStyle(elem) {
+            $(elem).parent().css("display", "none");
+            $(elem).parent().find(".tab_link").attr("is_delete", "1");
+
+            // $(elem).parent().parent().parent().find(".tab-pane[id=style" + $(elem).parent().attr("tab_index") + "]").remove();
+
+            $(elem).parent().parent().parent().find(".tab-pane[id=style" + $(elem).parent().attr("tab_index") + "]").find("input[type=number]").remove();
+            $(elem).parent().parent().parent().find(".tab-pane[id=style" + $(elem).parent().attr("tab_index") + "]").find(".btnSaveNext").remove();
+
+            // $("#modalcontent-common .btnUpdateStyleInfo").attr("disabled", "disabled");
+            $(".nav-tabs li  a:eq(0)").trigger("click");
+        }
+
+        function btnSaveNextClick(btn) {
+
+            if (checkCompleteness($(btn).closest(".box")) == true) {
+                var btnindex = $(btn).attr("btn_index");
+
+                modal_tab_events_click_next_tab($(".nav-tabs").find("li[tab_index=" + btnindex + "]"));
+
+                if ($(".dtcolorcodestyle")[parseInt(btnindex) + 1] != null)
+                    $($(".dtcolorcodestyle")[parseInt(btnindex) + 1]).find("input[type=number]:eq(0)").trigger("change");
+            }
+
+        }
+
+
+
+        function BtnStyleClickAdd(btn) {
+
+
+            var style_code = $(btn).parent().parent().find(".txt_style_code_gen").val();
+            var no_of_style = $(btn).parent().parent().find(".ddlNoOfStyle").val();
+
+            var style_product = $(btn).parent().parent().find("td:eq(1)").text();
+            var range_plan_qnty = $(btn).parent().parent().find("td:eq(2)").text();
+
+            var objStyle = {
+                row_index: $(btn).parent().parent().attr("row_index"),
+
+                no_of_style: 1,//$(btn).parent().parent().find(".ddlNoOfStyle").val(),
+                style_code_gen: getAbreviation(dt_source.rows().data()[$(btn).parent().parent().attr("row_index")].style_item_product_name), //$(btn).parent().parent().find(".txt_style_code_gen").val(),
+                style_item_product_id: $(btn).attr("style_item_product_id"),
+                range_plan_qnty: $(btn).parent().parent().find("td:eq(2)").text(),
+                style_product: $(btn).parent().parent().find("td:eq(1)").text(),
+
+                range_plan_detail_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_detail_id,
+                range_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_id,
+                tran_range_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_range_plan_event_id,
+
+                tran_va_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_event_id,
+
+                str_style_size: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].strjsonSizeList
+            }
+
+            try {
+                setTimeout(function () {
+                    showLoader("Loading..........");
+                }, 0);
+
+                ajaxGetHandler("/PlanningAndAllocation/StyleSetupNew?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    $("#modalcontent-common #ddl_s2embellishment").change(function () {
+                        $($(".dtcolorcodestyle")[0]).find("input[type=number]:eq(0)").trigger("change");
+                    });
+
+
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function LoadColorFromBox(txt) {
+
+            if ($(txt).closest("table").find("tr").not($(txt).closest('tr')).find(".txtColorCode[colorcode='" + $(txt).val() + "']").length == 0) {
+
+                $(txt).parent().find(".txtColorCode").val($(txt).val());
+                $(txt).parent().find(".txtColorCode").attr('colorcode', $(txt).val());
+                //checkCompleteness($(txt).closest(".box"));
+            }
+            else {
+                showErrorAlert("Alert", "Duplicate Color", "OK", function () {
+                    $(txt).val("#000000");
+                    $(txt).trigger("click");
+                });
+            }
+        }
+
+        function ColorSizeQuantityChanged(elem) {
+
+            var current_element = $(elem);
+
+            var txttotal = $("#txtTotalGivenSizeQuantity");
+
+            var total = getTotalByClassInsideTableObject($(elem).closest(".dtcolorcodestyle"), "txtColorSizeQuantity");
+
+            var tr_total = getTotalByClassInsideTableObject($(elem).closest("tr"), "txtColorSizeQuantity");
+
+            if (total > parseFloat($(elem).closest(".box").find(".txtStyleQuantity").val())) {
+
+                showErrorAlert("Alert", "Quantity Exceeds Style Quantity", "OK", function () {
+                    $(current_element).val('0');
+                    return;
+                });
+            }
+            else {
+
+                $(txttotal).val(total);
+                $(elem).closest("tr").find(".txtTotalColorSizeQuantity").val(tr_total);
+                //checkCompleteness($(current_element).closest(".box"));
+
+            }
+
+        }
+
+        function checkCompleteness(parent) {
+
+            if ($(parent).length == 0) {
+                return false;
+            }
+
+            var isOk = true;//
+
+            $(parent).find(".select2-selection").css("border", "");
+            //$(parent).find(".ddlColorQuantity").css("border", "");
+            $(parent).find(".txtStyleQuantity").css("border", "");
+            $(parent).find(".ddl_item_product_sub_category").css("border", "");
+
+            // if ($(parent).find(".ddl_item_product_sub_category").val().length == 0) {
+            //     $(parent).find(".ddl_item_product_sub_category").css("border", "1px solid red");
+            //     isOk = false;
+            // }
+            // if ($(parent).find("#ddl_s2embellishment").val().length == 0) {
+            //     $(parent).find(".select2-selection").css("border", "1px solid red");
+            //     isOk = false;
+            // }
+            if ($(parent).find(".txtStyleQuantity").val().length == 0) {
+                $(parent).find(".txtStyleQuantity").css("border", "1px solid red");
+                isOk = false;
+            }
+
+
+            var total = getTotalByClassInsideTableObject($(parent).find(".dtcolorcodestyle"), "txtColorSizeQuantity");
+
+            if (total == parseFloat($(parent).find(".txtStyleQuantity").val())) {
+
+                if ($(parent).find(".btnSaveNext").length > 0) {
+
+                    var btn_index = parseInt($(parent).find(".btnSaveNext").attr("btn_index"));
+
+                    if (
+                        $("#modalcontent-common .btnSaveNext[btn_index=" + (btn_index + 1) + "]").length == 0
+                        // &&
+                        // $("#modalcontent-common .btnSaveNext[btn_index=" + (btn_index + 1) + "]").is(":visible")==false
+                    ) {
+
+                        if ($("#modalcontent-common .btnUpdateStyleInfo").length > 0) {
+                            $("#modalcontent-common .btnUpdateStyleInfo").removeAttr("disabled");
+
+                            // if ($(parent).find(".btnSaveNext").length > 0)
+                            //     $(parent).find(".btnSaveNext").attr("disabled", "disabled");
+                        }
+
+                        else if ($("#modalcontent-common .btnSaveStyleInfo").length > 0) {
+                            //$("#modalcontent-common .btnSaveStyleInfo").removeAttr("disabled");
+                        }
+                        else {
+                            $(parent).find(".btnSaveNext").removeAttr("disabled");
+                        }
+                    }
+                    else {
+                        $(parent).find(".btnSaveNext").removeAttr("disabled");
+
+                    }
+                }
+
+            }
+            else {
+                isOk = false;
+                showErrorAlert("Alert", "Please provide all quantity", "OK", function () {
+
+                });
+            }
+
+            return isOk;
+
+        }
+        function closePopup() {
+            $('#modalcontent-common').html("");
+
+            $('#modalcontainer_common').modal("hide");
+        }
+
+        $(function () {
+
+            // LoadPlanData();
+          
+
+            $("#btnSavePlanningAndAllocation").click(function () {
+
+                SaveData(0);
+
+            });
+
+
+            $("#btnLoadData").click(function () {
+                if ($("#fiscal_year_id").val() == '') {
+                    $("#fiscal_year_id").focus();
+                    $("#fiscal_year_id").css("border", "1px solid red");
+                }
+                else if ($("#event_id").val() == '') {
+                    $("#event_id").focus();
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+                }
+                else {
+
+                    $("#fiscal_year_id").css("border", "");
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                    LoadPlanData();
+
+                }
+
+            });
+
+            $("#ddlFilterOption").val(2);
+            LoadPlanData();
+           
+            $("#ddltop_event").css("display", "none");
+            $("#ddldtop_fiscal_year").css("display", "none");
+
+            $("#btnBack").click(function () {
+                document.location = "/PlanningAndAllocation/PlanningAndAllocationCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+            });
+
+
+
+        });
+
+        function SaveOrUpdate(btn) {
+            if (dt_source.rows().data()[0].tran_va_plan_id == null) {
+                SaveData(btn);
+            }
+            else {
+                UpdateData(btn);
+            }
+        }
+
+
+        function LoadStyleDetails(elem) {
+
+            var style_id = $(elem).val();
+
+            if (style_id == "0") {
+                $("#txtStyleCode").val($("#hd_style_code_gen").val());
+                $("#ddl_item_product_sub_category").val($('#ddl_item_product_sub_category option:first').val());
+                $("#txtStyleQuantity").val('0');
+
+                var otherstyles = all_styles;
+
+                var added_style_count = otherstyles.reduce(function (sum, obj) {
+                    return sum + obj.style_quantity;
+                }, 0);
+
+                $("#txtAddedStyleQnty").val(added_style_count);
+                $("#txtRemainingStyleQnty").val(parseInt($("#txtRangePlanQnty").val()) - added_style_count);
+
+                $("#ddl_s2embellishment").val(null).trigger("change");
+
+                $('#dtdtcolorcodestyle tbody tr:not(:first)').remove();
+
+
+
+            }
+            else {
+                var objstyle = all_styles.filter(p => p.tran_va_plan_detl_style_id == style_id)[0];
+
+                //btnUpdateDeleteStyleInfo
+
+                if (objstyle.is_submitted == null || objstyle.is_submitted == 0) {
+                    $(".btnUpdateDeleteStyleInfo").css("display", "block");
+                    $("#btnAddColor").removeAttr("disabled");
+                }
+                else {
+                    $(".btnUpdateDeleteStyleInfo").css("display", "none");
+                    $("#btnAddColor").attr("disabled", "disabled");
+                }
+
+                $("#txtStyleCode").val(objstyle.style_code);
+                //$("#ddl_s2embellishment").val(objstyle.style_quantity);
+                $("#ddl_item_product_sub_category").val(objstyle.style_item_product_sub_category_id);
+                $("#txtStyleQuantity").val(objstyle.style_quantity);
+
+                var otherstyles = all_styles.filter(p => p.tran_va_plan_detl_style_id != style_id);
+
+                var added_style_count = otherstyles.reduce(function (sum, obj) {
+                    return sum + obj.style_quantity;
+                }, 0);
+
+                $("#txtAddedStyleQnty").val(added_style_count);
+                $("#txtRemainingStyleQnty").val(parseInt($("#txtRangePlanQnty").val()) - added_style_count);
+
+                $('#dtdtcolorcodestyle tbody tr:not(:first)').remove();
+
+                for (var colorindex = 0; colorindex < objstyle.List_ColorInfo.length; colorindex++) {
+
+                    var objcolorinfo = objstyle.List_ColorInfo[colorindex];
+
+                    var wholediv = $("#dtdtcolorcodestyle #trfirstrow").clone();
+                    $(wholediv).removeAttr("style");
+                    $(wholediv).removeAttr("id");
+
+                    $(wholediv).find(".row_sl").text((colorindex + 1));
+
+                    $(wholediv).find(".txtColorPicker").val(objcolorinfo.color_code);
+                    $(wholediv).find(".txtColorCode").val(objcolorinfo.color_code);
+                    $(wholediv).find(".txtColorCode").attr("tran_va_plan_detl_style_color_id", objcolorinfo.tran_va_plan_detl_style_color_id);
+                    $(wholediv).find(".txtColorCode").attr("tran_va_plan_detl_style_id", objcolorinfo.tran_va_plan_detl_style_id);
+
+                    for (var colorsizeindex = 0; colorsizeindex < objcolorinfo.List_ColorSizeInfo.length; colorsizeindex++) {
+
+                        var objcolorsizeinfo = objcolorinfo.List_ColorSizeInfo[colorsizeindex];
+                        //="296"
+                        // if (objcolorsizeinfo.style_color_size_quantity > 0) {
+                        $(wholediv).find(".txtColorSizeQuantity[style_product_size_group_detid=" + objcolorsizeinfo.style_product_size_group_detid + "]").val(objcolorsizeinfo.style_color_size_quantity);
+                        $(wholediv).find(".txtColorSizeQuantity[style_product_size_group_detid=" + objcolorsizeinfo.style_product_size_group_detid + "]").attr("tran_va_plan_detl_style_color_id", objcolorsizeinfo.tran_va_plan_detl_style_color_id);
+                        $(wholediv).find(".txtColorSizeQuantity[style_product_size_group_detid=" + objcolorsizeinfo.style_product_size_group_detid + "]").attr("tran_va_plan_detl_style_color_size_id", objcolorsizeinfo.tran_va_plan_detl_style_color_size_id);
+                        //  }
+                    }
+
+                    $("#dtdtcolorcodestyle tbody").append(wholediv);
+                }
+            }
+
+            $(".txtColorSizeQuantity").trigger("change");
+
+            // if ($("#hdIsView").val() == "1") {
+            //     MakePopupReadOnly("modalcontent-common", "btnModalClose");
+
+            //     $("#modalcontent-common #ddlstyle").removeAttr("disabled");
+
+            //     $(".btnUpdateDeleteStyleInfo").css("display", "none");
+            // }
+
+        }
+
+
+        function SaveData(btn) {
+
+            var prod_id = parseInt($("#modalcontent-common #hd_style_item_product_id").val());
+
+            if (all_styles.filter(p => p.style_code == $("#txtStyleCode").val() &&
+                p.tran_va_plan_detl_style_id != $("#ddlstyle").val()).length > 0) {
+                showErrorAlert("Alert", "Style Code Exists", "OK", function () {
+                    $("#txtStyleCode").css("border", "1px solid red");
+                    return;
+                });
+            }
+            else if (check_value($("#txtTotalGivenSizeQuantity").val()) == null) {
+
+                showErrorAlert("Alert", "Please provide size quantity", "OK", function () {
+
+                    return;
+                });
+
+            }
+            else {
+                //showLoader("Saving..........");
+                var btn_index = $(btn).attr("btn_index");
+                var objListStyle = [];
+
+                $("#modalcontent-common .box").each(function (index, element_box) {
+
+                    var colorinfo_List = [];
+
+                    $(element_box).find(".dtcolorcodestyle tbody tr:visible").each(function (index, element_grid_tr) {
+
+                        var color_sizeList = [];
+                        var total_style_color_quantity = 0;
+
+                        $(element_grid_tr).find(".txtColorSizeQuantity").each(function (index, element_sinlesize) {
+
+                            var objColorSize = {
+                                style_product_size_group_detid: parseInt($(element_sinlesize).attr("style_product_size_group_detid")),
+                                style_color_size_quantity: parseInt($(element_sinlesize).val())
+                            };
+
+                            total_style_color_quantity += parseInt($(element_sinlesize).val());
+
+                            color_sizeList.push(objColorSize);
+                        });
+
+
+                        var objColorinfo = {
+                            color_code: $(element_grid_tr).find(".txtColorCode").val(),
+                            style_color_quantity: total_style_color_quantity,
+
+                            List_ColorSizeInfo: color_sizeList
+
+                        };
+
+                        colorinfo_List.push(objColorinfo);
+
+                    });
+
+                    var list_embell = [];
+
+                    $.each($(element_box).find("#ddl_s2embellishment").val(), function (key, val) {
+                        var objSingleEmbellishment = {
+                            id: val,
+                            text: $(element_box).find("#ddl_s2embellishment").select2("data").filter(p => p.id == val)[0].text
+                        };
+                        list_embell.push(objSingleEmbellishment);
+                    });
+
+                    var objStyle = {
+                        //style_embellishment_ids: JSON.stringify(list_embell),
+                        style_item_product_sub_category_id: check_value($(element_box).find(".ddl_item_product_sub_category").val()),
+                        style_quantity: $(element_box).find(".txtStyleQuantity").val(),
+                        color_code_gen: $(element_box).find(".txtColorCode").val(),
+                        no_of_color: $("#dtdtcolorcodestyle tbody tr").length,
+                        style_code: $("#txtstyle_code").val(),
+                        List_ColorInfo: colorinfo_List,
+                        List_Embellishment: list_embell,
+                        trading_type: $("#trading_type").val(),
+                        is_delete: 0,
+                        is_submitted: $(btn).attr("is_submit") == 2 ? 1 : 0,
+                        is_approved: null,
+                        approved_by: null,
+                        approve_remarks: null
+                    }
+
+                    objListStyle.push(objStyle);
+
+                });
+
+
+
+                var objplan_detail = {
+                    tran_va_plan_detl_id: $("#modalcontent-common #hd_tran_va_plan_detl_id").val() == "" ? null : $("#modalcontent-common #hd_tran_va_plan_detl_id").val(),
+                    tran_va_plan_event_id: tran_va_plan_event_id == 0 ? null : parseInt(tran_va_plan_event_id),
+                    range_plan_detail_id: parseInt($("#modalcontent-common #hd_range_plan_detail_id").val()),
+                    style_item_product_id: parseInt($("#modalcontent-common #hd_style_item_product_id").val()),
+                    no_of_style: parseInt($("#modalcontent-common #hd_no_of_style").val()),
+                    style_code_gen: $("#modalcontent-common #hd_style_code_gen").val(),
+                    List_style: objListStyle,
+                    fiscal_year_id: $("#fiscal_year_id").val(),
+                    event_id: $("#event_id").val(),
+
+
+                }
+
+                if (checkCompleteness($("#dvbox")) == true) {
+
+                    setTimeout(function () {
+                        showLoader("Saving..........");
+                    }, 0);
+
+                    ajaxPostObjectHandler("/PlanningAndAllocation/SavePlanningAndAllocation", objplan_detail, function (response) {
+
+                        hideLoader();
+
+                        if (response.status_Code == "200") {
+
+                            closePopup();
+
+                            showConfirmationAlert("Alert", "Do You Want to Add Another Style??", "Yes", function () {
+
+                                $("#DTTranPlanningAndAllocation .BtnStyleSetup[style_item_product_id=" + prod_id + "]").trigger("click");
+
+                            }, function () {
+
+                                LoadPlanData();
+
+                            });
+
+
+                            // showSuccessAlert("Success", response.status_Result, "OK", function () {
+                            //     //document.location = "/PlanningAndAllocation/PlanningAndAllocationCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+                            //     closePopup();
+                            // });
+                        }
+                        else {
+                            showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                            });
+                        }
+                    }, true, function () { hideLoader(); }, true);
+
+                }
+            }
+        }
+
+        function LoadAllStyle(style_item_product_id, tran_va_plan_detl_id, ddlstyle) {
+            ajaxGetHandler("/PlanningAndAllocation/LoadAllStyle?style_item_product_id=" + style_item_product_id + "&tran_va_plan_detl_id=" + tran_va_plan_detl_id, null, function (data) {
+                all_styles = [];
+                all_styles = data.List_style;
+
+                $('#ddlstyle').empty();
+
+                for (var i = 0; i < all_styles.length; i++) {
+                    $('#ddlstyle').append($('<option>', {
+                        value: all_styles[i].tran_va_plan_detl_style_id,
+                        text: all_styles[i].style_code + ' (Quantity = ' + all_styles[i].style_quantity + ')'
+                    }));
+                }
+
+                $('#ddlstyle').append($('<option>', {
+                    value: '0',
+                    text: 'New Style'
+                }));
+
+                $('#ddlstyle').val(ddlstyle);
+                $('#ddlstyle').trigger("change");
+
+            }, true);
+
+        }
+
+        function UpdateData(btn, single) {
+
+            var current_style_id = $("#ddlstyle").val();
+
+            if (single != null) {
+                current_style_id = single;
+            }
+
+            if (all_styles.filter(p => p.style_code == $("#txtStyleCode").val() &&
+                p.tran_va_plan_detl_style_id != current_style_id).length > 0) {
+                showErrorAlert("Alert", "Style Code Exists", "OK", function () {
+                    $("#txtStyleCode").css("border", "1px solid red");
+                    return;
+                });
+            }
+            else if (check_value($("#txtTotalGivenSizeQuantity").val()) == null) {
+
+                showErrorAlert("Alert", "Please provide size quantity", "OK", function () {
+
+                    return;
+                });
+
+            }
+            else {
+
+                $("#txtStyleCode").css("border", "");
+
+                //showLoader("Saving..........");
+                var btn_index = $(btn).attr("btn_index");
+                var objListStyle = [];
+
+                var ddlstyle = current_style_id;
+
+                var colorinfo_List = [];
+
+                $("#dtdtcolorcodestyle tbody tr:visible").each(function (index, element_grid_tr) {
+
+                    var color_sizeList = [];
+                    var total_style_color_quantity = 0;
+
+                    $(element_grid_tr).find(".txtColorSizeQuantity").each(function (index, element_sinlesize) {
+
+                        var objColorSize = {
+                            tran_va_plan_detl_style_color_size_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_size_id"))),
+                            tran_va_plan_detl_style_color_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_id"))),
+                            style_product_size_group_detid: check_value($(element_sinlesize).attr("style_product_size_group_detid")),
+                            style_color_size_quantity: check_zerovalue($(element_sinlesize).val())
+                        };
+
+                        total_style_color_quantity += parseInt($(element_sinlesize).val());
+
+                        color_sizeList.push(objColorSize);
+                    });
+
+
+                    var objColorinfo = {
+                        color_code: $(element_grid_tr).find(".txtColorCode").val(),
+                        style_color_quantity: total_style_color_quantity,
+                        tran_va_plan_detl_style_color_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_color_id")),
+                        tran_va_plan_detl_style_id: check_value(ddlstyle),
+
+                        List_ColorSizeInfo: color_sizeList
+
+                    };
+
+                    colorinfo_List.push(objColorinfo);
+
+                });
+
+
+                var list_embell = [];
+
+                $.each($("#ddl_s2embellishment").val(), function (key, val) {
+                    var objSingleEmbellishment = {
+                        id: check_value(val),
+                        text: $("#ddl_s2embellishment").select2("data").filter(p => p.id == val)[0].text
+                    };
+                    list_embell.push(objSingleEmbellishment);
+                });
+
+                var objStyle = {
+                    tran_va_plan_detl_style_id: check_value(ddlstyle),
+                    tran_va_plan_detl_id: $("#modalcontent-common #hd_tran_va_plan_detl_id").val() == "" ? null : check_value($("#modalcontent-common #hd_tran_va_plan_detl_id").val()),
+                    //style_embellishment_ids: JSON.stringify(list_embell),
+                    style_item_product_sub_category_id: check_value($("#ddl_item_product_sub_category").val()),
+                    style_quantity: check_zerovalue($("#txtStyleQuantity").val()),
+                    color_code_gen: '',
+                    no_of_color: check_value($("#dtdtcolorcodestyle tbody tr:visible").length),
+                    style_code: $("#txtStyleCode").val(),
+                    trading_type: $("#trading_type").val(),
+                    is_delete: 0,
+                    is_submitted: null,
+                    is_approved: null,
+                    approved_by: null,
+                    approve_remarks: null,
+                    //is_delete: $(".modal-content .nav-tabs li[tab_index=" + $(element_box).attr("box_index") + "]").find("a").attr("is_delete"),
+                    List_ColorInfo: colorinfo_List,
+                    List_Embellishment: list_embell
+                }
+
+                var search_style = all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle);
+
+                if (search_style.length > 0) {
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].style_item_product_sub_category_id = objStyle.style_item_product_sub_category_id;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].style_quantity = objStyle.style_quantity;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].color_code_gen = objStyle.color_code_gen;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].no_of_color = objStyle.no_of_color;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].style_code = objStyle.style_code;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].List_ColorInfo = objStyle.List_ColorInfo;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].List_Embellishment = objStyle.List_Embellishment;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].style_embellishment_ids = null;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].is_delete = objStyle.is_delete;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].trading_type = objStyle.trading_type;
+
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].is_submitted = objStyle.is_submitted;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].is_approved = objStyle.is_approved;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].approved_by = objStyle.approved_by;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].approve_remarks = objStyle.approve_remarks;
+
+                }
+                else {
+                    all_styles.push(objStyle);
+                }
+
+                var List_Details = [];
+
+                var newArray = removeField(all_styles, 'List_ProductSubCategory');
+                var newArray1 = removeField(newArray, 'style_embellishment_ids');
+                var newArray2 = removeField(newArray1, 'style_color_details');
+
+                var objplan_detail = {
+                    tran_va_plan_detl_id: $("#modalcontent-common #hd_tran_va_plan_detl_id").val() == "" ? null : check_value($("#modalcontent-common #hd_tran_va_plan_detl_id").val()),
+                    // tran_va_plan_event_id: parseInt($("#modalcontent-common #hd_tran_va_plan_event_id").val()),
+                    range_plan_detail_id: check_value($("#modalcontent-common #hd_range_plan_detail_id").val()),
+                    style_item_product_id: check_value($("#modalcontent-common #hd_style_item_product_id").val()),
+                    no_of_style: check_value(all_styles.length),
+                    style_code_gen: $("#modalcontent-common #hd_style_code_gen").val(),
+                    List_style: newArray2,//objListStyle,
+                    fiscal_year_id: check_value($("#fiscal_year_id").val()),
+                    event_id: check_value($("#event_id").val())
+                }
+
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/PlanningAndAllocation/UpdatePlanningAndAllocation", objplan_detail, function (response) {
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+                        if (single != null) {
+                            showSuccessAlert("Success", response.status_Result, "OK", function () {
+                                $('#modalcontent-common').html('');
+                                $('#modalcontainer_common').modal("hide");
+                            });
+                        }
+                        else {
+                            LoadAllStyle(
+                                parseInt($("#modalcontent-common #hd_style_item_product_id").val()),
+                                $("#modalcontent-common #hd_tran_va_plan_detl_id").val(),
+                                ddlstyle
+                            );
+
+                        }
+                        LoadPlanData();
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+            }
+
+        }
+
+        function DeleteData(btn) {
+
+            $("#txtStyleCode").css("border", "");
+
+            var btn_index = $(btn).attr("btn_index");
+            var objListStyle = [];
+
+            var ddlstyle = $(".modal-content #ddlstyle").val();
+
+            var objStyle = {
+                tran_va_plan_detl_style_id: $("#hd_current_style_id").val() == "0" ? null : check_value($("#hd_current_style_id").val()),
+                tran_va_plan_detl_id: $("#modalcontent-common #hd_tran_va_plan_detl_id").val() == "" ? null : check_value($("#modalcontent-common #hd_tran_va_plan_detl_id").val()),
+                //style_embellishment_ids: JSON.stringify(list_embell),
+                style_item_product_sub_category_id: check_value($("#ddl_item_product_sub_category").val()),
+                style_quantity: check_zerovalue($("#txtStyleQuantity").val()),
+                color_code_gen: '',
+                no_of_color: check_value($("#dtdtcolorcodestyle tbody tr").length),
+                style_code: $("#txtStyleCode").val(),
+                is_delete: 1,
+
+            }
+
+            setTimeout(function () {
+                showLoader("Deleting..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/PlanningAndAllocation/DeleteStyle", objStyle, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    LoadAllStyle(
+                        parseInt($("#modalcontent-common #hd_style_item_product_id").val()),
+                        $("#modalcontent-common #hd_tran_va_plan_detl_id").val(),
+                        0
+                    );
+
+                    LoadPlanData();
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        $('#modalcontent-common').html('');
+                        $('#modalcontainer_common').modal("hide");
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+        }
+
+
+        function SendForApproval(btn, single) {
+
+            var current_style_id = $("#ddlstyle").val();
+
+            if (single != null) {
+                current_style_id = single;
+            }
+
+            if (all_styles.filter(p => p.style_code == $("#txtStyleCode").val() &&
+                p.tran_va_plan_detl_style_id != current_style_id).length > 0) {
+                showErrorAlert("Alert", "Style Code Exists", "OK", function () {
+                    $("#txtStyleCode").css("border", "1px solid red");
+                    return;
+                });
+            }
+            else {
+
+                $("#txtStyleCode").css("border", "");
+
+                //showLoader("Saving..........");
+                var btn_index = $(btn).attr("btn_index");
+                var objListStyle = [];
+
+                var ddlstyle = current_style_id;// $(".modal-content #ddlstyle").val();
+
+                var colorinfo_List = [];
+
+                $("#dtdtcolorcodestyle tbody tr:visible").each(function (index, element_grid_tr) {
+
+                    var color_sizeList = [];
+                    var total_style_color_quantity = 0;
+
+                    $(element_grid_tr).find(".txtColorSizeQuantity").each(function (index, element_sinlesize) {
+
+                        var objColorSize = {
+                            tran_va_plan_detl_style_color_size_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_size_id"))),
+                            tran_va_plan_detl_style_color_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_id"))),
+                            style_product_size_group_detid: check_value($(element_sinlesize).attr("style_product_size_group_detid")),
+                            style_color_size_quantity: check_zerovalue($(element_sinlesize).val())
+                        };
+
+                        total_style_color_quantity += parseInt($(element_sinlesize).val());
+
+                        color_sizeList.push(objColorSize);
+                    });
+
+
+                    var objColorinfo = {
+                        color_code: $(element_grid_tr).find(".txtColorCode").val(),
+                        style_color_quantity: total_style_color_quantity,
+                        tran_va_plan_detl_style_color_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_color_id")),
+                        tran_va_plan_detl_style_id: check_value(ddlstyle),
+
+                        List_ColorSizeInfo: color_sizeList
+
+                    };
+
+                    colorinfo_List.push(objColorinfo);
+
+                });
+
+
+                var list_embell = [];
+
+                $.each($("#ddl_s2embellishment").val(), function (key, val) {
+                    var objSingleEmbellishment = {
+                        id: check_value(val),
+                        text: $("#ddl_s2embellishment").select2("data").filter(p => p.id == val)[0].text
+                    };
+                    list_embell.push(objSingleEmbellishment);
+                });
+
+                var objStyle = {
+                    tran_va_plan_detl_style_id: check_value(ddlstyle),
+                    tran_va_plan_detl_id: $("#modalcontent-common #hd_tran_va_plan_detl_id").val() == "" ? null : check_value($("#modalcontent-common #hd_tran_va_plan_detl_id").val()),
+                    //style_embellishment_ids: JSON.stringify(list_embell),
+                    style_item_product_sub_category_id: check_value($("#ddl_item_product_sub_category").val()),
+                    style_quantity: check_zerovalue($("#txtStyleQuantity").val()),
+                    color_code_gen: '',
+                    trading_type: $("#trading_type").val(),
+                    no_of_color: check_value($("#dtdtcolorcodestyle tbody tr").length),
+                    style_code: $("#txtStyleCode").val(),
+                    is_delete: 0,
+                    //is_delete: $(".modal-content .nav-tabs li[tab_index=" + $(element_box).attr("box_index") + "]").find("a").attr("is_delete"),
+                    List_ColorInfo: colorinfo_List,
+                    List_Embellishment: list_embell,
+
+                    is_submitted: 1,
+                    is_approved: 0,
+                }
+
+                var search_style = all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle);
+
+                if (search_style.length > 0) {
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].style_item_product_sub_category_id = objStyle.style_item_product_sub_category_id;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].style_quantity = objStyle.style_quantity;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].color_code_gen = objStyle.color_code_gen;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].no_of_color = objStyle.no_of_color;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].style_code = objStyle.style_code;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].trading_type = objStyle.trading_type;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].List_ColorInfo = objStyle.List_ColorInfo;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].List_Embellishment = objStyle.List_Embellishment;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].style_embellishment_ids = null;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].is_delete = objStyle.is_delete;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].is_submitted = objStyle.is_submitted;
+                    all_styles.filter(p => p.tran_va_plan_detl_style_id == ddlstyle)[0].is_approved = objStyle.is_approved;
+
+                }
+                else {
+                    all_styles.push(objStyle);
+                }
+
+                var List_Details = [];
+
+                var newArray = removeField(all_styles, 'List_ProductSubCategory');
+                var newArray1 = removeField(newArray, 'style_embellishment_ids');
+                var newArray2 = removeField(newArray1, 'style_color_details');
+
+                var objplan_detail = {
+                    tran_va_plan_detl_id: $("#modalcontent-common #hd_tran_va_plan_detl_id").val() == "" ? null : check_value($("#modalcontent-common #hd_tran_va_plan_detl_id").val()),
+                    // tran_va_plan_event_id: parseInt($("#modalcontent-common #hd_tran_va_plan_event_id").val()),
+                    range_plan_detail_id: check_value($("#modalcontent-common #hd_range_plan_detail_id").val()),
+                    style_item_product_id: check_value($("#modalcontent-common #hd_style_item_product_id").val()),
+                    no_of_style: check_value(all_styles.length),
+                    style_code_gen: $("#modalcontent-common #hd_style_code_gen").val(),
+                    List_style: newArray2,//objListStyle,
+                    fiscal_year_id: check_value($("#fiscal_year_id").val()),
+                    event_id: check_value($("#event_id").val())
+                }
+
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/PlanningAndAllocation/UpdatePlanningAndAllocation", objplan_detail, function (response) {
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+                        if (single != null) {
+                            showSuccessAlert("Success", response.status_Result, "OK", function () {
+                                $('#modalcontent-common').html('');
+                                $('#modalcontainer_common').modal("hide");
+                            });
+                        }
+                        else {
+                            LoadAllStyle(
+                                parseInt($("#modalcontent-common #hd_style_item_product_id").val()),
+                                $("#modalcontent-common #hd_tran_va_plan_detl_id").val(),
+                                ddlstyle
+                            );
+
+                        }
+                        LoadPlanData();
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+            }
+        }
+
+    </script>
+
+}

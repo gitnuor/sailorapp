@@ -1,0 +1,221 @@
+﻿@page "/Index"
+@{
+    ViewBag.Title = "Business Plan";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<script type="text/javascript">
+    localStorage.setItem("pageName", "ViewBag.PageName");
+    localStorage.setItem("menuId", "ViewBag.MenuId");
+</script>
+@* 
+ *@
+
+<div class="content-wrapper">
+   
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card">
+                       
+                        <!-- /.card-header -->
+                        <div class="">
+
+                            <div class="row">
+                                <div class="col-md-1" style="margin-top:7px;">
+
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year</label>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                       
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                        {
+                                        ddlId = "fiscal_year_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.fiscal_year_list)),
+                                        selectedvalue = "",
+                                        cssclass = "form-control",
+                                        enable = true,
+                                        isRequired = true,
+                                        placeholder = "Select Fiscal Year"
+                                        })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+
+                                    <button style="" type="button" class="btn btn-primary" id="btnNewBusinessPlan"><i class="fa fa-plus"></i>&nbsp;New Business Plan</button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            @*  <h3 class="card-title">DataTable with minimal features & hover style</h3> *@
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="DTTranBPYear" class="table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center;"><label class="  "></label></th>
+                                        <th style="text-align:center;"><label class="labelNormal  ">Fiscal Year</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Gross Sales (Tk)</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Gross Discount (Tk)</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Gross Net Amount (Tk)</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Remaining Amount (Tk)</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Total Quantity (Tk)</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Total MRP (Tk)</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Total CPU (Tk)</label></th>
+
+                                        <th style="text-align:center;"><label class="labelNormal ">Status</label></th>
+                                        <th style="width:300px;text-align:center;">Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+@section Scripts{
+    <script>
+
+        function LoadPlanData() {
+
+            var dt_search = {
+
+                filterId: '#DTTranBPYear_filter input[type=search]',
+                tableId: "#DTTranBPYear"
+
+            };
+           
+            var dt = $(dt_search.tableId).DataTable({
+
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Gross Sales',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+                
+                
+                search: {
+                    return: true
+                },
+                
+                "ajax": $.fn.dataTable.json({ url: "/BusinessPlan/GetTranBusinessPlanYearData"}),
+                "bPaginate": true,
+                "sPaginationType": "full_numbers",
+                "iDisplayLength": 10,
+               
+                columnDefs: [
+                    { targets: 0, "visible": false, "sortable": false },
+                    { targets: 1, "visible": true, "sortable": false },
+                    { targets: 2, "visible": true, "sortable": false },
+                    { targets: 3, "visible": true, "sortable": false },
+                    { targets: 4, "visible": true, "sortable": false },
+                    { targets: 5, "visible": true, "sortable": false },
+                    { targets: 6, "visible": true, "sortable": false },
+                    { targets: 7, "visible": true, "sortable": false },
+                    { targets: 8, "visible": true, "sortable": false },
+                    { targets: 9, "visible": true, "sortable": false },
+                    { targets: 10, "visible": true, "sortable": false },
+
+                ],
+                "columns": [
+                    { "data": "tran_bp_year_id", "name": "year_name", "autoWidth": true },
+                    { "data": "year_name", "name": "gen_fiscal_year.year_name", "autoWidth": true },
+
+                    { "data": "str_gross_sales", "name": "str_gross_sales", "autoWidth": true },
+                    { "data": "str_yearly_gross_discount", "name": "str_yearly_gross_discount", "autoWidth": true },
+                    
+                    { "data": "str_yearly_gross_net_amount", "name": "str_yearly_gross_net_amount", "autoWidth": true },
+                    { "data": "str_due_amount", "name": "str_due_amount", "autoWidth": true },
+                    { "data": "total_quantity", "name": "total_quantity", "autoWidth": true },
+                    { "data": "total_mrp", "name": "total_mrp", "autoWidth": true },
+                    { "data": "total_cpu", "name": "total_cpu", "autoWidth": true },
+
+                    { "data": "plan_status", "name": "plan_status", "autoWidth": true },
+                    {
+                        "data": "datatablebuttonscode", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    }
+                ],
+                
+               
+            });
+        }
+
+        function jsdatatableloaded() {
+            ConvertNumberToCurrency();
+        }
+        $(function () {
+
+            LoadPlanData();
+
+            $("#btnNewBusinessPlan").click(function () {
+
+
+                if ($("#fiscal_year_id").val()) {
+
+                    var param_value = btoa($("#fiscal_year_id").val());
+                    document.location = "/BusinessPlan/BusinessPlanNew?param=" + param_value;
+
+                }
+                else {
+                    showErrorAlert("Alert", "Select Fiscal Year", "Close", function () {
+
+                        setTimeout(function () {
+                            $("#yearly_gross_sales").focus();
+                        }, 0);
+                    });
+                }
+
+            });
+
+        });
+    </script>
+
+ }

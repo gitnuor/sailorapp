@@ -1,0 +1,12 @@
+create sequence gen_supplier_mode_of_transact_gen_supplier_mode_of_transact_seq;
+
+alter sequence gen_supplier_mode_of_transact_gen_supplier_mode_of_transact_seq owner to postgres;
+
+alter sequence gen_supplier_mode_of_transact_gen_supplier_mode_of_transact_seq owned by " gen_map_supplier_mode_of_transaction".gen_map_supplier_mode_of_transaction_id;
+
+grant select, update, usage on sequence gen_supplier_mode_of_transact_gen_supplier_mode_of_transact_seq to anon;
+
+grant select, update, usage on sequence gen_supplier_mode_of_transact_gen_supplier_mode_of_transact_seq to authenticated;
+
+grant select, update, usage on sequence gen_supplier_mode_of_transact_gen_supplier_mode_of_transact_seq to service_role;
+

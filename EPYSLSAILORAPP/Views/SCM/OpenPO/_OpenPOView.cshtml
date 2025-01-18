@@ -1,0 +1,334 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_scm_po_DTO;
+@{
+    ViewBag.Title = "FabricPo Edit";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .table td, .table th {
+        padding: 0 !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <input type="hidden" id="po_id" value="@Model.po_id">
+
+
+
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Open PO</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Po No</label>
+                                <input style="width:100%" disabled asp-for="po_no" type="text" class="border-#d1cccc-200 form-control " />
+                                <span asp-validation-for="po_no" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Po Date</label>
+                                <input style="width:100%" disabled asp-for="po_date" type="date" class="border-#d1cccc-200 form-control " />
+                                <span asp-validation-for="po_date" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Start Date</label>
+                                <input style="width:100%" disabled asp-for="delivery_start_date" type="date" class="border-#d1cccc-200 form-control " />
+                                <span asp-validation-for="delivery_start_date" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery End Date</label>
+                                <input style="width:100%" disabled asp-for="delivery_end_date" type="date" class="border-#d1cccc-200 form-control " />
+                                <span asp-validation-for="delivery_end_date" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Supplier</label>
+                                <input style="width:100%" readonly asp-for="selected_supplier_name" type="text" class="border-#d1cccc-200 form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Supplier Concern Person</label>
+                                <input style="width:100%" readonly asp-for="supplier_concern_person" type="text" class="border-#d1cccc-200 form-control" />
+                            </div>
+                        </div>
+
+                       
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Unit</label>
+                                <input style="width:100%" readonly asp-for="delivery_unit_name" type="text" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Supplier Address</label>
+                                <input style="width:100%" asp-for="supplier_address" type="text" class="form-control border-#d1cccc-200 rounded-sm text-sm" readonly />
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+                </div>
+                <div class="col-md-6">
+                    <input type="file" style="display:none" id="attachments" multiple />
+
+
+
+                    <div class="row">
+                        <table class="table table-striped table-bordered table-hover" style="padding:0 !important">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width:20%;text-align:center">#</th>
+                                    <th style="width:60%;text-align:center">File</th>
+                                    <th style="width:10%;text-align:center">Download</th>
+                                    <th style="width:10%;text-align:center">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int count = 1;
+                                }
+                                @foreach (var obj in Model.List_Files)
+                                {
+                                    <tr>
+                                        <th style="text-align:center">@count</th>
+                                        <td>@obj.filename</td>
+                                        <td style="text-align:center"> <a href="#" class="btn btn-outline-success" onclick="downloadFile('@obj.filename', '@obj.base64string')"><i class="fa fa-download"></i></a></td>
+                                        <td style="text-align:center"> <a href="#" class="btn btn-outline-danger" onclick="deleteFile('@obj.server_filename',this)"><i class="fa fa-trash"></i></a></td>
+
+                                    </tr>
+
+                                    count++;
+                                }
+
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+
+                        <table style="font-size:10px;" id="DTTranFabricDetails" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                            <thead>
+                                <tr>
+
+                                    <th><label class="labelNormal">Item Code</label></th>
+                                    <th><label class="labelNormal">Item Name</label></th>
+                                    <th style="width:350px;"><label class="labelNormal">Item Spec</label></th>
+                                    <th><label class="labelNormal">Quantity</label></th>
+                                    <th><label class="labelNormal">UOM</label></th>
+                                    <th><label class="labelNormal">Unit Price</label></th>
+                                    <th><label class="labelNormal">Total Price</label></th>
+                                    <th><label class="labelNormal">Remarks</label></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    count = 1;
+                                }
+                                @foreach (var obj in Model.List_po_details)
+                                {
+                                    <tr>
+
+                                        <td style="display:none">@obj.po_details_id</td>
+                                        <td><input disabled type='number' class='form-control item_id' value="@obj.item_id"></td>
+                                        <td><input disabled type='text' class='form-control' value="@obj.item_name"></td>
+                                        <td><input disabled type='text' class='form-control' value="@obj.item_spec"></td>
+                                        <td><input disabled type='number' class='form-control quantity' value="@obj.item_quantity"></td>
+                                        <td><input disabled type='text' class='form-control uom' value="@obj.unit"></td>
+                                        <td><input disabled type='number' class='form-control unitPrice' value="@obj.unit_price"></td>
+                                        <td><input disabled type='number' class='form-control totalPrice' value="@obj.total_price"></td>
+                                        <td><input disabled type='text' class='form-control remarks' value="@obj.remarks"></td>
+
+
+
+
+                                    </tr>
+
+                                    count++;
+                                }
+
+                            </tbody>
+                            <tr>
+                                <td colspan="5" rowspan="1"></td>
+                                <td><strong>Total :</strong></td>
+                                <td><input type='number' id='totalUnitPrice' class='form-control' value="@Model.List_po_details.Sum(x => x.total_price)" disabled></td>
+                                <td colspan="1"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" rowspan="1"></td>
+                                <td><strong>Vat :</strong></td>
+                                <td><input type='number' id='vat' class='form-control' value="@Model.vat_amount"></td>
+                                <td colspan="1"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" rowspan="1"></td>
+                                <td><strong>Discount :</strong></td>
+                                <td><input type='number' id='discount' class='form-control' value="@Model.discount_amount"></td>
+                                <td colspan="1"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" rowspan="1"></td>
+                                <td><strong>Final Total :</strong></td>
+                                <td><input type='number' asp-for="@Model.final_amount" id='finalToPrice' class='form-control' value="@Model.final_amount" disabled></td>
+                                <td colspan="1"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-9">
+                    <strong>Terms and Conditions</strong>
+                    <div class="box" id="termDetails">
+
+                        <table style="font-size:10px;" id="DTTermANdConditionDetailsEdit" class="table dataTable table-striped table-bordered" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center;"><label class="labelNormal">Name</label></th>
+                                    <th style="text-align:center;"><label class="labelNormal">Details</label></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var obj in Model.terms_and_conditions_list)
+                                {
+                                    foreach (var item in obj.Details)
+                                    {
+                                        <tr>
+                                            <!-- Display Term Condition Name for the first detail in the list -->
+                                            <td><p id="term_condition_name">@obj.term_condition_name</p></td>
+                                            <td><p id="description">@item.description</p></td>
+                                            <td style="display:none"><p id="gen_term_and_conditions_details_id">@item.gen_term_and_conditions_details_id</p></td>
+                                            <td style="display:none"><p id="gen_term_and_conditions_id">@obj.gen_term_and_conditions_id</p></td>
+                                            @* <td><button class="btn btn-danger" onclick="deleteRowFPo(this, @item.gen_term_and_conditions_details_id)"><i class="fa fa-trash"></i></button></td> *@
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+
+
+</form>
+
+
+
+
+
+
+<script>
+
+    function deleteFile(guid, row) {
+
+        DeleteList.push(guid);
+        row.closest('tr').remove();
+    }
+
+</script>

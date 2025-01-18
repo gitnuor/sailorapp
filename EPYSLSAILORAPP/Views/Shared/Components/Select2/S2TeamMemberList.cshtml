@@ -1,0 +1,166 @@
+@{
+
+    Layout = null;
+}
+@{
+    string selectid = ViewBag.selectid;
+    int delay = 2;
+    int minimumInputLength = 0;
+    bool isReadOnly = ViewBag.isReadOnly;
+    int team_group_id = Convert.ToInt32(ViewBag.team_group_id);
+
+    string strisReadOnly = isReadOnly.ToString().ToLower();
+
+    bool isRequired = ViewBag.isRequired;
+
+    string isMultiple = ViewBag.isMultiple.ToString().ToLower();
+
+    string placeholder = ViewBag.placeholder;
+    string ddlcss = ViewBag.ddlcss;
+
+
+    if (isRequired == true)
+    {
+        <select selectedvalue="@ViewBag.data" name="@selectid" id="@selectid" class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box"
+                data-val="true" data-val-required="Please Select">
+            <option>@placeholder</option>
+        </select>
+        <span class="field-validation-valid text-danger" data-valmsg-for="@selectid" data-valmsg-replace="true"></span>
+    }
+    else
+    {
+
+        <select selectedvalue="@ViewBag.data" name="@selectid" id="@selectid" class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box">
+            <option>@placeholder</option>
+        </select>
+    }
+}
+
+<script>
+
+   
+    function LoadTeamMemberByDepartmentID(ddl_id, ismultiple, DepartmentID, PreLoadValues) {
+
+        var select2Options = returnSelect2Options();
+        select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'Select Member';
+        select2Options.minimumInputLength = @minimumInputLength;
+        select2Options.multiple = ismultiple;
+        select2Options.dropdownParent = '@ViewBag.model_parentid'.length > 0 ? $('#' + '@ViewBag.model_parentid') : null;
+        select2Options.disabled = @strisReadOnly.ToLower();
+        select2Options.ajax.url = '/Select2/GetTeamMemberListByTeamGroupID', select2Options.ajax.type = 'GET';
+        select2Options.templateResult = function (option) {
+            //console.log(option);
+            return $(option.new_emp_pic);
+
+        };
+        select2Options.ajax.data = function (params) {
+            return {
+                teamGroupID: DepartmentID,
+                pageSize: 10,
+                pageNum: params.page || 1,
+                searchTerm: params.term || null
+            };
+        };
+        select2Options.ajax.processResults = function (data, params) {
+            params.page = params.page || 1;
+
+            if (data.data != null) {
+                return {
+                    results: $.map(data.data, function (obj) {
+                        return { id: obj.id, text: obj.text, new_emp_pic: obj.new_emp_pic };
+                    }),
+                    pagination: {
+                        more: (params.page * 10) < data.recordstotal
+                    }
+                }
+            };
+        };
+
+        $("#" + ddl_id).select2(
+            select2Options
+        );
+
+        $("#" + ddl_id).val(null).trigger('change');
+
+        if ($("#" + ddl_id).attr("selectedvalue") != null) {
+
+            $("#" + ddl_id).empty();
+
+            $.each(JSON.parse($("#" + ddl_id).attr("selectedvalue")), function (key, val) {
+
+                $("#" + ddl_id).append('<option value="' + val.Value + '" selected="selected"">' + val.Text + '</option>');
+
+            });
+
+
+            $("#" + ddl_id).select2(select2Options);
+            $("#" + ddl_id).trigger('change');
+
+            
+        }
+    }
+
+    $(document).ready(function () {
+
+        var select2Options = returnSelect2Options();
+        select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'Select Member';
+        select2Options.minimumInputLength = @minimumInputLength;
+        select2Options.multiple = @isMultiple;
+        select2Options.dropdownParent = '@ViewBag.model_parentid'.length > 0 ? $('#' + '@ViewBag.model_parentid') : null;
+        select2Options.disabled = @strisReadOnly.ToLower();
+        select2Options.ajax.url = '/Select2/GetTeamMemberListByTeamGroupID', select2Options.ajax.type = 'GET';
+        select2Options.templateResult = function (option) {
+            //console.log(option);
+            return $(option.new_emp_pic);
+        };
+        select2Options.ajax.data = function (params) {
+            return {
+                teamGroupID: @team_group_id,
+                pageSize: 10,
+                pageNum: params.page || 1,
+                searchTerm: params.term || null
+            };
+        };
+        select2Options.ajax.processResults = function (data, params) {
+            params.page = params.page || 1;
+
+            if (data.data != null) {
+                return {
+                    results: $.map(data.data, function (obj) {
+                        return { id: obj.id, text: obj.text, new_emp_pic: obj.new_emp_pic };
+                    }),
+                    pagination: {
+                        more: (params.page * 10) < data.recordstotal
+                    }
+                }
+            };
+        };
+
+        $("#@selectid").select2(
+            select2Options
+        );
+
+        if ($("#@selectid").attr("selectedvalue")) {
+
+            $("#@selectid").val(null).trigger('change');
+
+            $("#@selectid").empty();
+
+            $.each(JSON.parse($('#@selectid').attr("selectedvalue")), function (key, val) {
+                $('#@selectid').append('<option   value="' + val.Value + '" selected="selected"">' + val.Text + '</option>');
+            });
+
+            $("#" + $("#@selectid").attr("id")).select2(select2Options);
+            $("#" + $("#@selectid").attr("id")).trigger('change');
+
+          //  $("#@selectid").removeAttr("selectedvalue")
+        }
+
+    });
+
+</script>
+
+
+
+
+

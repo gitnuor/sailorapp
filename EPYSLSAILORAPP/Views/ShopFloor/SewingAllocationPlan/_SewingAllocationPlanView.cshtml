@@ -1,0 +1,135 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_sewing_allocation_plan_DTO;
+@{
+    ViewBag.Title = "TranSewingAllocationPlan Edit";
+    Layout = null;
+}
+
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmView" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+      <input type="hidden" id="tran_sewing_allocation_plan_id" value="@Model.tran_sewing_allocation_plan_id">
+
+           <div class="card">
+             <div class="card-header">
+                   <h6 class="card-title">TranSewingAllocationPlan View</h6> 
+             </div>
+       
+             <div class="card-body">
+               		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sewing Allocation Number</label>
+					 <input style="width:100%"  disabled  asp-for="sewing_allocation_number" type="text" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="sewing_allocation_number" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techpack Id</label>
+					<input style="width:100%" disabled   asp-for="techpack_id" type="number" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="techpack_id" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sewing Allocation Date</label>
+					 <input style="width:100%"  disabled  asp-for="sewing_allocation_date" type="date" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="sewing_allocation_date" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Merchandiser Id</label>
+					<input style="width:100%" disabled   asp-for="merchandiser_id" type="number" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="merchandiser_id" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Item Product Id</label>
+					 <input style="width:100%"  disabled  asp-for="style_item_product_id" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="style_item_product_id" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Item Product Category</label>
+					<input style="width:100%" disabled   asp-for="style_item_product_category" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="style_item_product_category" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+
+             </div>
+          </div>
+	 
+	
+  
+
+</form>
+
+
+
+
+

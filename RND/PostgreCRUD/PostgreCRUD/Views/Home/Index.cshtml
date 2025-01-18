@@ -1,0 +1,35 @@
+﻿@model InsertDataViewModel
+
+@{
+    ViewData["Title"] = "Insert Data";
+}
+
+<h2>Insert Data</h2>
+
+<form asp-action="InsertData" method="post">
+    <h4>Grandparent Information</h4>
+    <div class="form-group">
+        <label asp-for="Grandparent.GrandparentName"></label>
+        <input asp-for="Grandparent.GrandparentName" class="form-control" />
+    </div>
+
+    <h4>Parent Information</h4>
+    <div class="form-group">
+        <label asp-for="Parent.ParentName"></label>
+        <input asp-for="Parent.ParentName" class="form-control" />
+    </div>
+
+    <h4>Child Information</h4>
+    <div class="form-group">
+        <label asp-for="Child.ChildName"></label>
+        <input asp-for="Child.ChildName" class="form-control" />
+    </div>
+
+    <h4>Great-Grandchild Information</h4>
+    <div class="form-group">
+        <label asp-for="GreatGrandchild.GreatGrandchildName"></label>
+        <input asp-for="GreatGrandchild.GreatGrandchildName" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Insert Data</button>
+</form>

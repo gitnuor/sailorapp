@@ -1,0 +1,287 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_finish_product_receive_DTO;
+@{
+    ViewBag.Title = "PMC Receive";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">PMC Receive Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Packing List</label>
+
+                        @await Component.InvokeAsync("S2TranPackingList", new
+                            {
+                                ddlId = "tran_packing_list_id",
+                                selectedvalue = "",
+                                cssclass = "form-control S2TranPackingList",
+                                isRequired = false,
+                                isReadOnly = false,
+                                placeholder = "Select Packing List",
+                                preloaded = "",
+                                model_parentid = "modalcontainer"
+                            })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Finish Product Receive Date</label>
+                        <input style="width:100%" asp-for="finish_product_receive_date" type="date" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="finish_product_receive_date" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Vehicle Type</label>
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "transport_id",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.transportTypeList)),
+                                selectedvalue = "",
+                                cssclass = "form-control vehicle_type",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "--Select--"
+                            })
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Vehicle Number</label>
+                        <input style="width:100%" asp-for="vehicle_number" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="vehicle_number" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Driver Name</label>
+                        <input style="width:100%" asp-for="driver_name" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="driver_name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Driver Contact No</label>
+                        <input style="width:100%" asp-for="driver_contact_no" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="driver_contact_no" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note</label>
+                        <input style="width:100%" asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="note" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" id="divTablePacking" style="display:none">
+                <div class="col-md-12">
+                    <table style="font-size:9px;" id="DTPListOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th><label class="labelNormal">SL No</label></th>
+                                <th><label class="labelNormal">Techpack</label></th>
+                                <th><label class="labelNormal">Style Code</label></th>
+                                <th><label class="labelNormal">Color</label></th>
+                                <th><label class="labelNormal">Barcode</label></th>
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">M.Unit</label></th>
+                                <th><label class="labelNormal">MRP</label></th>
+                                <th><label class="labelNormal">Order Qty</label></th>
+                                <th><label class="labelNormal">Challan /PL Qty</label></th>
+                                <th><label class="labelNormal">Already Receive </label></th>
+                                <th><label class="labelNormal">Available To Receive</label></th>
+                                <th><label class="labelNormal">Received Qty </label></th>
+                                <th><label class="labelNormal">Reject/Short Qty </label></th>
+                                <th><label class="labelNormal">Value </label></th>
+                                <th><label class="labelNormal">Remarks</label></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div class="row">
+
+            <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                <button type="button" class="btn btn-success " id="btnSaveTranFinishProductReceive" onclick="SaveTranFinishProductReceive(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+
+
+
+</form>
+
+
+<script>
+    $('#tran_packing_list_id').on('change', function () {
+        var tran_packing_list_id = $(this).select2("data");
+        ajaxGetHandler("/TranFinishProductReceive/GetPackingDetails?tran_packing_list_id=" + tran_packing_list_id[0].id, null, function (data) {
+
+            $("#divTablePacking").show();
+            var table = document.getElementById("DTPListOutput").getElementsByTagName('tbody')[0];
+            table.innerHTML = '';
+            var sl_no = 0;
+            data.data.forEach(function (item) {
+                var newRow = table.insertRow(table.rows.length);
+                sl_no++;
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+                var cell6 = newRow.insertCell(5);
+                var cell7 = newRow.insertCell(6);
+                var cell8 = newRow.insertCell(7);
+                var cell9 = newRow.insertCell(8);
+                var cell10 = newRow.insertCell(9);
+                var cell11 = newRow.insertCell(10);
+                var cell12 = newRow.insertCell(11);
+                var cell13 = newRow.insertCell(12);
+                var cell14 = newRow.insertCell(13);
+                var cell15 = newRow.insertCell(14);
+                var cell16 = newRow.insertCell(15);
+                var cell17 = newRow.insertCell(16);
+                var cell18 = newRow.insertCell(17);
+                var cell19 = newRow.insertCell(18);
+                var cell20 = newRow.insertCell(19);
+
+                cell1.innerHTML = `<input disabled type='number' class='form-control sl_no' value=` + sl_no + ` >`;
+                cell1.style.width = "4%";
+                cell2.innerHTML = "<input  type='number' class='form-control techpack_id' value=" + item.techpack_id + " >";
+                cell2.style.display = "none";
+                cell3.innerHTML = "<input disabled type='text' class='form-control techpack_number' value=" + item.techpack_number + " >";
+                cell3.style.width = "12%";
+                cell4.innerHTML = "<input disabled type='text' class='form-control style_code' value=" + item.style_code + " >";
+                cell4.style.width = "8%";
+                cell5.innerHTML = "<input disabled type='text'class='form-control color_code' value=" + item.color_code + " >";
+                cell5.style.display = "none";
+                let pattern = /#\w+/;
+                let match = item.color_code.match(pattern);
+                cell6.style.background = match[0];
+                
+                cell7.innerHTML = "<input disabled type='text'class='form-control barcode' value=" + item.barcode + " >";
+                cell7.style.width = "8%";
+                cell8.innerHTML = "<input disabled type='number'class='form-control style_product_size_group_detid' value=" + item.style_product_size_group_detid + " >";
+                cell8.style.display = "none";
+                cell9.innerHTML = "<input disabled type='text'class='form-control style_product_size' value=" + item.style_product_size + " >";
+                cell9.style.width = "7%";
+                cell10.innerHTML = "<input disabled type='number'class='form-control style_product_unit_id' value=" + item.style_product_unit_id + " >";
+                cell10.style.display = "none";
+                cell11.innerHTML = "<input disabled type='text'class='form-control style_product_unit' value=" + item.style_product_unit + " >";
+                cell11.style.width = "5%";
+                cell12.innerHTML = "<input disabled type='number'class='form-control mrp' value=" + item.final_mrp + " >";
+                cell12.style.width = "8%";
+                cell13.innerHTML = "<input disabled type='number' disabled class='form-control order_quantity' value=" + item.order_quantity + " >";
+                cell13.style.width = "8%";
+                cell14.innerHTML = "<input type='number' disabled class='form-control packing_quantity' value=" + item.packing_quantity + ">";
+                cell14.style.width = "8%";
+                cell15.innerHTML = "<input  type='number' disabled class='form-control already_receive' value=" + item.already_receive + ">";
+                cell16.innerHTML = "<input  type='number' disabled class='form-control avtr' value=" + (item.packing_quantity - item.already_receive) + ">";
+                cell17.innerHTML = "<input  type='number' class='form-control receive_quantity' onfocusout='calculation(this)'>";
+                cell18.innerHTML = "<input  type='number' disabled class='form-control reject_quantity'>";
+                cell18.style.width = "8%";
+                cell19.innerHTML = "<input  type='number' disabled class='form-control total_mrp_value' value= 0 >";
+                cell19.style.width = "8%";
+                cell20.innerHTML = "<input  type='text' class='form-control note'>";
+                cell20.style.width = "8%";
+            });
+
+
+
+
+        });
+
+    });
+
+    function calculation(e)
+    {
+
+        var avtr = parseInt($(e).closest("tr").find(".avtr").val());
+        var rcv = parseInt($(e).closest("tr").find(".receive_quantity").val());
+        var tmrp = parseInt($(e).closest("tr").find(".mrp").val());
+        $(e).closest("tr").find(".reject_quantity").val(parseInt(avtr) - parseInt(rcv));
+        $(e).closest("tr").find(".total_mrp_value").val(parseFloat(tmrp) * parseInt(rcv));
+    }
+</script>
+
+

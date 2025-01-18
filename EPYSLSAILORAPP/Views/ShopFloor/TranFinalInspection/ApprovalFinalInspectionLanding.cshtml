@@ -1,0 +1,444 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_final_inspection_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Final Inspection List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Final Inspection</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+               
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precostinglanding" class="nav nav-tabs">
+
+                                       
+                                        <li class="active" tab_index="1">
+                                            <a href="#det3" style="text-decoration: unset;width: 200px;" class="tab_link active" data-toggle="tab">PENDING LIST</a>
+                                        </li>
+                                        <li class="" tab_index="2">
+                                            <a href="#det4" style="text-decoration: unset;width: 170px;" class="tab_link" data-toggle="tab">APPROVED LIST</a>
+                                        </li>
+
+                                    </ul>
+                                    <div class="tab-content">
+
+                                        
+                                        <div class="tab-pane active" id="det3" tabpane_index="1">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTTranFinalInspectionSub" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th>Final Inspection No</th>
+                                                                <th>Final Inspection Date</th>
+
+                                                                <th>Techpack</th>
+                                                                <th>Event</th>
+                                                                <th>Note</th>
+
+
+                                                                <th>Action</th>
+
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det4" tabpane_index="2">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTTranFinalInspectionApp" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th>Final Inspection No</th>
+                                                                <th>Final Inspection Date</th>
+
+                                                                <th>Techpack</th>
+                                                                <th>Event</th>
+                                                                <th>Note</th>
+
+
+                                                                <th>Action</th>
+
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Final Inspection
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddTranFinalInspection() {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/TranFinalInspection/TranFinalInspectionNew", null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+               
+
+                $("#modalcontent .S2TechPack").val(null).trigger('change.select2');
+
+                $('#techpack_id').on('change', function () {
+                    var techpack_id = $(this).select2("data");
+
+                    ajaxGetHandler("/TranFinalInspection/GetTechpackDet?techpack_id=" + techpack_id[0].id, null, function (data) {
+
+                        var t_data = data.data;
+
+                        $('#techpack_date').val(t_data.techpack_date);
+
+                        $('#event_title').val(t_data.event_title);
+                        $('#style_item_product_name').val(t_data.style_item_product_name);
+                        $('#designer_name').val(t_data.designer_name);
+                        $('#merchandiser_name').val(t_data.merchandiser_name);
+                        $('#teckpack_style_code').val(t_data.teckpack_style_code);
+
+
+                        $('#ddl_color').empty();
+                        $('#ddl_color').append($('<option>', {
+                            value: 0,
+                            text: "Select Color",
+                            selected: "selected"
+                        }));
+
+                        for (var i = 0; i < t_data.colors.length; i++) {
+
+                            $('#ddl_color').append($('<option>', {
+                                value: t_data.colors[i].value,
+                                text: t_data.colors[i].text
+
+                            }));
+                        }
+
+
+                    });
+                });
+
+            });
+
+
+        }
+
+        function EditTranFinalInspection(btn) {
+
+
+            var tran_final_inspection_id = $(btn).attr("tran_final_inspection_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranFinalInspection/TranFinalInspectionEdit?tran_final_inspection_id=" + tran_final_inspection_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+        function EditPendingFinalInspection(btn) {
+
+
+            var tran_final_inspection_id = $(btn).attr("tran_final_inspection_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranFinalInspection/EditPendingFinalInspection?tran_final_inspection_id=" + tran_final_inspection_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+        function ViewTranFinalInspection(btn) {
+
+            var tran_final_inspection_id = $(btn).attr("tran_final_inspection_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranFinalInspection/TranFinalInspectionView?tran_final_inspection_id=" + tran_final_inspection_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+
+        function ApproveTranFinalInspection(btn) {
+
+            var details_list = [];
+            $.each($("#DTinspectionDetails tbody tr"), function (key, val) {
+
+
+                var obj_TranFinalInspectionDetails = {
+                    tran_final_inspection_id: $('#modalcontent #tran_final_inspection_id').val(),
+                    color_code: $(val).closest("tr").find(".color_code").val(),
+                    inspection_qty: $(val).closest("tr").find(".inspection_qty").val(),
+                    production_qty: $(val).closest("tr").find(".production_qty").val(),
+                    balance_qty: $(val).closest("tr").find(".balance_qty").val(),
+                    proposed_mrp: $(val).closest("tr").find(".proposed_mrp").val(),
+                    final_mrp: $(val).closest("tr").find(".final_mrp").val(),
+                    note: $(val).closest("tr").find(".note").val()
+
+
+                }
+                details_list.push(obj_TranFinalInspectionDetails);
+            });
+
+
+            var obj_TranFinalInspection = {
+                tran_final_inspection_id: $('#modalcontent #tran_final_inspection_id').val(),            
+        
+                tranFinalInspectionDetails_List: details_list
+
+            }
+
+   
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/TranFinalInspection/ApproveTranFinalInspection", obj_TranFinalInspection, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                if (response.status_Code == "200") {
+
+                    LoadTranFinalInspectionData();
+
+
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+      
+    
+
+        $(function () {
+            BindTabEvents("tab_bar_style");
+            LoadTranFinalInspectionData();
+
+        });
+
+        function LoadTranFinalInspectionData() {
+
+           
+            var dt3 = $("#DTTranFinalInspectionSub").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/TranFinalInspection/GetTranFinalInspectionApprovalPendingData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_final_inspection_id", data.tran_final_inspection_id);
+
+                },
+                "columns": [
+
+                    { "data": "final_inspection_no", "name": "final_inspection_no", "autoWidth": true },
+                    { "data": "final_inspection_date", "name": "final_inspection_date", "autoWidth": true },
+
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "note", "name": "note", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+            var dt4 = $("#DTTranFinalInspectionApp").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/TranFinalInspection/GetTranFinalInspectionApprovedData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_final_inspection_id", data.tran_final_inspection_id);
+
+                },
+                "columns": [
+
+                    { "data": "final_inspection_no", "name": "final_inspection_no", "autoWidth": true },
+                    { "data": "final_inspection_date", "name": "final_inspection_date", "autoWidth": true },
+
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "note", "name": "note", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

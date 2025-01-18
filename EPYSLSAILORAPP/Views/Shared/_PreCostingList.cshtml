@@ -1,0 +1,104 @@
+﻿@using Newtonsoft.Json;
+@model List<EPYSLSAILORAPP.Domain.RPC.rpc_sp_get_pre_costing_details_DTO>
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+    #DTTranSampleOrderData dataTable {
+    }
+
+        .inner_th {
+            background-color: #c5892f!important;
+            color: white;
+            vertical-align: middle;
+        }
+        .inner_tr
+        {
+        background-color: #e1dedb !important;
+        }
+
+</style>
+
+<div class="row detl_toprow" style="text-align: right; background-color: #e1a354;  display: inline-block; float: right;">
+
+    <table style="font-size:10px;" id="DTTranPreCostingData" class=" table dataTable  table-bordered DTTranSampleOrderData" cellspacing="0">
+        <thead>
+            <tr>
+
+                <th class="inner_th"><label class="labelNormal">SL</label></th>
+                <th class="inner_th"><label class="labelNormal">Order Number</label></th>
+                <th class="inner_th"><label class="labelNormal  ">Order Date</label></th>
+                <th class="inner_th"><label class="labelNormal ">Delivery Date</label></th>
+
+                <th class="inner_th"><label class="labelNormal "> Delivery Unit</label></th>
+                <th class="inner_th"><label class="labelNormal "> Quantity</label></th>
+
+
+                <th class="inner_th" style="width:120px;text-align: center;"><label class="labelNormal ">Action</label></th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                <tr class="inner_tr">
+                    <td>@obj.RowNumber</td>
+                    <td>@obj.tran_sample_order_number</td>
+                    <td>@obj.order_date.Value.ToShortDateString()</td>
+                    <td>@obj.delivery_date.Value.ToShortDateString()</td>
+                    <td>@obj.str_delivery_unit</td>
+                    <td>@obj.order_quantity</td>
+
+                    @if(obj.tran_pre_costing_id==null)
+                    {
+                        <td style="text-align: center;"><input style="width:110px;" class="btn btn-success" tran_sample_order_id="@obj.tran_sample_order_id" type="button" value="Add Pre Costing" onclick="AddPreCosting(this)" /></td>
+                    }
+                    else
+                    {
+                        <td style="text-align: center;"><input style="width:110px;" class="btn btn-success" tran_sample_order_id="@obj.tran_sample_order_id" tran_pre_consting_id="@obj.tran_pre_costing_id" type="button" value="Edit Pre Costing" onclick="EditPreCosting(this)" /></td>
+                    }
+                        </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

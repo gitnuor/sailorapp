@@ -1,0 +1,40 @@
+﻿@using Newtonsoft.Json;
+@using System.Data;
+@{
+    DataTable dt = ViewBag.TableDetails;
+}
+<div class="col-lg-6 col-sm-6 col-xs-6 single_db_table" style="max-height: 554px;overflow: scroll;">
+    <table class="tbldetl"  table_name="@ViewBag.Table" style="width:100%;background: darkseagreen;">
+        <tr style="background: beige;">
+            <td colspan="2">
+                <input onclick="CheckUncheckAllColumn(this);" type="checkbox" style="float:left;margin: 4px;" class="chkalcoumns" table_name="@ViewBag.Table">
+                <b style="padding: 10px;">@ViewBag.Table<input onclick="LoadMakeRelation(this);" type="button" class="btntablejoin" table_name="@ViewBag.Table" value="join" /> </b>
+                <button style="float:right;" onclick="RemoveTable(this);" class="clsRemove">X</button>
+            </td>
+        </tr>
+        @for (int i = 0; i < dt.Rows.Count; i++)
+        {
+            <tr class="tr_columns">
+                <td style="width:10%;">
+                    <input type="checkbox" style="float:left;    margin: 7px;" class="chkSelectColumn" column_name="@dt.Rows[i]["column_name"].ToString()">
+                </td>
+                <td style="width:90%;">
+                    @dt.Rows[i]["column_name"].ToString()
+                    (filter<input type="checkbox" style=" margin: 5px;" class="chkSelectFilterColumn" column_name="@dt.Rows[i]["column_name"].ToString()">)
+
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<script>
+    function testts() { 
+    }
+    var tempList = @Html.Raw((ViewBag.TableRelationDetails));
+
+    if (relationList.filter(p => p.referenced_table == '@ViewBag.Table').length==0)
+    relationList = relationList.concat(tempList);
+
+    var tempColList = @Html.Raw((ViewBag.TableDet));
+    tableColumnList = tableColumnList.concat(tempColList);
+</script>

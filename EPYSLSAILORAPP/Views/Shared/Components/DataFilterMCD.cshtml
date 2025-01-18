@@ -1,0 +1,92 @@
+﻿<div class="card-body" style="margin-top: 10px;background-color: aliceblue;">
+    <div class="row">
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year *</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                    {
+                        ddlId = "fiscal_year_id",
+                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.fiscal_year_list)),
+                        selectedvalue = ViewBag.fiscal_year_id,
+                        cssclass = "form-control",
+                        enable = false,
+                        isRequired = true,
+                        placeholder = "Select Fiscal Year"
+                    })
+            </div>
+        </div>
+        <div class="col-md-2">
+
+            <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Season Events *</label>
+
+            @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                    ddlId = "event_id",
+                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.event_list)),
+                    selectedvalue = ViewBag.event_id,
+                    cssclass = "form-control",
+                    enable = false,
+                    isRequired = true,
+                    placeholder = "Select Fiscal Year"
+                })
+
+        </div>
+        
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Item Group</label>
+
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                    {
+                        ddlId = "item_structure_group_id",
+                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.gen_item_structure_group_list)),
+                        selectedvalue = "",
+                        cssclass = "form-control",
+                        enable = true,
+                        isRequired = true,
+                        placeholder = "select"
+                    })
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Item Sub Group</label>
+
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                    {
+                        ddlId = "gen_item_structure_group_sub_id",
+                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.gen_item_structure_group_sub_list)),
+                        selectedvalue = "",
+                        cssclass = "form-control",
+                        enable = true,
+                        isRequired = true,
+                        placeholder = "select"
+                    })
+            </div>
+
+        </div>
+
+        <div class="col-md-2" style="width:20%">
+            <div class="form-group">
+                <button style="margin-top:30px;" type="button" class="btn btn-primary" id="btnLoadData"><i class="fa fa-plus"></i>&nbsp;Load Data</button>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+       
+    });
+
+</script>

@@ -1,0 +1,511 @@
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.cutting_details_DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<div class="col-md-12" id="tab_bar_style">
+    <ul id="tab_cutting" class="nav nav-tabs">
+        <li class="" tab_index="1">
+            <a href="#det1" style="text-decoration: unset;" class="tab_link" data-toggle="tab">Garment Part</a>
+        </li>
+        <li class="" tab_index="2">
+            <a href="#det2" style="text-decoration: unset;" class=" tab_link" data-toggle="tab">Bundle Information</a>
+        </li>
+     
+
+    </ul>
+
+    <div class="tab-content">
+        <input type="hidden" id="size_text" value="@Model.size_text">
+
+        <input type="hidden" id="batch_no_for_cutting" value="">
+        <div class="tab-pane active" id="det1" tabpane_index="1">
+
+            <div class="box">
+                <div class="row" style="">
+
+                    <div class="col-md-2" style="padding-top:5px;">
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "ddl_garment_part",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.garment_part_List)),
+                                selectedvalue = "",
+                                cssclass = "form-control ddl_garment_part",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "Garment Part"
+                            })
+
+
+                        <button type="button" class="btn btn-primary" onclick="addPart(this)" style="margin-left:60%; margin-top: 5%;">ADD</button>
+
+                      
+                    </div>
+                    <div class="col-md-2" >
+                        <table style="font-size:9px;" id="DTPartDetailsList" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                            <thead>
+                                <tr>
+
+                                    <th><label class="labelNormal">Part Name</label></th>
+                                    <th><label class="labelNormal">Action</label></th>
+                                 
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int count = 1;
+                                }
+                                @foreach (var obj in Model.techpack_garment_part_list)
+                                {
+                                    <tr>
+
+                                        <td><div class="garment_part_name">@obj.garment_part_name</div></td>
+                                 
+                                        <td style="display:none"><input type='text' class='form-control gen_garment_part_id' value="@obj.gen_garment_part_id"></td>
+                                        <td style="text-align:center"><button type='button' onclick='DeletePart(this,@obj.gen_garment_part_id)' class='btn btn-danger btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></button></td>
+                           
+
+                                    </tr>
+                                    count++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-3">
+                        
+                    </div>
+                    <div class="col-md-4">
+                        <table style="font-size:9px;" id="DTSizeOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">Total Output Qty</label></th>
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                                @foreach (var obj in Model.size_list)
+                            {
+                                <tr>
+
+                                        <td><input disabled type="text"class="form-control size_name" value="@obj.size">   </td>
+                                        <td style="display:none"><input type='text' class='form-control style_product_size_group_detid' value="@obj.style_product_size_group_detid"></td>
+                                    <td><input type='number' disabled class='form-control total_output_quantity'></td>
+
+
+                                </tr>
+                            
+                            }
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                        @foreach (var obj in Model.techpack_garment_part_list)
+                    {
+                        
+
+                        <div class="col-md-3" id="div_@obj.gen_garment_part_id">
+                            <p style="background-color:#c11116;text-align:center;color: white;"><b>@obj.garment_part_name</b></p>
+                            <table style="font-size:9px;" id="DTPartratio_@obj.gen_garment_part_id" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                                <thead>
+                                    <tr>
+
+                                        <th><label class="labelNormal">Size</label></th>
+                                        <th><label class="labelNormal">Ratio</label>
+                                            <input type='number' min="0" onfocusout="InputRatio(this,@obj.gen_garment_part_id)" class='form-control'>
+                                        </th>
+                                        <th><label class="labelNormal">Output Quantity</label></th>
+
+
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   
+                                    @foreach (var size in Model.size_list)
+                                    {
+                                        <tr>
+
+                                            <td><div class="size">@size.size</div></td>
+                                            <td style="display:none"><input type='text' class='form-control style_product_size_group_detid' value="@size.style_product_size_group_detid"></td>
+                                            <td><input type='number' min="0" class='form-control ratio'></td>
+                                            <td><input type='number' disabled class='form-control output_quantity'></td>
+
+                                         
+
+                                        </tr>
+                                      
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    }
+                    <div class="row" id="tableContainer">
+                       
+                        </div>
+                    
+
+                </div>
+                <div class="row">
+                    <div class="col-md-11"></div>
+                    <div class="col-md-1" style="text-align:right">
+                        <button type="button" class="btn btn-primary  btnSaveNext" onclick="ProcesseOutput(this)">Done</button>
+
+                    </div>
+                    
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-pane" id="det2" tabpane_index="2">
+            <div class="box">
+                <div class="row"> 
+                    <div class="col-md-11"></div>
+                    <div class="col-md-1">
+                        <button type="button" onclick="SaveTranCutting(this)" class="btn btn-success">Save Batch</button>
+                    </div>
+                    
+                    
+                </div>
+               
+                @foreach (var size in Model.size_list)
+                {
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        @* <button type="button" data-bs-toggle="collapse" data-bs-target="#demo" style="background-color:#c11116;text-align:center;color: white;width:100%"> *@
+                            
+                        @* </button> *@
+
+                        <li class="nav-item menu-open">
+                            <a href="#" class="nav-link" style="background-color:#c11116;text-align:left;color: white;width:100%">
+                               
+                                <p>
+                                    <i class="nav-icon fas fa-edit"></i>
+                                    <b> @size.size</b>
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                @foreach (var obj in Model.techpack_garment_part_list)
+                                {                                  
+                                    <div class="row divBundle_@obj.gen_garment_part_id">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Garment Part</label>
+                                                        <input style="width:100%" readonly type="text" class="border-#d1cccc-200 form-control" value="@obj.garment_part_name" />
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Output Quantity</label>
+                                                        <input style="width:100%" readonly type="number" id="output_quantity_@obj.gen_garment_part_id-@size.style_product_size_group_detid" class="border-#d1cccc-200 form-control" />
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Per Bundle Quantity</label>
+                                                        <input style="width:100%" type="number" min="0" onfocusout="BundleCalculation(this,@obj.gen_garment_part_id,@size.style_product_size_group_detid)" id="per_bundle_quantity_@obj.gen_garment_part_id-@size.style_product_size_group_detid" class="border-#d1cccc-200 form-control"
+                                                               onfocusout="(@obj.gen_garment_part_id,@size.style_product_size_group_detid)" />
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">No of Bundle</label>
+                                                        <input style="width:100%" readonly type="number" id="number_of_bundle_@obj.gen_garment_part_id-@size.style_product_size_group_detid" class="border-#d1cccc-200 form-control" />
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="col-md-12">
+                                                <table style="font-size:9px;" id="DTBundle_@obj.gen_garment_part_id-@size.style_product_size_group_detid" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th><label class="labelNormal">Bundle No</label></th>
+                                                            <th><label class="labelNormal">Bundle Quantity</label></th>
+
+                                                            <th><label class="labelNormal">Barcode Generate</label></th>
+
+
+
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                }
+                              
+                            </ul>
+                        </li>
+
+                   
+             
+            
+
+                    </ul>
+                }
+             
+            </div>
+        </div>
+
+     
+
+    </div>
+
+
+
+
+</div>
+<script>
+    function addPart()
+    {
+        var part_id = $("#ddl_garment_part").val();
+        var part_name = $("#ddl_garment_part option:selected").text();
+      
+        var table = document.getElementById("DTPartDetailsList").getElementsByTagName('tbody')[0];
+
+        var newRow = table.insertRow(table.rows.length);
+
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+ 
+
+
+      
+        cell1.innerHTML = part_name ;
+      
+        cell2.innerHTML = "<input disabled type='text'class='form-control gen_garment_part_id' value=" + part_id + " >";
+        cell2.style.display = "none";
+        cell3.innerHTML = "<button type='button' onclick='DeletePart(this,"+part_id+")' class='btn btn-danger btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></button>";
+        cell3.style = "text-align:center";
+
+
+        addDiv(part_id, part_name);
+    }
+
+    function DeletePart(button,id) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        $("#div_" + id).remove();
+        $(".divBundle_" + id).remove();
+  
+    }
+   
+    function addDiv(id, name) {
+        
+        var container = document.getElementById("tableContainer");
+        var div = document.createElement("div");
+        div.classList.add("col-md-3");
+        div.id = "div_" + id;
+    
+        // Create a new <p> element
+        var paragraph = document.createElement("p");
+
+        // Set the style attributes for the <p> element
+        paragraph.style.backgroundColor = "#c11116";
+        paragraph.style.textAlign = "center";
+        paragraph.style.color = "white";
+
+        // Create a <b> element
+        var boldElement = document.createElement("b");
+
+        // Set the text content for the <b> element
+        boldElement.textContent = name;
+
+        // Append the <b> element to the <p> element
+        paragraph.appendChild(boldElement);
+        div.appendChild(paragraph);
+        var table = document.createElement("table");
+        table.style.fontSize = "9px";
+        table.id = "DTPartratio_"+id;
+        table.classList.add("table", "dataTable", "table-striped", "table-bordered", "table-sm");
+
+        // Create the table header
+        var thead = document.createElement("thead");
+        var headerRow = document.createElement("tr");
+        var headers = ["Size", "Ratio", "Output Quantity"];
+        var tbody = document.createElement("tbody");
+        headers.forEach(function (headerText) {
+            var th = document.createElement("th");
+            th.innerHTML = "<label class='labelNormal'>" + headerText + "</label>";
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        div.appendChild(table);
+        container.appendChild(div);
+        
+        table.appendChild(tbody);
+
+        var new_table = document.getElementById("DTPartratio_" + id).getElementsByTagName('tbody')[0];
+        sizeArray.forEach(function (sizeObj) {
+           
+
+            var newRow = new_table.insertRow(new_table.rows.length);
+
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+
+
+            cell1.innerHTML = `<div class="size">` + sizeObj.size + `</div>`;
+           
+            cell2.innerHTML = "<input type='text' class='form-control style_product_size_group_detid' value="+sizeObj.style_product_size_group_detid+">";
+            cell2.style.display = "none";
+            cell3.innerHTML = `<input type='number' onfocusout="CalculateRatio(this,'` + sizeObj.size + `',` + sizeObj.style_product_size_group_detid + `)" class= 'form-control ratio'> `;
+            cell4.innerHTML = "<input type='number' readonly class='form-control output_quantity'>";
+           
+
+        
+        });
+
+      
+
+        // Append the table to the div and then append the div to the container
+      
+
+    }
+    function ProcesseOutput(btn) {
+        sizeArray.forEach(function (item) {
+            item.total_output_quantity = 0;
+        });
+        $.each($("#DTPartDetailsList tbody tr"), function (key, val) {
+
+            var gen_garment_part_id = $(this).closest("tr").find(".gen_garment_part_id").val();
+          
+            $.each($("#DTPartratio_" + gen_garment_part_id+ " tbody tr"), function (key, val) {
+
+                var style_product_size_group_detid = $(this).closest("tr").find(".style_product_size_group_detid").val();
+               
+                var sizeObj = sizeArray.find(obj => obj.style_product_size_group_detid === parseInt(style_product_size_group_detid));
+                sizeObj.total_output_quantity = sizeObj.total_output_quantity + parseInt($(this).closest("tr").find(".output_quantity").val());
+            });
+
+        });
+
+
+       
+        $.each($("#DTSizeOutput tbody tr"), function (key, val) {
+
+            var style_product_size_group_detid =  $(this).closest("tr").find(".style_product_size_group_detid").val();
+
+
+            var sizeObj = sizeArray.find(obj => obj.style_product_size_group_detid === parseInt(style_product_size_group_detid));
+            $(this).closest("tr").find(".total_output_quantity").val(sizeObj.total_output_quantity);
+            var t_obj = {
+                style_product_size_group_detid: $(this).closest("tr").find(".style_product_size_group_detid").val(),
+                size_name: $(this).closest("tr").find(".size_name").val(),
+                total_quantity: sizeObj.total_output_quantity
+            };
+            tran_cutting_color_batch_size_summery.push(t_obj);
+
+            total_cutting_output = sizeObj.total_output_quantity + total_cutting_output;
+        });
+        BundleCounter = 0;
+    }
+    
+    
+    function InputRatio(input, part_id) {
+        var inputValue = input.value;
+
+        $.each($("#DTPartratio_" + part_id + " tbody tr"), function (key, val) {
+
+            $(val).closest("tr").find(".ratio").val(inputValue);
+            $(val).closest("tr").find(".output_quantity").val(parseInt(inputValue) * no_of_lay);
+            
+            var in_id = "#output_quantity_" + part_id + "-" + $(val).closest("tr").find(".style_product_size_group_detid").val();
+            $(in_id).val(parseInt(inputValue) * no_of_lay);
+        });
+    }
+
+    function BundleCalculation(input, part_id,style_id) {
+        var inputValue = parseInt(input.value);
+        var last_budnle_qty = 0;
+        var output_quantity = $("#output_quantity_" + part_id + "-" + style_id).val();
+        var left_out = output_quantity % input.value;
+        var full_bundle = parseInt(output_quantity / input.value);
+        if (left_out > 10) {
+            full_bundle++;
+            last_budnle_qty = left_out;
+        }
+        else { 
+            last_budnle_qty = left_out + inputValue;
+        }
+        $("#number_of_bundle_" + part_id + "-" + style_id).val(full_bundle);
+     
+
+        var table = document.getElementById("DTBundle_" + part_id + "-" + style_id).getElementsByTagName('tbody')[0];
+        table.innerHTML = '';
+        for (var i = 0; i < full_bundle; i++) {
+
+            var newRow = table.insertRow(table.rows.length);
+
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+
+
+
+            BundleCounter++;
+            cell1.innerHTML = "<input disabled type='text'class='form-control bundle_no' value=BN-" + BundleCounter + ">";
+            if (full_bundle - 1 == i) {
+                inputValue = last_budnle_qty;
+            }
+            cell2.innerHTML = "<input disabled type='number'class='form-control b_qty' value=" + inputValue + ">";          
+            cell3.innerHTML = `<img style="width:200px;height:40px;background:none;"src="../Images/barcode.jpeg" alt="Italian Trulli">`;
+           
+        
+        
+        }
+        
+    }
+</script>
+
+
+
+
+

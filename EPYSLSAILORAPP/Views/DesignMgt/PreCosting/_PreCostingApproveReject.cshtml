@@ -1,0 +1,986 @@
+﻿@using EPYSLSAILORAPP.Domain.RPC;
+@using EPYSLSAILORAPP.Domain;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Application.DTO.Tran_DesignMgt.tran_pre_costing_DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 14px;
+        line-height: 1rem;
+        font-weight: bold;
+    }
+
+</style>
+<input type="hidden" value="@Model.sample_order.designer_member_id" id="designer_member_id">
+<input type="hidden" asp-for="tran_pre_costing_id">
+
+<input type="hidden" id="pre_costing_date" value="@Model.pre_costing_date.Value.Date.ToString("yyyy-MM-dd")">
+<input type="hidden" value="@Model.sample_order.tran_va_plan_detl_id" id="tran_va_plan_detl_id">
+<input type="hidden" value="@Model.sample_order.tran_sample_order_id" id="tran_sample_order_id">
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="box" style="margin-top:7px;">
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="box">
+                    <div class="row" style="">
+
+                        <div class="col-md-4">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Name</label>
+
+                                <input style="width:100%" disabled asp-for="style_product" type="text" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Details</label>
+
+                                <input style="width:100%" asp-for="style_product_details" type="text" disabled class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="">
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Order Number</label>
+
+                                <input style="width:100%" disabled asp-for="sample_order.tran_sample_order_number" type="text" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sample Order Date :</label>
+
+
+                                <input disabled style="width:100%" asp-for="sample_order.order_date" type="date" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Date :</label>
+
+                                <input disabled style="width:100%" asp-for="sample_order.delivery_date" type="date" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Unit :</label>
+
+                                @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                        ddlId = "delivery_unit_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(Model.List_Unit),
+                                        selectedvalue = Model.sample_order.delivery_unit_id.ToString(),
+                                        cssclass = "form-control  ",
+                                        enable = false,
+                                        isRequired = true,
+                                        placeholder = "Select Delivery Unit"
+                                    })
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="row" style="">
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Designer :</label>
+
+                                <input style="width:100%" disabled value="@Model.designer" type="text" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Quantity :</label>
+
+                                <input disabled style="width:100%" id="style_quantity" value="@Model.style_quantity" type="number" min="0" class="border-#d1cccc-200 form-control style_quantity" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Code :</label>
+
+                                <input style="width:100%" disabled asp-for="style_code" type="text" min="0" class="border-gray-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sample Quantity :</label>
+
+                                <input disabled style="width:100%" asp-for="order_quantity" type="number" min="0" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row" style="">
+
+                        <div class="col-md-12" style="margin-bottom: 7px;">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note :</label>
+
+                                <input disabled style="width:100%" asp-for="remarks" type="text" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="col-md-5">
+                <input type="file" style="display:none" id="attachments" multiple />
+
+                <div class="box">
+                    <div class="row" id="frames" style="max-height: 312px;  overflow-y: scroll;">
+                        @{
+                            var image_index = 0;
+                        }
+                        @if (Model.sample_order.List_base64String_File != null)
+                        {
+                            @foreach (var obj in Model.sample_order.List_base64String_File.Where(p => p.imagetype == Image_Position_Type.Front.ToString() || p.imagetype == Image_Position_Type.Back.ToString()))
+                            {
+                                <div index="@image_index" class="col-lg-4 dvSingleAttachment">
+                                    <img onclick="ShowImage(this);" style="width: 180px; height: 200px;" src="@obj.base64string" />
+                                    <a mailattachmentid="-1" index="' + file.fileindex + '" class=" attachmentLink @image_index " onclick="removeAtachments(this,@image_index)"></a>'
+                                    <span style="color:blue;text-decoration:underline;overflow: hidden;display: inherit;height: 45px;">@obj.filename</span>
+                                </div>
+                                image_index++;
+                            }
+                        }
+                    </div>
+
+                </div>
+                <div class="box">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12" id="tab_bar_style">
+                <ul id="tab_precosting" class="nav nav-tabs">
+                    <li class="active" tab_index="1">
+                        <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">Information</a>
+                    </li>
+                    <li class="" tab_index="2">
+                        <a href="#det2" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Detail Info</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="det1" tabpane_index="1">
+                        <div class="row" style=" margin-left:-1px!important; border: 1px solid #efe7e7;">
+                            <div class="col-md-12" style="margin-top: 7px;">
+
+                                <div class="box">
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+
+                                            <div class="row" style="">
+
+                                                <div class="col-md-12">
+                                                    @{
+                                                        var index = 0;
+                                                    }
+
+                                                    <table style="font-size:10px;" id="DTTranPreCostingDetail" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th><label class="labelNormal"> Item</label></th>
+                                                                <th><label class="labelNormal  ">Total Unit</label></th>
+                                                                <th><label class="labelNormal  ">Total Price</label></th>
+                                                                <th><label class="labelNormal ">Action Type</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        @if (Model.List_Mapped_Structure != null)
+                                                        {
+                                                            foreach (var objsinglegroup in Model.List_Mapped_Structure)
+                                                            {
+
+                                                                <tr style="margin-top:20px;" class="allbtn">
+                                                                    <td colspan="1">
+                                                                        <h6 class="box-title">@objsinglegroup.structure_group_name :</h6>
+                                                                    </td>
+                                                                    <td colspan="3">
+                                                                        <select class="form-control ddl_sub_group" style="width:100px;float:left;">
+
+                                                                            @if (objsinglegroup.List_sub_group.Count > 0)
+                                                                            {
+
+                                                                                @foreach (var objoption in objsinglegroup.List_sub_group.Where(p => p.item_structure_group_id == objsinglegroup.item_structure_group_id).OrderBy(p => p.gen_item_structure_group_sub_id))
+                                                                                {
+
+                                                                                    <option value="@objoption.gen_item_structure_group_sub_id" default_measurement_unit_detail_id="@objoption.default_measurement_unit_detail_id" measurement_unit_id='@objoption.measurement_unit_id' sub_group_name="@objoption.sub_group_name" item_structure_group_id="@objoption.item_structure_group_id" gen_item_structure_group_sub_id="@objoption.gen_item_structure_group_sub_id">@objoption.sub_group_name</option>
+
+                                                                                }
+
+                                                                            }
+                                                                        </select>
+                                                                        <input class="btn btn-primary" type="button" value="Create" style="margin-left: 7px;" onclick="AddNewFabric(this,@objsinglegroup.item_structure_group_id,null,null,null,null);">
+
+                                                                    </td>
+                                                                </tr>
+                                                                @if (objsinglegroup.List_sub_group.Count > 0)
+                                                                {
+
+                                                                    @foreach (var objoption in objsinglegroup.List_sub_group.Where(p => p.item_structure_group_id == objsinglegroup.item_structure_group_id))
+                                                                    {
+                                                                        <tr class="tr_subgroup" default_measurement_unit_detail_id="@objoption.default_measurement_unit_detail_id" measurement_unit_id='@objoption.measurement_unit_id' sub_group_name="@objoption.sub_group_name" item_structure_group_id="@objoption.item_structure_group_id" gen_item_structure_group_sub_id="@objoption.gen_item_structure_group_sub_id">
+                                                                        </tr>
+
+                                                                    }
+
+                                                                }
+
+                                                                index++;
+                                                            }
+
+                                                        }
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-6">
+
+                                            <div class="box allbtn">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <button type="button" class="btn btn-primary btnAddColor" onclick="btnAddColorClick(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Color</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="box">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <table id="dtcolorcodestyle" class="dtcolorcodestyle table dataTable table-striped table-bordered no-footer" cellspacing="0">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>
+                                                                        <label class="  labelNormal">SL</label>
+                                                                    </th>
+                                                                    <th>
+                                                                        <label class="labelNormal  ">Color Code</label>
+                                                                    </th>
+
+                                                                    @foreach (var objSize in Model.List_plan_detl_style.FirstOrDefault().List_ColorInfo[0].List_ColorSizeInfo)
+                                                                    {
+                                                                        <th style="text-align:right">
+                                                                            <label class="labelNormal ">@objSize.style_product_size</label>
+                                                                        </th>
+                                                                    }
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @{
+                                                                    var color_index = 1;
+                                                                }
+                                                                @foreach (var objColor in Model.List_detl_style_color)
+                                                                {
+                                                                    var objColorSingle = new SelectListItem { Text = objColor.color_code, Value = objColor.color_code };
+
+                                                                    string tr_id = color_index == 1 ? "tr_first" : "";
+
+                                                                    if (color_index == 1)
+                                                                    {
+                                                                        <tr style="display:none;">
+
+                                                                            <td class="row_sl" style="text-align: center;">@color_index.ToString()</td>
+                                                                            <td style="text-align: left;">
+
+                                                                                @await Component.InvokeAsync("S2GenColor", new
+                                                                                    {
+                                                                                        ddlId = "ddl_color1",
+                                                                                        cssclass = "form-control ddl_color txtColorCode",
+                                                                                        isRequired = false,
+                                                                                        isReadOnly = false,
+                                                                                        placeholder = "Select Color",
+                                                                                        preloaded = "",
+                                                                                        model_parentid = "modalcontainer_common",
+                                                                                        isMultiple = true,
+                                                                                        isOnLoad = false
+                                                                                    })
+
+                                                                            </td>
+
+                                                                            @foreach (var objSize in objColor.List_ColorSizeInfo)
+                                                                            {
+                                                                                <td>
+                                                                                    <input value="@objSize.style_color_size_quantity" style_product_size_group_detid="0" tran_va_plan_detl_style_color_id="0" tran_va_plan_detl_style_color_size_id="0" style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="0" onchange="ColorSizeQuantityChanged(this)" class="border-gray-200 rounded-sm txtColorSizeQuantity" />
+                                                                                </td>
+                                                                            }
+
+                                                                            <td>
+                                                                                <input style="text-align: right;width:100%" type="number" min="0" disabled class="border-gray-200 rounded-sm txtTotalColorSizeQuantity" value="@objColor.List_ColorSizeInfo.Sum(p=>p.style_color_size_quantity)" />
+                                                                            </td>
+
+                                                                        </tr>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <tr id="@tr_id">
+
+                                                                            <td class="row_sl" style="text-align: center;">@color_index.ToString()</td>
+                                                                            <td style="text-align: left;">
+                                                                                @await Component.InvokeAsync("S2GenColor", new
+                                                                                    {
+                                                                                        ddlId = ("ddl_color" + color_index.ToString()),
+                                                                                        cssclass = "form-control ddl_color txtColorCode",
+                                                                                        isRequired = false,
+                                                                                        isReadOnly = true,
+                                                                                        placeholder = "Select Color",
+                                                                                        preloaded = Newtonsoft.Json.JsonConvert.SerializeObject(objColorSingle),
+                                                                                        model_parentid = "modalcontainer_common",
+                                                                                        isMultiple = true,
+                                                                                        isOnLoad = false
+                                                                                    })
+                                                                            </td>
+
+                                                                            @foreach (var objSize in objColor.List_ColorSizeInfo)
+                                                                            {
+                                                                                <td>
+                                                                                    <input value="@objSize.style_color_size_quantity" style_product_size_group_detid="@objSize.style_product_size_group_detid" tran_va_plan_detl_style_color_id="@objSize.tran_va_plan_detl_style_color_id" tran_va_plan_detl_style_color_size_id="@objSize.tran_va_plan_detl_style_color_size_id" style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="@objSize.style_product_size_group_detid" onchange="ColorSizeQuantityChanged(this)" class="border-gray-200 rounded-sm txtColorSizeQuantity" />
+                                                                                </td>
+                                                                            }
+
+                                                                        </tr>
+                                                                    }
+
+                                                                    color_index++;
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="">
+                                                <div class="col-md-12">
+                                                    <div class="box">
+                                                        <table style="font-size:10px;" id="DTTranPreCostingDetailEmbellishment" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                            <thead>
+                                                                <tr>
+                                                                    @* <th><label class="labelNormal">SL</label></th> *@
+                                                                    <th><label class="labelNormal">Embellishment</label></th>
+                                                                    <th style="width:150px;"><label class="labelNormal  ">M. Unit</label></th>
+                                                                    <th style="width:70px;"><label class="labelNormal  ">Con/Pc</label></th>
+                                                                    <th style="width:70px;"><label class="labelNormal  ">Wastage(%)</label></th>
+                                                                    <th><label class="labelNormal  ">Total Req</label></th>
+                                                                    <th><label class="labelNormal  ">Cost/Unit</label></th>
+                                                                    <th><label class="labelNormal  ">Total Cost</label></th>
+                                                                    @*  <th><label class="labelNormal ">Action Type</label></th> *@
+
+                                                                </tr>
+                                                            </thead>
+
+
+                                                            <tr style="margin-top:20px;">
+                                                                <td colspan="8">
+                                                                    <h6 class="box-title">Embellishment :</h6>
+                                                                </td>
+
+                                                            </tr>
+                                                            @foreach (var objsingle_embell in Model.List_EmbellishmentDetl) //Model.List_EmbellishmentDetl
+                                                            {
+                //var objembellishmentdb = @Model.List_EmbellishmentDetl.Where(p => p.style_embellishment_id == objsingle_embell.embellishment_id).FirstOrDefault();
+
+                                                                @*  if (objembellishmentdb == null)
+                                                            {
+                                                            <tr tran_pre_costing_id="0" tran_pre_costing_item_embellishment_detail_id="0" embellishment_id="@objsingle_embell.embellishment_id">
+                                                            <td>
+                                                            @objsingle_embell.embellishment
+                                                            </td>
+                                                            <td>
+                                                            @await Component.InvokeAsync("S2MeasurementUnit", new
+                                                            {
+                                                            ddlId = "measurement_unit"+objsingle_embell.embellishment_id.ToString()+"_id",
+                                                            measurement_unit_id=objsingle_embell.measurement_unit_id,
+                                                            selectedvalue = "",
+                                                            cssclass = "form-control S2MeasurementUnit",
+                                                            isRequired = false,
+                                                            isReadOnly = false,
+                                                            placeholder = "Select Construction",
+                                                            preloaded="",
+                                                            model_parentid="modalcontainer_common"
+                                                            })
+
+                                                            </td>
+                                                            <td>
+                                                            <input style="width:70px;" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-controltxtembell_Order_quantity" />
+                                                            </td>
+                                                            <td>
+                                                            <input style="width:70px;" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-controltxtembell_Wastage" />
+                                                            </td>
+                                                            <td>
+                                                            <input disabled style="width:100%" type="number" class="border-#d1cccc-200 form-controltxtembell_TotalRequirement" />
+                                                            </td>
+                                                            <td>
+                                                            <input style="width:100%" type="number" onchange="CalcTotalEmbellPrice(this);" class="border-#d1cccc-200 form-controltxtembell_CostPerUnit" />
+                                                            </td>
+                                                            <td>
+                                                            <input disabled style="width:100%" type="number" class="border-#d1cccc-200 form-controltxtembell_TotalCost" />
+                                                            </td>
+
+                                                            </tr>
+                                                            }
+                                                            else
+                                                            { *@
+                                                                <tr tran_pre_costing_id="@objsingle_embell.tran_pre_costing_id" embellishment_id="@objsingle_embell.style_embellishment_id" tran_pre_costing_item_embellishment_detail_id="@objsingle_embell.tran_pre_costing_item_embellishment_detail_id">
+                                                                    <td>
+                                                                        @objsingle_embell.embellishment
+                                                                    </td>
+                                                                    <td>
+                                                                        @await Component.InvokeAsync("S2MeasurementUnit", new
+                                                                            {
+                                                                                ddlId = "measurement_unit" + objsingle_embell.style_embellishment_id.ToString() + "_id",
+                                                                                measurement_unit_id = objsingle_embell.gen_measurement_unit_id,
+                                                                                selectedvalue = objsingle_embell.measurement_unit_detail_id.ToString(),
+                                                                                cssclass = "form-control S2MeasurementUnit",
+                                                                                isRequired = false,
+                                                                                isReadOnly = false,
+                                                                                placeholder = "Select Construction",
+                                                                                preloaded = "",
+                                                                                model_parentid = "modalcontainer_common"
+                                                                            })
+
+                                                                    </td>
+                                                                    <td>
+                                                                        <input style="width:70px;" type="number" value="@objsingle_embell.order_quantity" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input style="width:70px;" type="number" value="@objsingle_embell.wastage" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Wastage" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input disabled style="width:100%" type="number" value="@objsingle_embell.total_order_quantity" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input style="width:100%" type="number" value="@objsingle_embell.price_per_unit" onchange="CalcTotalEmbellPrice(this);" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input disabled style="width:100%" type="number" value="@objsingle_embell.total_price" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+                                                                    </td>
+
+                                                                </tr>
+                                                                @*  } *@
+
+
+                                                            }
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row allbtn">
+                                                <div class="col-md-12">
+                                                    <div class="box">
+                                                        <button type="button" class="btn btn-danger " onclick="AddSubContract()" id="btnAddSubContract" style="width:250px;">
+                                                            Add Sub Contract
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="row" style="">
+                                                <div class="col-md-12">
+                                                    @{
+                                                        var sub_contract_index = 2;
+                                                    }
+                                                    <div class="box">
+                                                        <table style="font-size:10px;" id="DTTranPreCostingDetailSubContract" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                            <thead>
+                                                                <tr>
+                                                                    @* <th><label class="labelNormal">SL</label></th> *@
+                                                                    <th style="width:150px;"><label class="labelNormal">Process</label></th>
+                                                                    <th><label class="labelNormal  ">M. Unit</label></th>
+                                                                    <th style="width:70px;"><label class="labelNormal  ">Con/Pc</label></th>
+                                                                    <th style="width:70px;"><label class="labelNormal  ">Wastage(%)</label></th>
+                                                                    <th><label class="labelNormal  ">Total Req</label></th>
+                                                                    <th><label class="labelNormal  ">Cost/Unit</label></th>
+                                                                    <th><label class="labelNormal  ">Total Cost</label></th>
+                                                                    <th><label class="labelNormal  ">Action</label></th>
+                                                                </tr>
+
+                                                            <thead>
+                                                            <tbody>
+
+                                                                <tr style="display:none;" tran_pre_costing_item_subcontract_detail_id="0" tran_pre_costing_id="0">
+                                                                    <td>
+                                                                                @await Component.InvokeAsync("GenericDropdownList", new
+                                                                                    {
+                                                                                        ddlId = "ddl_process_master_1",
+                                                                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.process_list)),
+                                                                                        selectedvalue = "",
+                                                                                        cssclass = "form-control ddl_process_master",
+                                                                                        enable = true,
+                                                                                        isRequired = true,
+                                                                                        placeholder = "Select Process"
+                                                                                    })
+                                                                    </td>
+                                                                    <td>
+                                                                        <label class="labelNormal  ">Piece</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input style="width:70px;" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input style="width:70px;" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Wastage" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input style="width:100%" type="number" onchange="CalcTotalEmbellPrice(this);" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type='button' class='btn btn-danger' value='Delete' onclick='DeleteSubContract(this);' />
+                                                                    </td>
+                                                                </tr>
+                                                                        @foreach (var objsingleProcess in Model.List_SubContractDetl)
+                                                                        {
+
+                                                                    <tr tran_pre_costing_id="@objsingleProcess.tran_pre_costing_id" tran_pre_costing_item_subcontract_detail_id="@objsingleProcess.tran_pre_costing_item_subcontract_detail_id">
+                                                                        <td>
+                                                                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                                                                        {
+                                                                                            ddlId = "ddl_process_master_" + sub_contract_index.ToString(),
+                                                                                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.process_list)),
+                                                                                            selectedvalue = objsingleProcess.process_master_id.ToString(),
+                                                                                            cssclass = "form-control ddl_process_master",
+                                                                                            enable = true,
+                                                                                            isRequired = true,
+                                                                                            placeholder = "Select Process"
+                                                                                        })
+                                                                        </td>
+                                                                        <td>
+                                                                            <label class="labelNormal  ">Piece</label>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input style="width:70px;" value="@objsingleProcess.order_quantity" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+                                                                        </td>
+                                                                        <td>
+                                                                            <input style="width:70px;" type="number" value="@objsingleProcess.wastage" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Wastage" />
+                                                                        </td>
+                                                                        <td>
+                                                                            <input disabled style="width:100%" type="number" value="@objsingleProcess.total_order_quantity" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+                                                                        </td>
+                                                                        <td>
+                                                                            <input style="width:100%" type="number" onchange="CalcTotalEmbellPrice(this);" value="@objsingleProcess.price_per_unit" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+                                                                        </td>
+                                                                        <td>
+                                                                            <input disabled style="width:100%" type="number" value="@objsingleProcess.total_price" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='button' class='btn btn-danger' value='Delete' onclick='DeleteSubContract(this);' />
+                                                                        </td>
+                                                                    </tr>
+                                                                            sub_contract_index++;
+                                                                        }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                        <div class="row">
+
+                            <button type="button" class="btn btn-primary btnSaveNext" onclick="btnSaveNextClick(this)" style="margin-left: 21px;width:300px;"><i class="fa fa-forward"></i>Next</button>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="det2" tabpane_index="2">
+                        <div class="row" style="">
+                            <div class="col-md-6">
+                                <div class="box">
+                                    <table style="font-size:10px;" id="DTTranPreCostingOtherData" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th style="width:350px;"><label class="labelNormal">Item</label></th>
+                                                <th style="text-align:right;"><label class="labelNormal  ">Cost</label></th>
+
+                                            </tr>
+
+                                        <thead>
+                                        <tbody>
+                                                    @*  <tr>
+                                            <td>
+                                            <label class="labelNormal  ">Estimated Markup Price</label>
+                                            </td>
+
+                                            <td>
+                                            <input onchange="CalcRawMaterialPercentage();" style="width:100%" asp-for="estimated_markup_price" type="number" min="0" class="border-#d1cccc-200 form-control" />
+                                            </td>
+
+                                            </tr> *@
+                                                    @if (Model.List_Mapped_Structure != null)
+                                                    {
+                                                        foreach (var objsinglegroup in Model.List_Mapped_Structure)
+                                                        {
+                                                    <tr>
+                                                        <td>
+                                                            <label class="labelNormal  ">@objsinglegroup.structure_group_name</label>
+                                                        </td>
+
+                                                        <td>
+                                                            <input item_structure_group_id="@objsinglegroup.item_structure_group_id" disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txt_total_structure_group txtcalc_rawmat" />
+                                                        </td>
+                                                    </tr>
+                                                        }
+                                                    }
+                                            <tr>
+                                                <td>
+                                                    <label class="labelNormal  ">Total Value Addition Cost</label>
+                                                </td>
+
+                                                <td>
+                                                    <input id="txt_total_embellishment" disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_rawmat" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="labelNormal  ">Total Process Sub-Contract</label>
+                                                </td>
+
+                                                <td>
+                                                    <input id="txt_total_process_subcontract" disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_rawmat" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  "> A.Total Cost of Raw Material</label>
+                                                </td>
+
+                                                <td>
+                                                            @*  <input asp-for="total_raw_material_percentage" disabled style="width:45%;font-weight:bold;float:left;text-align:right;" type="text" class="border-#d1cccc-200 form-control" />
+                                                    *@
+                                                    <input asp-for="total_raw_material_cost" disabled style="width:45%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="margin-top:20px;">
+                                                <td colspan="2">
+                                                    <h6 class="box-title">Segments of Overhead Cost:</h6>
+                                                </td>
+
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <h6 class="box-title">SMV</h6>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="smv" style="width:100%" type="text" class="border-#d1cccc-200 form-control" />
+
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="labelNormal  ">Factory Overhead Cost</label>
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="factory_overhead_cost" onchange="CalcOverheadCost();" style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_overheadc" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="labelNormal  ">Sales, Marketing & Distribution Cost</label>
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="sales_marketing_distribution_cost" onchange="CalcOverheadCost();" style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_overheadc" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="labelNormal  ">Depreciation & Amortization Cost</label>
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="depreciation_amortization_cost" onchange="CalcOverheadCost();" style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_overheadc" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  ">B. Total Overhead Cost</label>
+                                                </td>
+
+                                                <td>
+
+                                                    <input disabled asp-for="total_overhead_cost" style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box">
+                                    <table style="font-size:10px;" id="DTTranPreCostingOtherData_2" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th style="width:350px;"><label class="labelNormal">Item</label></th>
+                                                <th style="text-align:right;"><label class="labelNormal  ">Cost</label></th>
+
+                                            </tr>
+
+                                        <thead>
+                                        <tbody>
+
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  ">C. (A+B) Total Cost of Production</label>
+                                                </td>
+
+                                                <td>
+                                                    <input disabled asp-for="total_production_cost" style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="height:30px">
+                                                <td>
+                                                    <label class="labelNormal  "></label>
+                                                </td>
+
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  "> D. Floor Price Per Piece(%)</label>
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="floor_price_percentage" onchange="CalcFloorPrice();" placeholder="Percentage %" style="width:45%;text-align:right;font-weight:bold;float:left;" type="number" class="border-#d1cccc-200 form-control" />
+
+                                                    <input asp-for="floor_price_per_pc" disabled style="width:45%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  "> E. Desired Markup Price(%)</label>
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="desired_markup_percentage" onchange="CalcDesiredMarkupPrice();" placeholder="Percentage %" style="text-align:right;width:45%;font-weight:bold;float:left;" type="number" class="border-#d1cccc-200 form-control" />
+
+                                                    <input asp-for="desired_markup_price" disabled style="width:45%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  "> H. Suggested MRP Considering Cost  with 43% Cost</label>
+                                                </td>
+
+                                                <td>
+
+                                                    <input asp-for="suggested_mrp_with_cost" disabled style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  "> F.Final MRP</label>
+                                                </td>
+
+                                                <td>
+
+                                                    <input asp-for="final_mrp" onchange="CalcTotalStyleMRP();" style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  "> G.Total Style Quantity MRP</label>
+                                                </td>
+
+                                                <td>
+
+                                                    <input asp-for="total_style_quantity_mrp" style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Remarks</label>
+
+                <input id="txtapprove_remarks" style="width:100%;" type="text" class="border-gray-200 rounded-sm text-sm  form-control " />
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-md-12" style="margin-bottom: 5px;">
+
+            <button style="width:200px;" type="button" class="btn btn-primary  " is_approved="1" id="btnApprovePreCosting" onclick="ApproveRejectPreCosting(this);"><i class="fa fa-file-open"></i>&nbsp;Approve</button>
+
+            <button style="width:200px;" type="button" class="btn btn-danger " is_approved="2" id="btnRejectPreCosting" onclick="ApproveRejectPreCosting(this);"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;Reject</button>
+
+        </div>
+    </div>
+</form>
+
+<div id="modalcontainer_common_popup" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #bc7b20;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Add Details
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_popup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common_popup">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var temp_data = '@Html.Raw(JsonConvert.SerializeObject(Model.List_PreCostingDet_rpc))';
+
+    obj_fabric_List = JSON.parse(temp_data);
+
+    for (var i = 0; i < obj_fabric_List.length; i++) {
+        var gen_item_structure_group_sub_id = obj_fabric_List[i].gen_item_structure_group_sub_id;
+
+        var item_structure_group_id = obj_fabric_List[i].item_structure_group_id;
+
+        $("#DTTranPreCostingDetail .btnclsmasterpage[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").css("display", "block");
+
+        $("#DTTranPreCostingDetail .editfabric[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").attr("value", "Edit(" + obj_fabric_List.filter(p => p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id).length + ")")
+
+        LoadTotalCalcDt(gen_item_structure_group_sub_id, item_structure_group_id);
+
+        $("#DTTranPreCostingDetailEmbellishment input[type=number]:eq(0)").trigger("change");
+
+        // obj_fabric_List[i].placement_info = null;
+
+    }
+
+    $(function () {
+        $.each($("#dtcolorcodestyle tbody tr"), function (key, val) {
+
+            RegisterS2ColorByElement($(val).find(".ddl_color"));
+
+        });
+
+    });
+
+</script>
+
+
+
+

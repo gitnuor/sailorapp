@@ -1,0 +1,158 @@
+﻿@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.owin_role_DTO;
+@{
+    ViewBag.Title = "Role Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <input type="hidden" asp-for="owin_role_id">
+
+    <div class="box" style="margin-top:7px;">
+
+        <div class="row" style="">
+
+            <div class="col-md-6">
+
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Role Name</label>
+                    <input style="width:100%" asp-for="role_name" type="text" class="border-#d1cccc-200 rounded-sm text-sm" />
+                    <span asp-validation-for="role_name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <div class="form-group" style="margin-top:40px;">
+                    <label>
+                        <input type="checkbox" class="checkAllActions"> Check all
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+  
+    <div class="box" style="margin-top:7px;">
+        @foreach (var objMenu in Model.Menu_List.Where(p => p.menu_id == p.parent_id).OrderBy(p => p.seq_no).ToList())
+        {
+            var topmenuid ="topmenu"+ objMenu.menu_id;
+            <div class="collapse-group">
+                <div class="controls">
+                    <a role="button" data-toggle="collapse" href="#@topmenuid" aria-expanded="true" aria-controls="collapseOne" class="root">
+                        <label id="" class="h4">@objMenu.menu_caption</label>
+                    </a>
+                </div>
+
+                <div class="collapse-group  " id="@topmenuid" aria-expanded="true" style="display:block;">
+                    @foreach (var objSubMenu in Model.Menu_List.Where(p => p.parent_id == objMenu.menu_id && p.menu_id!=p.parent_id).OrderBy(p => p.seq_no))
+                    {
+                        var submenucollapseid = "collapse" + objSubMenu.menu_id;
+
+                        
+                        <div class="panel panel-default" style="border: 1px solid #aeb1e1; margin-bottom: 10px;">
+                            <div class="panel-heading" role="tab" id="headingOne" style="padding: 7px;">
+                                <h6 class="panel-title" style="display: flex;">
+                                    <a role="button" data-toggle="collapse" href="#@submenucollapseid" aria-expanded="true" aria-controls="collapseOne" class="trigger collapsed col-md-4">
+                                        <label class="formid" data-val="40635">@objSubMenu.menu_caption</label>
+                                    </a>
+                                    <p>
+                                        <label>
+                                            <input type="checkbox" class="checkAll" checked> Check all
+                                        </label>
+                                    </p>
+                                </h6>
+                            </div>
+
+                            <div id="submenucollapseid" class="panel-collapse " role="tabpanel" aria-labelledby="headingOne" style="display:block;">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        @foreach (var objAction in Model.MenuAction_List.Where(p => p.menu_id == objSubMenu.menu_id).ToList())
+                                        {
+                                            
+                                            <div class="col-md-4">
+                                                <label>
+                                                    <input type="checkbox" class="actionid" menu_id="@objSubMenu.menu_id" value="@objAction.menu_action_id" checked>@objAction.method_name
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    
+                </div>
+            </div>
+        }
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+            <button style="width:300px;" type="button" class="btn btn-primary" id="btnSaveOwinRole" onclick="SaveOwinRole(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+        </div>
+    </div>
+</form>
+
+
+
+

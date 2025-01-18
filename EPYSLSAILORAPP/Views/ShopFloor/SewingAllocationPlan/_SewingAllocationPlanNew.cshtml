@@ -1,0 +1,232 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_sewing_allocation_plan_DTO;
+@{
+    ViewBag.Title = "Sewing Allocation Plan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Sewing Allocation Plan Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sewing Allocation Number</label>
+                        <input style="width:100%" readonly asp-for="sewing_allocation_number" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="sewing_allocation_number" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sewing Allocation Date</label>
+                        <input style="width:100%" asp-for="sewing_allocation_date" type="date" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="sewing_allocation_date" class="text-danger"></span>
+                    </div>
+
+                    
+                </div>
+              
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techpack</label>
+                        
+                        @await Component.InvokeAsync("S2TechPack", new
+                            {
+                                ddlId = "techpack_id",
+                                selectedvalue = "",
+                                cssclass = "form-control S2TechPack",
+                                isRequired = false,
+                                isReadOnly = false,
+                                placeholder = "Select Techpack",
+                                preloaded = "",
+                                model_parentid = "modalcontainer"
+                            })
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Merchandiser</label>
+                        <input style="width:100%" readonly asp-for="merchandiser_name" type="text" class="border-#d1cccc-200 form-control" />
+                        <input type="hidden" id="merchandiser_id" value="@Model.merchandiser_id">
+                        
+                    </div>
+                </div>
+    
+            
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;"> Product Category</label>
+                        <input style="width:100%" readonly asp-for="style_item_product_category" type="text" class="border-#d1cccc-200 form-control " />
+                        <input type="hidden" id="style_item_product_id" value="@Model.style_item_product_id">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom:5px;text-align:left;">
+
+                    <button type="button" class="btn btn-primary " onclick="AddSewingplantoTable(this);"><i class="fa fa-file-open"></i>&nbsp;&nbsp;ADD Plan&nbsp;&nbsp;</button>
+
+                </div>
+            </div>
+              <div class="row" id="divTablePlan" style="display:none">
+
+               <div class="col-md-12">
+
+                <table style="font-size:9px;" id="DTPlanOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th><label class="labelNormal">Line No</label></th>
+                            <th><label class="labelNormal">Color</label></th>
+                            <th><label class="labelNormal">Batch</label></th>
+                            <th><label class="labelNormal">Size</label></th>
+                            <th><label class="labelNormal">Allocated Qty</label></th>                      
+                            <th><label class="labelNormal">Action</label></th>                      
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button  type="button" class="btn btn-success " id="btnSaveSewingAllocationPlan" onclick="SaveSewingAllocationPlan(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+
+</form>
+<div id="modalcontainer_plan" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 30% !important; max-width: 30% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318226;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Sewing Allocation Plan
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_plan();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent_plan">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+  
+    function AddSewingplantoTable(btn) {
+         var techpack_id = $("#techpack_id").val();
+         setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+       
+            ajaxGetHandler("/SewingAllocationPlan/AddPlanNew?techpack_id=" + techpack_id, null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent_plan').html(data);
+                $('#modalcontainer_plan').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer_plan').modal("show");
+               
+            });
+    }
+
+    function closePopup_plan() {
+        $('#modalcontent_plan').html("");
+
+        $('#modalcontainer_plan').modal("hide");
+
+        $('#modalcontainer_plan').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+    </Script>
+
+

@@ -1,0 +1,353 @@
+@model EPYSLSAILORAPP.Domain.DTO.gen_tran_transport_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "GenTranTransport List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+   
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                              <h6 class="card-title">GenTranTransport</h6> 
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddGenTranTransport(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+                       
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="DTGenTranTransport" class="table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                		<th>transport type</th>
+
+
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 60% !important; max-width: 60% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            GenTranTransport
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddGenTranTransport() {
+
+           setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/GenTranTransport/GenTranTransportNew", null, function (data) {
+
+                 setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+            });
+
+        
+        }
+        
+        function EditGenTranTransport(btn){
+
+
+            var transport_id = $(btn).attr("transport_id");
+
+               setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/GenTranTransport/GenTranTransportEdit?transport_id=" + transport_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                 setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+            }
+        }
+
+        function ViewGenTranTransport(btn) {
+
+            var transport_id = $(btn).attr("transport_id");
+
+               setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/GenTranTransport/GenTranTransportView?transport_id=" + transport_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                 setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+            }
+        }
+        
+        function SaveGenTranTransport(btn) {
+
+            
+
+            var obj_GenTranTransport = {
+                		transport_id: check_value($('#modalcontent #transport_id').val()),
+		transport_type: $('#modalcontent #transport_type').val(),
+
+               
+            }
+
+            if (_cusFormValidate("frmAdd")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/GenTranTransport/SaveGenTranTransport", obj_GenTranTransport, function (response) {
+
+                     setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenTranTransportData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function UpdateGenTranTransport(btn) {
+            
+             
+
+            var obj_GenTranTransport = {
+                		transport_id: check_value($('#modalcontent #transport_id').val()),
+		transport_type: $('#modalcontent #transport_type').val(),
+
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+
+                ajaxPostObjectHandler("/GenTranTransport/UpdateGenTranTransport", obj_GenTranTransport, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenTranTransportData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+		
+		function DeleteGenTranTransport(id) {
+
+			showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+				var obj_GenTranTransport = {
+					strMasterID: id
+				}
+
+				setTimeout(function () {
+					showLoader("Saving..........");
+				}, 0);
+
+				ajaxPostObjectHandler("/GenTranTransport/DeleteGenTranTransport", obj_GenTranTransport, function (response) {
+
+					 setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+					if (response.status_Code == "200") {
+
+						LoadGenTranTransportData();
+
+						showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+							closePopup();
+
+						});
+					}
+					else {
+						showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+						});
+					}
+				}, true, function () { 
+
+                setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                }, true);
+
+			});
+		}
+
+        $(function () {
+
+            LoadGenTranTransportData();
+
+        });
+
+        function LoadGenTranTransportData() {
+            var dt = $("#DTGenTranTransport").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/GenTranTransport/GetGenTranTransportData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("transport_id", data.transport_id);
+
+                },
+                "columns": [
+
+                    		{ "data": "transport_type", "name": "transport_type", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

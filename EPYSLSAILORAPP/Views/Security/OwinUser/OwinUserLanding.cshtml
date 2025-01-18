@@ -1,0 +1,458 @@
+@model EPYSLSAILORAPP.Domain.DTO.owin_user_DTO
+
+@using BDO.Core.Base;
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "OwinUser List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">User Management</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <button type="button" class="btn btn-primary" onclick="AddOwinUser(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+
+                                </div>
+                                <div class="col-lg-2">
+
+                                    @{
+                                        var list = (List<SecurityCapsule>)ViewBag.UserList;
+
+                                        if (list != null)
+                                        {
+
+                                            <select class="form-control" id="drpUser">
+                                                <option value="AllUsers">All_Users</option>
+                                                @foreach (var obj in list)
+                                                {
+                                                    <option value="@obj.username">@obj.username</option>
+                                                }
+
+                                            </select>
+                                        }
+                                    }
+
+                                </div>
+                                <div class="col-lg-2">
+
+                                    <input type="text" id="messageInput" placeholder="Message" />
+
+                                </div>
+                                <div class="col-lg-2">
+
+                                    <button onclick="sendMessage()">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="DTOwinUser" class="table table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Role</th>
+                                        <th>Team</th>
+                                        <th>Name</th>
+                                        <th>User name</th>
+
+                                        <th>Email</th>
+
+                                        <th>is active</th>
+                                        <th>Employee ID</th>
+
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 70% !important; max-width: 70% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            User
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+
+
+    <script>
+
+        function sendMessage() {
+            sendMessageBySignalR(($("#drpUser").val() == "AllUsers" ? "" : $("#drpUser").val()), $("#messageInput").val());
+        }
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddOwinUser() {
+
+            showLoader("Loading..........");
+
+            ajaxGetHandler("/OwinUser/OwinUserNew", null, function (data) {
+
+                hideLoader();
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+                $("#prof_pic").change(function () {
+
+                    var file_type = $(this)[0].files[0].type;
+
+                    var reader = new FileReader();
+
+                    reader.onload = (function (singlefile) {
+
+                        return function (e) {
+
+                            var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                            $("#imgPhoto").attr("src", "data:" + file_type + ";base64," + base64String);
+                            $("#imgPhoto").attr("filetype", file_type);
+
+
+
+                        }
+
+
+                    })($(this)[0].files[0]);
+
+                    reader.readAsDataURL($(this)[0].files[0]);
+
+
+                });
+
+            });
+
+
+        }
+
+        function EditOwinUser(btn) {
+
+            var userid = $(btn).attr("userid");
+
+            showLoader("Loading..........");
+
+            try {
+                ajaxGetHandler("/OwinUser/OwinUserEdit?userid=" + userid, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    $("#chkSetPWD").click(function () {
+
+                        if ($(this).prop("checked")) {
+                            $("#password").prop("disabled", false);
+                            $("#password").val("");
+                        }
+                        else {
+                            $("#password").prop("disabled", true);
+                            $("#password").val("");
+                        }
+                    });
+
+                    $("#prof_pic").change(function () {
+
+                        var file_type = $(this)[0].files[0].type;
+
+                        var reader = new FileReader();
+
+                        reader.onload = (function (singlefile) {
+
+                            return function (e) {
+
+                                var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                                $("#imgPhoto").attr("src", "data:" + file_type + ";base64," + base64String);
+                                $("#imgPhoto").attr("filetype", file_type);
+
+
+
+                            }
+
+
+                        })($(this)[0].files[0]);
+
+                        reader.readAsDataURL($(this)[0].files[0]);
+
+
+                    });
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function ViewOwinUser(btn) {
+
+            var userid = $(btn).attr("userid");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+
+            try {
+                ajaxGetHandler("/OwinUser/OwinUserView?userid=" + userid, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+
+        function SaveOwinUser(btn) {
+
+            var obj_OwinUser = {
+                name: $('#modalcontent #name').val(),
+                user_name: $('#modalcontent #user_name').val(),
+
+                password: $('#modalcontent #password').val(),
+                email: $('#modalcontent #email').val(),
+                short_name: $('#modalcontent #short_name').val(),
+                is_active: $('#modalcontent #is_active:checked').val() == "true" ? true : false,
+                employee_code: check_value($('#modalcontent #employee_code').val()),
+                gen_team_group_id: $('#modalcontent #gen_team_group_id').val(),
+                role_id: check_value($('#modalcontent #role_id').val()),
+                designation_id: check_value($('#modalcontent #designation_id').val()),
+                new_emp_pic: $('#modalcontent #imgPhoto').attr("src"),
+                new_emp_pic_extension: $('#modalcontent #imgPhoto').attr("filetype"),
+                emp_pic: $('#modalcontent #emp_pic').val()
+            }
+
+            if (_cusFormValidate("frmAdd")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/OwinUser/SaveOwinUser", obj_OwinUser, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadOwinUserData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function UpdateOwinUser(btn) {
+
+            var obj_OwinUser = {
+                userid: check_value($('#modalcontent #userid').val()),
+                name: $('#modalcontent #name').val(),
+                user_name: $('#modalcontent #user_name').val(),
+
+                password: ($('#modalcontent #password').prop("disabled") == false && $('#modalcontent #password').val().length > 0) ? $('#modalcontent #password').val() : null,
+                email: $('#modalcontent #email').val(),
+                short_name: $('#modalcontent #short_name').val(),
+                is_active: $('#modalcontent #is_active:checked').val() == "true" ? true : false,
+                employee_code: check_value($('#modalcontent #employee_code').val()),
+                gen_team_group_id: $('#modalcontent #gen_team_group_id').val(),
+                role_id: check_value($('#modalcontent #role_id').val()),
+                designation_id: check_value($('#modalcontent #designation_id').val()),
+                new_emp_pic: $('#modalcontent #imgPhoto').attr("src"),
+                new_emp_pic_extension: $('#modalcontent #imgPhoto').attr("filetype"),
+                emp_pic: $('#modalcontent #emp_pic').val()
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/OwinUser/UpdateOwinUser", obj_OwinUser, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadOwinUserData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        $(function () {
+
+            LoadOwinUserData();
+
+        });
+
+        function LoadOwinUserData() {
+
+            var dt_search = {
+
+                filterId: '#DTOwinUser_filter input[type=search]',
+                tableId: "#DTOwinUser"
+
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+                //Shiaf
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search User',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+
+
+                "ajax": $.fn.dataTable.json({ url: "/OwinUser/GetOwinUserData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("userid", data.userid);
+
+                },
+                "columns": [
+                    { "data": "strRole", "name": "strRole", "autoWidth": true },
+                    { "data": "strTeam", "name": "strTeam", "autoWidth": true },
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "user_name", "name": "user_name", "autoWidth": true },
+
+                    { "data": "email", "name": "email", "autoWidth": true },
+                    //  { "data": "is_admin", "name": "is_admin", "autoWidth": true },
+                    { "data": "str_IsActive", "name": "str_IsActive", "autoWidth": true },
+                    { "data": "employee_code", "name": "employee_code", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

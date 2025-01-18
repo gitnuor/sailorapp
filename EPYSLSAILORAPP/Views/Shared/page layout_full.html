@@ -1,0 +1,89 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Dashboard</h1>
+                </div>
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            @*  <h3 class="card-title">DataTable with minimal features & hover style</h3> *@
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+tab
+
+<div class="row">
+    <div class="col-md-12" id="tab_bar_style">
+        <ul id="tab_precosting" class="nav nav-tabs">
+            <li class="active" tab_index="1">
+                <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">Information</a>
+            </li>
+            <li class="" tab_index="2">
+                <a href="#det2" style="text-decoration: unset;" class=" tab_link disablelink " data-toggle="tab">Detail Info</a>
+            </li>
+            <li class="" tab_index="3">
+                <a href="#det3" style="text-decoration: unset;" class=" tab_link disablelink " data-toggle="tab">Detail Info</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="det1" tabpane_index="1">
+              
+            </div>
+            <div class="tab-pane " id="det2" tabpane_index="2">
+               
+            </div>
+            <div class="tab-pane " id="det3" tabpane_index="3">
+               
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+  function btnSaveNextClick(btn) {
+
+      //if (checkCompleteness($(btn).closest(".box")) == true) {
+      var btnindex = $(btn).closest(".tab-pane").attr("tabpane_index");
+
+      modal_tab_events_click_next_tab($(".nav-tabs").find("li[tab_index=" + btnindex + "]"));
+
+      if ((parseInt( btnindex)+1) == $("#tab_techpack li").length) {
+          $("#btnSaveTechPack").removeAttr("disabled");
+      }
+      else
+      {
+          $("#btnSaveTechPack").attr("disabled", "disabled");
+      }
+      //}
+
+  }

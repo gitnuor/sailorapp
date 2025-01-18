@@ -1,0 +1,78 @@
+﻿@{
+    // Layout = "_LayoutViewComponent";
+    Layout = null;
+}
+@{
+    string selectid = ViewBag.selectid;
+    int delay = 2;
+    int minimumInputLength = 0;
+    bool isReadOnly = ViewBag.isReadOnly;
+
+    string strisReadOnly = isReadOnly.ToString().ToLower();
+    // string strmultiple = multiple.ToString().ToLower();
+
+    bool isRequired = ViewBag.isRequired;
+
+
+    string placeholder = ViewBag.placeholder;
+
+
+
+    if (isRequired == true)
+    {
+        <select name="@selectid" id="@selectid" class="form-control @selectid" style="width:100%;display:block;box-sizing:border-box"
+                data-val="true" data-val-required="Please Select">
+            <option value="">@placeholder</option>
+        </select>
+        <span class="field-validation-valid text-danger" data-valmsg-for="@selectid" data-valmsg-replace="true"></span>
+    }
+    else
+    {
+        <select name="@selectid" id="@selectid" class="form-control @selectid" style="width:100%;display:block;box-sizing:border-box">
+            <option value="">@placeholder</option>
+        </select>
+
+    }
+}
+
+
+<script type="text/javascript">
+
+
+    function LoadSeasonEventDropDown(fiscal_year_id) {
+
+        var select2Options = returnSelect2Options();
+        select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Events';
+        select2Options.minimumInputLength = @minimumInputLength;
+        select2Options.multiple = false;
+        select2Options.disabled = @strisReadOnly.ToLower();
+        select2Options.ajax.url = '/Select2/GetSeasonEventList', select2Options.ajax.type = 'GET';
+        select2Options.ajax.data = function (params) {
+            return {
+                fiscal_year_id: fiscal_year_id,
+                searchTerm: params.term || null
+            };
+        };
+
+
+        $('#@selectid').select2(
+            select2Options
+        );
+
+        if ($("#@selectid").attr("selectedvalue")) {
+
+            $('#@selectid').append('<option value="' + JSON.parse($("#@selectid").attr("selectedvalue"))[0].Value + '" selected="selected"">' + JSON.parse($("#@selectid").attr("selectedvalue"))[0].Text + '</option>');
+            $('#@selectid').select2(select2Options);
+            $('#@selectid').trigger('change');
+        }
+    }
+
+
+    $(function () {
+
+
+
+    });
+
+</script>
+

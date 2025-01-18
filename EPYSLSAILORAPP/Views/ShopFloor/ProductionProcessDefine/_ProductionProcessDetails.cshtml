@@ -1,0 +1,122 @@
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Application.DTO.RPC.rpc_tran_production_process_DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<form method="POST" id="frmAddFabric" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;" id="DTTranProductionDetailsList" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th><label class="labelNormal">Select</label></th>
+                            <th><label class="labelNormal">Color Code</label></th>
+                            <th><label class="labelNormal">Color Qty</label></th>
+                            <th><label class="labelNormal">Production Process</label></th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                        }
+                        @foreach (var obj in Model.color_quantity)
+                        {
+                            <tr>
+                                <td style="text-align:center"><input type='checkbox' class='form-control is_select' style="height:15px;width:15px;"></td>
+                                <td><input type='text' disabled class='form-control color_code'  value="@obj.color_code"></td>
+                                <td><input type='text' disabled class='form-control quantity' value="@obj.quantity"></td>
+                                <td>
+                                    <div class="form-check form-check-inline">
+                                        <input type="checkbox" class="form-check-input" id="cutting-@count" value="cutting">
+                                        <label class="form-check-label" for="cutting-@count">Cutting</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="checkbox" class="form-check-input" id="sewing-@count" value="sewing">
+                                        <label class="form-check-label" for="sewing-@count">Sewing</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="checkbox" class="form-check-input" id="finishing-@count" value="finishing">
+                                        <label class="form-check-label" for="finishing-@count">Finishing</label>
+                                    </div>
+                                </td>
+                                
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2" style="text-align:right">
+            <button type="button" class="btn btn-success" onclick="AddChkBoxWiseDetail();"><i class="fa fa-save"></i>&nbsp;&nbsp;OK</button>
+
+        </div>
+      
+    </div>
+
+</form>
+
+<script>
+
+    $(".addFabricRow").click(function () {
+        
+        // Select input fields in the same row
+        var itemName = $(this).closest("tr").find(".item_id").val();
+        var itemId = $(this).closest("tr").find(".gen_item_id").val();
+        var munitId = $(this).closest("tr").find(".gen_munit_id").val();
+        var gen_subGroup_id = $(this).closest("tr").find(".gen_subGroup_id").val();
+
+        var measurementUnit = $(this).closest("tr").find(".form-control").eq(6).val(); // Assuming measurement unit input is the second input
+        var avlStockQty = $(this).closest("tr").find(".form-control").eq(8).val();
+        var bookingQty = $(this).closest("tr").find(".form-control").eq(9).val();
+        // Construct HTML for new row
+        var newRowHtml = "<tr>" +
+
+            "<td><input type='text' style='width: 500px;' value='" + itemName + "'></td>" +
+            "<td style='display:none'>" + itemId + "</td>" +
+            "<td><input type='text' style='width: 80px;' value='" + measurementUnit + "'></td>" +
+            "<td style='display:none'>" + munitId + "</td>" +
+            "<td><input type='text' style='width: 80px;'></td>" +
+            "<td><input type='text' style='width: 70px;' value='" + avlStockQty + "'></td>" +
+            "<td><input type='text' style='width: 70px;' value='" + bookingQty + "'></td>" +
+            "<td><input type='text' style='width: 70px;'></td>" +
+            "<td><input type='text' style='width: 70px;'></td>" +
+            "<td><input type='text' style='width: 100px;'></td>" +
+            "<td style='display:none'>" + gen_subGroup_id + "</td>" +
+            //"<td> <button class='btn btn-danger' aria - hidden='false' onclick = 'deleteRow(this)' > <i class='fa fa-trash' aria - hidden='true' > </i></button ></td>" +
+            "<td><button onclick='deleteRow(this)'> <i class='fa fa-trash fa-x text-danger' style='font-size:large'></i></button ></td>" +
+            "</tr>";
+
+        // Append new row to the tbody of the data table
+        $("#modalcontainer #DTTranFabricDetailRow tbody").append(newRowHtml);
+    });
+
+    function deleteRow(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+</script>
+
+
+
+
+

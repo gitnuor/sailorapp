@@ -1,0 +1,203 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_finish_product_receive_DTO;
+@{
+    ViewBag.Title = "TranFinishProductReceive View";
+    Layout = null;
+}
+
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+</style>
+
+
+
+
+<form method="POST" id="frmView" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <input type="hidden" id="tran_finish_product_receive_id" value="@Model.tran_finish_product_receive_id">
+    <input type="hidden" id="tran_packing_list_id" value="@Model.tran_packing_list_id">
+     
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Finish Product Receive View</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;"> Packing list no</label>
+                        <input style="width:100%" asp-for="packing_list_no" type="text" class="border-#d1cccc-200 form-control " readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Finish Product Receive Date</label>
+                        <input style="width:100%" asp-for="finish_product_receive_date" type="text" class="border-#d1cccc-200 form-control " readonly="readonly" />
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Transport Type</label>
+                        <input style="width:100%" asp-for="transport_type" type="text" class="border-#d1cccc-200 form-control " readonly="readonly" />
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Driver Name</label>
+                        <input style="width:100%" asp-for="driver_name" type="text" class="border-#d1cccc-200 form-control " readonly="readonly" />
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Driver Contact No </label>
+                        <input style="width:100%" asp-for="driver_contact_no" type="text" class="border-#d1cccc-200 form-control " readonly="readonly" />
+
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+
+
+            <div class="row" id="divTablePacking">
+                <div class="col-md-12">
+                    <table style="font-size:9px;" id="DTPListOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th><label class="labelNormal">SL No</label></th>
+                                <th><label class="labelNormal">Techpack</label></th>
+                                <th><label class="labelNormal">Style Code</label></th>
+                                <th><label class="labelNormal">Color</label></th>
+                                <th></th>
+                                <th><label class="labelNormal">Barcode</label></th>
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">M.Unit</label></th>
+                                <th><label class="labelNormal">MRP</label></th>
+                                <th><label class="labelNormal">Order Qty</label></th>
+                                <th><label class="labelNormal">Challan /PL Qty</label></th>
+                                <th><label class="labelNormal">Received Qty </label></th>
+                                <th><label class="labelNormal">Reject/Short Qty </label></th>
+                                <th><label class="labelNormal">Value </label></th>
+                                <th><label class="labelNormal">Remarks</label></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int count = 1;
+                            }
+                            @foreach (var obj in Model.TranFinishProductReceiveDetails_List)
+                            {
+                                <tr>
+                                    <td>@count</td>
+                                    <td><input disabled type='text' class='form-control color_code' value="@obj.techpack_number"></td>
+                                    <td><input disabled type='text' class='form-control color_code' value="@obj.style_code"></td>
+                                    <td><input disabled type='text' class='form-control color_code' value="@obj.color_code"></td>
+                                    <td style="background-color:@obj.color_code; width: 110px;"></td>
+                                    <td><input type='text' disabled class='form-control colorQty' value="@obj.barcode"></td>
+                                    
+                                    <td><input disabled type='text' class='form-control process_name' value="@obj.style_product_size"></td>
+                                    <td><input disabled type='text' class='form-control process_name' value="@obj.style_product_unit"></td>
+                                    <td><input disabled type='text' class='form-control process_name' value="@obj.mrp"></td>
+                                    <td><input disabled type='text' class='form-control process_name' value="@obj.order_quantity"></td>
+                                    <td><input disabled type='text' class='form-control process_name' value="@obj.packing_quantity"></td>
+                                    <td><input disabled type='text' class='form-control process_name' value="@obj.receive_quantity"></td>
+                                    <td><input disabled type='text' class='form-control process_name' value="@obj.reject_quantity"></td>
+                                    <td><input disabled type='text' class='form-control process_name' value="@obj.total_mrp_value"></td>
+                                    <td><input disabled type='text' class='form-control process_name' value="@obj.note"></td>
+                                    
+
+                                </tr>
+                                count++;
+                            }
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        
+    </div>
+
+
+
+</form>
+
+
+
+
+<script>
+
+    
+
+</script>
+
+
+
+
+
+
+
+

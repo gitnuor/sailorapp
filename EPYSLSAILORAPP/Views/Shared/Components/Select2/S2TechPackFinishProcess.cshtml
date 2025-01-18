@@ -1,0 +1,258 @@
+@{
+
+    Layout = null;
+}
+@{
+    string selectid = ViewBag.selectid;
+    int delay = 2;
+    int minimumInputLength = 0;
+    bool isReadOnly = ViewBag.isReadOnly;
+
+    string strisReadOnly = isReadOnly.ToString().ToLower();
+
+    bool isRequired = ViewBag.isRequired;
+
+
+    string placeholder = ViewBag.placeholder;
+    string ddlcss = ViewBag.ddlcss;
+
+
+    if (isRequired == true)
+    {
+        <select selectedvalue="@ViewBag.data" name="@selectid" id="@selectid" class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box"
+                data-val="true" data-val-required="Please Select">
+            <option>@placeholder</option>
+        </select>
+        <span class="field-validation-valid text-danger" data-valmsg-for="@selectid" data-valmsg-replace="true"></span>
+    }
+    else
+    {
+
+        <select selectedvalue="@ViewBag.data" name="@selectid" id="@selectid" class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box">
+            <option>@placeholder</option>
+        </select>
+
+    }
+}
+
+
+<script type="text/javascript">
+    var model_parentid = '@ViewBag.model_parentid';
+
+    function    `LoadTechPackDropDownByClass(model_parentid, ddlclass, isReadonly = false) {
+
+        $.each($('.' + ddlclass), function (key, val) {
+
+
+            var select2Options = returnSelect2Options();
+            select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+            select2Options.minimumInputLength = @minimumInputLength;
+            select2Options.multiple = false;
+            select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid) : null;
+            select2Options.disabled = isReadonly;
+            select2Options.ajax.url = '/Select2/TechPackDetailListForFinishProductionProcess', select2Options.ajax.type = 'GET';
+            select2Options.templateResult = function (option) {
+                //console.log(option);
+                return $(option.photos);
+            };
+            select2Options.ajax.data = function (params) {
+                return {
+
+                    pageSize: 10,
+                    pageNum: params.page || 1,
+                    searchTerm: params.term || null
+                };
+            };
+            select2Options.ajax.processResults = function (data, params) {
+                params.page = params.page || 1;
+
+                if (data.data != null) {
+                    return {
+                        results: $.map(data.data, function (obj) {
+                            return { id: obj.id, text: obj.text, photos: obj.photos };
+                        }),
+                        pagination: {
+                            more: (params.page * 10) < data.recordstotal
+                        }
+                    }
+                };
+            };
+
+            $("#" + $(val).attr("id")).select2(
+                select2Options
+            );
+
+            if ($(val).attr("selectedvalue")) {
+
+                setTimeout(function () {
+                    $("#" + $(val).attr("id")).append('<option value="' + JSON.parse($(val).attr("selectedvalue")).tran_techpack_id + '" selected="selected"">' + JSON.parse($(val).attr("selectedvalue")).techpack_number + '</option>');
+                    $("#" + $(val).attr("id")).select2(select2Options);
+                    $("#" + $(val).attr("id")).trigger('change');
+                }, 0);
+
+            }
+
+        })
+
+    }
+
+    function LoadTechPackDropDownByElement(model_parentid, ddl, isReadonly = false) {
+
+        var select2Options = returnSelect2Options();
+        select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+        select2Options.minimumInputLength = @minimumInputLength;
+        select2Options.multiple = false;
+        select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid) : null;
+        select2Options.disabled = isReadonly;
+        select2Options.ajax.url = '/Select2/TechPackDetailListForFinishProductionProcess', select2Options.ajax.type = 'GET';
+        select2Options.templateResult = function (option) {
+            //console.log(option);
+            return $(option.photos);
+        };
+        select2Options.ajax.data = function (params) {
+            return {
+
+                pageSize: 10,
+                pageNum: params.page || 1,
+                searchTerm: params.term || null
+            };
+        };
+        select2Options.ajax.processResults = function (data, params) {
+            params.page = params.page || 1;
+
+            if (data.data != null) {
+                return {
+                    results: $.map(data.data, function (obj) {
+                        return { id: obj.id, text: obj.text, photos: obj.photos };
+                    }),
+                    pagination: {
+                        more: (params.page * 10) < data.recordstotal
+                    }
+                }
+            };
+        };
+
+        $(ddl).select2(
+            select2Options
+        );
+
+        if ($(ddl).attr("selectedvalue")) {
+
+            setTimeout(function () {
+                $("#" + $(ddl).attr("id")).append('<option value="' + JSON.parse($(ddl).attr("selectedvalue")).tran_techpack_id + '" selected="selected"">' + JSON.parse($(ddl).attr("selectedvalue")).techpack_number + '</option>');
+                $("#" + $(ddl).attr("id")).select2(select2Options);
+                $("#" + $(ddl).attr("id")).trigger('change');
+            }, 0);
+
+        }
+
+    }
+
+    function LoadTechPackDropDownWithAvlFabric(model_parentid, ddl, item_master_id, isReadonly = false) {
+
+        var select2Options = returnSelect2Options();
+        select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+        select2Options.minimumInputLength = @minimumInputLength;
+        select2Options.multiple = false;
+        select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid) : null;
+        select2Options.disabled = isReadonly;
+        select2Options.ajax.url = '/Select2/GetAvalTechPackListWithFabric', select2Options.ajax.type = 'GET';
+        select2Options.templateResult = function (option) {
+            //console.log(option);
+            return $(option.photos);
+        };
+        select2Options.ajax.data = function (params) {
+            return {
+                item_master_id: item_master_id,
+                pageSize: 10,
+                pageNum: params.page || 1,
+                searchTerm: params.term || null
+            };
+        };
+        select2Options.ajax.processResults = function (data, params) {
+            params.page = params.page || 1;
+
+            if (data.data != null) {
+                return {
+                    results: $.map(data.data, function (obj) {
+                        return { id: obj.id, text: obj.text, photos: obj.photos };
+                    }),
+                    pagination: {
+                        more: (params.page * 10) < data.recordstotal
+                    }
+                }
+            };
+        };
+
+        $(ddl).select2(
+            select2Options
+        );
+
+        if ($(ddl).attr("selectedvalue")) {
+
+            setTimeout(function () {
+                $("#" + $(ddl).attr("id")).append('<option value="' + JSON.parse($(ddl).attr("selectedvalue")).tran_techpack_id + '" selected="selected"">' + JSON.parse($(ddl).attr("selectedvalue")).techpack_number + '</option>');
+                $("#" + $(ddl).attr("id")).select2(select2Options);
+                $("#" + $(ddl).attr("id")).trigger('change');
+            }, 0);
+
+        }
+
+    }
+
+    $(function () {
+        // var select2Options = returnSelect2Options();
+        // select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+        // select2Options.minimumInputLength = @minimumInputLength;
+        // select2Options.multiple = false;
+        // select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid) : null,
+        //     select2Options.disabled = @strisReadOnly.ToLower();
+        // select2Options.ajax.url = '/Select2/TechPackDetailList', select2Options.ajax.type = 'GET';
+        // select2Options.templateResult = function (option) {
+        //     console.log(option);
+        //     return $(option.photos);
+        // };
+        // select2Options.ajax.data = function (params) {
+        //     return {
+
+        //         pageSize: 10,
+        //         pageNum: params.page || 1,
+        //         searchTerm: params.term || null
+        //     };
+        // };
+        // select2Options.ajax.processResults = function (data, params) {
+        //     params.page = params.page || 1;
+
+        //     if (data.data != null) {
+        //         return {
+        //             results: $.map(data.data, function (obj) {
+        //                 return { id: obj.id, text: obj.text, photos: obj.photos };
+        //             }),
+        //             pagination: {
+        //                 more: (params.page * 10) < data.recordstotal
+        //             }
+        //         }
+        //     };
+        // };
+
+        // $('#@selectid').select2(
+        //     select2Options
+        // );
+
+        // if ($('#@selectid').attr("selectedvalue")) {
+
+        //     setTimeout(function () {
+        //         $("#" + $('#@selectid').attr("id")).append('<option value="' + JSON.parse($('#@selectid').attr("selectedvalue")).tran_techpack_id + '" selected="selected"">' + JSON.parse($('#@selectid').attr("selectedvalue")).techpack_number + '</option>');
+        //         $("#" + $('#@selectid').attr("id")).select2(select2Options);
+        //         $("#" + $('#@selectid').attr("id")).trigger('change');
+        //     }, 0);
+
+        // }
+
+
+    });
+</script>
+
+
+
+

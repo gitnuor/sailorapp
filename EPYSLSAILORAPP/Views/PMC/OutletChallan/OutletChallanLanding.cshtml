@@ -1,0 +1,577 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_embellish_delivery_challan_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Outlet Challan Landing";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+<style>
+
+    #tab_precostinglanding.nav-tabs > li.active > a,
+    #tab_precostinglanding.nav-tabs > li.active > a:hover,
+    #tab_precostinglanding.nav-tabs > li.active > a:focus,
+    #tab_precostinglanding.nav-tabs > li > a.active,
+    #tab_precostinglanding.nav-tabs > li > a:hover,
+    #tab_precostinglanding.nav-tabs > li > a:focus {
+        color: #555;
+        cursor: default;
+        background-color: khaki;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+
+</style>
+
+<div class="content-wrapper">
+    <label style="display:none" class="col-sm-6 col-form-label-sm text-left" id="service_work_order_id1" style="font-size:12px;margin-bottom: 0; padding: 0;"></label>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Outlet Challan Landing</h6>
+                        </div>
+                        @*  @await Component.InvokeAsync("DataFilterSCMwd") *@
+                        <!-- /.card-header -->
+                    </div>
+
+                      <div class="card-body">
+                            <div class="form-group row" style="margin-bottom:0.3rem">                            
+                                <div class="row">
+
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-primary" onclick="AddItem();" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Create Challan </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precostinglanding" class="nav nav-tabs">
+                                        <li class="active" tab_index="1">
+                                            <a href="#det1" style="text-decoration: unset;width: 170px;" class="active tab_link  " data-toggle="tab">DRAFT LIST</a>
+                                        </li>
+                                        <li class="" tab_index="2">
+                                            <a href="#det2" style="text-decoration: unset;width: 225px;" class=" tab_link  " data-toggle="tab">APPROVED LIST</a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                                            <div class="card">
+
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <table id="DTTranOutletChallanDraft" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Outlet Challan No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Challan Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal  ">Delivery From</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Delivery To </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Delivery Address </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Transport Number </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Driver Name</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Action</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det2" tabpane_index="2">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTTranOutletChallanApproved" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Outlet Challan No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Challan Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal  ">Delivery From</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Delivery To </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Delivery Address </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Transport Number </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Driver Name</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Action</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                         
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 80% !important; ">
+        <div class="modal-content" id="modalcontent_1" style="overflow-y: scroll;">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Outlet Challan Detail
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section Scripts {
+    <script>
+        
+        function closePopup() {       
+            event.preventDefault();
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+            //location.reload();
+        }
+
+        function AddItem(btn) {
+             
+           // var tran_production_process_id = $(btn).attr("tran_production_process_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/OutletChallan/TranOutletChallanNew" , null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+
+        }
+
+        function SaveOutletChallan(btn) {
+            
+            var details = [];
+            $.each($("#DTOutletChallanList tbody tr"), function (key, val) {
+
+                var obj_TranOutletChallanDetails = {
+
+                    techpack_id: $(this).find(".techpack_id").val(),
+                    style_item_product_id: $(this).find(".style_item_product_id").val(),
+                    color_code: $(this).find(".color_code").val(),
+                    barcode: $(this).find(".barcode").val(),
+                    style_product_size_group_detid: $(this).find(".style_product_size_group_detid").val(),
+                    style_product_size: $(this).find(".style_product_size").val(),
+                    style_product_unit: $(this).find(".style_product_unit").val(),
+                    mrp: $(this).find(".mrp").val(),
+                    allocate_quantity: $(this).find(".distributed_quantity").val(),
+                    challan_quantity: $(this).find(".challan_quantity").val(),
+                    total_value: $(this).find(".total_mrp_value").val(),
+                    remarks: $(this).find(".note").val()
+
+                }
+                details.push(obj_TranOutletChallanDetails);
+            });
+
+            var obj_TranOutletChallan = {
+
+                delivery_outlet_challan_date: $('#modalcontent #del_outlet_challan_date').val(),
+                delivery_from: $('#modalcontent #SailorFactory').val(),
+                delivery_to: check_value($('#modalcontent #outlet_id').val()),
+                delivery_address: $('#modalcontent #delivery_address').val(),
+                transport_type: check_value($('#modalcontent #transport_id').val()),
+                transport_number: $('#modalcontent #vehicle_number').val(),
+                driver_name: $('#modalcontent #driver_name').val(),
+                driver_contact: $('#modalcontent #driver_contact_no').val(),
+                remarks: $('#modalcontent #note').val(),
+                is_submitted: 1,
+                details: details
+
+
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/OutletChallan/SaveOutletChallan", obj_TranOutletChallan, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                if (response.status_Code == "200") {
+
+                    LoadTranOutletChallanDraftData();
+                    LoadTranOutletChallanApprovedData();
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+
+        function ViewOutletChallanDraft(btn) {
+
+            var tran_delivery_outlet_challan_id = $(btn).attr("tran_delivery_outlet_challan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/OutletChallan/TranOutletChallanView?tran_delivery_outlet_challan_id=" + tran_delivery_outlet_challan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+            }
+        }
+
+        function ProposedOutletChallan(btn) {
+            
+            var obj_Approval = {
+                tran_delivery_outlet_challan_id: $('#outlet_challan_id').val(),
+            }
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 100);
+
+            ajaxPostObjectHandler("/OutletChallan/ProposedForApproval", obj_Approval, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+
+                if (response.status_Code == "200") {
+
+                    LoadTranOutletChallanDraftData();
+                    LoadTranOutletChallanApprovedData();
+
+                    showSuccessAlert("Proposed For Approval Successfully.", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function ViewOutletChallanApprove(btn) {
+
+            var tran_delivery_outlet_challan_id = $(btn).attr("tran_delivery_outlet_challan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/OutletChallan/TranOutletChallanViewApprove?tran_delivery_outlet_challan_id=" + tran_delivery_outlet_challan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+            }
+        }
+
+        function activeChange() {
+            $('#tab_precostinglanding.nav-tabs > li').click(function () {
+                // Remove active class from all tabs
+                $('#tab_precostinglanding.nav-tabs > li').removeClass('active');
+                // Add active class to the clicked tab
+                $(this).addClass('active');
+                // Remove active class from all tab links
+                $('#tab_precostinglanding.nav-tabs > li > a').removeClass('active');
+                // Add active class to the clicked tab link
+                $(this).find('a').addClass('active');
+                // Remove active class from all tab contents
+                $('.tab-content > .tab-pane').removeClass('active');
+                // Add active class to the corresponding tab content
+                var tabContentId = $(this).find('a').attr('href');
+                $(tabContentId).addClass('active');
+            });
+        }
+
+
+        $(function () {
+
+            LoadTranOutletChallanDraftData();
+            LoadTranOutletChallanApprovedData();
+            activeChange();
+        });
+
+        function LoadTranOutletChallanDraftData() {
+
+            var dt_search = {
+
+                filterId: '#DTTranOutletChallanDraft_filter input[type=search]',
+                tableId: "#DTTranOutletChallanDraft"
+
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search Outlet Challan No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+
+
+                "ajax": $.fn.dataTable.json({ url: "/OutletChallan/GetTranOutletChallanDraftData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_delivery_outlet_challan_id", data.tran_delivery_outlet_challan_id);
+
+                },
+                "columns": [
+
+
+                    { "data": "delivery_outlet_challan_no", "name": "delivery_outlet_challan_no", "autoWidth": true },
+                    {
+                        "data": "delivery_outlet_challan_date",
+                        "name": "delivery_outlet_challan_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "delivery_from", "name": "delivery_from", "autoWidth": true },
+                    { "data": "outlet_name", "name": "outlet_name", "autoWidth": true },
+                    { "data": "delivery_address", "name": "delivery_address", "autoWidth": true },
+                    { "data": "transport_number", "name": "transport_number", "autoWidth": true },
+                    { "data": "driver_name", "name": "driver_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+        function LoadTranOutletChallanApprovedData() {
+
+            var dt_search = {
+
+                filterId: '#DTTranOutletChallanApproved_filter input[type=search]',
+                tableId: "#DTTranOutletChallanApproved"
+
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search Outlet Challan No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+                
+                "ajax": $.fn.dataTable.json({ url: "/OutletChallan/GetTranOutletChallanApprovedData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_delivery_outlet_challan_id", data.tran_delivery_outlet_challan_id);
+
+                },
+                "columns": [
+                    //noor
+
+                    { "data": "delivery_outlet_challan_no", "name": "delivery_outlet_challan_no", "autoWidth": true },
+                    {
+                        "data": "delivery_outlet_challan_date",
+                        "name": "delivery_outlet_challan_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "delivery_from", "name": "delivery_from", "autoWidth": true },
+                    { "data": "outlet_name", "name": "outlet_name", "autoWidth": true },
+                    { "data": "delivery_address", "name": "delivery_address", "autoWidth": true },
+                    { "data": "transport_number", "name": "transport_number", "autoWidth": true },
+                    { "data": "driver_name", "name": "driver_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

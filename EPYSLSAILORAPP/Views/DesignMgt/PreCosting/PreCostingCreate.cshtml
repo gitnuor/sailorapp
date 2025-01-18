@@ -1,0 +1,3408 @@
+﻿@using EPYSLSAILORAPP.Domain;
+@model EPYSLSAILORAPP.Domain.DTO.tran_va_plan_DTO;
+@{
+    ViewBag.Title = "Pre Costing";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+</style>
+
+<div class="content-wrapper">
+    <input id="hd_range_plan_id" type="hidden" value="@Model.tran_range_plan_id" />
+    <input id="hd_va_plan_id" type="hidden" value="@Model.tran_va_plan_id" />
+    <input id="hd_encoded_fiscal_year" type="hidden" value="@ViewBag.encoded_fiscal_year" />
+    <input id="hd_tran_va_plan_event_id" type="hidden" value="@ViewBag.tran_va_plan_event_id" />
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Pre Costing</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        @await Component.InvokeAsync("DataFilter")
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12" id="tab_bar_style">
+                            <ul id="tab_precostinglanding" class="nav nav-tabs">
+                                <li class="active" tab_index="1">
+                                    <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">Pending List</a>
+                                </li>
+
+                                <li class="" tab_index="2">
+                                    <a href="#det2" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Draft List</a>
+                                </li>
+                                <li class="" tab_index="3">
+                                    <a href="#det3" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Proposed List</a>
+                                </li>
+                                <li class="" tab_index="4">
+                                    <a href="#det4" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Approved List</a>
+                                </li>
+                                <li class="" tab_index="5">
+                                    <a href="#det5" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Rejected List</a>
+                                </li>
+
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="det1" tabpane_index="1">
+                                    <div class="card">
+
+                                        <div class="card-body">
+                                            <table style="font-size:12px;" id="DTTranPreCosting" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th><label class="labelNormal">SL</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Status</label></th>
+                                                        <th style="width:300px;text-align:center"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;text-align:center"><label class="labelNormal  ">Product</label></th>
+                                                        <th style="width:200px;text-align:center"><label class="labelNormal">Delivery Unit</label></th>
+
+                                                        <th style="width:200px;text-align:center"><label class="labelNormal">Style Qty</label></th>
+                                                        <th style="width:100px;text-align:center"><label class="labelNormal">Sample Order</label></th>
+                                                        <th style="width:80px;text-align:center"><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane " id="det2" tabpane_index="2">
+                                    <div class="card">
+                                        <div class="card-body">
+
+                                            <table style="font-size:12px;" id="DTTranPreCostingDraft" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th><label class="labelNormal">SL</label></th>
+                                                        @*    <th><label class="labelNormal">Sample Order No.</label></th> *@
+                                                        <th style="width:300px;text-align:center"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;text-align:center"><label class="labelNormal  ">Product</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Delivery Unit</label></th>
+
+                                                        <th style="text-align:center"><label class="labelNormal">Style Qty</label></th>
+                                                        <th style="width:100px;text-align:center"><label class="labelNormal">Sample Order</label></th>
+                                                        <th style="width:80px;text-align:center"><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane " id="det3" tabpane_index="3">
+                                    <div class="card">
+
+                                        <div class="card-body">
+                                            <table style="font-size:12px;" id="DTTranPreCostingSendForApproval" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th><label class="labelNormal">SL</label></th>
+                                                        @*    <th><label class="labelNormal">Sample Order No.</label></th> *@
+                                                        <th style="width:300px;text-align:center;"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;text-align:center;"><label class="labelNormal  ">Product</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Delivery Unit</label></th>
+
+                                                        <th style="text-align:center;"><label class="labelNormal">Style Qty</label></th>
+                                                        <th style="width:100px;text-align:center;"><label class="labelNormal">Sample Order</label></th>
+                                                        <th style="width:80px;text-align:center;"><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane " id="det4" tabpane_index="4">
+                                    <div class="card">
+
+                                        <div class="card-body">
+                                            <table style="font-size:12px;" id="DTTranPreCostingApproved" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th><label class="labelNormal">SL</label></th>
+                                                        @*    <th><label class="labelNormal">Sample Order No.</label></th> *@
+                                                        <th style="width:300px;text-align:center;"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;text-align:center;"><label class="labelNormal  ">Product</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Delivery Unit</label></th>
+
+                                                        <th style="text-align:center;"><label class="labelNormal">Style Qty</label></th>
+                                                        <th style="width:100px;text-align:center;"><label class="labelNormal">Sample Order</label></th>
+                                                        <th style="width:80px;text-align:center;"><label class="labelNormal "> Action</label></th>
+
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane " id="det5" tabpane_index="5">
+                                    <div class="card">
+
+                                        <div class="card-body">
+                                            <table style="font-size:12px;" id="DTTranPreCostingRejected" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th><label class="labelNormal">SL</label></th>
+                                                        @*    <th><label class="labelNormal">Sample Order No.</label></th> *@
+                                                        <th style="width:300px;text-align:center;"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;text-align:center"><label class="labelNormal  ">Product</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Delivery Unit</label></th>
+
+                                                        <th style="text-align:center;"><label class="labelNormal">Style Qty</label></th>
+                                                        <th style="width:100px;text-align:center;"><label class="labelNormal">Sample Order</label></th>
+                                                        <th style="width:80px;text-align:center;"><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane " id="det6" tabpane_index="6">
+                                    <div class="card">
+
+                                        <div class="card-body">
+                                            <table style="font-size:12px;" id="DTTranPreCostingModifyRequestByMerchant" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th><label class="labelNormal">SL</label></th>
+                                                        <th><label class="labelNormal">Version No</label></th>
+                                                        <th><label class="labelNormal">Sample Order No.</label></th>
+                                                        <th style="width:300px;"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;"><label class="labelNormal  ">Product</label></th>
+                                                        <th><label class="labelNormal">Delivery Unit</label></th>
+                                                        <th><label class="labelNormal">Style Code</label></th>
+                                                        <th><label class="labelNormal">Style Qnty</label></th>
+
+                                                        <th><label class="labelNormal "> Action</label></th>
+
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+<div id="modalcontainer_common" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 90% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;margin: 5px !important;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Pre Costing
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        var dt_source_pending;
+        var dt_source_draft;
+        var dt_source_send_for_approval;
+        var dt_source_approved;
+        var dt_source_reject;
+        var dt_source_approved_by_designer;
+
+        var obj_fabric_List = [];
+        var obj_fabric_List_old = [];
+
+        var obj_subcontract_List = [];
+        var obj_subcontract_List_old = [];
+        var obj_embellish_List = [];
+        var obj_embellish_List_old = [];
+
+        var obj_fabric_List_removed = [];
+        var obj_subcontract_List_removed = [];
+        var obj_embellish_List_removed = [];
+
+        var tran_va_plan_id = 0;
+        var tran_va_plan_event_id = 0;
+
+        var listAttachments = [];
+        var IsNotDesigner = '@ViewBag.IsNotDesigner';
+
+        function jsdatatableloaded() {
+
+            // $("#txtTotalBusinessPlan").val(dt_source.rows().data()[0].bp_yearly_gross_sales);
+            // $("#txtTotalEventPlan").val(dt_source.rows().data()[0].event_gross_sales);
+            // $("#txtTotalRangeQuantity").val(dt_source.rows().data()[0].total_rangeplan_quantity);
+
+            // $("#txtTotalAddedQntity").val(dt_source.rows().data()[0].totaladded);
+            // $("#txtTotalNotAddedQntity").val(dt_source.rows().data()[0].totalnotadded);
+
+        }
+
+        function calc_total() {
+            //$("#order_quantity").val(getTotalByClassInsideTable("#DTTranPreCostingDetail", "txtorder_quantity"));
+        };
+
+        function calculate_quantitychange() {
+            for (var i = 0; i < obj_fabric_List.length; i++) {
+                var totalcons = parseFloat($("#style_quantity").val());
+
+                if (checknullValue(obj_fabric_List[i].wastage)) {
+                    totalcons = totalcons + (obj_fabric_List[i].wastage / 100);
+                }
+
+                totalcons = totalcons * obj_fabric_List[i].order_quantity;
+
+                obj_fabric_List[i].total_order_quantity = totalcons;
+                obj_fabric_List[i].total_price = totalcons * obj_fabric_List[i].price_per_unit;
+            }
+
+        }
+
+        function removeAtachments(elem, index) {
+
+            if (listAttachments[index].current_state == 1) {
+                listAttachments = listAttachments.filter(p => p.fileindex != index);
+            }
+            else {
+                listAttachments[index].current_state = 3;
+            }
+            $(elem).closest(".dvSingleAttachment").remove();
+        }
+
+        function CalcTotalEmbellConsumption(txt) {
+            //checknullValue
+            var totalcons = 0;
+
+            var waste = parseFloat($(txt).parent().parent().find(".txtembell_Wastage").val())
+            var orderqnty = parseInt($("#style_quantity").val());
+
+            if (checknullValue($(txt).parent().parent().find(".txtembell_Order_quantity").val())) {
+                totalcons = parseFloat($(txt).parent().parent().find(".txtembell_Order_quantity").val());
+            }
+
+            if (checknullValue(waste)) {
+                totalcons = totalcons + (waste / 100);
+            }
+
+            totalcons = totalcons * orderqnty;
+
+            $(txt).parent().parent().find(".txtembell_TotalRequirement").val(totalcons.toFixed(2));
+
+            if ($(txt).parent().parent().find(".txtembell_CostPerUnit").val() != "0") {
+                CalcTotalEmbellPrice($(txt).parent().parent().find(".txtembell_CostPerUnit"));
+            }
+        }
+
+        function CalcTotalEmbellPrice(txt) {
+            var TotalRequirement = parseFloat($(txt).parent().parent().find(".txtembell_TotalRequirement").val());
+            $(txt).parent().parent().find(".txtembell_TotalCost").val((TotalRequirement * parseFloat($(txt).val())).toFixed(2));
+
+            var total_embell_cost = getTotalByClassInsideTable("#DTTranPreCostingDetailEmbellishment", "txtembell_TotalCost") / parseInt($("#style_quantity").val());
+
+            $("#txt_total_embellishment").val(total_embell_cost.toFixed(2));
+
+            var total_subcontract_cost = getTotalByClassInsideTable("#DTTranPreCostingDetailSubContract", "txtembell_TotalCost") / parseInt($("#style_quantity").val());
+
+            $("#txt_total_process_subcontract").val(total_subcontract_cost.toFixed(2));
+            $("#total_raw_material_cost").val(getTotalByClassInsideTable("#DTTranPreCostingOtherData", "txtcalc_rawmat").toFixed(2));
+
+            if ($("#txt_total_embellishment").parent().parent().find(".olddatarow").length == 1) {
+                $("#txt_total_embellishment").parent().parent().find(".olddatarow").
+                    after('<h6 class="box-title olddatarow" style="float:right;color:red;font-weight:bold;">' +
+                        "(" + getTotalByClassInsideTable("#DTTranPreCostingDetailEmbellishment", "txtembell_TotalCost_old").toFixed(2) + ")"
+                        + '</h6>');
+            }
+            if ($("#txt_total_process_subcontract").parent().parent().find(".olddatarow").length == 1) {
+
+                $("#txt_total_process_subcontract").parent().parent().find(".olddatarow").
+                    after('<h6 class="box-title olddatarow" style="float:right;color:red;font-weight:bold;">' +
+                        "(" + getTotalByClassInsideTable("#DTTranPreCostingDetailSubContract", "txtembell_TotalCost_old").toFixed(2) + ")"
+                        + '</h6>');
+
+            }
+
+            if ($("#total_raw_material_cost").parent().parent().find(".olddatarow").length == 1) {
+
+                var total1stpart = getTotalByClassInsideTable("#DTTranPreCostingDetailEmbellishment", "txtembell_TotalCost_old") +
+                    getTotalByClassInsideTable("#DTTranPreCostingDetailSubContract", "txtembell_TotalCost_old") +
+                    getTotalByClassInsideTable("#DTTranPreCostingOtherData", "txtcalc_rawmat_old");
+
+                var percentage_old = parseFloat(total1stpart) / parseFloat($("#estimated_markup_price").attr("estimated_markup_price_old")) * 100;
+
+                $("#total_raw_material_cost").parent().parent().find(".olddatarow").
+                    after('<h6 class="box-title olddatarow" style="float:right;color:red;font-weight:bold;">' +
+                        "(" + total1stpart.toFixed(2) + ")"
+                        + '</h6>');
+
+                $("#total_raw_material_cost").attr("old_rawmatcost", total1stpart);
+            }
+
+
+            if ($("#total_raw_material_cost").val() != "0") {
+
+                if ($("#estimated_markup_price").val() != "0") {
+                    var percentage = parseFloat($("#total_raw_material_cost").val()) / parseFloat($("#estimated_markup_price").val()) * 100;
+                    $("#total_raw_material_percentage").val(percentage.toFixed() + "%");
+
+                }
+
+                if ($("#total_overhead_cost").val() != "0" && $("#total_raw_material_cost").val() != "0") {
+
+                    $("#total_production_cost").val(parseFloat($("#total_overhead_cost").val()) + parseFloat($("#total_raw_material_cost").val()));
+                    CalcFloorPrice();
+                }
+            }
+        }
+
+        function CalcTotalFabricConsumption(txt) {
+            //checknullValue
+            var totalcons = 0;
+
+            var waste = parseFloat($("#modalcontent-common_popup  #txtWastage").val());
+            var orderqnty = parseInt($("#txtorderqnty").val());
+
+            if (checknullValue($("#modalcontent-common_popup  #txtorder_quantity").val())) {
+                totalcons = parseFloat($("#modalcontent-common_popup  #txtorder_quantity").val());
+            }
+
+            if (checknullValue(waste)) {
+                totalcons = totalcons + (waste / 100);
+            }
+
+            totalcons = totalcons * orderqnty;
+
+            $("#modalcontent-common_popup  #txtTotalRequirement").val(totalcons.toFixed(2));
+
+            if ($("#modalcontent-common_popup #txtTotalRequirement").val() != "0") {
+                CalcTotalFabricPrice(txt);
+            }
+        }
+
+        function CalcTotalFabricPrice(txt) {
+            var TotalRequirement = parseFloat($("#modalcontent-common_popup #txtTotalRequirement").val());
+            $("#modalcontent-common_popup #txtTotalCost").val((TotalRequirement * parseFloat($("#modalcontent-common_popup  #txtCostPerUnit").val())).toFixed(2));
+            $("#total_raw_material_cost").val(getTotalByClassInsideTable("#DTTranPreCostingOtherData", "txtcalc_rawmat").toFixed(2));
+
+            if ($("#total_raw_material_cost").val() != "0") {
+
+                if ($("#estimated_markup_price").val() != "0") {
+
+                    var percentage = parseFloat($("#total_raw_material_cost").val()) / parseFloat($("#estimated_markup_price").val()) * 100;
+                    $("#total_raw_material_percentage").val(percentage.toFixed() + "%");
+
+                }
+
+                if ($("#total_overhead_cost").val() != "0" && $("#total_raw_material_cost").val() != "0") {
+
+                    $("#total_production_cost").val(parseFloat($("#total_overhead_cost").val()) + parseFloat($("#total_raw_material_cost").val()));
+                    CalcFloorPrice();
+
+                }
+            }
+        }
+
+        function CalcRawMaterialPercentage() {
+
+            if ($("#total_raw_material_cost").val() != "0") {
+
+                if ($("#estimated_markup_price").val() != "0") {
+                    var percentage = parseFloat($("#total_raw_material_cost").val()) / parseFloat($("#estimated_markup_price").val()) * 100;
+                    $("#total_raw_material_percentage").val(percentage.toFixed() + "%");
+                }
+
+                if ($("#total_overhead_cost").val() != "0" && $("#total_raw_material_cost").val() != "0") {
+
+                    $("#total_production_cost").val(parseFloat($("#total_overhead_cost").val()) + parseFloat($("#total_raw_material_cost").val()));
+                    CalcFloorPrice();
+
+                }
+            }
+        }
+
+        function GetAllSegment() {
+            var alltext = "";
+
+            for (var id = 1; id <= 15; id++) {
+                if ($("#modalcontent-common_popup #segment_det" + id + "_id").length > 0) {
+                    alltext += $("#modalcontent-common_popup #segment_det" + id + "_id > option:selected").text() + " ";
+                }
+
+            }
+
+            if (alltext.length == 0) {
+                alltext = $("#txtsubgroupname").val();
+            }
+
+            return alltext;
+        }
+
+        function LoadFabricFromGrid(row_index) {
+            if ($("#modalcontent-common_popup #segment_det1_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det1_id").append('<option value="' + obj_fabric_List[row_index].segment_det1_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det1_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det2_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det2_id").append('<option value="' + obj_fabric_List[row_index].segment_det2_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det2_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det3_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det3_id").append('<option value="' + obj_fabric_List[row_index].segment_det3_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det3_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det4_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det4_id").append('<option value="' + obj_fabric_List[row_index].segment_det4_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det4_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det5_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det5_id").append('<option value="' + obj_fabric_List[row_index].segment_det5_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det5_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det6_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det6_id").append('<option value="' + obj_fabric_List[row_index].segment_det6_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det6_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det7_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det7_id").append('<option value="' + obj_fabric_List[row_index].segment_det7_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det7_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det8_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det8_id").append('<option value="' + obj_fabric_List[row_index].segment_det8_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det8_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det9_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det9_id").append('<option value="' + obj_fabric_List[row_index].segment_det9_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det9_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det10_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det10_id").append('<option value="' + obj_fabric_List[row_index].segment_det10_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det10_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det11_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det11_id").append('<option value="' + obj_fabric_List[row_index].segment_det11_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det11_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det12_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det12_id").append('<option value="' + obj_fabric_List[row_index].segment_det12_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det12_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det13_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det13_id").append('<option value="' + obj_fabric_List[row_index].segment_det13_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det13_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det14_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det14_id").append('<option value="' + obj_fabric_List[row_index].segment_det14_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det14_text + '</option>');
+            }
+            if ($("#modalcontent-common_popup #segment_det15_id").length > 0) {
+                $("#modalcontent-common_popup #segment_det15_id").append('<option value="' + obj_fabric_List[row_index].segment_det15_id + '" selected="selected"">' + obj_fabric_List[row_index].segment_det15_text + '</option>');
+            }
+
+            // $('"#modalcontent-common_popup .S2GenSegment').trigger('change');
+
+            $("#modalcontent-common_popup #ddl_measurement_unit").append('<option value="' + obj_fabric_List[row_index].measurement_unit_detail_id + '" selected="selected"">' + obj_fabric_List[row_index].measurement_unit + '</option>');
+            //$("#ddl_measurement_unit").trigger("change");
+
+            $("#modalcontent-common_popup #txtorder_quantity").val(obj_fabric_List[row_index].order_quantity);
+            $("#modalcontent-common_popup #txtWastage").val(obj_fabric_List[row_index].wastage);
+            $("#modalcontent-common_popup #txtTotalRequirement").val(obj_fabric_List[row_index].total_order_quantity);
+            $("#modalcontent-common_popup #txtCostPerUnit").val(obj_fabric_List[row_index].price_per_unit);
+            $("#modalcontent-common_popup #txtTotalCost").val(obj_fabric_List[row_index].total_price);
+
+            $("#modalcontent-common_popup #btnAddFabric").attr("row_index", row_index);
+            $("#modalcontent-common_popup #btnAddFabric").attr("isSaveOrUpdate", "2");
+            $("#modalcontent-common_popup #btnAddFabric").html('<i class="fa fa-save"></i>&nbsp;&nbsp;Update Fabric ');
+
+            //for (var i = 0; i < JSON.parse(@Html.Raw(ViewBag.data)).length; i++) {
+            for (var i = 0; i < obj_fabric_List[row_index].List_placement_info.length; i++) {
+
+                $('#ddl_placement').append('<option value="' + obj_fabric_List[row_index].List_placement_info[i].style_placement_information_id + '" selected="selected"">' + obj_fabric_List[row_index].List_placement_info[i].placement + '</option>');
+            }
+
+            $("#modalcontent-common_popup #ddl_placement").select2({
+                allowClear: true,
+                placeholder: "Select Placement"
+            });
+            $("#modalcontent-common_popup #ddl_placement").trigger('change');
+            $("#modalcontent-common_popup #txtorderqnty").val(obj_fabric_List[row_index].color_quantity);
+            $('#ddl_combo').empty();
+            var count = 0;
+            $.each($("#dtcolorcodestyle tbody tr"), function (key, val) {
+                if (count == 0) {
+
+                    $('#ddl_combo').append($('<option>', {
+                        value: $(this).closest("tr").find(".ddl_color").val(),
+                        text: $(this).closest("tr").find(".ddl_color").val(),
+                        quantity: $(this).closest("tr").find(".txtTotalColorSizeQuantity").val()
+                    }));
+                    $('#ddl_combo').append($('<option>', {
+                        value: "All",
+                        text: "All",
+                        quantity: $("#style_quantity").val()
+                    }));
+                    count++;
+                }
+                else {
+
+                    $('#ddl_combo').append($('<option>', {
+                        value: $(this).closest("tr").find(".ddl_color").val(),
+                        text: $(this).closest("tr").find(".ddl_color").val(),
+                        quantity: $(this).closest("tr").find(".txtTotalColorSizeQuantity").val()
+                    }));
+                }
+
+
+
+
+            });
+           $('#ddl_combo').val(obj_fabric_List[row_index].color_code);
+        }
+
+
+        function btnSaveNextClick(btn) {
+
+            //if (checkCompleteness($(btn).closest(".box")) == true) {
+            var btnindex = $(btn).closest(".tab-pane").attr("tabpane_index");
+
+            modal_tab_events_click_next_tab($(".nav-tabs").find("li[tab_index=" + btnindex + "]"));
+
+            $("#btnSavePreCosting").removeAttr("disabled");
+            $("#btnSendForApproval").removeAttr("disabled");
+
+
+            //}
+
+        }
+        function RemoveFabricFromGrid(btn, index) {
+
+            var objToDelete = obj_fabric_List.filter(p => p.row_index == index);
+
+            if (objToDelete.length > 0) {
+
+                var gen_item_structure_group_sub_id = objToDelete[0].gen_item_structure_group_sub_id;
+
+                var item_structure_group_id = objToDelete[0].item_structure_group_id
+
+                if (objToDelete[0].tran_pre_costing_item_detail_id != null) {
+                    objToDelete[0].current_state = 3;
+                    obj_fabric_List_removed.push(objToDelete[0]);
+                }
+
+                $(btn).closest(".dynamic_row").remove();
+
+                obj_fabric_List = obj_fabric_List.filter(p => p.row_index != index);
+
+                if (obj_fabric_List.length > 0) {
+
+                }
+                else {
+                    $("#DTTranPreCostingDetail .btnclsmasterpage[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").css("display", "none");
+
+                }
+                $("#DTTranPreCostingDetail .editfabric").attr("value", "Edit(" + obj_fabric_List
+                    .filter(p => p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id
+                        //&& p.item_structure_group_id == item_structure_group_id
+                    ).length + ")")
+
+                LoadTotalCalcAfterDelete(gen_item_structure_group_sub_id, item_structure_group_id);
+                LoadFabricDt(gen_item_structure_group_sub_id, item_structure_group_id);
+                // LoadPReCostingDetail();
+            }
+        }
+
+        function LoadTotalCalcAfterDelete(gen_item_structure_group_sub_id, item_structure_group_id) {
+
+            var filter_data = obj_fabric_List.filter(p => p.item_structure_group_id == item_structure_group_id);
+
+            var sum = 0;
+
+            filter_data.forEach(element => {
+                sum += parseFloat(element.total_price);
+            });
+
+            var totalcost = sum / (parseFloat($("#style_quantity").val()));
+
+            $("#DTTranPreCostingOtherData .txt_total_structure_group[item_structure_group_id='" + item_structure_group_id + "']").val(totalcost.toFixed(2));
+
+            $("#total_raw_material_cost").val(getTotalByClassInsideTable("#DTTranPreCostingOtherData", "txtcalc_rawmat").toFixed(2));
+
+            if ($("#total_raw_material_cost").val() != "0") {
+
+                if ($("#estimated_markup_price").val() != "0") {
+                    var percentage = parseFloat($("#total_raw_material_cost").val()) / parseFloat($("#estimated_markup_price").val()) * 100;
+                    $("#total_raw_material_percentage").val(percentage.toFixed() + "%");
+                }
+
+                if ($("#total_overhead_cost").val() != "0" && $("#total_raw_material_cost").val() != "0") {
+
+                    $("#total_production_cost").val(parseFloat($("#total_overhead_cost").val()) + parseFloat($("#total_raw_material_cost").val()));
+                    CalcFloorPrice();
+                }
+            }
+
+        }
+
+
+        function LoadTotalCalcDt(gen_item_structure_group_sub_id, item_structure_group_id) {
+
+            var filter_data = obj_fabric_List.filter(p => p.item_structure_group_id == item_structure_group_id);
+            var filter_data_old = obj_fabric_List_old.filter(p => p.item_structure_group_id == item_structure_group_id);
+
+            var sum = 0, sum_old = 0;
+
+            filter_data.forEach(element => {
+                sum += parseFloat(element.total_price);
+            });
+            filter_data_old.forEach(element => {
+                sum_old += parseFloat(element.total_price);
+            });
+
+            var totalcost = sum / (parseFloat($("#style_quantity").val()));
+            var totalcost_old = sum_old / (parseFloat($("#style_quantity").val()));
+
+            var is_Exist = $("#DTTranPreCostingOtherData .labelNormal[item_structure_group_id=" + item_structure_group_id + "]").parent().find(".olddatarow").length;
+
+            if (is_Exist == 0) {
+                $("#DTTranPreCostingOtherData .labelNormal[item_structure_group_id=" + item_structure_group_id + "]")
+                    .after('<h6 class="box-title olddatarow"style="float:right;color:red;font-weight:bold;">(' + totalcost_old.toFixed(2) + ')</h6>');
+            }
+
+
+
+            $("#DTTranPreCostingOtherData .txt_total_structure_group[item_structure_group_id='" + item_structure_group_id + "']").val(totalcost.toFixed(2));
+
+            $("#total_raw_material_cost").addClass("txtcalc_rawmat_old", totalcost_old);
+            $("#total_raw_material_cost").val(getTotalByClassInsideTable("#DTTranPreCostingOtherData", "txtcalc_rawmat").toFixed(2));
+
+            if ($("#total_raw_material_cost").val() != "0") {
+
+                if ($("#estimated_markup_price").val() != "0") {
+                    var percentage = parseFloat($("#total_raw_material_cost").val()) / parseFloat($("#estimated_markup_price").val()) * 100;
+                    $("#total_raw_material_percentage").val(percentage.toFixed() + "%");
+                }
+
+                if ($("#total_overhead_cost").val() != "0" && $("#total_raw_material_cost").val() != "0") {
+
+                    $("#total_production_cost").val(parseFloat($("#total_overhead_cost").val()) + parseFloat($("#total_raw_material_cost").val()));
+                    CalcFloorPrice();
+                }
+            }
+
+        }
+
+        function DeleteSubContract(btn) {
+
+            if ($(btn).parent().parent().attr("tran_pre_costing_item_subcontract_detail_id") != "") {
+
+                var tr = $(btn).parent().parent();
+
+                var obj = {
+                    tran_pre_costing_item_subcontract_detail_id: $(tr).attr("tran_pre_costing_item_subcontract_detail_id") != "0" ? $(tr).attr("tran_pre_costing_item_subcontract_detail_id") : null,
+                    tran_pre_costing_id: $(tr).attr("tran_pre_costing_id") != "0" ? $(tr).attr("tran_pre_costing_id") : null,
+                    process_master_id: $(tr).find(".ddl_process_master").val(),
+                    measurement_unit_detail_id: 63,//piece id
+                    order_quantity: check_textbox_value($(tr).find(".txtembell_Order_quantity")),
+                    wastage: check_textbox_value($(tr).find(".txtembell_Wastage")),
+                    total_order_quantity: check_textbox_value($(tr).find(".txtembell_TotalRequirement")),
+                    price_per_unit: check_textbox_value($(tr).find(".txtembell_CostPerUnit")),
+                    total_price: check_textbox_value($(tr).find(".txtembell_TotalCost")),
+                    current_state: 3
+                };
+
+                obj_subcontract_List_removed.push(obj);
+
+            }
+
+            $(btn).parent().parent().remove();
+        }
+        function LoadFabricDt(gen_item_structure_group_sub_id, item_structure_group_id) {
+
+            $("#DTTranFabricDetails tbody tr").remove();
+
+            var strhtml = "";
+
+            var filter_data = obj_fabric_List.filter(p => p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id);
+
+            for (var index = 0; index < filter_data.length; index++) {
+
+                strhtml += "<tr tran_pre_costing_item_detail_id='" + filter_data[index].tran_pre_costing_item_detail_id + "' tran_pre_costing_id='" + filter_data[index].tran_pre_costing_id + "'  row_index='" + filter_data[index].row_index + "'>" +
+                    "<td>" + filter_data[index].color_code + "</td>" +
+                    "<td style='font-size:12px;'>" + filter_data[index].all_segment_text + "</td>" +
+                    "<td>" + filter_data[index].measurement_unit + "</td>" +
+                    "<td>" + filter_data[index].order_quantity + "</td>" +
+                    "<td>" + filter_data[index].wastage + "</td>" +
+                    "<td>" + filter_data[index].total_order_quantity + "</td>" +
+                    "<td>" + filter_data[index].price_per_unit + "</td>" +
+                    "<td>" + filter_data[index].color_quantity + "</td>" +
+                    "<td>" + filter_data[index].total_price + "</td>" +
+                    "<td><input type='button' class='btn btn-primary' value='Edit' onclick='LoadFabricFromGrid(" + filter_data[index].row_index + ");' />" +
+                    "<input type='button' class='btn btn-danger' value='Delete' onclick='RemoveFabricFromGrid(this," + filter_data[index].row_index + ");'/> </td>" +
+                    "</tr>";
+            }
+
+            $("#DTTranFabricDetails tbody").append(strhtml);
+
+            var sum = 0;
+
+            filter_data.forEach(element => {
+                sum += parseFloat(element.total_price);
+            });
+
+            var totalcost = sum / (parseFloat($("#style_quantity").val()));
+
+            $("#DTTranPreCostingOtherData .txt_total_structure_group[item_structure_group_id='" + item_structure_group_id + "']").val(totalcost.toFixed(2));
+
+            $("#total_raw_material_cost").val(getTotalByClassInsideTable("#DTTranPreCostingOtherData", "txtcalc_rawmat").toFixed(2));
+
+            if ($("#total_raw_material_cost").val() != "0") {
+
+                if ($("#estimated_markup_price").val() != "0") {
+                    var percentage = parseFloat($("#total_raw_material_cost").val()) / parseFloat($("#estimated_markup_price").val()) * 100;
+                    $("#total_raw_material_percentage").val(percentage.toFixed() + "%");
+                }
+
+                if ($("#total_overhead_cost").val() != "0" && $("#total_raw_material_cost").val() != "0") {
+
+                    $("#total_production_cost").val(parseFloat($("#total_overhead_cost").val()) + parseFloat($("#total_raw_material_cost").val()));
+                    CalcFloorPrice();
+                }
+            }
+
+        }
+
+        function CalcFloorPrice() {
+
+            if ($("#total_production_cost").val() != "0") {
+
+                if ($("#floor_price_percentage").val() == "") {
+                    $("#floor_price_percentage").val("0");
+                }
+
+                var total_production_cost = parseFloat($("#total_production_cost").val());
+
+                var percentage = parseFloat($("#floor_price_percentage").val()) / 100;
+
+                var result = (percentage * total_production_cost) + total_production_cost;
+
+                $("#floor_price_per_pc").val(result.toFixed(2));
+
+                CalcDesiredMarkupPrice();
+
+            }
+        }
+
+        function CalcDesiredMarkupPrice() {
+
+            if ($("#floor_price_per_pc").val() != "0") {
+
+                if ($("#floor_price_percentage").val() == "0") {
+                    $("#floor_price_percentage").val("0");
+                }
+
+                var floor_price_per_pc = parseFloat($("#floor_price_per_pc").val());
+                var percentage = parseFloat($("#desired_markup_percentage").val()) / 100;
+
+                var result = (percentage * floor_price_per_pc) + floor_price_per_pc;
+
+                $("#desired_markup_price").val(result.toFixed(2));
+
+                $("#final_mrp").val(Math.ceil(result));
+
+                $("#suggested_mrp_with_cost").val((parseFloat($("#total_production_cost").val()) / 0.43).toFixed(2));
+
+                CalcTotalStyleMRP();
+            }
+        }
+
+        function CalcTotalStyleMRP() {
+            if ($("#final_mrp").val() != "0" && $(".style_quantity").val() != 0) {
+                $("#total_style_quantity_mrp").val(parseFloat($("#final_mrp").val()) * parseInt($(".style_quantity").val()));
+            }
+        }
+
+        function CalcOverheadCost() {
+
+            $("#total_overhead_cost").val(getTotalByClassInsideTable("#DTTranPreCostingOtherData", "txtcalc_overheadc").toFixed(2));
+
+            if ($("#total_overhead_cost").val() != "0" && $("#total_raw_material_cost").val() != "0") {
+
+                $("#total_production_cost").val(parseFloat($("#total_overhead_cost").val()) + parseFloat($("#total_raw_material_cost").val()));
+                CalcFloorPrice();
+            }
+        }
+
+        function AddNewFabric(btn, item_structure_group_id, structure_group_name, gen_item_structure_group_sub_id, sub_group_name, measurement_unit_id, default_measurement_unit_detail_id) {
+
+            var nextRow = $("#DTTranPreCostingDetail .tr_subgroup[item_structure_group_id=" + item_structure_group_id + "]");
+
+            gen_item_structure_group_sub_id = $(btn).parent().find(".ddl_sub_group").val();
+            sub_group_name = $(btn).parent().find(".ddl_sub_group>option:selected").attr("sub_group_name");
+            measurement_unit_id = $(btn).parent().find(".ddl_sub_group> option:selected").attr("measurement_unit_id");
+            default_measurement_unit_detail_id = $(btn).parent().find(".ddl_sub_group> option:selected").attr("default_measurement_unit_detail_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            $("#modalcontainer_common").addClass("custom-class");
+
+            try {
+                ajaxGetHandler("/PreCosting/AddNewFabric?item_structure_group_id=" + item_structure_group_id + "&gen_item_structure_group_sub_id=" + gen_item_structure_group_sub_id + "&measurement_unit_id=" + measurement_unit_id + "&default_measurement_unit_detail_id=" + default_measurement_unit_detail_id, null, function (data) {
+                    hideLoader();
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+                    $('#modalcontent-common_popup').html(data);
+                    $('#modalcontainer_common_popup').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common_popup').modal("show");
+
+                    if (typeof LoadGenSegmentDetlDropDownByClass != 'undefined') {
+
+                    }
+
+                    $("#modalcontent-common_popup .S2GenSegmentDetl").val(null).trigger('change.select2');
+
+                    $("#modalcontent-common_popup #txtorderqnty").val($("#style_quantity").val());
+                    $("#modalcontent-common_popup #txtsubgroupname").val(sub_group_name);
+                    $("#modalcontent-common_popup #txtsubgroupname").attr("item_structure_group_id", item_structure_group_id);
+                    $("#modalcontent-common_popup #txtsubgroupname").attr("structure_group_name", structure_group_name);
+
+                    $("#modalcontent-common_popup  #ddl_placement").removeAttr("placeholder");
+                    $("#modalcontent-common_popup  #ddl_placement").attr("multiple", "multiple");
+                    $("#modalcontent-common_popup  #ddl_placement option:eq(0)").remove();
+                    $("#modalcontent-common_popup  #ddl_placement").val('').trigger('change');
+                    $("#modalcontent-common_popup  #ddl_placement").select2({
+                        allowClear: true,
+                        placeholder: "Select Placement"
+                    });
+
+                    $('#ddl_combo').empty();
+                    var count = 0;
+                    $.each($("#dtcolorcodestyle tbody tr"), function (key, val) {
+                        if (count == 0) {
+
+                            $('#ddl_combo').append($('<option>', {
+                                value: $(this).closest("tr").find(".ddl_color").val(),
+                                text: $(this).closest("tr").find(".ddl_color").val(),
+                                quantity: $(this).closest("tr").find(".txtTotalColorSizeQuantity").val()
+                            }));
+                            $('#ddl_combo').append($('<option>', {
+                                value: "All",
+                                text: "All",
+                                quantity: $("#style_quantity").val()
+                            }));
+                            count++;
+                        }
+                        else{
+
+                            $('#ddl_combo').append($('<option>', {
+                                value: $(this).closest("tr").find(".ddl_color").val(),
+                                text: $(this).closest("tr").find(".ddl_color").val(),
+                                quantity: $(this).closest("tr").find(".txtTotalColorSizeQuantity").val()
+                            }));
+                        }
+                       
+
+
+
+                    });
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+        function EditFabric(btn, item_structure_group_id, gen_item_structure_group_sub_id, sub_group_name, measurement_unit_id, default_measurement_unit_detail_id) {
+            $("#modalcontainer_common").addClass("custom-class");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PreCosting/AddNewFabric?item_structure_group_id=" + item_structure_group_id + "&gen_item_structure_group_sub_id=" + gen_item_structure_group_sub_id + "&measurement_unit_id=" + measurement_unit_id + "&default_measurement_unit_detail_id=" + default_measurement_unit_detail_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent-common_popup').html(data);
+                    $('#modalcontainer_common_popup').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common_popup').modal("show");
+
+                    if (typeof LoadGenSegmentDetlDropDownByClass != 'undefined') {
+
+                    }
+
+                    $("#modalcontent-common_popup .S2GenSegment").val(null).trigger('change.select2');
+
+                    $("#modalcontent-common_popup #txtorderqnty").val($("#style_quantity").val());
+                    $("#modalcontent-common_popup #txtsubgroupname").val(sub_group_name);
+
+                    LoadFabricDt(gen_item_structure_group_sub_id, item_structure_group_id);
+                    //LoadPReCostingDetail();
+
+                    $("#modalcontent-common_popup  #ddl_placement").removeAttr("placeholder");
+                    $("#modalcontent-common_popup  #ddl_placement").attr("multiple", "multiple");
+                    $("#modalcontent-common_popup  #ddl_placement option:eq(0)").remove();
+                    $("#modalcontent-common_popup  #ddl_placement").val('').trigger('change');
+                    $("#modalcontent-common_popup  #ddl_placement").select2({
+                        allowClear: true,
+                        placeholder: "Select Placement"
+                    });
+
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function EditPrecDetail(btn, row_index, item_structure_group_id, gen_item_structure_group_sub_id, sub_group_name, isreview) {
+
+            $("#modalcontainer_common").addClass("custom-class");
+
+            var tr_item_structure_group_sub_id = $(btn).closest("tr").attr("gen_item_structure_group_sub_id")
+
+            var sub_group_row = $("#DTTranPreCostingDetail .tr_subgroup[gen_item_structure_group_sub_id=" + tr_item_structure_group_sub_id + "]")
+
+            sub_group_name = $(sub_group_row).attr("sub_group_name");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PreCosting/AddNewFabric?item_structure_group_id=" + item_structure_group_id + "&gen_item_structure_group_sub_id=" + gen_item_structure_group_sub_id + "&measurement_unit=" + $(sub_group_row).attr("measurement_unit") + "&default_measurement_unit_detail_id=" + $(sub_group_row).attr("measurement_unit_detail_id"), null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent-common_popup').html(data);
+                    $('#modalcontainer_common_popup').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common_popup').modal("show");
+
+                    if (typeof LoadGenSegmentDetlDropDownByClass != 'undefined') {
+
+                    }
+
+                    $("#modalcontent-common_popup .S2GenSegment").val(null).trigger('change.select2');
+
+                 
+                    $("#modalcontent-common_popup #txtsubgroupname").val(sub_group_name);
+
+                    LoadFabricDt(gen_item_structure_group_sub_id, item_structure_group_id);
+                    //LoadPReCostingDetail();
+
+                    $("#modalcontent-common_popup  #ddl_placement").removeAttr("placeholder");
+                    $("#modalcontent-common_popup  #ddl_placement").attr("multiple", "multiple");
+                    $("#modalcontent-common_popup  #ddl_placement option:eq(0)").remove();
+                    $("#modalcontent-common_popup  #ddl_placement").val('').trigger('change');
+                    $("#modalcontent-common_popup  #ddl_placement").select2({
+                        allowClear: true,
+                        placeholder: "Select Placement"
+                    });
+
+                    LoadFabricFromGrid(row_index);
+
+                    $("#modalcontent-common_popup  #btnAddFabric").attr("isreview", isreview);
+
+                    if ($(btn).attr("isview") == "1") {
+                        setTimeout(function () {
+                            MakePopupReadOnly("modalcontent-common_popup", "btnModalClose");
+                        }, 200);
+                    }
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+
+        function SaveFabric(btn, item_structure_group_id, gen_item_structure_group_sub_id) {
+
+            var placements = [];
+
+            $.each($("#ddl_placement").select2("data"), function (key, val) {
+
+                var obj_placement = {
+                    style_placement_information_id: val.id,
+                    placement: val.text,
+                }
+
+                placements.push(obj_placement);
+            })
+
+
+            if (_cusFormValidate("frmAddFabric") == true) {
+                if ($(btn).attr("isSaveOrUpdate") == "1") {
+
+                    var obj = {
+                        item_structure_group_id: item_structure_group_id,
+                        structure_group_name: $("#modalcontent-common_popup #txtsubgroupname").attr("structure_group_name"),
+                        gen_item_structure_group_sub_id: gen_item_structure_group_sub_id,
+                        row_index: obj_fabric_List.length,
+                        tran_pre_costing_item_detail_id: null,
+                        tran_pre_costing_id: null,
+                        all_segment_text: GetAllSegment(),
+                        List_placement_info: placements,
+                        color_code: $("#modalcontent-common_popup #ddl_combo").val(),
+                        color_quantity: $("#modalcontent-common_popup #txtorderqnty").val(),
+                        placement_info: null,
+                        sub_group_name: $("#modalcontent-common_popup #txtsubgroupname").val(),
+                        measurement_unit: $("#modalcontent-common_popup #ddl_measurement_unit > option:selected").text(),
+                        measurement_unit_detail_id: $("#modalcontent-common_popup #ddl_measurement_unit").val(),
+
+                        segment_det1_id: $("#modalcontent-common_popup #segment_det1_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det1_id").val()) : 0,
+                        // segment_det1_value: $("#modalcontent-common_popup #segment_det1_id").length > 0 ? $("#modalcontent-common_popup #segment_det1_id").val() : null,
+                        segment_det1_text: $("#modalcontent-common_popup #segment_det1_id").length > 0 ? $("#modalcontent-common_popup #segment_det1_id > option:selected").text() : "",
+
+                        segment_det2_id: $("#modalcontent-common_popup #segment_det2_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det2_id").val()) : 0,
+                        // segment_det2_value: $("#modalcontent-common_popup #segment_det2_id").length > 0 ? $("#modalcontent-common_popup #segment_det2_id").val() : null,
+                        segment_det2_text: $("#modalcontent-common_popup #segment_det2_id").length > 0 ? $("#modalcontent-common_popup #segment_det2_id > option:selected").text() : "",
+
+                        segment_det3_id: $("#modalcontent-common_popup #segment_det3_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det3_id").val()) : 0,
+                        //  segment_det3_value: $("#modalcontent-common_popup #segment_det3_id").length > 0 ? $("#modalcontent-common_popup #segment_det3_id").val() : null,
+                        segment_det3_text: $("#modalcontent-common_popup #segment_det3_id").length > 0 ? $("#modalcontent-common_popup #segment_det3_id > option:selected").text() : "",
+
+                        segment_det4_id: $("#modalcontent-common_popup #segment_det4_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det4_id").val()) : 0,
+                        // segment_det4_value: $("#modalcontent-common_popup #segment_det4_id").length > 0 ? $("#modalcontent-common_popup #segment_det4_id").val() : null,
+                        segment_det4_text: $("#modalcontent-common_popup #segment_det4_id").length > 0 ? $("#modalcontent-common_popup #segment_det4_id > option:selected").text() : "",
+
+                        segment_det5_id: $("#modalcontent-common_popup #segment_det5_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det5_id").val()) : 0,
+                        // segment_det5_value: $("#modalcontent-common_popup #segment_det5_id").length > 0 ? $("#modalcontent-common_popup #segment_det5_id").val() : null,
+                        segment_det5_text: $("#modalcontent-common_popup #segment_det5_id").length > 0 ? $("#modalcontent-common_popup #segment_det5_id > option:selected").text() : "",
+
+                        segment_det6_id: $("#modalcontent-common_popup #segment_det6_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det6_id").val()) : 0,
+                        // segment_det6_value: $("#modalcontent-common_popup #segment_det6_id").length > 0 ? $("#modalcontent-common_popup #segment_det6_id").val() : null,
+                        segment_det6_text: $("#modalcontent-common_popup #segment_det6_id").length > 0 ? $("#modalcontent-common_popup #segment_det6_id > option:selected").text() : "",
+
+                        segment_det7_id: $("#modalcontent-common_popup #segment_det7_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det7_id").val()) : 0,
+                        // segment_det7_value: $("#modalcontent-common_popup #segment_det7_id").length > 0 ? $("#modalcontent-common_popup #segment_det7_id").val() : null,
+                        segment_det7_text: $("#modalcontent-common_popup #segment_det7_id").length > 0 ? $("#modalcontent-common_popup #segment_det7_id > option:selected").text() : "",
+
+                        segment_det8_id: $("#modalcontent-common_popup #segment_det8_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det8_id").val()) : 0,
+                        // segment_det8_value: $("#modalcontent-common_popup #segment_det8_id").length > 0 ? $("#modalcontent-common_popup #segment_det8_id").val() : null,
+                        segment_det8_text: $("#modalcontent-common_popup #segment_det8_id").length > 0 ? $("#modalcontent-common_popup #segment_det8_id > option:selected").text() : "",
+
+                        segment_det9_id: $("#modalcontent-common_popup #segment_det9_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det9_id").val()) : 0,
+                        //segment_det9_value: $("#modalcontent-common_popup #segment_det9_id").length > 0 ? $("#modalcontent-common_popup #segment_det9_id").val() : null,
+                        segment_det9_text: $("#modalcontent-common_popup #segment_det9_id").length > 0 ? $("#modalcontent-common_popup #segment_det9_id > option:selected").text() : "",
+
+                        segment_det10_id: $("#modalcontent-common_popup #segment_det10_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det10_id").val()) : 0,
+                        // segment_det10_value: $("#modalcontent-common_popup #segment_det10_id").length > 0 ? $("#modalcontent-common_popup #segment_det10_id").val() : null,
+                        segment_det10_text: $("#modalcontent-common_popup #segment_det10_id").length > 0 ? $("#modalcontent-common_popup #segment_det10_id > option:selected").text() : "",
+
+                        segment_det11_id: $("#modalcontent-common_popup #segment_det11_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det11_id").val()) : 0,
+                        //segment_det11_value: $("#modalcontent-common_popup #segment_det11_id").length > 0 ? $("#modalcontent-common_popup #segment_det11_id").val() : null,
+                        segment_det11_text: $("#modalcontent-common_popup #segment_det11_id").length > 0 ? $("#modalcontent-common_popup #segment_det11_id > option:selected").text() : "",
+
+                        segment_det12_id: $("#modalcontent-common_popup #segment_det12_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det12_id").val()) : 0,
+                        // segment_det12_value: $("#modalcontent-common_popup #segment_det12_id").length > 0 ? $("#modalcontent-common_popup #segment_det12_id").val() : null,
+                        segment_det12_text: $("#modalcontent-common_popup #segment_det12_id").length > 0 ? $("#modalcontent-common_popup #segment_det12_id > option:selected").text() : "",
+
+                        segment_det13_id: $("#modalcontent-common_popup #segment_det13_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det13_id").val()) : 0,
+                        //segment_det13_value: $("#modalcontent-common_popup #segment_det13_id").length > 0 ? $("#modalcontent-common_popup #segment_det13_id").val() : null,
+                        segment_det13_text: $("#modalcontent-common_popup #segment_det13_id").length > 0 ? $("#modalcontent-common_popup #segment_det13_id > option:selected").text() : "",
+
+                        segment_det14_id: $("#modalcontent-common_popup #segment_det14_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det14_id").val()) : 0,
+                        // segment_det14_value: $("#modalcontent-common_popup #segment_det14_id").length > 0 ? $("#modalcontent-common_popup #segment_det14_id").val() : null,
+                        segment_det14_text: $("#modalcontent-common_popup #segment_det14_id").length > 0 ? $("#modalcontent-common_popup #segment_det14_id > option:selected").text() : "",
+
+                        segment_det15_id: $("#modalcontent-common_popup #segment_det15_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det15_id").val()) : 0,
+                        // segment_det15_value: $("#modalcontent-common_popup #segment_det15_id").length > 0 ? $("#modalcontent-common_popup #segment_det15_id").val() : null,
+                        segment_det15_text: $("#modalcontent-common_popup #segment_det15_id").length > 0 ? $("#modalcontent-common_popup #segment_det15_id > option:selected").text() : "",
+
+                        order_quantity: check_value($("#modalcontent-common_popup #txtorder_quantity").val()),
+                        wastage: check_value($("#modalcontent-common_popup #txtWastage").val()),
+                        total_order_quantity: check_value($("#modalcontent-common_popup #txtTotalRequirement").val()),
+                        price_per_unit: check_value($("#modalcontent-common_popup #txtCostPerUnit").val()),
+                        total_price: check_value($("#modalcontent-common_popup #txtTotalCost").val()),
+                        current_state: 1,
+                    };
+
+                    if (
+                        obj_fabric_List.filter(p =>
+                            p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id &&
+                            p.segment_det1_id == check_textbox_value($("#modalcontent-common_popup #segment_det1_id")) &&
+                            p.segment_det2_id == check_textbox_value($("#modalcontent-common_popup #segment_det2_id")) &&
+                            p.segment_det3_id == check_textbox_value($("#modalcontent-common_popup #segment_det3_id")) &&
+                            p.segment_det4_id == check_textbox_value($("#modalcontent-common_popup #segment_det4_id")) &&
+                            p.segment_det5_id == check_textbox_value($("#modalcontent-common_popup #segment_det5_id")) &&
+                            p.segment_det6_id == check_textbox_value($("#modalcontent-common_popup #segment_det6_id")) &&
+                            p.segment_det7_id == check_textbox_value($("#modalcontent-common_popup #segment_det7_id")) &&
+                            p.segment_det8_id == check_textbox_value($("#modalcontent-common_popup #segment_det8_id")) &&
+                            p.segment_det9_id == check_textbox_value($("#modalcontent-common_popup #segment_det9_id")) &&
+                            p.segment_det10_id == check_textbox_value($("#modalcontent-common_popup #segment_det10_id")) &&
+                            p.segment_det11_id == check_textbox_value($("#modalcontent-common_popup #segment_det11_id")) &&
+                            p.segment_det12_id == check_textbox_value($("#modalcontent-common_popup #segment_det12_id")) &&
+                            p.segment_det13_id == check_textbox_value($("#modalcontent-common_popup #segment_det13_id")) &&
+                            p.segment_det14_id == check_textbox_value($("#modalcontent-common_popup #segment_det14_id")) &&
+                            p.segment_det15_id == check_textbox_value($("#modalcontent-common_popup #segment_det15_id"))
+                        ).length == 0
+                    ) {
+                        obj_fabric_List.push(obj);
+
+                        $("#DTTranPreCostingDetail .btnclsmasterpage[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").css("display", "block");
+
+                        $("#DTTranPreCostingDetail .editfabric[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").attr("value", "Edit(" + obj_fabric_List.filter(p => p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id).length + ")")
+                    }
+                }
+                else {
+                    var rowindex = $(btn).attr("row_index");
+
+                    var objRowValue = obj_fabric_List.filter(p => p.row_index == rowindex)[0];
+
+                    objRowValue.all_segment_text = GetAllSegment();
+
+                    objRowValue.List_placement_info = placements;
+
+                    objRowValue.placement_info = null;
+
+                    objRowValue.measurement_unit = $("#modalcontent-common_popup #ddl_measurement_unit > option:selected").text();
+
+                    objRowValue.segment_det1_id = $("#modalcontent-common_popup #segment_det1_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det1_id").val()) : 0;
+                    //objRowValue.segment_det1_value = $("#modalcontent-common_popup #segment_det1_id").length > 0 ? $("#modalcontent-common_popup #segment_det1_id").val() : null;
+                    objRowValue.segment_det1_text = $("#modalcontent-common_popup #segment_det1_id").length > 0 ? $("#modalcontent-common_popup #segment_det1_id > option:selected").text() : "";
+
+                    objRowValue.segment_det2_id = $("#modalcontent-common_popup #segment_det2_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det2_id").val()) : 0;
+                    //objRowValue.segment_det2_value = $("#modalcontent-common_popup #segment_det2_id").length > 0 ? $("#modalcontent-common_popup #segment_det2_id").val() : null;
+                    objRowValue.segment_det2_text = $("#modalcontent-common_popup #segment_det2_id").length > 0 ? $("#modalcontent-common_popup #segment_det2_id > option:selected").text() : "";
+
+                    objRowValue.segment_det3_id = $("#modalcontent-common_popup #segment_det3_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det3_id").val()) : 0;
+                    // objRowValue.segment_det3_value = $("#modalcontent-common_popup #segment_det3_id").length > 0 ? $("#modalcontent-common_popup #segment_det3_id").val() : null;
+                    objRowValue.segment_det3_text = $("#modalcontent-common_popup #segment_det3_id").length > 0 ? $("#modalcontent-common_popup #segment_det3_id > option:selected").text() : "";
+
+                    objRowValue.segment_det4_id = $("#modalcontent-common_popup #segment_det4_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det4_id").val()) : 0;
+                    // objRowValue.segment_det4_value = $("#modalcontent-common_popup #segment_det4_id").length > 0 ? $("#modalcontent-common_popup #segment_det4_id").val() : null;
+                    objRowValue.segment_det4_text = $("#modalcontent-common_popup #segment_det4_id").length > 0 ? $("#modalcontent-common_popup #segment_det4_id > option:selected").text() : "";
+
+                    objRowValue.segment_det5_id = $("#modalcontent-common_popup #segment_det5_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det5_id").val()) : 0;
+                    //objRowValue.segment_det5_value = $("#modalcontent-common_popup #segment_det5_id").length > 0 ? $("#modalcontent-common_popup #segment_det5_id").val() : null;
+                    objRowValue.segment_det5_text = $("#modalcontent-common_popup #segment_det5_id").length > 0 ? $("#modalcontent-common_popup #segment_det5_id > option:selected").text() : "";
+
+                    objRowValue.segment_det6_id = $("#modalcontent-common_popup #segment_det6_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det6_id").val()) : 0;
+                    //objRowValue.segment_det6_value = $("#modalcontent-common_popup #segment_det6_id").length > 0 ? $("#modalcontent-common_popup #segment_det6_id").val() : null;
+                    objRowValue.segment_det6_text = $("#modalcontent-common_popup #segment_det6_id").length > 0 ? $("#modalcontent-common_popup #segment_det6_id > option:selected").text() : "";
+
+                    objRowValue.segment_det7_id = $("#modalcontent-common_popup #segment_det7_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det7_id").val()) : 0;
+                    //objRowValue.segment_det7_value = $("#modalcontent-common_popup #segment_det7_id").length > 0 ? $("#modalcontent-common_popup #segment_det7_id").val() : null;
+                    objRowValue.segment_det7_text = $("#modalcontent-common_popup #segment_det7_id").length > 0 ? $("#modalcontent-common_popup #segment_det7_id > option:selected").text() : "";
+
+                    objRowValue.segment_det8_id = $("#modalcontent-common_popup #segment_det8_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det8_id").val()) : 0;
+                    // objRowValue.segment_det8_value = $("#modalcontent-common_popup #segment_det8_id").length > 0 ? $("#modalcontent-common_popup #segment_det8_id").val() : null;
+                    objRowValue.segment_det8_text = $("#modalcontent-common_popup #segment_det8_id").length > 0 ? $("#modalcontent-common_popup #segment_det8_id > option:selected").text() : "";
+
+                    objRowValue.segment_det9_id = $("#modalcontent-common_popup #segment_det9_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det9_id").val()) : 0;
+                    //objRowValue.segment_det9_value = $("#modalcontent-common_popup #segment_det9_id").length > 0 ? $("#modalcontent-common_popup #segment_det9_id").val() : null;
+                    objRowValue.segment_det9_text = $("#modalcontent-common_popup #segment_det9_id").length > 0 ? $("#modalcontent-common_popup #segment_det9_id > option:selected").text() : "";
+
+                    objRowValue.segment_det10_id = $("#modalcontent-common_popup #segment_det10_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det10_id").val()) : 0;
+                    //objRowValue.segment_det10_value = $("#modalcontent-common_popup #segment_det10_id").length > 0 ? $("#modalcontent-common_popup #segment_det10_id").val() : null;
+                    objRowValue.segment_det10_text = $("#modalcontent-common_popup #segment_det10_id").length > 0 ? $("#modalcontent-common_popup #segment_det10_id > option:selected").text() : "";
+
+                    objRowValue.segment_det11_id = $("#modalcontent-common_popup #segment_det11_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det11_id").val()) : 0;
+                    //objRowValue.segment_det11_value = $("#modalcontent-common_popup #segment_det11_id").length > 0 ? $("#modalcontent-common_popup #segment_det11_id").val() : null;
+                    objRowValue.segment_det11_text = $("#modalcontent-common_popup #segment_det11_id").length > 0 ? $("#modalcontent-common_popup #segment_det11_id > option:selected").text() : "";
+
+                    objRowValue.segment_det12_id = $("#modalcontent-common_popup #segment_det12_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det12_id").val()) : 0;
+                    //objRowValue.segment_det12_value = $("#modalcontent-common_popup #segment_det12_id").length > 0 ? $("#modalcontent-common_popup #segment_det12_id").val() : null;
+                    objRowValue.segment_det12_text = $("#modalcontent-common_popup #segment_det12_id").length > 0 ? $("#modalcontent-common_popup #segment_det12_id > option:selected").text() : "";
+
+                    objRowValue.segment_det13_id = $("#modalcontent-common_popup #segment_det13_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det13_id").val()) : 0;
+                    // objRowValue.segment_det13_value = $("#modalcontent-common_popup #segment_det13_id").length > 0 ? $("#modalcontent-common_popup #segment_det13_id").val() : null;
+                    objRowValue.segment_det13_text = $("#modalcontent-common_popup #segment_det13_id").length > 0 ? $("#modalcontent-common_popup #segment_det13_id > option:selected").text() : "";
+
+                    objRowValue.segment_det14_id = $("#modalcontent-common_popup #segment_det14_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det14_id").val()) : 0;
+                    //objRowValue.segment_det14_value = $("#modalcontent-common_popup #segment_det14_id").length > 0 ? $("#modalcontent-common_popup #segment_det14_id").val() : null;
+                    objRowValue.segment_det14_text = $("#modalcontent-common_popup #segment_det14_id").length > 0 ? $("#modalcontent-common_popup #segment_det14_id > option:selected").text() : "";
+
+                    objRowValue.segment_det15_id = $("#modalcontent-common_popup #segment_det15_id").length > 0 ? check_zerovalue($("#modalcontent-common_popup #segment_det15_id").val()) : 0;
+                    //objRowValue.segment_det15_value = $("#modalcontent-common_popup #segment_det15_id").length > 0 ? $("#modalcontent-common_popup #segment_det15_id").val() : null;
+                    objRowValue.segment_det15_text = $("#modalcontent-common_popup #segment_det15_id").length > 0 ? $("#modalcontent-common_popup #segment_det15_id > option:selected").text() : "";
+
+                    objRowValue.measurement_unit_detail_id = check_value($("#modalcontent-common_popup #ddl_measurement_unit").val());
+                    objRowValue.order_quantity = check_value($("#modalcontent-common_popup #txtorder_quantity").val());
+                    objRowValue.wastage = check_value($("#modalcontent-common_popup #txtWastage").val());
+                    objRowValue.total_order_quantity = check_value($("#modalcontent-common_popup #txtTotalRequirement").val());
+                    objRowValue.price_per_unit = check_value($("#modalcontent-common_popup #txtCostPerUnit").val());
+                    objRowValue.total_price = check_value($("#modalcontent-common_popup #txtTotalCost").val());
+
+                    $(btn).attr("isSaveOrUpdate", "1");
+                    $(btn).html('<i class="fa fa-save"></i>&nbsp;&nbsp;Add Fabric ');
+                }
+
+                LoadFabricDt(gen_item_structure_group_sub_id, item_structure_group_id);
+                LoadPReCostingDetail();
+
+                $("#modalcontent-common_popup select").val(null).trigger('change.select2');
+                $("#modalcontent-common_popup input[type=text]:enabled").val("");
+                $("#modalcontent-common_popup input[type=number]:enabled").val("0");
+            }
+            // $("#modalcontent-common_popup  #ddl_placement").val('').trigger('change');
+
+        }
+
+        function AddSubContract(btn) {
+
+            var wholediv = $("#DTTranPreCostingDetailSubContract tbody tr:nth-child(1)").clone();
+            $(wholediv).removeAttr("style");
+            $(wholediv).find(".ddl_process_master").attr("id", "ddl_process_master_" + $("#DTTranPreCostingDetailSubContract tbody tr").length);
+
+            $("#DTTranPreCostingDetailSubContract tbody").append(wholediv);
+
+        }
+
+        function AddNewEmbellishment(btn, embellishment_id, embellishment) {
+
+            // setTimeout(function () {
+            //     showLoader("Loading..........");
+            // }, 0);
+
+            $("#modalcontainer_common").addClass("custom-class");
+
+            try {
+                ajaxGetHandler("/PreCosting/AddNewEmbellishmentDetails?embellishment_id=" + embellishment_id + "&embellishment=" + embellishment, null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common_popup').html(data);
+                    $('#modalcontainer_common_popup').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common_popup').modal("show");
+
+
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function EditPreCosting(btn) {
+
+            var rowindex = parseInt($(btn).closest(".master_table_row").attr("row_index")) - 1;
+
+            var objStyle; var dt_tmp;
+
+            var tableid = $(btn).closest(".dataTable").attr("id");
+
+            if (tableid == "DTTranPreCostingDraft") {
+                dt_tmp = dt_source_draft;
+            }
+            else if (tableid == "DTTranPreCosting") { //pending
+                dt_tmp = dt_source_pending;
+            }
+            else if (tableid == "DTTranPreCostingSendForApproval") {
+                dt_tmp = dt_source_send_for_approval;
+            }
+            else if (tableid == "DTTranPreCostingApproved") {
+                dt_tmp = dt_source_approved;
+            }
+            else if (tableid == "DTTranPreCostingRejected") {
+                dt_tmp = dt_source_reject;
+            }
+            else if (tableid == "DTTranPreCostingModifyRequestByMerchant") {
+                dt_tmp = dt_source_approved_by_designer;
+            }
+
+            var objStyle = {
+                row_index: rowindex,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                style_code: dt_tmp.rows().data()[rowindex].style_code,
+                style_item_product_id: dt_tmp.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                style_product: dt_tmp.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_tmp.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_tmp.rows().data()[rowindex].style_product_size_group_id,
+                order_quantity: dt_tmp.rows().data()[rowindex].order_quantity,
+                range_plan_detail_id: dt_tmp.rows().data()[rowindex].range_plan_detail_id,
+                range_plan_id: dt_tmp.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_tmp.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_tmp.rows().data()[rowindex].style_master_category_id,
+
+                tran_va_plan_id: dt_tmp.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_tmp.rows().data()[rowindex].tran_va_plan_event_id,
+                tran_va_plan_detl_style_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_quantity: $(btn).attr("style_quantity")
+            }
+
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PreCosting/PreCostingEdit?input=" + JSON.stringify(objStyle), null, function (data) {
+
+                    hideLoader();
+
+                    obj_fabric_List_removed = [];
+                    obj_fabric_List_old = [];
+                    obj_fabric_List = [];
+
+
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    $("#DTTranSampleOrderSize input,#DTTranSampleOrderSize select").attr("disabled", "disabled");
+
+                    BindTabEvents("tab_precosting");
+
+                    LoadPReCostingDetail();
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function ViewPreCosting(btn) {
+
+            var rowindex = parseInt($(btn).closest(".master_table_row").attr("row_index")) - 1;
+
+            var objStyle; var dt_tmp;
+
+            var tableid = $(btn).closest(".dataTable").attr("id");
+
+            if (tableid == "DTTranPreCostingDraft") {
+                dt_tmp = dt_source_draft;
+            }
+            else if (tableid == "DTTranPreCosting") { //pending
+                dt_tmp = dt_source_pending;
+            }
+            else if (tableid == "DTTranPreCostingSendForApproval") {
+                dt_tmp = dt_source_send_for_approval;
+            }
+            else if (tableid == "DTTranPreCostingApproved") {
+                dt_tmp = dt_source_approved;
+            }
+            else if (tableid == "DTTranPreCostingRejected") {
+                dt_tmp = dt_source_reject;
+            }
+            else if (tableid == "DTTranPreCostingModifyRequestByMerchant") {
+                dt_tmp = dt_source_approved_by_designer;
+            }
+
+            var objStyle = {
+                row_index: rowindex,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                style_code: dt_tmp.rows().data()[rowindex].style_code,
+                style_item_product_id: dt_tmp.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                style_product: dt_tmp.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_tmp.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_tmp.rows().data()[rowindex].style_product_size_group_id,
+                order_quantity: dt_tmp.rows().data()[rowindex].order_quantity,
+                range_plan_detail_id: dt_tmp.rows().data()[rowindex].range_plan_detail_id,
+                range_plan_id: dt_tmp.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_tmp.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_tmp.rows().data()[rowindex].style_master_category_id,
+
+                tran_va_plan_id: dt_tmp.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_tmp.rows().data()[rowindex].tran_va_plan_event_id,
+                tran_va_plan_detl_style_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_quantity: $(btn).attr("style_quantity")
+            }
+
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PreCosting/PreCostingEdit?input=" + JSON.stringify(objStyle), null, function (data) {
+
+                    hideLoader();
+
+                    obj_fabric_List_removed = [];
+                    obj_fabric_List_old = [];
+                    obj_fabric_List = [];
+
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    $("#DTTranSampleOrderSize input,#DTTranSampleOrderSize select").attr("disabled", "disabled");
+
+                    BindTabEvents("tab_precosting");
+
+                    LoadPReCostingDetail();
+
+                    MakePopupReadOnly("modalcontent-common", "btnModalClose");
+
+                    $(".allbtn").remove();
+                    $(".btnSaveNext").removeAttr("disabled");
+                    $(".editfabric").prop("disabled", false);
+                    $(".editfabric").attr("isview", "1");
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+
+
+        function ColorSizeQuantityChanged(elem) {
+
+            var current_element = $(elem);
+            var total = 0;
+            $($(elem).closest(".dtcolorcodestyle")).find(".txtColorSizeQuantity").each(function (index, element) {
+
+                if (index > 5) {
+                    var str = $(element).val().length == 0 ? 0 : parseFloat($(element).val());
+
+                    if (str > 0)
+                        total += parseFloat(str);
+                }
+            });
+            $(".style_quantity").val(total);
+
+            calculate_quantitychange();
+
+            LoadPReCostingDetail();
+
+            total = getTotalByClassInsideTableObject($(elem).closest("tr"), "txtColorSizeQuantity");
+
+            $(elem).closest("tr").find(".txtTotalColorSizeQuantity").val(total);
+        }
+
+        function LoadColorFromBox(txt) {
+            $(txt).parent().find(".txtColorCode").val($(txt).val());
+
+        }
+
+        function btnAddColorClick(btn) {
+
+            var current_row_count = $("#dtcolorcodestyle tbody tr:visible").length;
+
+            var row_html = $("#dtcolorcodestyle tbody tr:eq(0)").clone().removeAttr("id");
+
+            $(row_html).find("input").val("0");
+            $(row_html).find("input").attr("tran_va_plan_detl_style_color_id", "0");
+            $(row_html).find("input").attr("tran_va_plan_detl_style_color_size_id", "0");
+            $(row_html).removeAttr("style");
+            $("#dtcolorcodestyle").find("tbody").append(row_html);
+            $(row_html).find(".ddl_color").attr("id", "ddl_color_" + (current_row_count + 2));
+            RegisterS2ColorByElement($(row_html).find(".ddl_color"));
+
+            var rowindex = 1;
+
+            $("#dtcolorcodestyle").find("tbody tr").each(function (index, element) {
+
+                $(element).find("td:eq(0)").text(rowindex);
+
+                rowindex++;
+            });
+
+        }
+
+        function AddPreCosting(btn) {
+
+            var rowindex = parseInt($(btn).closest(".master_table_row").attr("row_index")) - 1;
+
+            var objStyle; var dt_tmp;
+
+            var tableid = $(btn).closest(".dataTable").attr("id");
+
+            if (tableid == "DTTranPreCostingDraft") {
+                dt_tmp = dt_source_draft;
+            }
+            else if (tableid == "DTTranPreCosting") { //pending
+                dt_tmp = dt_source_pending;
+            }
+            else if (tableid == "DTTranPreCostingSendForApproval") {
+                dt_tmp = dt_source_send_for_approval;
+            }
+            else if (tableid == "DTTranPreCostingApproved") {
+                dt_tmp = dt_source_approved;
+            }
+            else if (tableid == "DTTranPreCostingRejected") {
+                dt_tmp = dt_source_reject;
+            }
+            else if (tableid == "DTTranPreCostingModifyRequestByMerchant") {
+                dt_tmp = dt_source_approved_by_designer;
+            }
+
+
+            var objStyle = {
+                row_index: rowindex,
+
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                style_code: dt_tmp.rows().data()[rowindex].style_code,
+                style_item_product_id: dt_tmp.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                style_product: dt_tmp.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_tmp.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_tmp.rows().data()[rowindex].style_product_size_group_id,
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                range_plan_detail_id: dt_tmp.rows().data()[rowindex].range_plan_detail_id,
+                range_plan_id: dt_tmp.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_tmp.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_tmp.rows().data()[rowindex].style_master_category_id,
+
+                tran_va_plan_id: dt_tmp.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_tmp.rows().data()[rowindex].tran_va_plan_event_id,
+                tran_va_plan_detl_style_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PreCosting/PreCostingAdd?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    $("#DTTranSampleOrderSize input,#DTTranSampleOrderSize select").attr("disabled", "disabled");
+
+                    BindTabEvents("tab_precosting");
+
+
+
+                });
+
+
+
+
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function SavePreCosting(btn) {
+
+            var colorinfo_List = [];
+
+            $("#dtcolorcodestyle tbody tr:not(:first-child)").each(function (index, element_grid_tr) {
+
+                var color_sizeList = [];
+
+                var total_style_color_quantity = 0;
+
+                $(element_grid_tr).find(".txtColorSizeQuantity").each(function (index, element_sinlesize) {
+
+                    var objColorSize = {
+                        tran_va_plan_detl_style_color_size_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_size_id"))),
+                        tran_va_plan_detl_style_color_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_id"))),
+                        style_product_size_group_detid: parseInt($(element_sinlesize).attr("style_product_size_group_detid")),
+                        style_color_size_quantity: parseInt($(element_sinlesize).val())
+                    };
+
+                    total_style_color_quantity += parseInt($(element_sinlesize).val());
+
+                    color_sizeList.push(objColorSize);
+                });
+
+
+                var objColorinfo = {
+                    color_code: $(element_grid_tr).find(".txtColorCode").val(),
+                    style_color_quantity: total_style_color_quantity,
+                    tran_va_plan_detl_style_color_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_color_id")),
+                    tran_va_plan_detl_style_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_id")),
+
+                    List_ColorSizeInfo: color_sizeList
+
+                };
+
+                colorinfo_List.push(objColorinfo);
+
+            });
+
+            obj_embellish_List = [];
+
+            $.each($("#DTTranPreCostingDetailEmbellishment tbody tr"), function () {
+
+                var obj = {
+                    tran_pre_costing_item_embellishment_detail_id: null,
+                    tran_pre_costing_id: null,
+                    style_embellishment_id: check_value($(this).attr("embellishment_id")),
+                    process_name: $(this).attr("process_name"),
+                    measurement_unit_detail_id: $(this).find(".S2MeasurementUnit").val(),
+                    order_quantity: check_textbox_value($(this).find(".txtembell_Order_quantity")),
+                    wastage: check_textbox_value($(this).find(".txtembell_Wastage")),
+                    total_order_quantity: check_textbox_value($(this).find(".txtembell_TotalRequirement")),
+                    price_per_unit: check_textbox_value($(this).find(".txtembell_CostPerUnit")),
+                    total_price: check_textbox_value($(this).find(".txtembell_TotalCost"))
+                };
+
+                if (checkAllElementOfParent(this) == true && obj.style_embellishment_id != null) {
+                    obj_embellish_List.push(obj);
+                }
+
+            });
+
+            obj_subcontract_List = [];
+
+            $.each($("#DTTranPreCostingDetailSubContract tbody tr"), function (key, val) {
+
+                var obj = {
+                    tran_pre_costing_item_subcontract_detail_id: null,
+                    tran_pre_costing_id: null,
+                    process_master_id: $(this).find(".ddl_process_master").val(),
+                    measurement_unit_detail_id: 63,//piece id
+                    order_quantity: check_textbox_value($(this).find(".txtembell_Order_quantity")),
+                    wastage: check_textbox_value($(this).find(".txtembell_Wastage")),
+                    total_order_quantity: check_textbox_value($(this).find(".txtembell_TotalRequirement")),
+                    price_per_unit: check_textbox_value($(this).find(".txtembell_CostPerUnit")),
+                    total_price: check_textbox_value($(this).find(".txtembell_TotalCost"))
+                };
+                if (checkAllElementOfParent(this) == true) {
+                    obj_subcontract_List.push(obj);
+                }
+
+
+            });
+            //total_raw_material_cost
+
+            //var raw_percentage = $('#modalcontainer_common #total_raw_material_percentage').val();
+            var floor_percentage = $('#modalcontainer_common #floor_price_percentage').val();
+            var markup_percentage = $('#modalcontainer_common #desired_markup_percentage').val();
+
+            var raw_percentage = 0;
+
+            // if (raw_percentage.length > 0) {
+            //     raw_percentage = raw_percentage.replace("%", "");
+            // }
+
+            if (floor_percentage.length > 0) {
+                floor_percentage = floor_percentage.replace("%", "");
+            }
+
+            if (markup_percentage.length > 0) {
+                markup_percentage = markup_percentage.replace("%", "");
+            }
+
+            var objData = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                tran_pre_costing_id: null,
+                tran_sample_order_id: check_value($('#modalcontainer_common #tran_sample_order_id').val()),
+                pre_costing_date: null,
+                total_raw_material_cost: check_value($('#modalcontainer_common #total_raw_material_cost').val()),
+                total_raw_material_percentage: raw_percentage.length > 0 ? check_value(raw_percentage) : null,
+                factory_overhead_cost: check_value($('#modalcontainer_common #factory_overhead_cost').val()),
+                sales_marketing_distribution_cost: check_value($('#modalcontainer_common #sales_marketing_distribution_cost').val()),
+                depreciation_amortization_cost: check_value($('#modalcontainer_common #depreciation_amortization_cost').val()),
+                total_overhead_cost: check_value($('#modalcontainer_common #total_overhead_cost').val()),
+                total_production_cost: check_value($('#modalcontainer_common #total_production_cost').val()),
+                floor_price_percentage: floor_percentage.length > 0 ? check_value(floor_percentage) : null,
+                floor_price_per_pc: check_value($('#modalcontainer_common #floor_price_per_pc').val()),
+                desired_markup_percentage: markup_percentage.length > 0 ? check_value(markup_percentage) : null,
+                estimated_markup_price: check_value($('#modalcontainer_common #estimated_markup_price').val()),
+                desired_markup_price: check_value($('#modalcontainer_common #desired_markup_price').val()),
+                final_mrp: check_value($('#modalcontainer_common #final_mrp').val()),
+                total_style_quantity_mrp: check_value($('#modalcontainer_common #total_style_quantity_mrp').val()),
+                suggested_mrp_with_cost: check_value($('#modalcontainer_common #suggested_mrp_with_cost').val()),
+                smv: check_value($('#modalcontainer_common #smv').val()),
+                pre_costing_quantity: check_value($('#style_quantity').val()),
+                is_submitted: $(btn).attr("is_submit"),
+                is_approved: null,
+
+                List_PreCostingDet: obj_fabric_List,
+                List_EmbellishmentDetl: obj_embellish_List,
+                List_SubContractDetl: obj_subcontract_List,
+                List_detl_style_color: colorinfo_List
+
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+
+            ajaxPostObjectHandler("/PreCosting/SavePreCosting", objData, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+                    obj_fabric_List_removed = [];
+                    obj_fabric_List_old = [];
+                    obj_fabric_List = [];
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                        LoadPReCostingData();
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function LoadPReCostingData() {
+
+            LoadPReCostingDataPending();
+
+            LoadPReCostingDataDraft();
+
+            LoadPReCostingDataSendForApproval();
+
+
+            LoadPReCostingDataApproved();
+
+            LoadPReCostingDataRejected();
+
+        }
+
+        function LoadPReCostingDataDraft() {
+
+            var dt_search = {
+
+                filterId: '#DTTranPreCostingDraft_filter input[type=search]',
+                tableId: "#DTTranPreCostingDraft"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                filter_option: @Convert.ToInt64(Enum_Approval_Status.Draft),
+
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+            };
+
+            dt_source_draft = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/PreCosting/GetTranPreCostingData", data: input }),
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                //scrollX: true,
+                scrollCollapse: true,
+                //scrollY: '200px',
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+
+                    $(row).find("td:eq(1)").css("font-size", "12px");
+
+
+                    $(row).find("td:eq(2)").css("font-size", "12px");
+
+
+
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+
+                    //{ "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+                    { "data": "sample_photos_html", "name": "sample_photos_html", "autoWidth": true },
+
+                    { "data": "btnAddEditPreCosting", "name": "btnAddEditPreCosting", "autoWidth": true },
+
+                ],
+               
+            });
+        }
+
+        function LoadPReCostingDataPending() {
+            var dt_search = {
+
+                filterId: '#DTTranPreCosting_filter input[type=search]',
+                tableId: "#DTTranPreCosting"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                filter_option: @Convert.ToInt64(Enum_Approval_Status.Pending),
+
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+            };
+
+            dt_source_pending = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/PreCosting/GetTranPreCostingData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                //scrollX: true,
+                scrollCollapse: true,
+                //scrollY: '200px',
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "12px");
+                    $(row).find("td:eq(2)").css("font-size", "12px");
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+
+                    { "data": "status", "name": "status", "autoWidth": true },
+
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+                    { "data": "sample_photos_html", "name": "sample_photos_html", "autoWidth": true },
+
+                    { "data": "btnAddEditPreCosting", "name": "btnAddEditPreCosting", "autoWidth": true },
+
+                ],
+               
+            });
+        }
+
+        function LoadPReCostingDataSendForApproval() {
+            var dt_search = {
+
+                filterId: '#DTTranPreCostingSendForApproval_filter input[type=search]',
+                tableId: "#DTTranPreCostingSendForApproval"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                filter_option: @Convert.ToInt64(Enum_Approval_Status.SendForApproval),
+
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val()
+            };
+
+            dt_source_send_for_approval = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/PreCosting/GetTranPreCostingData", data: input }),
+
+                // // "bLengthChange": false,
+                // // "bPaginate": false,
+                // // "bInfo": false,
+                //scrollX: true,
+                scrollCollapse: true,
+                //scrollY: '200px',
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "12px");
+                    $(row).find("td:eq(2)").css("font-size", "12px");
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+
+                    //{ "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+                    { "data": "sample_photos_html", "name": "sample_photos_html", "autoWidth": true },
+
+                    { "data": "btnView", "name": "btnView", "autoWidth": true },
+
+                ],
+               
+            });
+        }
+
+        function LoadPReCostingDataApproved() {
+            var dt_search = {
+
+                filterId: '#DTTranPreCostingApproved_filter input[type=search]',
+                tableId: "#DTTranPreCostingApproved"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                filter_option: @Convert.ToInt64(Enum_Approval_Status.Approved),
+
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+            };
+
+            dt_source_approved = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+               
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/PreCosting/GetTranPreCostingData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                //scrollX: true,
+                scrollCollapse: true,
+                //scrollY: '200px',
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "12px");
+                    $(row).find("td:eq(2)").css("font-size", "12px");
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+
+                    //{ "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+                    { "data": "sample_photos_html", "name": "sample_photos_html", "autoWidth": true },
+
+                    { "data": "btnView", "name": "btnView", "autoWidth": true },
+
+                ],
+               
+            });
+        }
+
+        function LoadPReCostingDataRejected() {
+            var dt_search = {
+
+                filterId: '#DTTranPreCostingRejected_filter input[type=search]',
+                tableId: "#DTTranPreCostingRejected"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                filter_option: @Convert.ToInt64(Enum_Approval_Status.Rejected),
+
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+            };
+
+            dt_source_reject = $("#DTTranPreCostingRejected").DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/PreCosting/GetTranPreCostingData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                //scrollX: true,
+                scrollCollapse: true,
+                //scrollY: '200px',
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "12px");
+                    $(row).find("td:eq(2)").css("font-size", "12px");
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+
+                    //{ "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+                    { "data": "sample_photos_html", "name": "sample_photos_html", "autoWidth": true },
+
+                    { "data": "btnAddEditPreCosting", "name": "btnAddEditPreCosting", "autoWidth": true },
+
+                ],
+                
+            });
+        }
+
+
+        function UpdatePreCosting(btn) {
+
+            var colorinfo_List = [];
+
+            $("#dtcolorcodestyle tbody tr:not(:first-child)").each(function (index, element_grid_tr) {
+
+                var color_sizeList = [];
+
+                var total_style_color_quantity = 0;
+
+                $(element_grid_tr).find(".txtColorSizeQuantity").each(function (index, element_sinlesize) {
+
+                    var objColorSize = {
+                        tran_va_plan_detl_style_color_size_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_size_id"))),
+                        tran_va_plan_detl_style_color_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_id"))),
+                        style_product_size_group_detid: parseInt($(element_sinlesize).attr("style_product_size_group_detid")),
+                        style_color_size_quantity: parseInt($(element_sinlesize).val())
+                    };
+
+                    total_style_color_quantity += parseInt($(element_sinlesize).val());
+
+                    color_sizeList.push(objColorSize);
+                });
+
+
+                var objColorinfo = {
+                    color_code: $(element_grid_tr).find(".txtColorCode").val(),
+                    style_color_quantity: total_style_color_quantity,
+                    tran_va_plan_detl_style_color_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_color_id")),
+                    tran_va_plan_detl_style_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_id")),
+
+                    List_ColorSizeInfo: color_sizeList
+
+                };
+
+                colorinfo_List.push(objColorinfo);
+
+            });
+
+
+            obj_embellish_List = [];
+
+            $.each($("#DTTranPreCostingDetailEmbellishment tbody tr"), function () {
+
+                var obj = {
+                    tran_pre_costing_item_embellishment_detail_id: $(this).attr("tran_pre_costing_item_embellishment_detail_id") != "0" ? $(this).attr("tran_pre_costing_item_embellishment_detail_id") : null,
+                    tran_pre_costing_id: $(this).attr("tran_pre_costing_id") != "0" ? $(this).attr("tran_pre_costing_id") : null,
+                    style_embellishment_id: check_value($(this).attr("embellishment_id")),
+                    process_name: $(this).attr("process_name"),
+                    measurement_unit_detail_id: $(this).find(".S2MeasurementUnit").val(),
+                    order_quantity: check_textbox_value($(this).find(".txtembell_Order_quantity")),
+                    wastage: check_textbox_value($(this).find(".txtembell_Wastage")),
+                    total_order_quantity: check_textbox_value($(this).find(".txtembell_TotalRequirement")),
+                    price_per_unit: check_textbox_value($(this).find(".txtembell_CostPerUnit")),
+                    total_price: check_textbox_value($(this).find(".txtembell_TotalCost")),
+                    current_state: $(this).attr("tran_pre_costing_item_embellishment_detail_id") == "0" ? 1 : 2,
+                };
+
+                if (checkAllElementOfParent(this) == true && obj.style_embellishment_id != null) {
+                    obj_embellish_List.push(obj);
+                }
+
+            });
+
+            obj_subcontract_List = [];
+
+            $.each($("#DTTranPreCostingDetailSubContract tbody tr"), function () {
+
+                var obj = {
+                    tran_pre_costing_item_subcontract_detail_id: $(this).attr("tran_pre_costing_item_subcontract_detail_id") != "0" ? $(this).attr("tran_pre_costing_item_subcontract_detail_id") : null,
+                    tran_pre_costing_id: $(this).attr("tran_pre_costing_id") != "0" ? $(this).attr("tran_pre_costing_id") : null,
+                    process_master_id: $(this).find(".ddl_process_master").val(),
+                    process_name: $(this).find(".ddl_process_master option:selected").text(),
+                    measurement_unit_detail_id: 63,//piece id
+                    order_quantity: check_textbox_value($(this).find(".txtembell_Order_quantity")),
+                    wastage: check_textbox_value($(this).find(".txtembell_Wastage")),
+                    total_order_quantity: check_textbox_value($(this).find(".txtembell_TotalRequirement")),
+                    price_per_unit: check_textbox_value($(this).find(".txtembell_CostPerUnit")),
+                    total_price: check_textbox_value($(this).find(".txtembell_TotalCost")),
+                    current_state: $(this).attr("tran_pre_costing_id") == "0" ? 1 : 2
+                };
+
+                if (checkAllElementOfParent(this) == true) {
+                    obj_subcontract_List.push(obj);
+                }
+
+
+            });
+            //total_raw_material_cost
+
+            //var raw_percentage = $('#modalcontainer_common #total_raw_material_percentage').val();
+            var floor_percentage = $('#modalcontainer_common #floor_price_percentage').val();
+            var markup_percentage = $('#modalcontainer_common #desired_markup_percentage').val();
+
+            var raw_percentage = 0;
+
+            if (floor_percentage.length > 0) {
+                floor_percentage = floor_percentage.replace("%", "");
+            }
+
+            if (markup_percentage.length > 0) {
+                markup_percentage = markup_percentage.replace("%", "");
+            }
+
+            var objData = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                tran_pre_costing_id: $("#modalcontainer_common #tran_pre_costing_id").val(),
+                tran_sample_order_id: check_value($('#modalcontainer_common #tran_sample_order_id').val()),
+                pre_costing_date: $("#pre_costing_date").val(),
+                total_raw_material_cost: check_value($('#modalcontainer_common #total_raw_material_cost').val()),
+                total_raw_material_percentage: raw_percentage.length > 0 ? check_value(raw_percentage) : null,
+                factory_overhead_cost: check_value($('#modalcontainer_common #factory_overhead_cost').val()),
+                sales_marketing_distribution_cost: check_value($('#modalcontainer_common #sales_marketing_distribution_cost').val()),
+                depreciation_amortization_cost: check_value($('#modalcontainer_common #depreciation_amortization_cost').val()),
+                total_overhead_cost: check_value($('#modalcontainer_common #total_overhead_cost').val()),
+                total_production_cost: check_value($('#modalcontainer_common #total_production_cost').val()),
+                floor_price_percentage: floor_percentage.length > 0 ? check_value(floor_percentage) : null,
+                floor_price_per_pc: check_value($('#modalcontainer_common #floor_price_per_pc').val()),
+                desired_markup_percentage: markup_percentage.length > 0 ? check_value(markup_percentage) : null,
+                estimated_markup_price: check_value($('#modalcontainer_common #estimated_markup_price').val()),
+                desired_markup_price: check_value($('#modalcontainer_common #desired_markup_price').val()),
+                final_mrp: check_value($('#modalcontainer_common #final_mrp').val()),
+                total_style_quantity_mrp: check_value($('#modalcontainer_common #total_style_quantity_mrp').val()),
+                suggested_mrp_with_cost: check_value($('#modalcontainer_common #suggested_mrp_with_cost').val()),
+                smv: check_value($('#modalcontainer_common #smv').val()),
+                pre_costing_quantity: check_value($('#style_quantity').val()),
+                is_submitted: $(btn).attr("is_submit"),
+                is_approved: null,
+
+
+                List_PreCostingDet: obj_fabric_List.concat(obj_fabric_List_removed),
+                List_EmbellishmentDetl: obj_embellish_List,
+                List_SubContractDetl: obj_subcontract_List.concat(obj_subcontract_List_removed),
+                List_detl_style_color: colorinfo_List
+
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+
+
+            ajaxPostObjectHandler("/PreCosting/UpdatePreCosting", objData, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                        LoadPReCostingData();
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function PreCostingApprove() {
+
+            var objReview = {
+                tran_pre_costing_id: $("#modalcontainer_common #tran_pre_costing_id").val(),
+                tran_pre_costing_review_id: $("#modalcontainer_common #tran_pre_costing_review_id").val(),
+                is_submitted: 1,
+                is_approved_by_designer: 1,
+                designer_approved_by: null,
+                designer_approve_date: null,
+                designer_approve_remarks: $('#modalcontainer_common #designer_remarks').val(),
+
+                is_ack_by_merchant: null,
+                merchant_ack_by: null,
+                merchant_ack_date: null,
+                merchant_ack_remarks: $('#modalcontainer_common #merchant_ack_remarks').val(),
+            }
+
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/PreCosting/DesignerApprovePreCosting", objReview, function (response) {
+
+                hideLoader();
+
+                LoadPReCostingData();
+
+                if (response.status_Code == "200") {
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function closePopup_popup() {
+            $('#modalcontent-common_popup').html("");
+
+            $('#modalcontainer_common_popup').modal("hide");
+
+            $('#modalcontainer_common_popup').on('hidden.bs.modal', function () {
+                $('body').addClass('modal-open');
+            });
+        }
+        function closePopup() {
+            $('#modalcontent-common').html("");
+
+            $('#modalcontainer_common').modal("hide");
+        }
+
+        function PreCostingReviewAction(btn, designer_action) {
+
+            var colorinfo_List = [];
+
+            $("#dtcolorcodestyle tbody tr").each(function (index, element_grid_tr) {
+
+                var color_sizeList = [];
+
+                var total_style_color_quantity = 0;
+
+                $(element_grid_tr).find(".txtColorSizeQuantity").each(function (index, element_sinlesize) {
+
+                    var objColorSize = {
+                        tran_va_plan_detl_style_color_size_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_size_id"))),
+                        tran_va_plan_detl_style_color_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_id"))),
+                        style_product_size_group_detid: parseInt($(element_sinlesize).attr("style_product_size_group_detid")),
+                        style_color_size_quantity: parseInt($(element_sinlesize).val())
+                    };
+
+                    total_style_color_quantity += parseInt($(element_sinlesize).val());
+
+                    color_sizeList.push(objColorSize);
+                });
+
+                var objColorinfo = {
+                    color_code: $(element_grid_tr).find(".txtColorCode").val(),
+                    style_color_quantity: total_style_color_quantity,
+                    tran_va_plan_detl_style_color_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_color_id")),
+                    tran_va_plan_detl_style_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_id")),
+
+                    List_ColorSizeInfo: color_sizeList
+                };
+
+                colorinfo_List.push(objColorinfo);
+
+            });
+
+            obj_embellish_List = [];
+
+            $.each($("#DTTranPreCostingDetailEmbellishment tbody tr"), function () {
+
+                var obj = {
+                    tran_pre_costing_item_embellishment_detail_id: $(this).attr("tran_pre_costing_item_embellishment_detail_id") != "0" ? $(this).attr("tran_pre_costing_item_embellishment_detail_id") : null,
+                    tran_pre_costing_id: $(this).attr("tran_pre_costing_id") != "0" ? $(this).attr("tran_pre_costing_id") : null,
+                    style_embellishment_id: check_value($(this).attr("embellishment_id")),
+                    measurement_unit_detail_id: $(this).find(".S2MeasurementUnit").val(),
+                    order_quantity: check_textbox_value($(this).find(".txtembell_Order_quantity")),
+                    wastage: check_textbox_value($(this).find(".txtembell_Wastage")),
+                    total_order_quantity: check_textbox_value($(this).find(".txtembell_TotalRequirement")),
+                    price_per_unit: check_textbox_value($(this).find(".txtembell_CostPerUnit")),
+                    total_price: check_textbox_value($(this).find(".txtembell_TotalCost")),
+                    current_state: $(this).attr("tran_pre_costing_item_embellishment_detail_id") == "0" ? 1 : 2,
+                };
+
+                if (checkAllElementOfParent(this) == true && obj.style_embellishment_id != null) {
+                    obj_embellish_List.push(obj);
+                }
+
+            });
+
+            obj_subcontract_List = [];
+
+            $.each($("#DTTranPreCostingDetailSubContract tbody tr"), function () {
+
+                var obj = {
+                    tran_pre_costing_item_subcontract_detail_id: $(this).attr("tran_pre_costing_item_subcontract_detail_id") != "0" ? $(this).attr("tran_pre_costing_item_subcontract_detail_id") : null,
+                    tran_pre_costing_id: $(this).attr("tran_pre_costing_id") != "0" ? $(this).attr("tran_pre_costing_id") : null,
+                    process_master_id: $(this).find(".ddl_process_master").val(),
+                    measurement_unit_detail_id: 63,//piece id
+                    order_quantity: check_textbox_value($(this).find(".txtembell_Order_quantity")),
+                    wastage: check_textbox_value($(this).find(".txtembell_Wastage")),
+                    total_order_quantity: check_textbox_value($(this).find(".txtembell_TotalRequirement")),
+                    price_per_unit: check_textbox_value($(this).find(".txtembell_CostPerUnit")),
+                    total_price: check_textbox_value($(this).find(".txtembell_TotalCost")),
+                    current_state: $(this).attr("tran_pre_costing_id") == "0" ? 1 : 2
+                };
+
+                if (checkAllElementOfParent(this) == true) {
+                    obj_subcontract_List.push(obj);
+                }
+
+            });
+
+            // var raw_percentage = $('#modalcontainer_common #total_raw_material_percentage').val();
+            var floor_percentage = $('#modalcontainer_common #floor_price_percentage').val();
+            var markup_percentage = $('#modalcontainer_common #desired_markup_percentage').val();
+
+            var raw_percentage = 0;
+
+            if (floor_percentage.length > 0) {
+                floor_percentage = floor_percentage.replace("%", "");
+            }
+
+            if (markup_percentage.length > 0) {
+                markup_percentage = markup_percentage.replace("%", "");
+            }
+
+            var objReview = {
+                tran_pre_costing_review_id: $("#modalcontainer_common #tran_pre_costing_review_id").val(),
+                tran_pre_costing_id: $("#modalcontainer_common #tran_pre_costing_id").val(),
+                is_submitted: 2,
+                is_approved_by_designer: designer_action,
+                designer_approved_by: null,
+                designer_approve_date: null,
+                designer_approve_remarks: $('#modalcontainer_common #designer_remarks').val(),
+
+                is_ack_by_merchant: null,
+                merchant_ack_by: null,
+                merchant_ack_date: null,
+                merchant_ack_remarks: null,
+            }
+
+            var objData = {
+                tran_pre_costing_id: $("#modalcontainer_common #tran_pre_costing_id").val(),
+                tran_sample_order_id: check_value($('#modalcontainer_common #tran_sample_order_id').val()),
+                pre_costing_date: $("#pre_costing_date").val(),
+                total_raw_material_cost: check_value($('#modalcontainer_common #total_raw_material_cost').val()),
+                total_raw_material_percentage: raw_percentage.length > 0 ? check_value(raw_percentage) : null,
+                factory_overhead_cost: check_value($('#modalcontainer_common #factory_overhead_cost').val()),
+                sales_marketing_distribution_cost: check_value($('#modalcontainer_common #sales_marketing_distribution_cost').val()),
+                depreciation_amortization_cost: check_value($('#modalcontainer_common #depreciation_amortization_cost').val()),
+                total_overhead_cost: check_value($('#modalcontainer_common #total_overhead_cost').val()),
+                total_production_cost: check_value($('#modalcontainer_common #total_production_cost').val()),
+                floor_price_percentage: floor_percentage.length > 0 ? check_value(floor_percentage) : null,
+                floor_price_per_pc: check_value($('#modalcontainer_common #floor_price_per_pc').val()),
+                desired_markup_percentage: markup_percentage.length > 0 ? check_value(markup_percentage) : null,
+                estimated_markup_price: check_value($('#modalcontainer_common #estimated_markup_price').val()),
+                desired_markup_price: check_value($('#modalcontainer_common #desired_markup_price').val()),
+                final_mrp: check_value($('#modalcontainer_common #final_mrp').val()),
+                total_style_quantity_mrp: check_value($('#modalcontainer_common #total_style_quantity_mrp').val()),
+                suggested_mrp_with_cost: check_value($('#modalcontainer_common #suggested_mrp_with_cost').val()),
+                smv: check_value($('#modalcontainer_common #smv').val()),
+                pre_costing_quantity: check_value($('#style_quantity').val()),
+
+                List_PreCostingDet: obj_fabric_List.concat(obj_fabric_List_removed),
+                List_EmbellishmentDetl: obj_embellish_List,
+                List_SubContractDetl: obj_subcontract_List.concat(obj_subcontract_List_removed),
+                List_detl_style_color: colorinfo_List,
+
+                pre_costing_review: objReview
+
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+
+
+            ajaxPostObjectHandler("/PreCosting/PreCostingReviewAction", objData, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                        LoadPReCostingData();
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function PreCostingAck() {
+
+            var colorinfo_List = [];
+
+            $("#dtcolorcodestyle tbody tr").each(function (index, element_grid_tr) {
+
+                var color_sizeList = [];
+
+                var total_style_color_quantity = 0;
+
+                $(element_grid_tr).find(".txtColorSizeQuantity").each(function (index, element_sinlesize) {
+
+                    var objColorSize = {
+                        tran_va_plan_detl_style_color_size_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_size_id"))),
+                        tran_va_plan_detl_style_color_id: check_value(parseInt($(element_sinlesize).attr("tran_va_plan_detl_style_color_id"))),
+                        style_product_size_group_detid: parseInt($(element_sinlesize).attr("style_product_size_group_detid")),
+                        style_color_size_quantity: parseInt($(element_sinlesize).val())
+                    };
+
+                    total_style_color_quantity += parseInt($(element_sinlesize).val());
+
+                    color_sizeList.push(objColorSize);
+                });
+
+
+                var objColorinfo = {
+                    color_code: $(element_grid_tr).find(".txtColorCode").val(),
+                    style_color_quantity: total_style_color_quantity,
+                    tran_va_plan_detl_style_color_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_color_id")),
+                    tran_va_plan_detl_style_id: check_value($(element_grid_tr).find(".txtColorCode").attr("tran_va_plan_detl_style_id")),
+
+                    List_ColorSizeInfo: color_sizeList
+
+                };
+
+                colorinfo_List.push(objColorinfo);
+
+            });
+
+            obj_embellish_List = [];
+
+            $.each($("#DTTranPreCostingDetailEmbellishment tbody tr"), function () {
+
+                var obj = {
+                    tran_pre_costing_item_embellishment_detail_id: $(this).attr("tran_pre_costing_item_embellishment_detail_id") != "0" ? $(this).attr("tran_pre_costing_item_embellishment_detail_id") : null,
+                    tran_pre_costing_id: $(this).attr("tran_pre_costing_id") != "0" ? $(this).attr("tran_pre_costing_id") : null,
+                    style_embellishment_id: check_value($(this).attr("embellishment_id")),
+                    measurement_unit_detail_id: $(this).find(".S2MeasurementUnit").val(),
+                    order_quantity: check_textbox_value($(this).find(".txtembell_Order_quantity")),
+                    wastage: check_textbox_value($(this).find(".txtembell_Wastage")),
+                    total_order_quantity: check_textbox_value($(this).find(".txtembell_TotalRequirement")),
+                    price_per_unit: check_textbox_value($(this).find(".txtembell_CostPerUnit")),
+                    total_price: check_textbox_value($(this).find(".txtembell_TotalCost")),
+                    current_state: $(this).attr("tran_pre_costing_item_embellishment_detail_id") == "0" ? 1 : 2,
+                };
+
+                if (checkAllElementOfParent(this) == true && obj.style_embellishment_id != null) {
+                    obj_embellish_List.push(obj);
+                }
+
+            });
+
+            obj_subcontract_List = [];
+
+            $.each($("#DTTranPreCostingDetailSubContract tbody tr"), function () {
+
+                var obj = {
+                    tran_pre_costing_item_subcontract_detail_id: $(this).attr("tran_pre_costing_item_subcontract_detail_id") != "0" ? $(this).attr("tran_pre_costing_item_subcontract_detail_id") : null,
+                    tran_pre_costing_id: $(this).attr("tran_pre_costing_id") != "0" ? $(this).attr("tran_pre_costing_id") : null,
+                    process_master_id: $(this).find(".ddl_process_master").val(),
+                    measurement_unit_detail_id: 63,//piece id
+                    order_quantity: check_textbox_value($(this).find(".txtembell_Order_quantity")),
+                    wastage: check_textbox_value($(this).find(".txtembell_Wastage")),
+                    total_order_quantity: check_textbox_value($(this).find(".txtembell_TotalRequirement")),
+                    price_per_unit: check_textbox_value($(this).find(".txtembell_CostPerUnit")),
+                    total_price: check_textbox_value($(this).find(".txtembell_TotalCost")),
+                    current_state: $(this).attr("tran_pre_costing_id") == "0" ? 1 : 2
+                };
+
+                if (checkAllElementOfParent(this) == true) {
+                    obj_subcontract_List.push(obj);
+                }
+
+            });
+
+            //var raw_percentage = $('#modalcontainer_common #total_raw_material_percentage').val();
+            var floor_percentage = $('#modalcontainer_common #floor_price_percentage').val();
+            var markup_percentage = $('#modalcontainer_common #desired_markup_percentage').val();
+
+            var raw_percentage = 0;
+
+            if (floor_percentage.length > 0) {
+                floor_percentage = floor_percentage.replace("%", "");
+            }
+
+            if (markup_percentage.length > 0) {
+                markup_percentage = markup_percentage.replace("%", "");
+            }
+
+            var objReview = {
+                tran_pre_costing_id: $("#modalcontainer_common #tran_pre_costing_id").val(),
+
+                is_submitted: 1,
+                is_approved_by_designer: 1,
+
+                designer_approved_by: null,
+                designer_approve_date: null,
+                designer_approve_remarks: $('#modalcontainer_common #designer_remarks').val(),
+
+                is_ack_by_merchant: null,
+                merchant_ack_remarks: null,
+            }
+
+            var objData = {
+                tran_pre_costing_id: $("#modalcontainer_common #tran_pre_costing_id").val(),
+                tran_sample_order_id: check_value($('#modalcontainer_common #tran_sample_order_id').val()),
+                pre_costing_date: $("#pre_costing_date").val(),
+                total_raw_material_cost: check_value($('#modalcontainer_common #total_raw_material_cost').val()),
+                total_raw_material_percentage: raw_percentage.length > 0 ? check_value(raw_percentage) : null,
+                factory_overhead_cost: check_value($('#modalcontainer_common #factory_overhead_cost').val()),
+                sales_marketing_distribution_cost: check_value($('#modalcontainer_common #sales_marketing_distribution_cost').val()),
+                depreciation_amortization_cost: check_value($('#modalcontainer_common #depreciation_amortization_cost').val()),
+                total_overhead_cost: check_value($('#modalcontainer_common #total_overhead_cost').val()),
+                total_production_cost: check_value($('#modalcontainer_common #total_production_cost').val()),
+                floor_price_percentage: floor_percentage.length > 0 ? check_value(floor_percentage) : null,
+                floor_price_per_pc: check_value($('#modalcontainer_common #floor_price_per_pc').val()),
+                desired_markup_percentage: markup_percentage.length > 0 ? check_value(markup_percentage) : null,
+                estimated_markup_price: check_value($('#modalcontainer_common #estimated_markup_price').val()),
+                desired_markup_price: check_value($('#modalcontainer_common #desired_markup_price').val()),
+                final_mrp: check_value($('#modalcontainer_common #final_mrp').val()),
+                total_aantity_mrp: check_value($('#modalcontainer_common #total_style_quantity_mrp').val()),
+                suggested_mrp_with_cost: check_value($('#modalcontainer_common #suggested_mrp_with_cost').val()),
+                smv: check_value($('#modalcontainer_common #smv').val()),
+                pre_costing_quantity: check_value($('#style_quantity').val()),
+
+
+                List_PreCostingDet: obj_fabric_List.concat(obj_fabric_List_removed),
+                List_EmbellishmentDetl: obj_embellish_List,
+                List_SubContractDetl: obj_subcontract_List.concat(obj_subcontract_List_removed),
+                List_detl_style_color: colorinfo_List
+
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/PreCosting/DesignerReviewPreCosting", objData, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                        LoadPReCostingData();
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function ViewAlreadyModifiedByDesignerPreCosting(btn) {
+
+            var rowindex = parseInt($(btn).closest(".master_table_row").attr("row_index")) - 1;
+
+            var objStyle = {
+                row_index: rowindex,
+                tran_pre_costing_review_id: $(btn).attr("tran_pre_costing_review_id"),
+                tran_pre_costing_id: $(btn).attr("tran_pre_costing_id"),
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                style_code: dt_source_already_modified_by_designer.rows().data()[rowindex].style_code,
+                style_item_product_id: dt_source_already_modified_by_designer.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                style_product: dt_source_already_modified_by_designer.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_source_already_modified_by_designer.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_source_already_modified_by_designer.rows().data()[rowindex].style_product_size_group_id,
+                order_quantity: dt_source_already_modified_by_designer.rows().data()[rowindex].order_quantity,
+                range_plan_detail_id: dt_source_already_modified_by_designer.rows().data()[rowindex].range_plan_detail_id,
+                range_plan_id: dt_source_already_modified_by_designer.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_source_already_modified_by_designer.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_source_already_modified_by_designer.rows().data()[rowindex].style_master_category_id,
+
+                tran_va_plan_id: dt_source_already_modified_by_designer.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_source_already_modified_by_designer.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_source_already_modified_by_designer.rows().data()[rowindex].tran_va_plan_event_id,
+                tran_va_plan_detl_style_id: dt_source_already_modified_by_designer.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PreCosting/PreCostingReviewVersons?input=" + JSON.stringify(objStyle), null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    BindTabEvents("tab_precosting");
+
+                    LoadPReCostingDetailForReview();
+
+                    $('#modalcontent-common input').prop("disabled", true);
+                    $('#modalcontent-common button').prop("disabled", true);
+                    $('#modalcontent-common select').prop("disabled", true);
+                    $('#modalcontent-common #btnEnableEdit').prop("disabled", false);
+
+                    $('#modalcontent-common #btnAckPreCosting').prop("disabled", false);
+                    $('#modalcontent-common #btnModalClose').prop("disabled", false);
+                    $('#modalcontent-common .btnSaveNext').prop("disabled", false);
+
+                    $("#modalcontent-common #dvbtn").remove();
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function ViewApprovedByDesignerPreCosting(btn) {
+
+            var rowindex = parseInt($(btn).closest(".master_table_row").attr("row_index")) - 1;
+
+            var objStyle = {
+                row_index: rowindex,
+                tran_pre_costing_review_id: $(btn).attr("tran_pre_costing_review_id"),
+                tran_pre_costing_id: $(btn).attr("tran_pre_costing_id"),
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                style_code: dt_source_approved_by_designer.rows().data()[rowindex].style_code,
+                style_item_product_id: dt_source_approved_by_designer.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                style_product: dt_source_approved_by_designer.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_source_approved_by_designer.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_source_approved_by_designer.rows().data()[rowindex].style_product_size_group_id,
+                order_quantity: dt_source_approved_by_designer.rows().data()[rowindex].order_quantity,
+                range_plan_detail_id: dt_source_approved_by_designer.rows().data()[rowindex].range_plan_detail_id,
+                range_plan_id: dt_source_approved_by_designer.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_source_approved_by_designer.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_source_approved_by_designer.rows().data()[rowindex].style_master_category_id,
+
+                tran_va_plan_id: dt_source_approved_by_designer.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_source_approved_by_designer.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_source_approved_by_designer.rows().data()[rowindex].tran_va_plan_event_id,
+                tran_va_plan_detl_style_id: dt_source_approved_by_designer.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PreCosting/PreCostingReviewVersons?input=" + JSON.stringify(objStyle), null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    //$("#DTTranSampleOrderSize input,#DTTranSampleOrderSize select").attr("disabled", "disabled");
+
+                    BindTabEvents("tab_precosting");
+
+                    LoadPReCostingDetailForReview();
+
+                    $('#modalcontent-common input').prop("disabled", true);
+                    $('#modalcontent-common button').prop("disabled", true);
+                    $('#modalcontent-common select').prop("disabled", true);
+                    $('#modalcontent-common #btnEnableEdit').prop("disabled", false);
+
+
+                    $('#modalcontent-common #btnAckPreCosting').prop("disabled", false);
+                    $('#modalcontent-common #btnModalClose').prop("disabled", false);
+                    $('#modalcontent-common .btnSaveNext').prop("disabled", false);
+                    $("#modalcontent-common #dvbtn").remove();
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function EnableEdit(btn) {
+
+            $('#modalcontent-common input').prop("disabled", false);
+            $('#modalcontent-common button').prop("disabled", false);
+            $('#modalcontent-common select').prop("disabled", false);
+            $('#modalcontent-common #btnEnableEdit,#merchant_ack_remarks').prop("disabled", true);
+            $(".editfabric,.clsRemoveFabric").prop("disabled", false);
+            $("#designer_remarks").prop("disabled", false);
+            // $('#modalcontent-common .txtembell_TotalRequirement,.txtembell_TotalRequirement,.txtembell_TotalCost,.txtembell_TotalCost').prop("disabled", true);
+            $('#desired_markup_price,.txtembell_TotalRequirement,.txtembell_TotalCost,.txtembell_TotalRequirement,.txtembell_TotalCost,#floor_price_per_pc,#total_production_cost,#total_raw_material_percentage,#total_overhead_cost,#modalcontent-common #desired_markup_price,#total_production_cost,#floor_price_per_pc,#total_raw_material_percentage,#total_raw_material_cost,.S2MeasurementUnit,.txtcalc_rawmat,#total_style_quantity_mrp').prop("disabled", true);
+
+        }
+
+        function ReviewPreCostingLoad(btn) {
+
+            var rowindex = parseInt($(btn).closest(".master_table_row").attr("row_index")) - 1;
+
+            var objStyle = {
+                row_index: rowindex,
+                tran_pre_costing_review_id: $(btn).attr("tran_pre_costing_review_id"),
+                tran_pre_costing_id: $(btn).attr("tran_pre_costing_id"),
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                style_code: dt_source_pending.rows().data()[rowindex].style_code,
+                style_item_product_id: dt_source_pending.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                style_product: dt_source_pending.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_source_pending.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_source_pending.rows().data()[rowindex].style_product_size_group_id,
+                order_quantity: dt_source_pending.rows().data()[rowindex].order_quantity,
+                range_plan_detail_id: dt_source_pending.rows().data()[rowindex].range_plan_detail_id,
+                range_plan_id: dt_source_pending.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_source_pending.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_source_pending.rows().data()[rowindex].style_master_category_id,
+                tran_pre_costing_review_id: dt_source_pending.rows().data()[rowindex].tran_pre_costing_review_id,
+                tran_va_plan_id: dt_source_pending.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_source_pending.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_source_pending.rows().data()[rowindex].tran_va_plan_event_id,
+                tran_va_plan_detl_style_id: dt_source_pending.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+
+
+            showLoader("Loading..........");
+
+
+            try {
+                ajaxGetHandler("/PreCosting/PreCostingReviewVersons?input=" + JSON.stringify(objStyle), null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    //$("#DTTranSampleOrderSize input,#DTTranSampleOrderSize select").attr("disabled", "disabled");
+
+                    BindTabEvents("tab_precosting");
+
+                    LoadPReCostingDetailForReview();
+
+                    $('#modalcontent-common input').prop("disabled", true);
+                    $('#modalcontent-common button').prop("disabled", true);
+                    $('#modalcontent-common select').prop("disabled", true);
+                    $('#modalcontent-common #btnEnableEdit').prop("disabled", false);
+
+                    $('#modalcontent-common #btnAckPreCosting').prop("disabled", false);
+                    $('#modalcontent-common #btnRejectPreCosting').prop("disabled", false);
+                    $('#modalcontent-common #btnModalClose').prop("disabled", false);
+                    $("#modalcontent-common #designer_remarks").prop("disabled", false);
+
+                    setTimeout(function () {
+                        $('#desired_markup_price,#floor_price_per_pc,#total_production_cost,#total_raw_material_percentage,#total_overhead_cost,#modalcontent-common #desired_markup_price,#total_production_cost,#floor_price_per_pc,#total_raw_material_percentage,#total_raw_material_cost,.editfabric,.clsRemoveFabric,.S2MeasurementUnit,.txtcalc_rawmat,#total_style_quantity_mrp').prop("disabled", true);
+                    }, 0);
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+        function LoadPReCostingDetail() {
+
+            $("#DTTranPreCostingDetail .dynamic_row").remove();
+
+            for (var i = 0; i < obj_fabric_List.length; i++) {
+
+                var tr = $("#DTTranPreCostingDetail .tr_subgroup[gen_item_structure_group_sub_id=" + obj_fabric_List[i].gen_item_structure_group_sub_id + "]")
+
+                var tableRowString = '<tr class="dynamic_row" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '">' +
+                    '<td>' +
+                    '<b style="color:blue;">(' + obj_fabric_List[i].sub_group_name + ')</b> ' + obj_fabric_List[i].all_segment_text +
+                    '</td>' +
+                    '<td>' +
+                    obj_fabric_List[i].total_order_quantity + ' ' + obj_fabric_List[i].measurement_unit +
+                    '</td>' +
+                    '<td style="text-align:right;">' +
+                    parseFloat(obj_fabric_List[i].total_price).toFixed(2) +
+                    '</td>' +
+                    '<td>' +
+                    '<div style="text-align: center;width: 80px;" class="btnclsmasterpage" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '">' +
+                    '<button class="editfabric" onclick="EditPrecDetail(this,' + obj_fabric_List[i].row_index + ',' + obj_fabric_List[i].item_structure_group_id + ',' + obj_fabric_List[i].gen_item_structure_group_sub_id + ',\'' + obj_fabric_List[i].sub_group_name.trim() + '\');return false;" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '"><i class="fa fa-edit " style="font-size: 18px;"></i></button>' +
+                    '<button class="clsRemoveFabric" onclick="RemoveFabricFromGrid(this,' + obj_fabric_List[i].row_index + ');return false;" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '"><i class="fa fa-solid fa-trash " style="font-size: 18px;color:red;" ></i></button>' +
+                    '</div>' +
+                    '</td>' +
+                    '</tr>';
+                $(tr).after(tableRowString);
+
+            }
+        }
+        function getColorWiseQuantity(e) {
+
+
+
+            var selectedOption = e.options[e.selectedIndex];
+            $("#txtorderqnty").val(selectedOption.getAttribute("quantity"));
+
+        }
+
+        function LoadPReCostingDetailForReview() {
+
+            $("#DTTranPreCostingDetail .dynamic_row").remove();
+
+            var old_data_rows = "";
+
+            for (var i = 0; i < obj_fabric_List_old.length; i++) {
+
+                var tr_font_color = "black"; var td_font_color = "black";
+
+                var new_data = obj_fabric_List.filter(p =>
+                    p.all_segment_text.trim() == obj_fabric_List_old[i].all_segment_text.trim());
+
+                if (new_data.length == 0) {
+
+                    var tr = $("#DTTranPreCostingDetail .tr_subgroup[gen_item_structure_group_sub_id=" + obj_fabric_List_old[i].gen_item_structure_group_sub_id + "]")
+                    var tableRowString = '<tr style="color:red;" class="dynamic_row" gen_item_structure_group_sub_id="' + obj_fabric_List_old[i].gen_item_structure_group_sub_id + '">'
+                        + '<td>'
+                        + obj_fabric_List_old[i].all_segment_text + '<b> (Deleted) </b>'
+                        + '</td>'
+                        + '<td>'
+                        + obj_fabric_List_old[i].total_order_quantity + ' ' + obj_fabric_List_old[i].measurement_unit
+                        + '</td>'
+                        + '<td style="text-align:right;color:red;">'
+                        + parseFloat(obj_fabric_List_old[i].total_price).toFixed(2)
+                        + '</td>'
+                        + '<td>'
+                        // + '<div style="text-align: center;width: 80px;" class="btnclsmasterpage" gen_item_structure_group_sub_id="' + obj_fabric_List_old[i].gen_item_structure_group_sub_id + '">'
+                        // + '<button class="editfabric"  onclick="EditPrecDetail(this,' + obj_fabric_List[i].row_index + ',' + obj_fabric_List[i].item_structure_group_id + ',' + obj_fabric_List[i].gen_item_structure_group_sub_id + ',' + obj_fabric_List[i].sub_group_name + ',' + obj_fabric_List[i].measurement_unit_id + ',' + obj_fabric_List[i].default_measurement_unit_detail_id + ');return false;" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '"><i class="fa fa-edit " style="font-size: 18px;"></i></button>'
+                        // + '<button class="clsRemoveFabric"  onclick="RemoveFabricFromGrid(this,' + obj_fabric_List[i].row_index + ');return false;" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '"><i class="fa fa-solid fa-trash " style="font-size: 18px;color:red;" ></i></button>'
+
+                        // + '</div>'
+                        + '</td>'
+                        + '</tr>';
+                    $(tr).after(tableRowString);
+                }
+            }
+
+            for (var i = 0; i < obj_fabric_List.length; i++) {
+
+                var tr_font_color = "black"; var td_font_color = "black"; var add_status = "<b>(Unchanged)</b>";
+                var old_data = obj_fabric_List_old.filter(p =>
+                    p.all_segment_text.trim() == obj_fabric_List[i].all_segment_text.trim());
+                var strprice = "";
+                if (old_data.length == 0) {
+
+                    tr_font_color = "blue";
+                    add_status = " <b style='color:#9b0f8a'>(New)</b>";
+                    strprice = "<b style='color:blue;'>" + parseFloat(obj_fabric_List[i].total_price).toFixed(2) + "</b>"
+                }
+                else if (parseFloat(old_data[0].total_price) != parseFloat(obj_fabric_List[i].total_price)) {
+                    td_font_color = "green";
+                    add_status = " <b style='color:#9b0f8a'>(Modified)</b>";
+                    strprice = "<b style='color:green;'>" + parseFloat(obj_fabric_List[i].total_price).toFixed(2) + "</b>"
+                }
+                else {
+                    td_font_color = "black";
+                    add_status = " <b style='color:#9b0f8a'>(Unchanged)</b>";
+                    strprice = "<b style='color:black;'>" + parseFloat(obj_fabric_List[i].total_price).toFixed(2) + "</b>"
+
+                }
+
+                var tr = $("#DTTranPreCostingDetail .tr_subgroup[gen_item_structure_group_sub_id=" + obj_fabric_List[i].gen_item_structure_group_sub_id + "]")
+
+                var tableRowString = '<tr style="color:' + tr_font_color + '" class="dynamic_row" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '">'
+                    + '<td>'
+                    + obj_fabric_List[i].all_segment_text + add_status
+                    + '</td>'
+                    + '<td>'
+                    + obj_fabric_List[i].total_order_quantity + ' ' + obj_fabric_List[i].measurement_unit
+                    + '</td>'
+                    + '<td style="text-align:right;color:' + td_font_color + '">'
+                    + strprice
+                    + '</td>'
+                    + '<td>'
+                    + '<div style="text-align: center;width: 80px;" class="btnclsmasterpage" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '">'
+                    + '<button class="editfabric"  onclick="EditPrecDetail(this,' + obj_fabric_List[i].row_index + ',' + obj_fabric_List[i].item_structure_group_id + ',' + obj_fabric_List[i].gen_item_structure_group_sub_id + ',\'' + obj_fabric_List[i].sub_group_name + '\',' + obj_fabric_List[i].measurement_unit_id + ',' + obj_fabric_List[i].default_measurement_unit_detail_id + ',1);return false;" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '"><i class="fa fa-edit " style="font-size: 18px;"></i></button>'
+                    + '<button class="clsRemoveFabric"  onclick="RemoveFabricFromGrid(this,' + obj_fabric_List[i].row_index + ',1);return false;" gen_item_structure_group_sub_id="' + obj_fabric_List[i].gen_item_structure_group_sub_id + '"><i class="fa fa-solid fa-trash " style="font-size: 18px;color:red;" ></i></button>'
+
+                    + '</div>'
+                    + '</td>'
+                    + '</tr>';
+                $(tr).after(tableRowString);
+
+            }
+        }
+
+        $(function () {
+
+            if (IsNotDesigner.length > 0) {
+
+                showErrorAlert("Alert", IsNotDesigner, "OK", function () {
+                    document.location = "/Dashboard/Index";
+                });
+            }
+
+            LoadPReCostingData();
+
+            BindTabEvents("tab_precostinglanding");
+
+            $("#btnLoadData").click(function () {
+                if ($("#fiscal_year_id").val() == '') {
+                    $("#fiscal_year_id").focus();
+                    $("#fiscal_year_id").css("border", "1px solid red");
+                }
+                else if ($("#event_id").val() == '') {
+                    $("#event_id").focus();
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+                }
+                else {
+
+                    $("#fiscal_year_id").css("border", "");
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                    LoadPReCostingData();
+
+                }
+
+            });
+            $(".filterOption").hide();
+
+            $("#btnBack").click(function () {
+                document.location = "/PreCosting/SampleOrderCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+            });
+
+
+
+        });
+
+
+    </script>
+
+}

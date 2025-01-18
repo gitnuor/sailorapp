@@ -1,0 +1,152 @@
+﻿@page "/Index"
+@{
+    ViewBag.Title = "Business Plan Approval";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<script type="text/javascript">
+    localStorage.setItem("pageName", "ViewBag.PageName");
+    localStorage.setItem("menuId", "ViewBag.MenuId");
+</script>
+@* 
+ *@
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                             <h6 class="card-title">Business Plan Approval</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="DTTranBPYear" class="table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead style="text-align:center">
+                                    <tr>
+                                        <th><label class="  "></label></th>
+                                        <th><label class="labelNormal  ">Fiscal Year</label></th>
+                                        <th><label class="labelNormal ">Gross Sales (Tk)</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Total Quantity (Tk)</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Total MRP (Tk)</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Total CPU (Tk)</label></th>
+                                        <th><label class="labelNormal ">Status</label></th>
+                                        <th style="width:360px;text-align:center;">Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                   
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+@section Scripts{
+    <script>
+        function jsdatatableloaded() {
+            ConvertNumberToCurrency();
+        }
+
+        function LoadPlanData() {
+
+            var dt_search = {
+
+                filterId: '#DTTranBPYear_filter input[type=search]',
+                tableId: "#DTTranBPYear"
+
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Gross Sales' ,
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+               
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/BusinessPlan/GetTranBusinessPlanYearApprovalData" }),
+                "buttons": {
+                    "buttons": [
+                        {
+                            text: '<i class="fas fa-plus-square" aria-hidden="true"></i> Add',
+                            className: 'btn btn-primary mr-1',
+                            action: function (e, dt, node, config) {
+                                location.href = "/BusinessPlan/AddNew";
+                            }
+                        },
+                    ]
+                },
+                columnDefs: [
+                    { targets: 0, "visible": false, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                "columns": [
+                    { "data": "tran_bp_year_id", "name": "year_name", "autoWidth": true },
+                    { "data": "year_name", "name": "gen_fiscal_year.year_name", "autoWidth": true },
+
+                    { "data": "str_gross_sales", "name": "gross_sales", "autoWidth": true },
+                    { "data": "total_quantity", "name": "total_quantity", "autoWidth": true },
+                    { "data": "total_mrp", "name": "total_mrp", "autoWidth": true },
+                    { "data": "total_cpu", "name": "total_cpu", "autoWidth": true },
+                    { "data": "plan_status", "name": "plan_status", "autoWidth": true },
+                    {
+                        "data": "datatablebuttonscode", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    }
+                ],
+                
+            });
+        }
+        $(function () {
+
+            LoadPlanData();
+
+          
+
+        });
+    </script>
+
+ }

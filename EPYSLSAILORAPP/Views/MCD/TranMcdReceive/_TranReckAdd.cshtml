@@ -1,0 +1,50 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+@* <div class="modal fade text-left" id="recAddModal" role="dialog" aria-labelledby="reassign-modal-label" aria-hidden="true" style="z-index:1051;"> *@
+<div id="modalContainerRack" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-xs" role="document">
+        <div class="modal-content" id="modalContetRack">
+            <div class="modal-header bg-info">
+                <h6 class="modal-title text-white" id="reassign-modal-label">Add <span id="option">Rack Number Add</span></h6>
+                @* <button type="button" id="btnModalClose1" class="btn btn-danger btn-md cancel" onclick="closePopuRec();">X</button> *@
+                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button> 
+            </div>
+            <div class="modal-body modal-fixed">
+                <div class="form-group row" style="margin-bottom:0rem">
+                    <label class="col-sm-2 col-form-label-sm text-right">Rack No :</label>
+                    <div class="col-md-6">
+                         <select id="PinId" class="form-control select2" placeholder="Select a User" style="width: 100%;">
+                         </select>
+                      
+                         <input type="hidden" id="hdPinId" />
+                    </div>
+                   
+                    <button type="button" class="btn btn-primary  btn-sm col-sm-2" id="btn-callingOfficer-Add">OK</button>
+              </div>
+
+             <div id="tempCallPlan-summary" class="media-list position-relative">
+                    <div class="table-responsive">
+                        <table class="table table-padded table-sm mb-0 w-100" id="callentry-report-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-form-label-sm" style="padding-left:10px" id="test1">Rack No</th>
+                                    <th class="col-form-label-sm"  style="padding-left:10px">Quantity</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="test">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+             
+            </div>
+        </div>
+    </div>
+</div>

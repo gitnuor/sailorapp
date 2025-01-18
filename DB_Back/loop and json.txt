@@ -1,0 +1,34 @@
+--CREATE  TABLE IF NOT EXISTS temp_table1 (  event_id bigint,month_id bigint, outletid bigint, gross_sales bigint );
+
+DO $$
+DECLARE
+    row_record RECORD;
+    row_record_month RECORD;
+BEGIN
+    -- Create a temporary table if it doesn't exist
+    delete from temp_table1;
+    FOR row_record IN 
+        SELECT tranbp_event.*
+        FROM public.tran_bp_year m,
+             LATERAL json_array_elements(m.event_list_json) AS t(doc),
+             LATERAL json_populate_record(null::tran_bp_event, t.doc) AS tranbp_event
+        WHERE m.tran_bp_year_id = 75 
+    LOOP
+        FOR row_record_month IN 
+            SELECT tranbpev_month.*
+            FROM LATERAL json_array_elements(row_record.event_month_list_json) AS u(doc2),
+                 LATERAL json_populate_record(null::public.tran_bp_event_month, u.doc2) AS tranbpev_month
+        LOOP
+          
+				insert into temp_table1
+			 SELECT row_record.event_id,row_record_month.month_id,
+			 tranbpevmonth_outlet.outlet_id,tranbpevmonth_outlet.outlet_gross_sales           
+			 FROM LATERAL json_array_elements( row_record_month.event_month_outlet_list_json) AS v(doc3),
+			 LATERAL json_populate_record(null::public.tran_bp_event_month_outlet,v.doc3) AS tranbpevmonth_outlet;
+			
+			
+        END LOOP;
+    END LOOP;
+END $$;
+--drop table temp_table1 --delete from temp_table1
+SELECT * FROM temp_table1;

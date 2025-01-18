@@ -1,0 +1,27 @@
+create function proc_sp_get_data_{TableName}({FilterParams})
+    returns TABLE(
+        {OutputParamsWithType}
+        )
+    language plpgsql
+as
+$$
+DECLARE
+
+     {ListVariables}
+
+BEGIN
+    
+    {DetlTableQueries}
+
+    RETURN QUERY
+
+        SELECT
+            {SelectColumns}
+            
+
+        FROM {TableNameWithAleas}
+        
+        OFFSET ((currnet_page-1)*page_size) ROWS FETCH NEXT page_size ROWS ONLY;
+
+END;
+$$;

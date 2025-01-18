@@ -1,0 +1,29 @@
+
+
+        public async Task<List<rpc_{EntityName}_DTO>> GetAll{EntityName}Async({all_param_declaration})
+        {
+            
+           try
+            {
+               
+                using (NpgsqlConnection connection = new NpgsqlConnection(_configuration.GetConnectionString("PGConnectionString")))
+                {
+                    connection.Open();
+
+                    string query = $"SELECT * FROM {EntityName}( {all_param_names})";
+
+                    var dataList = connection.Query<rpc_{EntityName}_DTO>(query, 
+                          new { {all_params} }
+                         ).AsList();
+
+                    return dataList;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }

@@ -1,0 +1,712 @@
+@model EPYSLSAILORAPP.Domain.DTO.gen_season_event_config_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "GenSeasonEventConfig List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">GenSeasonEventConfig</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddGenSeasonEventConfig(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="DTGenSeasonEventConfig" class="table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Fiscal Year</th>
+                                                <th>Season</th>
+                                                <th>Event Title</th>
+                                                <th>Start Date</th>
+                                                <th>End Date</th>
+                                                <th>Action</th>
+                                                
+
+
+                                               
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 60% !important; max-width: 60% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            GenSeasonEventConfig
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddGenSeasonEventConfig() {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            ajaxGetHandler("/GenSeasonEventConfig/GenSeasonEventConfigNew", null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+            });
+
+
+        }
+
+        function EditGenSeasonEventConfig(btn) {
+
+
+            var event_id = $(btn).attr("event_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/GenSeasonEventConfig/GenSeasonEventConfigEdit?event_id=" + event_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+            }
+        }
+
+        function ViewGenSeasonEventConfig(btn) {
+
+            var event_id = $(btn).attr("event_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/GenSeasonEventConfig/GenSeasonEventConfigView?event_id=" + event_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+            }
+        }
+
+        function SaveGenSeasonEventConfig(btn) {
+
+            var obj_TranShopFloorReturn = {
+                tran_shop_floor_return_id: check_value($('#tran_shop_floor_return_id').val()),
+                return_no: $('#return_no').val(),
+                requisition_slip_id: check_value($('#requisition_slip_id').val()),
+                tran_mcd_requisition_issue_id: check_value($('#tran_mcd_requisition_issue_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                remarks: $('#remarks').val(),
+                is_submitted: check_value($('#is_submitted').val()),
+                acknowledged_by: check_value($('#acknowledged_by').val()),
+                acknowledged_date: $('#acknowledged_date').val(),
+                acknowledged_remarks: $('#acknowledged_remarks').val(),
+                gen_item_structure_group_id: check_value($('#gen_item_structure_group_id').val()),
+                gen_item_structure_group_sub_id: check_value($('#gen_item_structure_group_sub_id').val()),
+                event_id: check_value($('#event_id').val()),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                is_acknowledged: check_value($('#is_acknowledged').val()),
+                shop_floor_return_details_json: $('#shop_floor_return_details_json').val(),
+                tran_type: check_value($('#tran_type').val()),
+
+            }
+
+            var obj_TranPpMeeting = {
+                tran_pp_meeting_id: check_value($('#tran_pp_meeting_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                remarks: $('#remarks').val(),
+                meeting_conducted_by: check_value($('#meeting_conducted_by').val()),
+                meeting_conducted_date: $('#meeting_conducted_date').val(),
+                event_id: check_value($('#event_id').val()),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+
+            }
+
+            var obj_TranPurchaseRequisition = {
+                pr_id: check_value($('#pr_id').val()),
+                pr_no: $('#pr_no').val(),
+                pr_date: $('#pr_date').val(),
+                delivery_date: $('#delivery_date').val(),
+                event_id: check_value($('#event_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                designer_id: check_value($('#designer_id').val()),
+                merchandiser_id: check_value($('#merchandiser_id').val()),
+                currency_id: check_value($('#currency_id').val()),
+                delivery_unit_id: check_value($('#delivery_unit_id').val()),
+                delivery_unit_address: $('#delivery_unit_address').val(),
+                remarks: $('#remarks').val(),
+                supplier_id: check_value($('#supplier_id').val()),
+                supplier_address: $('#supplier_address').val(),
+                supplier_concern_person: $('#supplier_concern_person').val(),
+                terms_condition_list: $('#terms_condition_list').val(),
+                test_requirements_list: $('#test_requirements_list').val(),
+                document_list: $('#document_list').val(),
+                approved_by: check_value($('#approved_by').val()),
+                approve_date: $('#approve_date').val(),
+                approve_remarks: $('#approve_remarks').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                gen_item_structure_group_id: check_value($('#gen_item_structure_group_id').val()),
+                is_acknowledged: $('#is_acknowledged').val(),
+                acknowledged_by: check_value($('#acknowledged_by').val()),
+                acknowledged_date: $('#acknowledged_date').val(),
+                acknowledged_remarks: $('#acknowledged_remarks').val(),
+                is_submitted: check_value($('#is_submitted').val()),
+                is_approved: check_value($('#is_approved').val()),
+                det_list: $('#det_list').val(),
+
+            }
+
+            var obj_TranBpEvent = {
+                tran_bp_event_id: check_value($('#tran_bp_event_id').val()),
+                event_id: check_value($('#event_id').val()),
+                event_gross_sales: $('#event_gross_sales').val(),
+                readygoods_qnty: check_value($('#readygoods_qnty').val()),
+                readygoods_value: $('#readygoods_value').val(),
+                added_by: check_value($('#added_by').val()),
+                updated_by: check_value($('#updated_by').val()),
+                date_added: $('#date_added').val(),
+                date_updated: $('#date_updated').val(),
+                tran_bp_year_id: check_value($('#tran_bp_year_id').val()),
+                event_month_list_json: $('#event_month_list_json').val(),
+                event_discount_amount: $('#event_discount_amount').val(),
+                event_net_amount: $('#event_net_amount').val(),
+
+            }
+
+            var obj_TranCutting = {
+                tran_cutting_id: check_value($('#tran_cutting_id').val()),
+                tran_pp_meeting_id: check_value($('#tran_pp_meeting_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                event_id: check_value($('#event_id').val()),
+                style_code: $('#style_code').val(),
+                all_processes: $('#all_processes').val(),
+                remarks: $('#remarks').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                tran_cutting_color_json: $('#tran_cutting_color_json').val(),
+                is_complete: check_value($('#is_complete').val()),
+
+            }
+
+            var obj_TranMcdRequisitionIssue = {
+                tran_mcd_requisition_issue_id: check_value($('#tran_mcd_requisition_issue_id').val()),
+                issue_no: $('#issue_no').val(),
+                requisition_slip_id: check_value($('#requisition_slip_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                remarks: $('#remarks').val(),
+                is_submitted: $('#is_submitted').val(),
+                is_full_issued: $('#is_full_issued').val(),
+                is_closed: $('#is_closed').val(),
+                is_approved: $('#is_approved').val(),
+                approved_by: check_value($('#approved_by').val()),
+                approve_date: $('#approve_date').val(),
+                approve_remarks: $('#approve_remarks').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                gen_item_structure_group_id: check_value($('#gen_item_structure_group_id').val()),
+                gen_item_structure_group_sub_id: check_value($('#gen_item_structure_group_sub_id').val()),
+                event_id: check_value($('#event_id').val()),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                mcd_requisition_issue_details: $('#mcd_requisition_issue_details').val(),
+                tran_type: check_value($('#tran_type').val()),
+
+            }
+
+            var obj_GenSeason = {
+                season_id: check_value($('#season_id').val()),
+                season_name: $('#season_name').val(),
+                short_name: $('#short_name').val(),
+                is_active: $('#is_active').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                sequence: check_value($('#sequence').val()),
+
+            }
+
+            var obj_GenFiscalYear = {
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                year_no: check_value($('#year_no').val()),
+                year_name: $('#year_name').val(),
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val(),
+                locks: $('#locks').val(),
+                is_used: $('#is_used').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                update_by: check_value($('#update_by').val()),
+                date_updated: $('#date_updated').val(),
+
+            }
+
+
+
+            var obj_GenSeasonEventConfig = {
+                event_id: check_value($('#modalcontent #event_id').val()),
+                season_id: check_value($('#modalcontent #season_id').val()),
+                fiscal_year_id: check_value($('#modalcontent #fiscal_year_id').val()),
+                start_date: $('#modalcontent #start_date').val(),
+                start_month_id: check_value($('#modalcontent #start_month_id').val()),
+                end_month_id: check_value($('#modalcontent #end_month_id').val()),
+                event_title: $('#modalcontent #event_title').val(),
+                is_active: $('#modalcontent #is_active').val(),
+                event_sequence: check_value($('#modalcontent #event_sequence').val()),
+                end_date: $('#modalcontent #end_date').val(),
+
+
+            }
+
+            if (_cusFormValidate("frmAdd")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+                ajaxPostObjectHandler("/GenSeasonEventConfig/SaveGenSeasonEventConfig", obj_GenSeasonEventConfig, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenSeasonEventConfigData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function UpdateGenSeasonEventConfig(btn) {
+
+            var obj_TranShopFloorReturn = {
+                tran_shop_floor_return_id: check_value($('#tran_shop_floor_return_id').val()),
+                return_no: $('#return_no').val(),
+                requisition_slip_id: check_value($('#requisition_slip_id').val()),
+                tran_mcd_requisition_issue_id: check_value($('#tran_mcd_requisition_issue_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                remarks: $('#remarks').val(),
+                is_submitted: check_value($('#is_submitted').val()),
+                acknowledged_by: check_value($('#acknowledged_by').val()),
+                acknowledged_date: $('#acknowledged_date').val(),
+                acknowledged_remarks: $('#acknowledged_remarks').val(),
+                gen_item_structure_group_id: check_value($('#gen_item_structure_group_id').val()),
+                gen_item_structure_group_sub_id: check_value($('#gen_item_structure_group_sub_id').val()),
+                event_id: check_value($('#event_id').val()),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                is_acknowledged: check_value($('#is_acknowledged').val()),
+                shop_floor_return_details_json: $('#shop_floor_return_details_json').val(),
+                tran_type: check_value($('#tran_type').val()),
+
+            }
+
+            var obj_TranPpMeeting = {
+                tran_pp_meeting_id: check_value($('#tran_pp_meeting_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                remarks: $('#remarks').val(),
+                meeting_conducted_by: check_value($('#meeting_conducted_by').val()),
+                meeting_conducted_date: $('#meeting_conducted_date').val(),
+                event_id: check_value($('#event_id').val()),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+
+            }
+
+            var obj_TranPurchaseRequisition = {
+                pr_id: check_value($('#pr_id').val()),
+                pr_no: $('#pr_no').val(),
+                pr_date: $('#pr_date').val(),
+                delivery_date: $('#delivery_date').val(),
+                event_id: check_value($('#event_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                designer_id: check_value($('#designer_id').val()),
+                merchandiser_id: check_value($('#merchandiser_id').val()),
+                currency_id: check_value($('#currency_id').val()),
+                delivery_unit_id: check_value($('#delivery_unit_id').val()),
+                delivery_unit_address: $('#delivery_unit_address').val(),
+                remarks: $('#remarks').val(),
+                supplier_id: check_value($('#supplier_id').val()),
+                supplier_address: $('#supplier_address').val(),
+                supplier_concern_person: $('#supplier_concern_person').val(),
+                terms_condition_list: $('#terms_condition_list').val(),
+                test_requirements_list: $('#test_requirements_list').val(),
+                document_list: $('#document_list').val(),
+                approved_by: check_value($('#approved_by').val()),
+                approve_date: $('#approve_date').val(),
+                approve_remarks: $('#approve_remarks').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                gen_item_structure_group_id: check_value($('#gen_item_structure_group_id').val()),
+                is_acknowledged: $('#is_acknowledged').val(),
+                acknowledged_by: check_value($('#acknowledged_by').val()),
+                acknowledged_date: $('#acknowledged_date').val(),
+                acknowledged_remarks: $('#acknowledged_remarks').val(),
+                is_submitted: check_value($('#is_submitted').val()),
+                is_approved: check_value($('#is_approved').val()),
+                det_list: $('#det_list').val(),
+
+            }
+
+            var obj_TranBpEvent = {
+                tran_bp_event_id: check_value($('#tran_bp_event_id').val()),
+                event_id: check_value($('#event_id').val()),
+                event_gross_sales: $('#event_gross_sales').val(),
+                readygoods_qnty: check_value($('#readygoods_qnty').val()),
+                readygoods_value: $('#readygoods_value').val(),
+                added_by: check_value($('#added_by').val()),
+                updated_by: check_value($('#updated_by').val()),
+                date_added: $('#date_added').val(),
+                date_updated: $('#date_updated').val(),
+                tran_bp_year_id: check_value($('#tran_bp_year_id').val()),
+                event_month_list_json: $('#event_month_list_json').val(),
+                event_discount_amount: $('#event_discount_amount').val(),
+                event_net_amount: $('#event_net_amount').val(),
+
+            }
+
+            var obj_TranCutting = {
+                tran_cutting_id: check_value($('#tran_cutting_id').val()),
+                tran_pp_meeting_id: check_value($('#tran_pp_meeting_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                event_id: check_value($('#event_id').val()),
+                style_code: $('#style_code').val(),
+                all_processes: $('#all_processes').val(),
+                remarks: $('#remarks').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                tran_cutting_color_json: $('#tran_cutting_color_json').val(),
+                is_complete: check_value($('#is_complete').val()),
+
+            }
+
+            var obj_TranMcdRequisitionIssue = {
+                tran_mcd_requisition_issue_id: check_value($('#tran_mcd_requisition_issue_id').val()),
+                issue_no: $('#issue_no').val(),
+                requisition_slip_id: check_value($('#requisition_slip_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                remarks: $('#remarks').val(),
+                is_submitted: $('#is_submitted').val(),
+                is_full_issued: $('#is_full_issued').val(),
+                is_closed: $('#is_closed').val(),
+                is_approved: $('#is_approved').val(),
+                approved_by: check_value($('#approved_by').val()),
+                approve_date: $('#approve_date').val(),
+                approve_remarks: $('#approve_remarks').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                gen_item_structure_group_id: check_value($('#gen_item_structure_group_id').val()),
+                gen_item_structure_group_sub_id: check_value($('#gen_item_structure_group_sub_id').val()),
+                event_id: check_value($('#event_id').val()),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                mcd_requisition_issue_details: $('#mcd_requisition_issue_details').val(),
+                tran_type: check_value($('#tran_type').val()),
+
+            }
+
+            var obj_GenSeason = {
+                season_id: check_value($('#season_id').val()),
+                season_name: $('#season_name').val(),
+                short_name: $('#short_name').val(),
+                is_active: $('#is_active').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+                sequence: check_value($('#sequence').val()),
+
+            }
+
+            var obj_GenFiscalYear = {
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                year_no: check_value($('#year_no').val()),
+                year_name: $('#year_name').val(),
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val(),
+                locks: $('#locks').val(),
+                is_used: $('#is_used').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                update_by: check_value($('#update_by').val()),
+                date_updated: $('#date_updated').val(),
+
+            }
+
+
+
+            var obj_GenSeasonEventConfig = {
+                event_id: check_value($('#modalcontent #event_id').val()),
+                season_id: check_value($('#modalcontent #season_id').val()),
+                fiscal_year_id: check_value($('#modalcontent #fiscal_year_id').val()),
+                start_date: $('#modalcontent #start_date').val(),
+                start_month_id: check_value($('#modalcontent #start_month_id').val()),
+                end_month_id: check_value($('#modalcontent #end_month_id').val()),
+                event_title: $('#modalcontent #event_title').val(),
+                is_active: $('#modalcontent #is_active').val(),
+                event_sequence: check_value($('#modalcontent #event_sequence').val()),
+                end_date: $('#modalcontent #end_date').val(),
+
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+
+                ajaxPostObjectHandler("/GenSeasonEventConfig/UpdateGenSeasonEventConfig", obj_GenSeasonEventConfig, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenSeasonEventConfigData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteGenSeasonEventConfig(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_GenSeasonEventConfig = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+                ajaxPostObjectHandler("/GenSeasonEventConfig/DeleteGenSeasonEventConfig", obj_GenSeasonEventConfig, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenSeasonEventConfigData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                }, true);
+
+            });
+        }
+
+        $(function () {
+
+            LoadGenSeasonEventConfigData();
+
+        });
+
+        function LoadGenSeasonEventConfigData() {
+            var dt = $("#DTGenSeasonEventConfig").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/GenSeasonEventConfig/GetGenSeasonEventConfigData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("event_id", data.event_id);
+
+                },
+                "columns": [
+
+                    { "data": "year_name", "name": "year_name", "autoWidth": true },
+                    { "data": "season_name", "name": "season_name", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "start_date", "name": "start_date", "autoWidth": true },
+                    { "data": "end_date", "name": "end_date", "autoWidth": true },
+                 
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

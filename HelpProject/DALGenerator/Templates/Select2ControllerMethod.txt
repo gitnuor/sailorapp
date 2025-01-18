@@ -1,0 +1,150 @@
+using EPYSLSAILORAPP.Application.DTO.BusinessPlanning;
+using EPYSLSAILORAPP.Application.Interface;
+using EPYSLSAILORAPP.Application.Interface.BusinessPlanning;
+using EPYSLSAILORAPP.Application.Interface.Common;
+using EPYSLSAILORAPP.Domain.DTO;
+using EPYSLSAILORAPP.Domain.Entity;
+using EPYSLSAILORAPP.Domain.Security;
+using EPYSLSAILORAPP.Domain.Statics;
+using EPYSLSAILORAPP.Infrastructure.Services;
+using EPYSLSAILORAPP.Infrastructure.Services.Common;
+using k8s.KubeConfigModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using ServiceStack;
+using Supabase.Gotrue;
+using System.Collections.Generic;
+using System.Web.Providers.Entities;
+
+namespace EPYSLSAILORAPP.Controllers
+{
+    public class Select2Controller : Controller
+    {
+      
+        private readonly I{ServiceName}Service _{ServiceName}Service;
+       
+        private readonly IConfiguration _configuration;
+
+       
+        public Select2Controller(
+			I{ServiceName}Service {ServiceName}Service
+			, IConfiguration configuration
+            )
+        {
+            
+            _{ServiceName}Service = {ServiceName}Service;
+            
+            _configuration = configuration;
+
+
+        }
+       
+
+        [IgnoreAntiforgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> {TableName}DetailList(int? pageSize, int? pageNum, string searchTerm = "")
+        {
+          
+            try
+            {
+               
+                var filter = new DtParameters();
+                filter.Start = (pageNum.Value - 1)*10;
+                filter.Length = pageSize.Value;
+                filter.Search = new DtSearch();
+                filter.Search.Value = searchTerm;
+
+                var ListData = await _{ServiceName}Service.GetPagedData(filter);
+
+                var list = (from t in ListData
+                            select new
+                            {
+                                Id = t.{ValueField},
+                                Text = t.{TextField}
+
+                            }).ToList();
+
+                var result = new
+                {
+                     recordstotal = ListData.Count > 0 ? ListData[0].TotalRecord : 0,
+                    data = list
+                };
+
+                return Json(result);
+
+
+
+                return Json("");
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+		
+
+		  public async Task<List<{EntityName}_DTO>> GetAllPagedDataForSelect2(DtParameters param)
+        {
+            try
+            {
+                await _connectionSupabse.InitializeAsync();
+
+                var sort_column = ""; var sort_order = "";
+
+                if (!string.IsNullOrEmpty(param.Search.Value))
+                {
+
+                    var TotalRecord = await _connectionSupabse
+                           .From<{EntityName}_entity>()
+                           .Select(x => new object[] { x.{ValueField} })
+                           .Filter(p => p.{TextField}, Operator.ILike, "%" + param.Search.Value + "%")
+                           .Count(CountType.Exact);
+
+                    var response = await _connectionSupabse.From<{EntityName}_entity>()
+                   .Select("*")
+                   .Filter(p => p.{TextField}, Operator.ILike, "%" + param.Search.Value + "%")
+                   .Order("{TextField}", Ordering.Ascending)
+                   .Range(param.Start, param.Start + param.Length - 1)
+                   .Get();
+
+                    var list= JsonConvert.DeserializeObject<List<{EntityName}_DTO>>(response.Content);
+
+                    list.ForEach(p=> p.TotalRecord= TotalRecord);
+
+                    return list;
+                }
+                else
+                {
+                    var TotalRecord = await _connectionSupabse
+                          .From<{EntityName}_entity>()
+                          .Select(x => new object[] { x.gen_item_master_id })
+                          .Count(CountType.Exact);
+
+                    var response = await _connectionSupabse.From<{EntityName}_entity>()
+                   .Select("*")
+                   .Order("{TextField}", Ordering.Ascending)
+                   .Range(param.Start, param.Start + param.Length - 1)
+                   .Get();
+
+                    var list = JsonConvert.DeserializeObject<List<{EntityName}_DTO>>(response.Content);
+
+                    list.ForEach(p => p.TotalRecord = TotalRecord);
+
+                    return list;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }
+
+
+
+     
+    }
+}

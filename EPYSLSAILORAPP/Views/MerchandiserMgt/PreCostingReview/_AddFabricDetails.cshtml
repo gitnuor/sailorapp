@@ -1,0 +1,253 @@
+﻿@using EPYSLSAILORAPP.Domain;
+@using Newtonsoft.Json;
+@model List<EPYSLSAILORAPP.Domain.RPC.rpc_sp_get_mapped_segment_by_gen_item_structure_group_sub_id_DTO>;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+
+}
+
+
+<form method="POST" id="frmAddFabric" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box">
+                <div class="row">
+                    <div class="col-md-4">
+
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Group Name :</label>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+
+                        <div class="form-group">
+
+                            <input disabled style="width:100%" id="txtsubgroupname" type="text" min="0" class="border-gray-200 form-control " />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Order Quantity :</label>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+
+                        <div class="form-group">
+
+                            <input disabled style="width:100%" id="txtorderqnty" type="text" min="0" class="border-gray-200 form-control " />
+
+                        </div>
+                    </div>
+                </div>
+                @{
+                    var segment_id = 1;
+                }
+                @foreach (var single in Model)
+                {
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">@single.gen_segment_name</label>
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                            @await Component.InvokeAsync("S2GenSegmentDetl", new
+                            {
+                            ddlId = "segment_det"+segment_id.ToString()+"_id",
+                            SegmentGroupID=single.gen_segment_id.ToString(),
+                            selectedvalue = "",
+                            cssclass = "form-control S2GenSegmentDetl",
+                            isRequired = true,
+                            isReadOnly = false,
+                            placeholder = "Select Construction",
+                            preloaded="",
+                            model_parentid="modalcontaent_commmon_popup"
+                            })
+
+                            </div>
+                        </div>
+                    </div>
+                    segment_id++;
+                }
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Measurement Type</label>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+
+                            @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                            ddlId = "ddl_measurement_unit",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.list_measurement)),
+                            selectedvalue = "",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = true,
+                            placeholder = "Select Measurement Unit"
+                            })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Consumption Per Pc (Kg/Yrd)</label>
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <input id="txtorder_quantity" onchange="CalcTotalFabricConsumption(this);" style="width:100%" type="number" class="border-gray-200 form-control " />
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Allowance (%)</label>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <input id="txtWastage" onchange="CalcTotalFabricConsumption(this);" style="width:100%" type="number" class="border-gray-200 form-control " />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Total Req (Kg/Yrd)</label>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <input id="txtTotalRequirement" disabled style="width:100%" type="number" class="border-gray-200 form-control " />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Cost Per Unit</label>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <input id="txtCostPerUnit" onchange="CalcTotalFabricPrice(this);" style="width:100%" type="number" class="border-gray-200 form-control " />
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Total Cost</label>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <input id="txtTotalCost" disabled style="width:100%" type="number" class="border-gray-200 form-control " />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Placement</label>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+
+                            @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                            ddlId = "ddl_placement",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.list_placement)),
+                            selectedvalue = "",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = (ViewBag.item_structure_group_id==Convert.ToInt64(Enum_gen_item_structure_group.Fabric)?true:false ),
+                            placeholder = "Select Placement"
+                            })
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" isSaveOrUpdate="1" onclick="SaveFabric(this,@ViewBag.item_structure_group_id,@ViewBag.gen_item_structure_group_sub_id.ToString());" class="btn btn-primary" id="btnAddFabric"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Fabric  </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;" id="DTTranFabricDetails" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th style="width:350px;"><label class="labelNormal">Fabric Details</label></th>
+                            <th s><label class="labelNormal  ">Measurement Type</label></th>
+                            <th><label class="labelNormal ">Con/Pc</label></th>
+
+                            <th><label class="labelNormal "> Allowange(%)</label></th>
+                            <th><label class="labelNormal "> Total Requirement</label></th>
+                            <th><label class="labelNormal "> Price Per Unit</label></th>
+
+                            <th><label class="labelNormal ">Total Price</label></th>
+
+                            <th><label class="labelNormal ">Action</label></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+

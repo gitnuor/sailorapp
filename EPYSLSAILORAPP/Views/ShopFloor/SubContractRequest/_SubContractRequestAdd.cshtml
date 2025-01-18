@@ -1,0 +1,416 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Application.DTO.RPC.rpc_tran_sub_contract_request_DTO;
+@{
+    ViewBag.Title = "Sub Contract Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <input type="hidden" id="contactPerson" value="@ViewBag.contactPerson">
+    <input type="hidden" id="supplieraddress" value="@ViewBag.supplieraddress">
+    <input type="hidden" id="tran_production_process_id" value="@Model.tran_production_process_id">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Sub Contract Request</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-8 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Techpack</label>
+                        <input style="width:100%" readonly asp-for="techpack_number" type="text" class="border-#d1cccc-200 form-control " />
+                        <input type="hidden" id="techpack_id" value="@Model.techpack_id">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-8 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;"> Style Type </label>
+                        <input style="width:100%" readonly asp-for="style_item_product_category" id="style_item_product" type="text" class="border-#d1cccc-200 form-control " />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group1">
+                        <label class="col-sm-8 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Supplier </label>
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "supplier_id",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.supplier_name),
+                                selectedvalue = "",
+                                cssclass = "form-control",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "select"
+                            })
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-8 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Supplier Concern</label>
+                        <input style="width:100%" readonly id="supplier_concern_person" type="text" class="border-#d1cccc-200 form-control " />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-8 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Supplier Address</label>
+                        <input style="width:100%" readonly id="supplier_address" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group1">
+                        <button style="width:70px;margin-top: 23px;" type="button" class="btn btn-success" onclick="AddSubContractRequestDetail();"><i class="fa fa-file-open"></i>&nbsp;Add</button>&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+            <div class="row"></div><div class="row"></div><div class="row"></div>
+
+            <div class="row" id="BatchAdd">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                            <div class="box">
+                                <div class="row" style="">
+
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <table id="DTSubContractRequestDetail" class="table table-striped table-bordered table-hover table-sm" style="padding:0 !important">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align:center"><label class="labelNormal">Color Code</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Color</label> </th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Color Qty</label></th>
+                                                        <th style="text-align:center;width:300px"><label class="labelNormal"> Process Name</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Sub Con. Qty</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Rate</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Value</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Already Subcon Qty</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Balence</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Remarks</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Action</label></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button style="width:150px;" type="button" class="btn btn-success " id="SaveSubContractRequest1" onclick="SaveSubContractRequest(this);"><i class="fa fa-file-open"></i>&nbsp;Save Draft</button>&nbsp;&nbsp;&nbsp;
+                    <button style="width:180px; display:none" type="button" class="btn btn-success " id="SaveSubContractRequest2" onclick="SaveSubContractRequest(this);"><i class="fa fa-file-open"></i>&nbsp;Proposed For Approve</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</form>
+
+
+<div id="modalcontainer_detl" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 50% !important; max-width: 50% !important; font-size: 14px; ">
+        <div class="modal-content" style="overflow-y: scroll;">
+
+            <div class="modal-header" style="padding:0px;background-color: #c9b426;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Sub Contract Request
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose_detl" class="btn btn-danger btn-md cancel" onclick="closePopup_detl();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent_detl">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+   
+    var batch_no = 0;
+    var colorRateTypeMap = {};
+
+    function create(color) {
+        color_code = color;
+        $("#BatchAdd").show();
+    }
+    function AddSubContractRequestDetail() {
+        
+        $('#modalcontainer_detl').modal("show");
+        var tran_production_process_id = $("#tran_production_process_id").val();
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/SubContractRequest/GetSubcontractColorRateWiseDetail?tran_production_process_id=" + tran_production_process_id, null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 0);
+
+            $('#modalcontent_detl').html(data);
+            $('#modalcontainer_detl').modal({ backdrop: 'static', keyboard: false });
+            $('#modalcontainer_detl').modal("show");
+
+        });
+    }
+
+    function AddColorSubContractRequestDetails(btn) {
+        
+
+        var techpack_id = $('#techpack_id').val();
+        var colorCode = $('#ddl_color').val();
+        var rateType = $('#ddlrateType').val();
+
+
+
+
+
+        ajaxGetHandler("/SubContractRequest/GetSubContractDetailAll?techpack_id=" + techpack_id + "&colorCode=" + encodeURIComponent(colorCode), null, function (data) {
+
+
+            console.log(data);
+            console.log(data.data);
+
+            if (color_List.some(item => item.colorCode === colorCode)) {
+                showErrorAlert("Alert", "Color Already Added", "OK");
+                return;
+            }
+
+            color_List.push({ colorCode: colorCode, data: data.data });
+            console.log("Updated Color List:", color_List);
+            
+
+            var table = document.getElementById("DTSubContractRequestDetail").getElementsByTagName('tbody')[0];
+
+            if (rateType == 1) {
+
+                
+
+                
+                data.data.forEach(function (obj, index) {
+
+                    var newRow = table.insertRow(table.rows.length);
+
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    var cell3 = newRow.insertCell(2);
+                    var cell4 = newRow.insertCell(3);
+                    var cell5 = newRow.insertCell(4);
+                    var cell6 = newRow.insertCell(5);
+                    var cell7 = newRow.insertCell(6);
+                    var cell8 = newRow.insertCell(7);
+                    var cell9 = newRow.insertCell(8);
+                    var cell10 = newRow.insertCell(9);
+                    var cell11 = newRow.insertCell(10);
+
+                    cell1.innerHTML = "<input disabled type='text' class='form-control color_code' value='" + obj.color_code + "'>";
+                    cell2.style.backgroundColor = obj.color_code;
+                    cell3.innerHTML = "<input disabled type='number'   class='form-control colorQty'    value='" + obj.color_qty + "'>";
+                    cell4.innerHTML = "<input disabled type='text'   class='form-control process_name'    value='" + obj.production_process_name + "'>";
+                    cell5.innerHTML = "<input type='number' class='form-control sub_con_qty' >";
+                    cell6.innerHTML = "<input type='number' class='form-control rate' onchange='updateBalanQty(this);'>";
+                    cell7.innerHTML = "<input type='number' class='form-control total'>";
+                    cell8.innerHTML = "<input type='number' class='form-control already'>";
+                    cell9.innerHTML = "<input type='number' class='form-control balqnty'>";
+                    cell10.innerHTML = "<input type='text' class='form-control remarks'>";
+                    cell11.innerHTML = "<button class='btn btn-danger' aria-hidden='true' onclick='deleteRow(this, \"" + obj.color_code + "\")'><i class='fa fa-trash' aria-hidden='true'></i></button>";
+                    data = {};
+
+                    // cell11.innerHTML = "<input disabled style='display:none;' type='text'   class='form-control batchIdhidden'     value=" + obj.tran_cutting_color_batch_id + ">";
+
+
+
+                });
+
+
+
+
+
+            }
+            else {
+                
+
+                
+
+
+                data.data.forEach(function (obj, index) {
+                    // Split production_process_name by comma
+                    var productionProcesses = obj.production_process_name.split(',');
+
+                    // Iterate over each production process name
+                    productionProcesses.forEach(function (process) {
+                        var newRow = table.insertRow(table.rows.length);
+
+                        var cell1 = newRow.insertCell(0);
+                        var cell2 = newRow.insertCell(1);
+                        var cell3 = newRow.insertCell(2);
+                        var cell4 = newRow.insertCell(3);
+                        var cell5 = newRow.insertCell(4);
+                        var cell6 = newRow.insertCell(5);
+                        var cell7 = newRow.insertCell(6);
+                        var cell8 = newRow.insertCell(7);
+                        var cell9 = newRow.insertCell(8);
+                        var cell10 = newRow.insertCell(9);
+                        var cell11 = newRow.insertCell(10);
+
+                        cell1.innerHTML = "<input disabled type='text' class='form-control color_code' value='" + obj.color_code + "'>";
+                        cell2.style.backgroundColor = obj.color_code;
+                        cell3.innerHTML = "<input disabled type='number' class='form-control colorQty' value='" + obj.color_qty + "'>";
+                        cell4.innerHTML = "<input disabled type='text' class='form-control process_name' value='" + process.trim() + "'>";
+                        cell5.innerHTML = "<input type='number' class='form-control sub_con_qty' >";
+                        cell6.innerHTML = "<input type='number' class='form-control rate' onchange='updateBalanQty(this);'>";
+                        cell7.innerHTML = "<input type='number' class='form-control total'>";
+                        cell8.innerHTML = "<input type='number' class='form-control already'>";
+                        cell9.innerHTML = "<input type='number' class='form-control balqnty'>";
+                        cell10.innerHTML = "<input type='text' class='form-control remarks'>";
+                        cell11.innerHTML = "<button class='btn btn-danger' aria-hidden='true' onclick='deleteRow(this, \"" + obj.color_code + "\")'><i class='fa fa-trash' aria-hidden='true'></i></button>";
+                        data = {};
+                    });
+
+
+                });
+
+
+
+
+
+            }
+
+        });
+
+    }
+
+    function deleteRow(btn, colorCode) {
+       
+        var row = btn.parentNode.parentNode;
+        var table = row.parentNode;
+
+        
+        table.removeChild(row);
+
+        
+        color_List = color_List.filter(item => item.colorCode !== colorCode);
+
+        console.log("Updated Color List after deletion:", color_List);
+    }
+
+
+
+    function updateBalanQty(input) {
+        
+        const row = input.closest('tr');
+        const sub_con_qty = parseInt(row.querySelector('.sub_con_qty').value) || 0;
+        const rate = parseInt(row.querySelector('.rate').value) || 0;
+        const value = parseInt(row.querySelector('.total').value) || 0;
+        const alreadysub_con_qty = parseInt(row.querySelector('.already').value) || 0;
+        const balqnty = parseInt(row.querySelector('.balqnty').value) || 0;
+
+        row.querySelector('.total').value = sub_con_qty * rate;
+        const totalsub_con_qty = alreadysub_con_qty + sub_con_qty;
+        const sub_conBalQty = sub_con_qty - totalsub_con_qty;
+
+        row.querySelector('.balqnty').value = sub_conBalQty;
+
+    }
+
+    function closePopup_detl() {
+        
+        $('#modalcontent_detl').html("");
+        $('#modalcontainer_detl').modal("hide");
+        $('#modalcontainer_detl').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+    
+</script>

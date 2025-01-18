@@ -1,0 +1,209 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_shop_floor_return_DTO;
+@{
+	ViewBag.Title = "ShopFloorReturn Add";
+	Layout = null;
+}
+<style>
+	#toolbarId select {
+		font-size: 11px !important;
+	}
+
+	.btninnerClose {
+		color: #a52711;
+		width: 26px;
+		border: 1px solid #6f2d23;
+		font-size: 22px;
+		margin-top: 6px;
+	}
+
+	.dataTables_wrapper {
+		margin-top: -40px;
+	}
+
+	.select_style {
+		height: 30px;
+	}
+
+	.dataTable select {
+		height: 25px !important;
+		font-size: 10px !important;
+	}
+
+	.card-body {
+		padding-bottom: 0px;
+		padding-top: 0px;
+		padding: 0rem 0rem;
+	}
+
+	.box {
+		margin-bottom: 0.5rem;
+	}
+
+	.box-header {
+		padding-top: 0.25rem;
+		padding-bottom: 0.25rem;
+		font-weight: 500;
+		font-size: 12px;
+	}
+
+	.box-title {
+		font-size: 12px;
+		line-height: 1rem;
+	}
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+	<div class="card">
+		<div class="card-header">
+			<h6 class="card-title">Floor Return</h6>
+
+
+			
+
+		</div>
+		<!-- /.card-header -->
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-4">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Issue Number</label>
+					<input type="hidden" id="tran_shop_floor_return_id" value="@Model.tran_shop_floor_return_id">
+					<input style="width:100%" readonly asp-for="issue_no" type="text" class="border-#d1cccc-200 form-control " />
+
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Issue Date</label>
+						<input style="width:100%" readonly asp-for="issue_date" type="date" class="border-#d1cccc-200 form-control " />
+
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Requisition Slip No</label>
+						<input style="width:100%" readonly asp-for="requisition_slip_no" type="text" class="border-#d1cccc-200 form-control " />
+
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Return No</label>
+						<input style="width:100%" readonly asp-for="return_no" type="text" class="border-#d1cccc-200 form-control " />
+
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Return Date</label>
+						<input style="width:100%" readonly asp-for="return_date" type="date" class="border-#d1cccc-200 form-control " />
+
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Return By</label>
+						<input style="width:100%" readonly asp-for="return_by" type="text" class="border-#d1cccc-200 form-control " />
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techpack Number</label>
+						<input style="width:100%" readonly asp-for="techpack_number" type="text" class="border-#d1cccc-200 form-control " />
+
+
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="form-group">
+						<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Remarks</label>
+						<input style="width:100%" readonly asp-for="remarks" type="text" class="border-#d1cccc-200 form-control " />
+						<span asp-validation-for="remarks" class="text-danger"></span>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="box">
+
+						<table style="font-size:10px;" id="DTItemDetails" class=" table dataTable table-striped table-bordered" cellspacing="0">
+							<thead>
+								<tr>
+
+									<th><label class="labelNormal">Item Code</label></th>
+									<th><label class="labelNormal">Item Name</label></th>
+									<th><label class="labelNormal">UOM</label></th>
+									<th><label class="labelNormal">Issued Quantity</label></th>
+									<th><label class="labelNormal">Return Quantity</label></th>
+							
+
+								</tr>
+							</thead>
+							<tbody>
+
+								@foreach (var obj in Model.details)
+								{
+									<tr>
+										<td><input disabled type='number' class='form-control item_id' value="@obj.item_id"></td>
+										<td><input disabled type='text' class='form-control item_name' value="@obj.item_name"></td>
+										<td><input disabled type='text' class='form-control measurement_unit_name' value="@obj.measurement_unit_name"></td>
+										<td style="display:none"><input disabled type='hidden' class='form-control measurement_unit_id' value="@obj.measurement_unit_id"></td>
+										<td><input disabled type='number' class='form-control issue_quantity' value="@obj.issue_quantity"></td>
+										<td><input type='number' disabled class='form-control return_quantity' value="@obj.return_quantity"></td>
+
+
+
+									
+									</tr>
+
+
+								}
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="row">
+
+				<div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+					@* <button type="button" class="btn btn-danger" onclick="SaveShopFloorReturn(this,2);"><i class="fa fa-file-open"></i>&nbsp;Reject</button> *@
+					<button type="button" class="btn btn-success" onclick="SaveShopFloorReturn(this,1);"><i class="fa fa-file-open"></i>&nbsp;Approve</button>
+					
+
+				</div>
+			</div>
+		</div>
+		<!-- /.card-body -->
+	</div>
+
+
+</form>
+
+
+
+
+<script>
+	function deleteRow(button) {
+		var row = button.parentNode.parentNode;
+		row.parentNode.removeChild(row);
+	}
+</script>

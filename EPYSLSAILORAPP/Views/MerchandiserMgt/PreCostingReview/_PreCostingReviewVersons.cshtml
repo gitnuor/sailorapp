@@ -1,0 +1,1248 @@
+﻿@using EPYSLSAILORAPP.Domain.RPC;
+@using EPYSLSAILORAPP.Domain;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.RPC.rpc_proc_sp_get_pre_costing_modification_request_data__DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 14px;
+        line-height: 1rem;
+        font-weight: bold;
+    }
+
+</style>
+<input type="hidden" value="@Model.designer_member_id" id="designer_member_id">
+<input type="hidden" value="@Model.tran_pre_costing_review_id" id="tran_pre_costing_review_id">
+<input type="hidden" value="@Model.tran_pre_costing_id" id="tran_pre_costing_id">
+
+<input type="hidden" id="pre_costing_date" value="@Model.pre_costing_date.Value.Date.ToString("yyyy-MM-dd")">
+<input type="hidden" value="@Model.tran_va_plan_detl_id" id="tran_va_plan_detl_id">
+<input type="hidden" value="@Model.tran_sample_order_id" id="tran_sample_order_id">
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="box" style="margin-top:7px;">
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="box">
+                    <div class="row" style="">
+
+                        <div class="col-md-4">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Name</label>
+
+                                <input style="width:100%" disabled asp-for="style_item_product_name" type="text" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Details</label>
+
+                                <input style="width:100%" asp-for="style_product_details" type="text" disabled class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="">
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Order Number</label>
+
+                                <input style="width:100%" disabled asp-for="tran_sample_order_number" type="text" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sample Order Date :</label>
+
+
+                                <input disabled style="width:100%" asp-for="order_date" type="date" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Date :</label>
+
+                                <input disabled style="width:100%" asp-for="delivery_date" type="date" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Unit :</label>
+
+                                @await Component.InvokeAsync("GenericDropdownList", new
+                                {
+                                ddlId = "delivery_unit_id",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(Model.List_Unit),
+                                selectedvalue = Model.delivery_unit_id.ToString(),
+                                cssclass = "form-control  ",
+                                enable = false,
+                                isRequired = true,
+                                placeholder = "Select Delivery Unit"
+                                })
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="row" style="">
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Designer :</label>
+
+                                <input style="width:100%" disabled value="@Model.name" type="text" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Quantity :</label>
+
+                                <input disabled style="width:100%" asp-for="pre_costing_quantity" type="number" min="0" class="border-#d1cccc-200 form-control style_quantity" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Code :</label>
+
+                                <input style="width:100%" disabled asp-for="style_code" type="text" min="0" class="border-gray-200 form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sample Quantity :</label>
+
+                                <input disabled style="width:100%" asp-for="order_quantity" type="number" min="0" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row" style="">
+
+                        <div class="col-md-12" style="margin-bottom: 7px;">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note :</label>
+
+                                <input disabled style="width:100%" asp-for="remarks" type="text" class="border-#d1cccc-200 form-control" />
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="col-md-5">
+                <input type="file" style="display:none" id="attachments" multiple />
+
+                <div class="box">
+                    <div class="row" id="frames" style="max-height: 312px;  overflow-y: scroll;">
+                        @{
+                            var image_index = 0;
+                        }
+                        @if (Model.List_SampleOrderFiles != null)
+                        {
+                            @foreach (var obj in Model.List_SampleOrderFiles.Where(p => p.imagetype == Image_Position_Type.Front.ToString() || p.imagetype == Image_Position_Type.Back.ToString()))
+                            {
+                                <div index="@image_index" class="col-lg-4 dvSingleAttachment">
+                                    <img onclick="ShowImage(this);" style="width: 180px; height: 200px;" src="@obj.base64string" />
+                                    <a mailattachmentid="-1" index="' + file.fileindex + '" class=" attachmentLink @image_index " onclick="removeAtachments(this,@image_index)"></a>'
+                                    <span style="color:blue;text-decoration:underline;overflow: hidden;display: inherit;height: 45px;">@obj.filename</span>
+                                </div>
+                                image_index++;
+                            }
+                        }
+                    </div>
+
+                </div>
+                <div class="box">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12" id="tab_bar_style">
+                <ul id="tab_precosting" class="nav nav-tabs">
+                    <li class="active" tab_index="1">
+                        <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">Information</a>
+                    </li>
+                    <li class="" tab_index="2">
+                        <a href="#det2" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Detail Info</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="det1" tabpane_index="1">
+                        <div class="row" style=" margin-left:-1px!important; border: 1px solid #efe7e7;">
+                            <div class="col-md-12" style="margin-top: 7px;">
+
+                                <div class="box">
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+
+                                            <div class="row" style="">
+
+                                                <div class="col-md-12">
+                                                    @{
+                                                        var index = 0;
+                                                    }
+
+                                                    <table style="font-size:10px;" id="DTTranPreCostingDetail" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th><label class="labelNormal"> Item</label></th>
+                                                                <th><label class="labelNormal  ">M Unit</label></th>
+                                                                <th><label class="labelNormal  ">Total Price</label></th>
+                                                                <th><label class="labelNormal ">Action Type</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        @if (Model.List_Mapped_Structure != null)
+                                                        {
+                                                            foreach (var objsinglegroup in Model.List_Mapped_Structure)
+                                                            {
+
+                                                                <tr style="margin-top:20px;">
+                                                                    <td colspan="1">
+                                                                        <h6 class="box-title">@objsinglegroup.structure_group_name :</h6>
+                                                                    </td>
+
+                                                                    <td colspan="3">
+                                                                        <input class="btn btn-primary" type="button" value="Create" onclick="AddNewFabric(this,@objsinglegroup.item_structure_group_id,null,null,null,null);">
+
+                                                                    </td>
+
+                                                                </tr>
+                                                                @if (objsinglegroup.List_sub_group.Count > 0)
+                                                                {
+
+                                                                    @foreach (var objoption in objsinglegroup.List_sub_group.Where(p => p.item_structure_group_id == objsinglegroup.item_structure_group_id))
+                                                                    {
+                                                                        <tr class="tr_subgroup" default_measurement_unit_detail_id="@objoption.default_measurement_unit_detail_id" measurement_unit_id='@objoption.measurement_unit_id' sub_group_name="@objoption.sub_group_name" item_structure_group_id="@objoption.item_structure_group_id" gen_item_structure_group_sub_id="@objoption.gen_item_structure_group_sub_id">
+                                                                        </tr>
+
+
+                                                                    }
+
+                                                                }
+
+                                                                index++;
+                                                            }
+
+                                                        }
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-6">
+
+                                            <div class="box">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <button type="button" class="btn btn-primary btnAddColor" onclick="btnAddColorClick(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Color</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="box">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <table id="dtcolorcodestyle" class="dtcolorcodestyle table dataTable table-striped table-bordered no-footer" cellspacing="0">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>
+                                                                        <label class="  labelNormal">SL</label>
+                                                                    </th>
+                                                                    <th>
+                                                                        <label class="labelNormal  ">Color Code</label>
+                                                                    </th>
+
+                                                                    @foreach (var objSize in Model.List_plan_detl_style.FirstOrDefault().List_ColorInfo[0].List_ColorSizeInfo)
+                                                                    {
+                                                                        <th style="text-align:right">
+                                                                            <label class="labelNormal ">@objSize.style_product_size</label>
+                                                                        </th>
+                                                                    }
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @{
+                                                                    var color_index = 1;
+                                                                }
+
+                                                                @for (var i = 0; i < Model.List_detl_style_color.Count; i++)
+                                                                {
+                                                                    var objColor = Model.List_detl_style_color[i];
+                                                                    var objColor_old = Model.List_detl_style_color_Old.
+                                                                    Where(p => p.tran_va_plan_detl_style_color_id == objColor.tran_va_plan_detl_style_color_id)
+                                                                    .FirstOrDefault();
+
+                                                                    string tr_id = color_index == 1 ? "tr_first" : "";
+
+                                                                    <tr id="@tr_id">
+
+                                                                        <td class="row_sl" style="text-align: center;">@color_index.ToString()</td>
+                                                                        <td style="text-align: center;">
+                                                                            @if (objColor_old == null)
+                                                                            {
+                                                                                <span style="color:blue;">(New)<br /></span>
+
+                                                                            }
+                                                                            else if (objColor_old.color_code != objColor_old.color_code)
+                                                                            {
+
+                                                                                <input type="color" class="border-gray-200 rounded-sm txtColorPicker" value="@objColor_old.color_code" style="width:30%;float:left;" />
+                                                                                <span style="width:65%;float:right;">(@objColor_old.color_code)</span>
+                                                                                <br />
+                                                                                <input type="color" class="border-gray-200 rounded-sm txtColorPicker" value="@objColor.color_code" style="width:30%;float:left;" onchange="LoadColorFromBox(this)" />
+                                                                                <input value="@objColor.color_code" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" type="text" tran_va_plan_detl_style_id="@objColor.tran_va_plan_detl_style_id" tran_va_plan_detl_style_color_id="@objColor.tran_va_plan_detl_style_color_id" class="border-gray-200 rounded-sm txtColorCode" style="width:65%;float:right;" />
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span style="color:green;font-weight:bold;">(Unchanged)<br /></span>
+                                                                                <input type="color" class="border-gray-200 rounded-sm txtColorPicker" value="@objColor.color_code" style="width:30%;float:left;" onchange="LoadColorFromBox(this)" />
+                                                                                <input value="@objColor.color_code" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" type="text" tran_va_plan_detl_style_id="@objColor.tran_va_plan_detl_style_id" tran_va_plan_detl_style_color_id="@objColor.tran_va_plan_detl_style_color_id" class="border-gray-200 rounded-sm txtColorCode" style="width:65%;float:right;" />
+
+                                                                            }
+                                                                        </td>
+
+                                                                        @* @foreach (var objSize in objColor.List_ColorSizeInfo) *@
+                                                                        @for (var rowsize = 0; rowsize < objColor.List_ColorSizeInfo.Count; rowsize++)
+                                                                        {
+                                                                            var objSize = objColor.List_ColorSizeInfo[rowsize];
+                                                                            var objSize_old = objColor_old != null ? objColor_old.List_ColorSizeInfo.
+                                                                            Where(p => p.tran_va_plan_detl_style_color_size_id == objSize.tran_va_plan_detl_style_color_size_id)
+                                                                            .FirstOrDefault() : null;
+
+                                                                            <td style="text-align: center;">
+                                                                                @if (objSize_old == null)
+                                                                                {
+
+                                                                                    <input style="color:blue;width:100%;font-weight:bold;" value="@objSize.style_color_size_quantity" style_product_size_group_detid="@objSize.style_product_size_group_detid" tran_va_plan_detl_style_color_id="@objSize.tran_va_plan_detl_style_color_id" tran_va_plan_detl_style_color_size_id="@objSize.tran_va_plan_detl_style_color_size_id" style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="@objSize.style_product_size_group_detid" onchange="ColorSizeQuantityChanged(this)" class="border-gray-200 rounded-sm txtColorSizeQuantity" />
+
+                                                                                }
+                                                                                else if (objSize.style_color_size_quantity != objSize_old.style_color_size_quantity)
+                                                                                {
+                                                                                    <span style="color:red;">(@objSize_old.style_color_size_quantity)</span>
+                                                                                    <input style="color:green;width:100%;font-weight:bold;" value="@objSize.style_color_size_quantity" style_product_size_group_detid="@objSize.style_product_size_group_detid" tran_va_plan_detl_style_color_id="@objSize.tran_va_plan_detl_style_color_id" tran_va_plan_detl_style_color_size_id="@objSize.tran_va_plan_detl_style_color_size_id" style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="@objSize.style_product_size_group_detid" onchange="ColorSizeQuantityChanged(this)" class="border-gray-200 rounded-sm txtColorSizeQuantity" />
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span style="color:black;">(@objSize_old.style_color_size_quantity)</span>
+
+                                                                                    <input style="color:black;width:100%;" value="@objSize.style_color_size_quantity" style_product_size_group_detid="@objSize.style_product_size_group_detid" tran_va_plan_detl_style_color_id="@objSize.tran_va_plan_detl_style_color_id" tran_va_plan_detl_style_color_size_id="@objSize.tran_va_plan_detl_style_color_size_id" style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="@objSize.style_product_size_group_detid" onchange="ColorSizeQuantityChanged(this)" class="border-gray-200 rounded-sm txtColorSizeQuantity" />
+
+                                                                                }
+
+
+                                                                            </td>
+                                                                        }
+
+                                                                    </tr>
+
+                                                                    color_index++;
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="">
+                                                <div class="col-md-12">
+                                                    <div class="box">
+                                                        <table style="font-size:10px;" id="DTTranPreCostingDetailEmbellishment" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                            <thead>
+                                                                <tr>
+                                                                    @* <th><label class="labelNormal">SL</label></th> *@
+                                                                    <th><label class="labelNormal">Embellishment</label></th>
+                                                                    <th style="width:150px;"><label class="labelNormal  ">M. Unit</label></th>
+                                                                    <th style="width:70px;"><label class="labelNormal  ">Con/Pc</label></th>
+                                                                    <th style="width:70px;"><label class="labelNormal  ">Wastage(%)</label></th>
+                                                                    <th><label class="labelNormal  ">Total Req</label></th>
+                                                                    <th><label class="labelNormal  ">Cost/Unit</label></th>
+                                                                    <th><label class="labelNormal  ">Total Cost</label></th>
+                                                                    @*  <th><label class="labelNormal ">Action Type</label></th> *@
+
+                                                                </tr>
+                                                            </thead>
+
+
+                                                            <tr style="margin-top:20px;">
+                                                                <td colspan="8">
+                                                                    <h6 class="box-title">Embellishment :</h6>
+                                                                </td>
+
+                                                            </tr>
+
+                                                            @for (var i = 0; i < Model.List_EmbellishmentDetl.Count; i++) //Model.List_EmbellishmentDetl
+                                                            {
+                                                                var font_color = "black";
+                                                                var objsingle_embell = Model.List_EmbellishmentDetl[i];
+                                                                var objsingle_embell_old = Model.List_EmbellishmentDetl_old
+                                                                .Where(p => p.process_master_id == objsingle_embell.process_master_id).FirstOrDefault();
+                                                                var old_price = objsingle_embell_old == null ? 0 : objsingle_embell_old.total_price;
+
+                                                                <tr tran_pre_costing_id="@objsingle_embell.tran_pre_costing_id" embellishment_id="@objsingle_embell.style_embellishment_id" tran_pre_costing_item_embellishment_detail_id="@objsingle_embell.tran_pre_costing_item_embellishment_detail_id">
+                                                                    <td>
+                                                                        @if (objsingle_embell_old == null)
+                                                                        {
+                                                                            <span style="color:blue;font-weight:bold;">(New)</span>
+                                                                            <br />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span style="color:blue;font-weight:bold;">(Unchanged)</span>
+
+                                                                            <br />
+                                                                        }
+
+                                                                        @objsingle_embell.embellishment
+                                                                    </td>
+                                                                    <td>
+                                                                        @await Component.InvokeAsync("S2MeasurementUnit", new
+                                                                    {
+                                                                    ddlId = "measurement_unit"+objsingle_embell.style_embellishment_id.ToString()+"_id",
+                                                                    measurement_unit_id=objsingle_embell.gen_measurement_unit_id,
+                                                                    selectedvalue = objsingle_embell.measurement_unit_detail_id.ToString(),
+                                                                    cssclass = "form-control S2MeasurementUnit",
+                                                                    isRequired = false,
+                                                                    isReadOnly = true,
+                                                                    placeholder = "Select Construction",
+                                                                    preloaded="",
+                                                                    model_parentid="modalcontainer_common"
+                                                                    })
+
+                                                                    </td>
+                                                                    <td style="text-align:center;">
+
+                                                                        @if (objsingle_embell_old == null)
+                                                                        {
+                                                                            <input style="width:100%;color:blue;font-weight:bold;" type="number" value="@objsingle_embell.order_quantity" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+
+                                                                        }
+                                                                        else if (objsingle_embell.order_quantity != objsingle_embell_old.order_quantity)
+                                                                        {
+
+                                                                            <span style="color:red;font-weight:bold;">(@objsingle_embell_old.order_quantity.ToString())</span>
+                                                                            <input style="width:100%;color:green;" type="number" value="@objsingle_embell.order_quantity" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span style="color:black;">(@objsingle_embell_old.order_quantity.ToString())</span>
+
+                                                                            <input style="width:100%;color:black;" type="number" value="@objsingle_embell.order_quantity" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+                                                                        }
+
+                                                                    </td>
+                                                                    <td style="text-align:center;">
+                                                                        @if (objsingle_embell_old == null)
+                                                                        {
+                                                                            <input style="width:100%;color:blue;font-weight:bold;" type="number" value="@objsingle_embell.wastage" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+
+                                                                        }
+                                                                        else if (objsingle_embell.wastage != objsingle_embell_old.wastage)
+                                                                        {
+                                                                            <span style="color:red;">(@objsingle_embell_old.wastage.ToString())</span>
+                                                                            <input style="width:100%;color:green;" type="number" value="@objsingle_embell.wastage" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Wastage" />
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span style="color:black;">(@objsingle_embell.wastage)</span>
+
+                                                                            <input style="width:100%;color:black;" type="number" value="@objsingle_embell.wastage" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Wastage" />
+
+                                                                        }
+
+                                                                    </td>
+                                                                    <td style="text-align:center;">
+                                                                        @if (objsingle_embell_old == null)
+                                                                        {
+                                                                            <input style="width:100%;color:blue;font-weight:bold;" type="number" value="@objsingle_embell.total_order_quantity" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+
+                                                                        }
+                                                                        else if (objsingle_embell.total_order_quantity != objsingle_embell_old.total_order_quantity)
+                                                                        {
+                                                                            <span style="color:red;">(@objsingle_embell_old.total_order_quantity.ToString())</span>
+                                                                            <input disabled style="width:100%;color:green;" type="number" value="@objsingle_embell.total_order_quantity" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span style="color:black;">(@objsingle_embell.total_order_quantity)</span>
+
+                                                                            <input disabled style="width:100%;color:black;" type="number" value="@objsingle_embell.total_order_quantity" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+                                                                        }
+                                                                    </td>
+                                                                    <td style="text-align:center;">
+                                                                        @if (objsingle_embell_old == null)
+                                                                        {
+                                                                            <input style="width:100%;color:blue;font-weight:bold;" type="number" value="@objsingle_embell.price_per_unit" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+
+                                                                        }
+                                                                        else if (objsingle_embell.price_per_unit != objsingle_embell_old.price_per_unit)
+                                                                        {
+                                                                            <span style="color:red;">(@objsingle_embell_old.price_per_unit.ToString())</span>
+                                                                            <input style="width:100%;color:green;" type="number" value="@objsingle_embell.price_per_unit" onchange="CalcTotalEmbellPrice(this);" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span style="color:black;">(@objsingle_embell.price_per_unit)</span>
+
+                                                                            <input style="width:100%;color:black;" type="number" value="@objsingle_embell.price_per_unit" onchange="CalcTotalEmbellPrice(this);" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+                                                                        }
+                                                                    </td>
+                                                                    <td>
+                                                                        @if (objsingle_embell_old == null)
+                                                                        {
+                                                                            <input style="width:100%;color:blue;font-weight:bold;" type="number" value="@objsingle_embell.total_price" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+
+                                                                        }
+                                                                        else if (objsingle_embell.total_price != objsingle_embell_old.total_price)
+                                                                        {
+                                                                            <span style="color:red;">(@objsingle_embell_old.total_price.ToString())</span>
+                                                                            <input disabled style="width:100%;color:green;" type="number" value="@objsingle_embell.total_price" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span style="color:black;">(@objsingle_embell.total_price)</span>
+
+                                                                            <input disabled style="width:100%;color:black;" type="number" value="@objsingle_embell.total_price" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+                                                                        }
+                                                                        <input style="width:100%;color:black;display:none" type="number" value="@old_price" class="border-#d1cccc-200 form-control txtembell_TotalCost_old" />
+                                                                    </td>
+
+                                                                </tr>
+
+                                                            }
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="box">
+                                                        <button type="button" class="btn btn-danger " onclick="AddSubContract()" id="btnAddSubContract" style="width:250px;">
+                                                            Add Sub Contract
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="row" style="">
+                                                <div class="col-md-12">
+                                                    @{
+                                                        var sub_contract_index = 2;
+                                                    }
+                                                    <div class="box">
+                                                        <table style="font-size:10px;" id="DTTranPreCostingDetailSubContract" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                            <thead>
+                                                                <tr>
+                                                                    @* <th><label class="labelNormal">SL</label></th> *@
+                                                                    <th style="width:150px;"><label class="labelNormal">Process</label></th>
+                                                                    <th><label class="labelNormal  ">M. Unit</label></th>
+                                                                    <th style="width:70px;"><label class="labelNormal  ">Con/Pc</label></th>
+                                                                    <th style="width:70px;"><label class="labelNormal  ">Wastage(%)</label></th>
+                                                                    <th><label class="labelNormal  ">Total Req</label></th>
+                                                                    <th><label class="labelNormal  ">Cost/Unit</label></th>
+                                                                    <th><label class="labelNormal  ">Total Cost</label></th>
+                                                                    <th><label class="labelNormal  ">Action</label></th>
+                                                                </tr>
+
+                                                            <thead>
+                                                            <tbody>
+
+                                                                <tr style="display:none;" tran_pre_costing_item_subcontract_detail_id="0" tran_pre_costing_id="0">
+                                                                    <td>
+                                                                                @await Component.InvokeAsync("GenericDropdownList", new
+                                                                        {
+                                                                        ddlId = "ddl_process_master_1",
+                                                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.process_list)),
+                                                                        selectedvalue = "",
+                                                                        cssclass = "form-control ddl_process_master",
+                                                                        enable = true,
+                                                                        isRequired = true,
+                                                                        placeholder = "Select Process"
+                                                                        })
+                                                                    </td>
+                                                                    <td>
+                                                                        <label class="labelNormal  ">Piece</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input style="width:70px;" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input style="width:70px;" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Wastage" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input style="width:100%" type="number" onchange="CalcTotalEmbellPrice(this);" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type='button' class='btn btn-danger' value='Delete' onclick='DeleteSubContract(this);' />
+                                                                    </td>
+                                                                </tr>
+
+
+                                                                        @for (var i = 0; i < Model.List_SubContractDetl.Count; i++)
+                                                                        {
+                                                                            var objsingleProcess = Model.List_SubContractDetl[i];
+                                                                            var objsingleProcess_old = Model.List_SubContractDetl_old.Where(p => p.process_master_id == objsingleProcess.process_master_id).FirstOrDefault();
+
+                                                                            var old_price = objsingleProcess_old == null ? 0 : objsingleProcess_old.total_price;
+                                                                    <tr tran_pre_costing_id="@objsingleProcess.tran_pre_costing_id" tran_pre_costing_item_subcontract_detail_id="@objsingleProcess.tran_pre_costing_item_subcontract_detail_id">
+                                                                        <td style="text-align:center;">
+                                                                                    @if (objsingleProcess_old == null)
+                                                                                    {
+                                                                                <span style="color:blue;font-weight:bold;">(New)</span>
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                <span style="color:green;font-weight:bold;">(Unchanged)</span>
+                                                                                    }
+
+                                                                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                                                        {
+                                                                        ddlId = "ddl_process_master_"+sub_contract_index.ToString(),
+                                                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.process_list)),
+                                                                        selectedvalue = objsingleProcess.process_master_id.ToString(),
+                                                                        cssclass = "form-control ddl_process_master",
+                                                                        enable = false,
+                                                                        isRequired = true,
+                                                                        placeholder = "Select Process"
+                                                                        })
+                                                                        </td>
+                                                                        <td style="text-align:center;">
+                                                                            <label class="labelNormal  ">Piece</label>
+                                                                        </td>
+                                                                        <td style="text-align:center;">
+                                                                                    @if (objsingleProcess_old == null)
+                                                                                    {
+                                                                                <input style="width:100%;color:blue;font-weight:bold;" value="@objsingleProcess.order_quantity" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+
+                                                                                    }
+                                                                                    else if (objsingleProcess.order_quantity != objsingleProcess_old.order_quantity)
+                                                                                    {
+                                                                                <span style="color:red;">(@objsingleProcess.order_quantity.ToString())</span>
+                                                                                <input style="width:100%;color:green;font-weight:bold;" value="@objsingleProcess.order_quantity" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                <span style="color:black;">(@objsingleProcess.order_quantity.ToString())</span>
+
+                                                                                <input style="width:100%;color:black;" value="@objsingleProcess.order_quantity" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+                                                                                    }
+                                                                        </td>
+                                                                        <td style="text-align:center;">
+                                                                                    @if (objsingleProcess_old == null)
+                                                                                    {
+                                                                                <input style="width:100%;color:blue;" type="number" value="@objsingleProcess.wastage" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Wastage" />
+
+                                                                                    }
+                                                                                    else if (objsingleProcess.wastage != objsingleProcess_old.wastage)
+                                                                                    {
+                                                                                <span style="color:red;">(@objsingleProcess.wastage.ToString())</span>
+                                                                                <input style="width:100%;color:green;" value="@objsingleProcess.wastage" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                <span style="color:black;">(@objsingleProcess.wastage.ToString())</span>
+
+                                                                                <input style="width:100%;color:black;" type="number" value="@objsingleProcess.wastage" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Wastage" />
+
+                                                                                    }
+                                                                        </td>
+                                                                        <td style="text-align:center;">
+                                                                                    @if (objsingleProcess_old == null)
+                                                                                    {
+                                                                                <input disabled style="width:100%;color:blue;" type="number" value="@objsingleProcess.total_order_quantity" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+
+                                                                                    }
+                                                                                    else if (objsingleProcess.total_order_quantity != objsingleProcess_old.total_order_quantity)
+                                                                                    {
+                                                                                <span style="color:red;">(@objsingleProcess.total_order_quantity.ToString())</span>
+                                                                                <input disabled style="width:100%;color:green;" type="number" value="@objsingleProcess.total_order_quantity" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                <span style="color:black;">(@objsingleProcess.total_order_quantity.ToString())</span>
+
+                                                                                <input disabled style="width:100%;color:black;" type="number" value="@objsingleProcess.total_order_quantity" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+
+                                                                                    }
+                                                                        </td>
+                                                                        <td style="text-align:center;">
+                                                                                    @if (objsingleProcess_old == null)
+                                                                                    {
+                                                                                <input style="width:100%;color:blue;" type="number" onchange="CalcTotalEmbellPrice(this);" value="@objsingleProcess.price_per_unit" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+
+                                                                                    }
+                                                                                    else if (objsingleProcess.price_per_unit != objsingleProcess_old.price_per_unit)
+                                                                                    {
+                                                                                <span style="color:red;">(@objsingleProcess.price_per_unit.ToString())</span>
+                                                                                <input style="width:100%;color:green;" type="number" onchange="CalcTotalEmbellPrice(this);" value="@objsingleProcess.price_per_unit" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                <span style="color:black;">(@objsingleProcess.price_per_unit.ToString())</span>
+
+                                                                                <input style="width:100%;color:black;" type="number" onchange="CalcTotalEmbellPrice(this);" value="@objsingleProcess.price_per_unit" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+
+                                                                                    }
+                                                                        </td>
+                                                                        <td style="text-align:center;">
+                                                                                    @if (objsingleProcess_old == null)
+                                                                                    {
+                                                                                <input disabled style="width:100%;color:blue;" type="number" value="@objsingleProcess.total_price" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+
+                                                                                    }
+                                                                                    else if (objsingleProcess.total_price != objsingleProcess_old.total_price)
+                                                                                    {
+                                                                                <span style="color:red;">(@objsingleProcess.total_price.ToString())</span>
+                                                                                <input disabled style="width:100%;color:green;" type="number" value="@objsingleProcess.total_price" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                <span style="color:black;">(@objsingleProcess.total_price.ToString())</span>
+
+                                                                                <input disabled style="width:100%;color:black;" type="number" value="@objsingleProcess.total_price" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+
+                                                                                    }
+                                                                            <input disabled style="width:100%;color:black;display:none;" type="number" value="@old_price" class="border-#d1cccc-200 form-control txtembell_TotalCost_old" />
+
+                                                                        </td>
+                                                                        <td style="text-align:center;">
+                                                                            <input type='button' class='btn btn-danger' value='Delete' onclick='DeleteSubContract(this);' />
+                                                                        </td>
+                                                                    </tr>
+                                                                            sub_contract_index++;
+                                                                        }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                        <div class="row">
+
+                            <button type="button" class="btn btn-primary btnSaveNext" onclick="btnSaveNextClick(this)" style="margin-left: 21px;width:300px;"><i class="fa fa-forward"></i>Next</button>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="det2" tabpane_index="2">
+                        <div class="row" style="">
+                            <div class="col-md-6">
+                                <div class="box">
+                                    <table style="font-size:10px;" id="DTTranPreCostingOtherData" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th style="width:350px;"><label class="labelNormal">Item</label></th>
+                                                <th style="text-align:right;"><label class="labelNormal  ">Cost</label></th>
+
+                                            </tr>
+
+                                        <thead>
+                                        <tbody>
+                                           @*  <tr>
+                                                <td>
+
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">Estimated Markup Price</h6>
+                                                            @if (Model.estimated_markup_price_old != Model.estimated_markup_price)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.estimated_markup_price_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.estimated_markup_price_old)</h6>
+                                                            }
+
+                                                </td>
+
+                                                <td>
+                                                    <input onchange="CalcRawMaterialPercentage();" estimated_markup_price_old="@Model.estimated_markup_price_old" style="width:100%" asp-for="estimated_markup_price" type="number" min="0" class="border-#d1cccc-200 form-control" />
+                                                </td>
+
+                                            </tr> *@
+                                                    @if (Model.List_Mapped_Structure != null)
+                                                    {
+
+                                                        for (var group_row = 0; group_row < Model.List_Mapped_Structure.Count; group_row++)
+                                                        {
+                                                            var objsinglegroup = Model.List_Mapped_Structure[group_row];
+
+                                                    <tr>
+                                                        <td>
+                                                            <label structure_group_name="@objsinglegroup.structure_group_name" item_structure_group_id="@objsinglegroup.item_structure_group_id" class="labelNormal structure_group_name" style="float:left;">@objsinglegroup.structure_group_name</label>
+                                                        </td>
+
+                                                        <td>
+                                                            <input item_structure_group_id="@objsinglegroup.item_structure_group_id" disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txt_total_structure_group txtcalc_rawmat" />
+                                                        </td>
+                                                    </tr>
+                                                        }
+                                                    }
+                                            <tr>
+                                                <td>
+                                                    <label id="lbl_total_embellishment" class="labelNormal  olddatarow ">Total Value Addition Cost</label>
+                                                </td>
+
+                                                <td>
+                                                    <input id="txt_total_embellishment" disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_rawmat" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label id="lbl_total_process_subcontract" class="labelNormal  olddatarow ">Total Process Sub-Contract</label>
+                                                </td>
+
+                                                <td>
+                                                    <input id="txt_total_process_subcontract" disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_rawmat" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  olddatarow"> A.Total Cost of Raw Material</label>
+                                                </td>
+
+                                                <td>
+                                                 @*    <input asp-for="total_raw_material_percentage" disabled style="width:45%;font-weight:bold;float:left;text-align:right;" type="text" class="border-#d1cccc-200 form-control" />
+ *@
+                                                    <input asp-for="total_raw_material_cost" disabled style="width:45%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="margin-top:20px;">
+                                                <td colspan="2">
+                                                    <h6 class="box-title">Segments of Overhead Cost:</h6>
+                                                </td>
+
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">SMV</h6>
+                                                            @if (Model.smv != Model.smv_old)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.smv_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.smv_old)</h6>
+                                                            }
+                                                </td>
+                                                <td>
+                                                    <input asp-for="smv" style="width:100%" type="text" class="border-#d1cccc-200 form-control" />
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">Factory Overhead Cost</h6>
+                                                            @if (Model.factory_overhead_cost_old != Model.factory_overhead_cost)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.factory_overhead_cost_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.factory_overhead_cost_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="factory_overhead_cost" onchange="CalcOverheadCost();" style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_overheadc" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">Sales, Marketing & Distribution Cost</h6>
+                                                            @if (Model.sales_marketing_distribution_cost_old != Model.sales_marketing_distribution_cost)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.sales_marketing_distribution_cost_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.sales_marketing_distribution_cost_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="sales_marketing_distribution_cost" onchange="CalcOverheadCost();" style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_overheadc" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">Depreciation & Amortization Cost</h6>
+                                                            @if (Model.depreciation_amortization_cost_old != Model.depreciation_amortization_cost)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.depreciation_amortization_cost_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.depreciation_amortization_cost_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="depreciation_amortization_cost" onchange="CalcOverheadCost();" style="width:100%" type="number" class="border-#d1cccc-200 form-control txtcalc_overheadc" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">B. Total Overhead Cost</h6>
+                                                            @if (Model.total_overhead_cost_old != Model.total_overhead_cost)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.total_overhead_cost_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.total_overhead_cost_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+
+                                                    <input disabled asp-for="total_overhead_cost" style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box">
+                                    <table style="font-size:10px;" id="DTTranPreCostingOtherData_2" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th style="width:350px;"><label class="labelNormal">Item</label></th>
+                                                <th style="text-align:right;"><label class="labelNormal  ">Cost</label></th>
+
+                                            </tr>
+
+                                        <thead>
+                                        <tbody>
+
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">C. (A+B) Total Cost of Production</h6>
+
+                                                            @if (Model.total_production_cost != Model.total_production_cost_old)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.total_production_cost_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.total_production_cost_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+                                                    <input disabled asp-for="total_production_cost" style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="height:30px">
+                                                <td>
+                                                    <label class="labelNormal  "></label>
+                                                </td>
+
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">D. Floor Price Per Piece(%)</h6>
+                                                            @if (Model.estimated_markup_price_old != Model.estimated_markup_price)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.floor_price_percentage_old%  -  @Model.floor_price_per_pc_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.floor_price_percentage_old%  -  @Model.floor_price_per_pc_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="floor_price_percentage" onchange="CalcFloorPrice();" placeholder="Percentage %" style="width:45%;text-align:right;font-weight:bold;float:left;" type="number" class="border-#d1cccc-200 form-control" />
+
+                                                    <input asp-for="floor_price_per_pc" disabled style="width:45%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">E. Desired Markup Price(%)</h6>
+                                                            @if (Model.desired_markup_percentage_old != Model.desired_markup_percentage)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.desired_markup_percentage_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.desired_markup_percentage_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="desired_markup_percentage" onchange="CalcDesiredMarkupPrice();" placeholder="Percentage %" style="text-align:right;width:45%;font-weight:bold;float:left;" type="number" class="border-#d1cccc-200 form-control" />
+
+                                                    <input asp-for="desired_markup_price" disabled style="width:45%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  "> </label>
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;">H. Suggested MRP Considering Cost</h6>
+
+                                                            @if (Model.suggested_mrp_with_cost_old != Model.suggested_mrp_with_cost)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.suggested_mrp_with_cost_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.suggested_mrp_with_cost_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+
+                                                    <input asp-for="suggested_mrp_with_cost" disabled style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+                                                    <label class="labelNormal  "></label>
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;"> F.Final MRP</h6>
+                                                            @if (Model.final_mrp != Model.final_mrp_old)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.final_mrp_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.final_mrp_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="final_mrp" onchange="CalcTotalStyleMRP();" style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#d1cccc!important;    font-size: 12px;">
+                                                <td>
+
+                                                    <h6 class="box-title" style="float:left;color:black;font-weight:bold;"> G.Total Style Quantity MRP</h6>
+
+                                                            @if (Model.total_style_quantity_mrp_old != Model.total_style_quantity_mrp)
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:red;font-weight:bold;">(@Model.total_style_quantity_mrp_old)</h6>
+                                                            }
+                                                            else
+                                                            {
+                                                        <h6 class="box-title" style="float:right;color:black;font-weight:bold;">(@Model.total_style_quantity_mrp_old)</h6>
+                                                            }
+                                                </td>
+
+                                                <td>
+
+                                                    <input asp-for="total_style_quantity_mrp" style="width:100%;font-weight:bold;float:right;" type="number" class="border-#d1cccc-200 form-control" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Designer Comment :</label>
+
+                <input disabled id="designer_remarks" placeholder="Insert Comments" type="text" class="border-#d1cccc-200 form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Merchant Comment :</label>
+
+                <input id="merchant_ack_remarks" value="@Model.merchant_ack_remarks" placeholder="Insert Comments" type="text" class="border-#d1cccc-200 form-control" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="dvbtn">
+        <div class="col-md-12" style="margin-bottom: 5px;">
+
+            <button style="width:250px;float:left;margin: 5px;" type="button" class="btn btn-danger " id="btnEnableEdit" onclick="EnableEdit(this);"><i class="fa fa-file-open"></i>&nbsp;Click to Edit</button>
+
+            <button style="width:250px;float:left;margin: 5px;" type="button" class="btn btn-primary " id="btnRequestForReview" onclick="RequestForReviewPreCosting(this);"><i class="fa fa-file-open"></i>&nbsp;Request For Designer Approval</button>
+
+            <button style="width:250px;float:right;margin: 5px;" type="button" class="btn btn-primary " id="btnAckPreCosting" onclick="PreCostingAck(this);"><i class="fa fa-file-open"></i>&nbsp;Pre Costing Ack</button>
+
+        </div>
+    </div>
+</form>
+
+<div id="modalcontainer_common_popup" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #bc7b20;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Add Details
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_popup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common_popup">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var temp_data = '@Html.Raw(JsonConvert.SerializeObject( Model.List_PreCostingDet_rpc))';
+
+    obj_fabric_List = JSON.parse(temp_data);
+
+    var temp_data_old = '@Html.Raw(JsonConvert.SerializeObject( Model.List_PreCostingDet_rpc_old))';
+
+    obj_fabric_List_old = JSON.parse(temp_data_old);
+
+    for (var i = 0; i < obj_fabric_List.length; i++) {
+        var gen_item_structure_group_sub_id = obj_fabric_List[i].gen_item_structure_group_sub_id;
+
+        var item_structure_group_id = obj_fabric_List[i].item_structure_group_id;
+
+        $("#DTTranPreCostingDetail .btnclsmasterpage[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").css("display", "block");
+
+        $("#DTTranPreCostingDetail .editfabric[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").attr("value", "Edit(" + obj_fabric_List.filter(p => p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id).length + ")")
+
+        LoadTotalCalcDt(gen_item_structure_group_sub_id, item_structure_group_id);
+
+        $("#DTTranPreCostingDetailEmbellishment input[type=number]:eq(0)").trigger("change");
+
+        // obj_fabric_List[i].placement_info = null;
+    }
+
+</script>
+
+
+
+

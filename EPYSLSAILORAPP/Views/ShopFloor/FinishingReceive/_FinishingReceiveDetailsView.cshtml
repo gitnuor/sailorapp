@@ -1,0 +1,353 @@
+﻿@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_finishing_receive_DTO
+@{
+    ViewBag.Title = "Finishing Receive";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+    .form-group1 {
+        margin-bottom: 3px !important;
+        padding: 0.1rem !important;
+        font-size: 12px !important;
+    }
+
+    #fileNamesContainer p {
+        margin-bottom: 0;
+    }
+</style>
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Finishing Receive</h6>
+        </div>
+        <!-- /.card-header -->
+        <input type="hidden" id="supplierId" value="">
+
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Finishing Receive No</label>
+                            <input style="width:100%" readonly placeholder="Auto Generated" type="text" class="border-#d1cccc-200 form-control " value="@Model.tran_finish_receive_no"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group1" style="margin-bottom: 0.3rem;">
+                            <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Receive Date</label>
+                            <input style="width:100%" id="FinishingReceiveDate" type="text" class="border-#d1cccc-200 form-control " value="@Model.tran_finish_receive_date" readonly/>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Item Category</label>
+                            <input style="width:100%" type="text" id="ItemCategory" asp-for="@Model.style_item_product_category" class="border-#d1cccc-200 form-control " value="@Model.style_item_product_category" readonly/>
+                            <input type="hidden" id="style_item_product_id" value="@Model.style_item_product_id">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Techpack No</label>
+                            <input style="width:100%" id="TechpackId" asp-for="@Model.techpack_number" type="text" class="border-#d1cccc-200 form-control " value="@Model.techpack_number" readonly/>
+                            <input type="hidden" id="tran_sewing_output_id" value="@Model.tran_sewing_output_id">
+                            <input type="hidden" id="techpack_id" value="@Model.techpack_id">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Finishing Process </label>
+                        @{
+                            var processNames = string.Join(", ", Model.finishingProcessdetails.Select(item => item.finishing_process_name));
+                        }
+
+                        <input disabled type='text' style="width:800px;" class='class="border-#d1cccc-200 form-control' value="@processNames">
+                        @* <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Finishing Process </label>
+                            @await Component.InvokeAsync("GenericDropdownList", new
+                                {
+                                    ddlId = "gen_finishing_process_id",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.finishing_process_name)),
+                                    selectedvalue = "",
+                                    cssclass = "form-control",
+                                    enable = true,
+                                    isRequired = true,
+                                    placeholder = "select"
+                                })
+
+                        </div> *@
+                    </div>
+
+                </div>
+
+                
+
+            </div>
+
+        </div>
+
+
+        <div class="row" id="FinishingReceiveDetrails" style="">
+            <div class="col-md-12">
+                <div class="box">
+
+                    <table style="font-size:10px;" id="DTBatchDetailReceive" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><label class="labelNormal" style="width:35px">SL No</label></th>
+                                <th><label class="labelNormal">Color</label></th>
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">Color Qty</label></th>
+                                <th><label class="labelNormal">Total Sewing Output Qty</label></th>
+                               
+                                <th><label class="labelNormal">Receive Qty</label></th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="tableBodywork">
+                            @{
+                                int count = 1;
+                            }
+                            @foreach (var obj in @Model.details)
+                            {
+                                <tr>
+
+                                    <td>@count</td>
+                                    <td><input disabled="" type="text" class="form-control color_code" value="@obj.color_code"></td>
+                                    <td><input disabled="" type="text" class="form-control size_name" value="@obj.size_name"></td>
+
+                                    <td><input disabled type='text' class='form-control colorQty' value="@obj.color_quantity"></td>
+
+
+                                    <td><input disabled type='text' class='form-control qc_pass_quantity' value="@obj.qc_pass_quantity"></td>
+
+                                    <td><input disabled type='text' class='form-control rec_qty' value="@obj.finish_receive_qty"></td>
+                                 
+
+
+                                </tr>
+
+                                count++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+     
+
+    </div>
+    <!-- /.card-body -->
+</form>
+
+
+<div id="modalcontainer_detl" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 50% !important; max-width: 50% !important; font-size: 14px; ">
+        <div class="modal-content" style="overflow-y: scroll;">
+
+            <div class="modal-header" style="padding:0px;background-color: #c9b426;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Add Finishing Receive
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose_detl" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent_detl">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function AddReceiveDetailTable(btn) {
+
+
+        var tran_sewing_output_id = $("#tran_sewing_output_id").val();
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/FinishingReceive/AddreceiveDetailNew?tran_sewing_output_id=" + tran_sewing_output_id, null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 0);
+
+            $('#modalcontent_detl').html(data);
+            $('#modalcontainer_detl').modal({ backdrop: 'static', keyboard: false });
+            $('#modalcontainer_detl').modal("show");
+            $("#btnOk").hide();
+
+        });
+    }
+
+
+    function closePopup() {
+
+        $('#modalcontent_detl').html("");
+        $('#modalcontainer_detl').modal("hide");
+        $('#modalcontainer_detl').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+</script>
+
+<script>
+    var batch_List = [];
+    var batchno = 0;
+
+    function AddColorDetails(btn) {
+
+        // $.each($("#DTReceiveOutput tbody tr"), function (key, val) {
+        //if ($(this).find(".is_select")[0].checked) {
+        //var batch_id = check_textbox_value($(this).find(".tran_cutting_color_batch_id"));
+        var tran_sewing_output_id = $('#tran_sewing_output_id').val();
+        var techpack_id = $('#techpack_id').val();
+        var colorCode = $('#ddl_color').val();
+
+        ajaxGetHandler("/FinishingReceive/GetDetaiilsReceive?techpack_id=" + techpack_id + "&colorCode=" + encodeURIComponent(colorCode), null, function (data) {
+            var table = document.getElementById("DTBatchDetailReceive").getElementsByTagName('tbody')[0];
+            var serialNo = table.rows.length + 1;
+            var existingBatchIds = [];
+
+
+            data.data.forEach(function (obj, index) {
+
+
+                var newRow = table.insertRow(table.rows.length);
+
+                var serialCell = newRow.insertCell(0);
+                serialCell.innerHTML = serialNo;
+                serialNo++; // Increment the serial number
+
+                var cell1 = newRow.insertCell(1);
+                var cell2 = newRow.insertCell(2);
+                var cell3 = newRow.insertCell(3);
+                var cell4 = newRow.insertCell(4);
+                var cell5 = newRow.insertCell(5);
+                var cell6 = newRow.insertCell(6);
+                var cell7 = newRow.insertCell(7);
+
+                var cel5_value = "";
+                if (obj.finish_receive_qty !== null && obj.finish_receive_qty !== "") {
+                    cel5_value = obj.finish_receive_qty;
+                }
+                else {
+                    cel5_value = "0";
+                }
+
+                var color_code = 10;
+
+                cell1.innerHTML = "<input disabled type='text'   class='form-control color_code'  value=" + obj.color_code + " >";
+                cell2.innerHTML = "<input disabled type='text'   class='form-control size_name'          value=" + obj.size_name + " >";
+                cell3.innerHTML = "<input disabled type='number'   class='form-control colorQty'             value=" + color_code + ">";
+                cell4.innerHTML = "<input disabled type='text'   class='form-control qc_pass_quantity'             value=" + obj.qc_pass_quantity + ">";
+                cell5.innerHTML = "<input  type='number' disabled   class='form-control  already_rec_qty' value=" + cel5_value + " >";
+                cell6.innerHTML = "<input  type='number'   class='form-control rec_qty'    onchange='updateBalanceQty(this);' >";
+                cell7.innerHTML = "<input  type='number'   class='form-control rec_bal_qty'   >";
+
+                // cell11.innerHTML = "<input disabled style='display:none;' type='text'   class='form-control batchIdhidden'     value=" + obj.tran_cutting_color_batch_id + ">";
+
+            });
+            // }
+
+
+        });
+
+        // }
+        //});
+    }
+
+
+    function updateBalanceQty(input) {
+
+        const row = input.closest('tr');
+        const qcPassQuantity = parseInt(row.querySelector('.qc_pass_quantity').value) || 0;
+        const alreadyRecQty = parseInt(row.querySelector('.already_rec_qty').value) || 0;
+        const recQty = parseInt(row.querySelector('.rec_qty').value) || 0;
+
+        // Calculate the total received quantity
+        const totalRecQty = alreadyRecQty + recQty;
+
+        // Calculate the received balance quantity
+        const recBalQty = qcPassQuantity - totalRecQty;
+
+        // Update the rec_bal_qty field
+        row.querySelector('.rec_bal_qty').value = recBalQty;
+
+
+    }
+
+</script>
+

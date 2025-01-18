@@ -1,0 +1,24 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<div class="content">
+
+    <!-- Start::main-content -->
+    <div class="main-content">
+        <h1 class="text-danger">Error.</h1>
+        <h2 class="text-danger">An error occurred while processing your request.</h2>
+
+
+        <p>
+            <strong style="color:red">Error</strong>
+        </p>
+
+
+
+        <p>
+            @Html.Raw(ViewBag.errormsg)
+        </p>
+    </div>
+</div>

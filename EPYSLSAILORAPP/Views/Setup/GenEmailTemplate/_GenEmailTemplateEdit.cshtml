@@ -1,0 +1,185 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.gen_email_template_DTO;
+@{
+    ViewBag.Title = "GenEmailTemplate Edit";
+    Layout = null;
+}
+
+
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+
+    .main-container {
+        width: 795px;
+        
+        
+
+    }
+
+    .ck-editor__editable {
+        min-height: 400px; 
+    }
+
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <input type="hidden" id="gen_email_template_id" value="@Model.gen_email_template_id">
+
+
+
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Email Template Edit</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+
+
+            <div class="row">
+                <div class="col-md-6">
+                   
+
+
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Template Name</label>
+                        <input style="width:100%" id="email_template_name" asp-for="email_template_name" type="text" class="border-#d1cccc-200 form-control" />
+                        <span asp-validation-for="email_template_name" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+
+
+
+
+            </div>
+
+            <div class="row">
+
+
+
+
+                <div class="col-md-12">
+                    <div class="form-group email_template_html">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Email Template</label>
+                       
+                            <textarea id="email_template_html" asp-for="@Model.email_template_html" class="form-control" style="height: 210px;">ViewBag.content</textarea>
+                       
+                       
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button style="width:300px;" type="button" class="btn btn-success " id="btnUpdateGenEmailTemplate" onclick="UpdateGenEmailTemplate(this);"><i class="fa fa-file-open"></i>&nbsp;Update</button>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+
+
+</form>
+
+
+<script type="module">
+    import {
+        ClassicEditor,
+        Essentials,
+        Paragraph,
+        Bold,
+        Italic,
+        Font
+    } from 'ckeditor5';
+
+    ClassicEditor
+        .create(document.querySelector('#email_template_html'), {
+            plugins: [Essentials, Paragraph, Bold, Italic, Font],
+            toolbar: [
+                'undo', 'redo', '|', 'bold', 'italic', '|',
+                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+            ]
+        })
+        .then(editor => {
+            window.editor = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+
+    
+
+
+
+
+
+
+
+
+

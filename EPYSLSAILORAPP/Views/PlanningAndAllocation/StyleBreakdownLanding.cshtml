@@ -1,0 +1,156 @@
+﻿@page "/Index"
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<script type="text/javascript">
+    localStorage.setItem("pageName", "ViewBag.PageName");
+    localStorage.setItem("menuId", "ViewBag.MenuId");
+</script>
+@* <script src="~/scripts/PlanningAndAllocationning/PlanningAndAllocationNew.js" asp-append-version="true"></script>
+ *@
+<style>
+    .rightalign {
+        text-align: right;
+    }
+
+    .leftalign {
+        text-align: left;
+    }
+
+    .centeralign {
+        text-align: center;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+</style>
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                             <h6 class="card-title">Style Breakdown</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="DTTranPlanningAndAllocation" class="table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+
+                                        <th><label class="labelNormal  ">Fiscal Year</label></th>
+                                        <th style="text-align:right"><label class="labelNormal ">Gross Sales (Tk)</label></th>
+                                        @*
+                                        <th style="text-align:right"><label class="labelNormal ">Total MRP Value (Tk)</label></th>
+                                        <th style="text-align:right"><label class="labelNormal ">Total CPU Value (Tk)</label></th>
+                                        *@
+                                        <th style="text-align:center"><label class="labelNormal ">Total Range Plan Qnty</label></th>
+                                        <th style="text-align:center;"><label class="labelNormal ">Status</label></th>
+                                        <th style="width:400px;text-align:center">Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+@section Scripts{
+    <script>
+        var dtevent;
+
+        function jsdatatableloaded() {
+
+
+
+        }
+        function LoadPlanData() {
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val()
+            };
+
+            dtevent = $("#DTTranPlanningAndAllocation").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/PlanningAndAllocation/GetPlanningAndAllocationSummaryData", data: input }),
+                "buttons": {
+                    "buttons": [
+                        {
+                            text: '<i class="fas fa-plus-square" aria-hidden="true"></i> Add',
+                            className: 'btn btn-primary mr-1',
+                            action: function (e, dt, node, config) {
+                                location.href = "/PlanningAndAllocation/AddNew";
+                            }
+                        },
+                    ]
+                },
+                "bLengthChange": false,
+                "bPaginate": false,
+                "bInfo": false,
+                columnDefs: [ //strIsFinalized
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false },
+                    { targets: 1, "visible": true, "sortable": false },
+                    { targets: 2, "visible": true, "sortable": false },
+                    { targets: 3, "visible": true, "sortable": false },
+                    { targets: 4, "visible": true, "sortable": false },
+                    // { targets: 5, "visible": true, "sortable": false },
+                    // { targets: 6, "visible": true, "sortable": false },
+                   // { targets: 7, "visible": true, "sortable": false },
+                   
+                ],
+                "rowCallback": function (row, data) {
+                    $('td:eq(0)', row).css('text-align', "left");
+                    $('td:eq(1)', row).css('text-align', "right");
+                    $('td:eq(2)', row).css('text-align', "right");
+                    $('td:eq(3)', row).css('text-align', "right");
+                    $('td:eq(4)', row).css('text-align', "center");
+                    // $('td:eq(5)', row).css('text-align', "center");
+                    // $('td:eq(6)', row).css('text-align', "center");
+                   // $('td:eq(7)', row).css('text-align', "center");
+                },
+                "columns": [
+                    { "data": "year_name", "name": "year_name", "autoWidth": true, },
+
+                    { "data": "yearly_gross_sales", "name": "yearly_gross_sales", "autoWidth": true },
+                    // { "data": "yearly_total_mrp", "name": "yearly_total_mrp", "autoWidth": true },
+                    // { "data": "yearly_total_cpu", "name": "yearly_total_cpu", "autoWidth": true },
+                    { "data": "yearly_total_quantity", "name": "yearly_total_quantity", "autoWidth": true },
+                   // { "data": "yearly_total_product", "name": "yearly_total_product", "autoWidth": true },
+                    { "data": "strStatus", "name": "strStatus", "autoWidth": true },
+                    { "data": "strBtns", "name": "strBtns", "autoWidth": true },
+                ]
+            });
+        }
+        $(function () {
+
+
+            $("#fiscal_year_id").prop('selectedIndex', 1);
+
+            LoadPlanData();
+
+            $("#fiscal_year_id").change(function () {
+
+                LoadPlanData();
+
+            });
+
+        });
+    </script>
+
+ }

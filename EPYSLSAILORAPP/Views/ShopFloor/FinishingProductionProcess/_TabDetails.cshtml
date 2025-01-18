@@ -1,0 +1,110 @@
+﻿
+
+@model EPYSLSAILORAPP.Application.DTO.RPC.rpc_tran_finishing_receive_DTO
+
+<style>
+    #tab_precostinglanding.nav-tabs > li.active > a,
+    #tab_precostinglanding.nav-tabs > li.active > a:hover,
+    #tab_precostinglanding.nav-tabs > li.active > a:focus,
+    #tab_precostinglanding.nav-tabs > li > a.active,
+    #tab_precostinglanding.nav-tabs > li > a:hover,
+    #tab_precostinglanding.nav-tabs > li > a:focus {
+        color: #555;
+        cursor: default;
+        background-color: khaki;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+</style>
+
+
+@if (Model != null && Model.details_process != null && Model.details_process.Count > 0)
+{
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12" id="tab_bar_style">
+                <ul id="tab_precostinglanding" class="nav nav-tabs hhh">
+                    @for (int i = 0; i < Model.details_process.First().finishing_process.Count; i++)
+                    {
+                        var tab = Model.details_process.First().finishing_process[i];
+
+                        <li class="@(i == 0 ? "active" : "")" tab_index="@i" id="@i">
+                            <a href="#det_@i" style="text-decoration: unset;width: 170px;" class="@(i == 0 ? "active tab_link" : "tab_link")" data-toggle="tab" data-name="@tab.finishing_process_name">@tab.finishing_process_name</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        BindTabEvents("tab_bar_style");
+
+        $('#tab_precostinglanding').on('click', '.tab_link', function (e) {
+            e.preventDefault(); 
+
+            var techpack_id = $('#techpack_id').val();
+            var activeTab = $(this).data('name').trim();
+ 
+                    var gen_finishing_process_id = 0;
+                    switch (activeTab) {
+                        case 'Handwork':
+                            gen_finishing_process_id = 1;
+                            break;
+                        case 'Trimming':
+                            gen_finishing_process_id = 2;
+                            break;
+                        case 'Quality Check inside':
+                            gen_finishing_process_id = 3;
+                            break;
+                        case 'Thread sucking':
+                            gen_finishing_process_id = 4;
+                            break;
+                        case 'Iron':
+                            gen_finishing_process_id = 5;
+                            break;
+                        case 'Quality check':
+                            gen_finishing_process_id = 6;
+                            break;
+                        default:
+                            gen_finishing_process_id = 7;
+                            break;
+                    }
+
+
+                    if (techpack_id) {
+                        TranFinishingProductionView(techpack_id);
+                        LoadProductionProcessData2(techpack_id, gen_finishing_process_id);
+                        LoadProductionProcessData3(techpack_id, gen_finishing_process_id);
+                        LoadProductionProcessData4(techpack_id, gen_finishing_process_id);
+                    } else {
+                        console.error("Techpack ID is not defined.");
+                    }
+               
+        });
+
+ 
+  });
+
+
+    function loadTabContent(tabIndex) {
+
+        $.ajax({
+            url: '/FinishingProductionProcess/GetTabContent',
+            data: { tabIndex: tabIndex },
+            success: function (data) {
+                $('#det' + tabIndex).html(data);
+            },
+            error: function () {
+                alert('Failed to load tab content.');
+            }
+        });
+    }
+
+
+</script>
+
+

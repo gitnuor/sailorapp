@@ -1,0 +1,227 @@
+﻿@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_mcd_requisition_slip_DTO;
+@{
+	ViewBag.Title = "TranFabricRequisitionSlip Edit";
+	Layout = null;
+}
+<style>
+	#toolbarId select {
+		font-size: 11px !important;
+	}
+
+	.btninnerClose {
+		color: #a52711;
+		width: 26px;
+		border: 1px solid #6f2d23;
+		font-size: 22px;
+		margin-top: 6px;
+	}
+
+	.dataTables_wrapper {
+		margin-top: -40px;
+	}
+
+	.select_style {
+		height: 30px;
+	}
+
+	.dataTable select {
+		height: 25px !important;
+		font-size: 10px !important;
+	}
+
+	.card-body {
+		padding-bottom: 0px;
+		padding-top: 0px;
+		padding: 0rem 0rem;
+	}
+
+	.box {
+		margin-bottom: 0.5rem;
+	}
+
+	.box-header {
+		padding-top: 0.25rem;
+		padding-bottom: 0.25rem;
+		font-weight: 500;
+		font-size: 12px;
+	}
+
+	.box-title {
+		font-size: 12px;
+		line-height: 1rem;
+	}
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+	<input type="hidden" id="requisition_slip_id" value="@Model.requisition_slip_id">
+	<input type="hidden" id="techPackId" value="@Model.techpack_id">
+
+
+	<div class="card">
+		<div class="card-header">
+			<h6 class="card-title">Accessories RequisitionSlip Finishing Update</h6>
+		</div>
+		<!-- /.card-header -->
+		<div class="card-body">
+
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						@* <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Requisition Slip No</label>
+						<input style="width:100%" asp-for="requisition_slip_no" type="text" class="border-#d1cccc-200 form-control " />
+						<span asp-validation-for="requisition_slip_no" class="text-danger"></span> *@
+
+						<label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Requisition Slip No</label>
+						<input style="width:100%" readonly placeholder="Auto Generated" asp-for="@Model.requisition_slip_no" type="text" class="border-#d1cccc-200 form-control " />
+
+
+					</div>
+				</div>
+
+				<input style="width:100%" id="gen_item_structure_group_sub_id" value="@ViewBag.gen_item_structure_group_sub_id" type="hidden" />
+
+
+				<div class="col-md-6">
+					<div class="form-group">
+						@* <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Requisition Date</label>
+						<input style="width:100%" asp-for="requisition_date" type="date" class="border-#d1cccc-200 form-control " />
+						<span asp-validation-for="requisition_date" class="text-danger"></span> *@
+
+						<label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Requisition Date</label>
+						<input style="width:100%" readonly asp-for="@Model.requisition_date" type="date" class="border-#d1cccc-200 form-control " />
+
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						@* <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techpack Id</label>
+						<input style="width:100%" asp-for="techpack_id" type="number" class="border-#d1cccc-200 form-control " />
+						<span asp-validation-for="techpack_id" class="text-danger"></span> *@
+
+						<label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Requisition Date</label>
+						<input style="width:100%" readonly asp-for="@Model.requisition_date" type="date" class="border-#d1cccc-200 form-control " />
+
+
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						@* <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Requisition By</label>
+						<input style="width:100%" asp-for="requisition_by" type="number" class="border-#d1cccc-200 form-control " />
+						<span asp-validation-for="requisition_by" class="text-danger"></span> *@
+
+						<label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Requisition By</label>
+						<input style="width:100%" readonly asp-for="@Model.name" type="text" class="border-#d1cccc-200 form-control " />
+
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						@* <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Remarks</label>
+						<input style="width:100%" asp-for="remarks" type="text" class="border-#d1cccc-200 form-control " />
+						<span asp-validation-for="remarks" class="text-danger"></span> *@
+
+						<label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Remarks</label>
+						<input style="width: 130%; height: 40px;" readonly asp-for="@Model.remarks" type="text" class="border-#d1cccc-200 form-control " />
+
+
+					</div>
+				</div> 
+
+
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+				<div class="col-md-3" id="fabric">
+					<div class="form-group1">
+						<label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Finishing Accessories Item</label>
+						@await Component.InvokeAsync("GenericDropdownList", new
+							{
+								ddlId = "ddlFinishing",
+								strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.SubCategoryFinishinList)),
+								selectedvalue = "",
+								cssclass = "form-control",
+								enable = true,
+								isRequired = false,
+								placeholder = "Select"
+							})
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2" style="top:18px">
+				<div class="form-group">
+					<button type="button" class="btn btn-primary" onclick="AddAssocoriesFinishingList(this);" style="margin-left: -17px;width: 65px;height: 30px;font-size: 13px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Fabric</button>
+				</div>
+			</div>
+			
+
+			
+
+
+		
+
+			
+
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box">
+					<table style="font-size:10px;" id="DTTranSewingDetailRow" class=" table dataTable table-striped table-bordered" cellspacing="0">
+						<thead>
+							<tr>
+								<th style="width:350px;"><label class="labelNormal">Accossories Details</label></th>
+								<th s><label class="labelNormal  ">Measurement Type</label></th>
+								<th><label class="labelNormal ">MCD No</label></th>
+								<th><label class="labelNormal "> Stock Qty</label></th>
+								<th style="width:100px;"><label class="labelNormal "> Already Requisited Qty</label></th>
+								<th style="width:80px;"><label class="labelNormal ">Requisition Qty</label></th>
+								<th style="width:80px;"><label class="labelNormal ">Remarks</label></th>
+								<th style="width:30px;"><label class="labelNormal ">Delete</label></th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="row">
+			<div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+				<button style="width:300px;" type="button" class="btn btn-primary" id="btnUpdateTranFabricRequisitionSlip" onclick="UpdateTranFabricRequisitionSlip(this);"><i class="fa fa-file-open"></i>&nbsp;Update</button>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- /.card-body -->
+	</div>
+
+
+
+</form>
+
+
+
+
+

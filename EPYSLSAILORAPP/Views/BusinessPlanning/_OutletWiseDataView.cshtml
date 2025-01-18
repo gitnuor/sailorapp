@@ -1,0 +1,133 @@
+﻿@using Newtonsoft.Json;
+@model List<EPYSLSAILORAPP.Domain.RPC.rpc_rpt_bp_data_outlet_wise_DTO>
+@{
+    Layout = null;
+}
+
+<style>
+    input, button {
+        line-height: 0.75rem !important;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .table td, .table th {
+        padding: 0px !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+</style>
+
+<div class="card" style="margin-top: 11px">
+    <div class="card-header" style="    text-align: center; display: contents;">
+        <h6 class="card-title" style="font-size: 20px!important;font-weight: bold;">Fiscal Year :  @Model.FirstOrDefault().year_name</h6>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+
+        <div class="row">
+            @{
+                var discount_per = Decimal.Round((Model.Sum(p => p.total_gross_discont).Value / Model.Sum(p => p.total_gross).Value * 100), 2);
+            }
+            <div class="col-md-6" style="max-height: 550px;  overflow-y: auto;">
+                <table id="DTOutletWiseData" class="table  table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th style="background-color:#eef0d7!important"><label class="labelNormal " style="font-weight:bold;font-size:15px!important;">Total</label></th>
+
+                            <th style="background-color:#eef0d7!important;text-align:right;font-weight:bold;font-size:15px;">
+                                <input disabled type="currency" style="background-color:#eef0d7!important;text-align:right;width:100%;font-size: 15px!important;font-weight: bold;color: #1a7ba0;" value="@Decimal.Round(Model.Sum(p=>p.total_gross).Value,0)" class="border-gray-200 form-control">
+
+                            </th>
+                            <th style="background-color:#eef0d7!important;text-align:right;font-weight:bold;font-size:15px;">
+                                <input disabled type="currency" style="background-color:#eef0d7!important;text-align:right;width:100%;font-size: 15px!important;font-weight: bold;color: #1a7ba0;" value="@Decimal.Round(Model.Sum(p=>p.total_gross_discont).Value,0)" class="border-gray-200 form-control">
+
+                            </th>
+                            <th style="background-color:#eef0d7!important;text-align:right;font-weight:bold;font-size:27px;">
+                                <input disabled type="text" style="background-color:#eef0d7!important;text-align:center;width:100%;font-size: 15px!important;font-weight: bold;color: #1a7ba0;" value="@discount_per" class="border-gray-200 form-control">
+                            </th>
+                            <th style="background-color:#eef0d7!important;text-align:right;font-weight:bold;font-size:15px;">
+                                <input disabled type="currency" style="background-color:#eef0d7!important;text-align:right;width:100%;font-size: 15px!important;font-weight: bold;color: #1a7ba0;" value="@Decimal.Round(Model.Sum(p=>p.outlet_gross_net).Value,0)" class="border-gray-200 form-control">
+
+                            </th>
+
+                        </tr>
+                        <tr>
+                            <th style="width:140px;"><label class="labelNormal ">Outlet</label></th>
+
+                            <th style="text-align:right;width:110px;"><label class="labelNormal ">Gross Amount</label></th>
+                            <th style="text-align:right;width:110px;"><label class="labelNormal ">Discount</label></th>
+                            <th style="text-align:center;width:60px;"><label class="labelNormal "> (%)</label></th>
+
+                            <th style="text-align:right;width:110px;"><label class="labelNormal ">Net Amount</label></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sngle in Model)
+                        {
+                            discount_per = 0;
+
+                            if (sngle.total_gross_discont.Value != 0)
+                                discount_per = Decimal.Round((sngle.total_gross_discont.Value / sngle.total_gross.Value * 100), 2);
+
+                            <tr>
+                                <td>
+                                    <label class="labelNormal">@sngle.outlet_name</label>
+                                </td>
+                                <td>
+                                    <input disabled type="currency" style="text-align:right;width:100%;font-size: 14px!important;font-weight: bold;color: blue;" value="@Decimal.Round( sngle.total_gross.Value,2).ToString()"  class="border-gray-200 rounded-sm text-sm">
+                                </td>
+                                <td>
+                                    <input disabled type="currency" style="text-align:right;width:100%;font-size: 14px!important;font-weight: bold;color: blue;" value="@Decimal.Round( sngle.total_gross_discont.Value,2).ToString()" class="border-gray-200 rounded-sm text-sm">
+                                </td>
+                                <td>
+                                    <input disabled type="text" style="text-align:center;width:100%;font-size: 14px!important;font-weight: bold;color: blue;" value="@discount_per.ToString()" class="border-gray-200  form-control">
+                                </td>
+                                <td>
+                                    <input disabled type="currency" style="text-align:right;width:100%;font-size: 14px!important;font-weight: bold;color: blue;" value="@Decimal.Round( sngle.outlet_gross_net.Value,2).ToString()"  class="border-gray-200 rounded-sm text-sm">
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <div class="box">
+                    <div class="box-header">
+                        <div class="text-center">
+                            <h5 class="box-title my-auto"><b>Outlet Wise Pie Chart</b></h5>
+
+                        </div>
+                    </div>
+                    <div class="box-body" style="background: antiquewhite;">
+                        <div id="dvoutletwisechart" style="height:500px;width:100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,288 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_mcd_receive_DTO;
+@{
+    ViewBag.Title = "TranMcdReceive Edit";
+    Layout = null;
+}
+
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmView" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+      <input type="hidden" id="received_id" value="@Model.received_id">
+
+           <div class="card">
+             <div class="card-header">
+                   <h6 class="card-title">Item Received View</h6> 
+             </div>
+       
+             <div class="card-body">
+               		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Receive No</label>
+					 <input style="width:100%"  disabled  asp-for="receive_no" type="text" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="receive_no" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Po Id</label>
+					<input style="width:100%" disabled   asp-for="po_id" type="number" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="po_id" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Po Date</label>
+					 <input style="width:100%"  disabled  asp-for="po_date" type="date" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="po_date" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Supplier Name</label>
+						<input style="width:100%" disabled asp-for="supplier_name" type="text" class="border-#d1cccc-200 form-control " />
+						
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Unit</label>
+					 <input style="width:100%"  disabled  asp-for="delivery_unit" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="delivery_unit" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Address</label>
+					<input style="width:100%" disabled   asp-for="delivery_address" type="number" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="delivery_address" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Arrival Date</label>
+					 <input style="width:100%"  disabled  asp-for="arrival_date" type="date" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="arrival_date" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Del Chalan No</label>
+					<input style="width:100%" disabled   asp-for="del_chalan_no" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="del_chalan_no" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Del Chalan Date</label>
+					 <input style="width:100%"  disabled  asp-for="del_chalan_date" type="date" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="del_chalan_date" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Tran Mode</label>
+					<input style="width:100%" disabled   asp-for="tran_mode" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="tran_mode" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Transport Type</label>
+					 <input style="width:100%"  disabled  asp-for="transport_type" type="text" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="transport_type" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Tollerence</label>
+					<input style="width:100%" disabled   asp-for="tollerence" type="number" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="tollerence" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Vehical No</label>
+					 <input style="width:100%"  disabled  asp-for="vehical_no" type="text" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="vehical_no" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Driver Name</label>
+					<input style="width:100%" disabled   asp-for="driver_name" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="driver_name" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delevary Status</label>
+					 <input style="width:100%"  disabled  asp-for="delevary_status" type="text" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="delevary_status" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Lc No</label>
+					<input style="width:100%" disabled   asp-for="lc_no" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="lc_no" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Lc Date</label>
+					 <input style="width:100%"  disabled  asp-for="lc_date" type="date" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="lc_date" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Invoice No</label>
+					<input style="width:100%" disabled   asp-for="invoice_no" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="invoice_no" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Invoice Date</label>
+					 <input style="width:100%"  disabled  asp-for="invoice_date" type="date" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="invoice_date" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Documents</label>
+					<input style="width:100%" disabled   asp-for="documents" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="documents" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Approved By</label>
+					 <input style="width:100%"  disabled  asp-for="approved_by" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="approved_by" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Date Approved</label>
+					<input style="width:100%" disabled   asp-for="date_approved" type="date" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="date_approved" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Item Structure Group Id</label>
+					 <input style="width:100%"  disabled  asp-for="item_structure_group_id" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="item_structure_group_id" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Po Status</label>
+					<input style="width:100%" disabled   asp-for="po_status" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="po_status" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+
+             </div>
+          </div>
+	 
+	
+  
+
+</form>
+
+
+
+
+

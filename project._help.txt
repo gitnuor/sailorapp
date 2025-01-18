@@ -1,0 +1,14 @@
+function closePopup_popup() {
+            $('#modalcontent-common_popup').html("");
+
+            $('#modalcontainer_common_popup').modal("hide");
+
+            $('#modalcontainer_common_popup').on('hidden.bs.modal', function () {
+                $('body').addClass('modal-open');
+            });
+        }
+function closePopup() {
+            $('#modalcontent-common').html("");
+
+            $('#modalcontainer_common').modal("hide");
+        }

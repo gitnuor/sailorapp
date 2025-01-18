@@ -1,0 +1,909 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@using EPYSLSAILORAPP.Application.DTO;
+@model EPYSLSAILORAPP.Domain.DTO.gen_supplier_information_DTO;
+@{
+    ViewBag.Title = "GenSupplierInformation Edit";
+    Layout = null;
+}
+
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmView" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <input type="hidden" id="gen_supplier_information_id" value="@Model.gen_supplier_information_id">
+    <input type="hidden" id="gen_supplier_information_id" value="@Model.gen_supplier_information_id">
+    <div class="box" style="margin-top:7px;">
+        <div class="row">
+            <div class="col-md-12" id="tab_bar_style">
+                <ul id="tabSuppplier" class="nav nav-tabs">
+                    <li class="active" tab_index="1">
+                        <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">General Info</a>
+                    </li>
+                    <li class="" tab_index="2">
+                        <a href="#det2" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Legal Info</a>
+                    </li>
+                    <li class="" tab_index="3" style="width: 200px;">
+                        <a href="#det3" style="text-decoration: unset;width:100%;" class=" tab_link  " data-toggle="tab">Branch & Concern Persons</a>
+                    </li>
+
+                    <li class="" tab_index="4">
+                        <a href="#det4" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Financial Info</a>
+                    </li>
+                    <li class="" tab_index="5">
+                        <a href="#det5" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Bank Info</a>
+                    </li>
+                    <li class="" tab_index="6">
+                        <a href="#det6" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Sub Group Info</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="det1" tabpane_index="1">
+                        <div class="box">
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Name</label>
+                                        <input style="width:100%" asp-for="name" type="text" class="border-#d1cccc-200 form-control " />
+                                        <span asp-validation-for="name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Display Code</label>
+                                        <input style="width:100%" asp-for="display_code" type="text" class="border-#d1cccc-200 form-control " />
+                                        <span asp-validation-for="display_code" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fax No</label>
+                                        <input style="width:100%" asp-for="fax_no" type="text" class="border-#d1cccc-200 form-control " />
+                                        <span asp-validation-for="fax_no" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Email</label>
+                                        <input style="width:100%" asp-for="email" type="text" class="border-#d1cccc-200 form-control " />
+                                        <span asp-validation-for="email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Office Address</label>
+                                        <input style="width:100%" asp-for="office_address" type="text" class="border-#d1cccc-200 form-control " />
+                                        <span asp-validation-for="office_address" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Factory Address</label>
+                                        <input style="width:100%" asp-for="factory_address" type="text" class="border-#d1cccc-200 form-control " />
+                                        <span asp-validation-for="factory_address" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;"> Contact Category</label>
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                        {
+                                        ddlId = "ddl_contact_category",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_contact_category
+                                        .Select(a =>
+                                        new SelectListItem
+                                        {
+                                        Text = a.contact_category,
+                                        Value = a.gen_contact_category_id.ToString()
+                                        }
+                                        ).ToList()),
+                                        selectedvalue = Model.obj_contact_category.gen_contact_category_id.ToString(),
+                                        cssclass = "form-control",
+                                        enable = true,
+                                        isRequired = false,
+                                        placeholder = "Select Contact Category"
+                                        })
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Contact Person</label>
+                                        <input style="width:100%" asp-for="contact_person" type="text" class="border-#d1cccc-200 form-control " />
+                                        <span asp-validation-for="contact_person" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Country</label>
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                        {
+                                        ddlId = "ddl_country_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_country
+                                        .Select(a =>
+                                        new SelectListItem
+                                        {
+                                        Text = a.country_name,
+                                        Value = a.gen_country_id.ToString()
+                                        }
+                                        ).ToList()),
+                                        selectedvalue = Model.country_id.ToString(),
+                                        cssclass = "form-control",
+                                        enable = true,
+                                        isRequired = false,
+                                        placeholder = "Select Country"
+                                        })
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">City</label>
+                                        <input style="width:100%" asp-for="city" type="text" class="border-#d1cccc-200 form-control " />
+                                        <span asp-validation-for="city" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Agent Name</label>
+                                        <input style="width:100%" asp-for="agent_name" type="text" class="border-#d1cccc-200 form-control " />
+                                        <span asp-validation-for="agent_name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Geographical Location</label>
+
+                                        <br />
+                                        <table id="tblgeographical_location">
+                                            <tr>
+                                                @foreach (var item in Model.List_geographical_location)
+                                                {
+                                                    var strchecked = item.is_checked == true ? "checked" : "";
+                                                    <td style="padding:5px;">
+                                                        <label><input @strchecked class="chkgeographical_location" type="checkbox" style="margin: 3px;" value="@item.gen_geographical_location_id" name="chkgeographical_location" /> @Html.Raw(@item.location_title)</label>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        </table>
+
+                                        <span asp-validation-for="geographical_location_list" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane " id="det2" tabpane_index="2">
+                        <div class="box">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title">VAT/BIN</h6>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Vat Bin Number</label>
+                                                        <input style="width:100%" asp-for="vat_bin_number" type="text" class="border-#d1cccc-200 form-control " />
+                                                        <span asp-validation-for="vat_bin_number" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Vat Bin Number Start Date</label>
+                                                        <input style="width:100%" asp-for="vat_bin_number_start_date" type="date" class="border-#d1cccc-200 form-control " />
+                                                        <span asp-validation-for="vat_bin_number_start_date" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Vat Bin Number Expire Date</label>
+                                                        <input style="width:100%" asp-for="vat_bin_number_expire_date" type="date" class="border-#d1cccc-200 form-control " />
+                                                        <span asp-validation-for="vat_bin_number_expire_date" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="box">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <button type="button" class="btn btn-danger " onclick="uploadFile(1);" id="btnbindoc" style="width:250px;">
+                                                                    Upload VAT/BIN Document
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <input type="file" style="display:none" id="attachments_vatbindocs" multiple />
+                                                        <hr />
+                                                        <div class="row" id="vatbin_docs_frames">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title">TIN Info</h6>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Tin Number</label>
+                                                        <input style="width:100%" asp-for="tin_number" type="text" class="border-#d1cccc-200 form-control " />
+                                                        <span asp-validation-for="tin_number" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="box">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <button type="button" class="btn btn-danger " onclick="uploadFile(2);" id="btntindoc" style="width:250px;">
+                                                                    Upload TIN Document
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <input type="file" style="display:none" id="attachments_tindocs" multiple />
+                                                        <hr />
+                                                        <div class="row" id="tin_docs_frames">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+
+
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="card-title">Trade License Info</h6>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Trade License</label>
+                                                        <input style="width:100%" asp-for="trade_license" type="text" class="border-#d1cccc-200 form-control " />
+                                                        <span asp-validation-for="trade_license" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Trade License Start Date</label>
+                                                        <input style="width:100%" asp-for="trade_license_start_date" type="date" class="border-#d1cccc-200 form-control " />
+                                                        <span asp-validation-for="trade_license_start_date" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Trade License Expire Date</label>
+                                                        <input style="width:100%" asp-for="trade_license_expire_date" type="date" class="border-#d1cccc-200 form-control " />
+                                                        <span asp-validation-for="trade_license_expire_date" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="box">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <button type="button" class="btn btn-danger " onclick="uploadFile(3);" id="btntindoc" style="width:250px;">
+                                                                    Trade License Info
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <input type="file" style="display:none" id="attachments_tradelicensedocs" multiple />
+                                                        <hr />
+                                                        <div class="row" id="tradelicense_docs_frames">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="det3" tabpane_index="3">
+                        <div class="box">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <button id="btnaddNewBranchInfo" onclick="AddNewBranchInfo();return false;">Add Branch</button>
+                                </div>
+
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-12">
+
+                                    <table id="DTBranchInfo" class="dataTable table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th><label class="labelNormal ">Branch Name</label></th>
+
+                                                <th><label class="labelNormal ">Address</label></th>
+                                                <th><label class="labelNormal">Remove</label></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var objsngle in Model.List_branch)
+                                            {
+                                                <tr class="dynrow">
+
+                                                    <td><input type="text" class=" txt_name border-gray-200 form-control" value="@objsngle.branch_name"></td>
+                                                    <td><input type="text" class=" txt_address border-gray-200 form-control" value="@objsngle.address"></td>
+
+                                                    <td>
+                                                        <button onclick="RemoveRow(this);return false;" type="button" class="btn btn-danger ">
+                                                            Remove
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <hr />
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <button id="btnConcernedPerson" onclick="AddConcernedPerson();return false;">Add Concerned Person</button>
+                                </div>
+
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <table id="DTConcernedPerson" class="dataTable table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th><label class="labelNormal ">Name</label></th>
+
+                                                <th><label class="labelNormal ">Designaton</label></th>
+                                                <th><label class="labelNormal">Phone Number</label></th>
+                                                <th><label class="labelNormal">Email</label></th>
+                                                <th><label class="labelNormal">Remove</label></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var objsngle in Model.List_concern_person)
+                                            {
+                                                <tr class="dynrow">
+
+                                                    <td><input type="text" class=" txt_name border-gray-200 form-control" value="@objsngle.name"></td>
+                                                    <td><input type="text" class=" txt_designation border-gray-200 form-control" value="@objsngle.designation"></td>
+                                                    <td><input type="text" class=" txt_phone border-gray-200 form-control" value="@objsngle.phone"></td>
+                                                    <td><input type="email" class=" txt_email border-gray-200 form-control" value="@objsngle.email"></td>
+
+                                                    <td><button onclick="RemoveRow(this);return false;" type="button" class="btn btn-danger ">Remove</button></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="det4" tabpane_index="4">
+                        <div class="box">
+                            <div class="row">
+                                <div class="col-md-3">
+
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Credit Period</label>
+
+                                </div>
+                                <div class="col-md-3">
+                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                    ddlId = "ddl_credit_period",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_creditperiod
+                                    .Select(a =>
+                                    new SelectListItem
+                                    {
+                                    Text = a.credit_period,
+                                    Value = a.gen_credit_period_id.ToString()
+                                    }
+                                    ).ToList()),
+                                    selectedvalue =Model.obj_credit_period.gen_credit_period_id.ToString(),
+                                    cssclass = "form-control",
+                                    enable = true,
+                                    isRequired = false,
+                                    placeholder = "Select Credit Period"
+                                    })
+                                    <span asp-validation-for="vat_bin_number" class="text-danger"></span>
+
+                                </div>
+                                <div class="col-md-3">
+
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Calculation of Tenure</label>
+
+                                </div>
+                                <div class="col-md-3">
+                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                    ddlId = "ddl_calculation_of_period",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_calculationoftenure
+                                    .Select(a =>
+                                    new SelectListItem
+                                    {
+                                    Text = a.calculation_of_tenure,
+                                    Value = a.gen_calculation_of_tenure_id.ToString()
+                                    }
+                                    ).ToList()),
+                                    selectedvalue = Model.obj_calculation_of_tenure.gen_calculation_of_tenure_id.ToString(),
+                                    cssclass = "form-control",
+                                    enable = true,
+                                    isRequired = false,
+                                    placeholder = "Select Calculation of Tenure"
+                                    })
+                                    <span asp-validation-for="vat_bin_number" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="labelNormal ">Inco-Term</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="labelNormal ">Payment Term</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="labelNormal ">Payment Method</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="labelNormal ">Mode of Transaction</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <table id="tblinco_term">
+                                        @foreach (var item in Model.List_incoterm)
+                                        {
+                                            var strchecked = item.is_checked == true ? "checked" : "";
+                                            <tr>
+                                                <td style="padding:5px;">
+                                                    <input @strchecked type="checkbox" style="margin: 3px;" value="@item.gen_inco_term_id" name="chkinco_term" /> @Html.Raw(@item.inco_term)
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </table>
+                                </div>
+                                <div class="col-md-3">
+                                    <table id="tblpayment_term">
+                                        @foreach (var item in Model.List_paymentterm)
+                                        {
+                                            var strchecked = item.is_checked == true ? "checked" : "";
+                                            <tr>
+                                                <td style="padding:5px;">
+                                                    <input @strchecked type="checkbox" style="margin: 3px;" value="@item.gen_payment_term_id" name="chkinco_term" /> @Html.Raw(@item.payment_term)
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </table>
+                                </div>
+                                <div class="col-md-3">
+                                    <table id="tblpayment_method">
+                                        @foreach (var item in Model.List_paymentmethod)
+                                        {
+                                            var strchecked = item.is_checked == true ? "checked" : "";
+                                            <tr>
+                                                <td style="padding:5px;">
+                                                    <input @strchecked type="checkbox" style="margin: 3px;" value="@item.gen_payment_method_id" name="chkinco_term" /> @Html.Raw(@item.payment_method)
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </table>
+                                </div>
+                                <div class="col-md-3">
+                                    <table id="tblmode_of_transacton">
+                                        @foreach (var item in Model.List_mode_of_transaction)
+                                        {
+                                            var strchecked = item.is_checked == true ? "checked" : "";
+                                            <tr>
+                                                <td style="padding:5px;">
+                                                    <input @strchecked type="checkbox" style="margin: 3px;" value="@item.gen_mode_of_transaction_id" name="chkinco_term" /> @Html.Raw(@item.mode_of_transaction)
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane " id="det5" tabpane_index="5">
+                        <div class="box">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <button id="btnNewBankInfo" onclick="AddNewBankInfo();return false;">Add Bank</button>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <table id="DTBankInfo" class="dataTable table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th><label class="labelNormal ">Bank Name</label></th>
+                                                <th><label class="labelNormal ">Branch </label></th>
+                                                <th><label class="labelNormal ">A/C No </label></th>
+                                                <th><label class="labelNormal ">Routing No </label></th>
+                                                <th><label class="labelNormal ">SWIFT Code </label></th>
+                                                <th><label class="labelNormal ">Is Default </label></th>
+                                                <th><label class="labelNormal">Remove</label></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr style="display:none;">
+                                                <td>
+                                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                                    {
+                                                    ddlId = "ddl_bank",
+                                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_bank
+                                                    .Select(a =>
+                                                    new SelectListItem
+                                                    {
+                                                    Text = a.bank_name,
+                                                    Value = a.gen_bank_id.ToString()
+                                                    }
+                                                    ).ToList()),
+                                                    selectedvalue = "",
+                                                    cssclass = "form-control ddl_bank",
+                                                    enable = true,
+                                                    isRequired = false,
+                                                    placeholder = "Select Bank"
+                                                    })
+                                                </td>
+                                                <td>
+                                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                                    {
+                                                    ddlId = "ddl_bank_branch",
+                                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_bankbranch
+                                                    .Select(a =>
+                                                    new SelectListItemExtended
+                                                    {
+                                                    Text = a.branch_name,
+                                                    Value = a.gen_bank_branch_id.ToString(),
+                                                    str_other_value=a.gen_bank_id.ToString()
+
+                                                    }
+                                                    ).ToList()),
+                                                    selectedvalue = "",
+                                                    cssclass = "form-control ddl_bank_branch",
+                                                    enable = true,
+                                                    isRequired = false,
+                                                    placeholder = "Select Branch "
+                                                    })
+                                                </td>
+                                                <td>
+                                                    <input class="form-control txt_acno" type="text" />
+                                                </td>
+                                                <td>
+                                                    <input class="form-control txt_routingno" type="text" />
+                                                </td>
+                                                <td>
+                                                    <input class="form-control txt_swiftcode" type="text" />
+                                                </td>
+                                                <td>
+                                                    <select class="form-control is_default">
+                                                        <option>Yes</option>
+                                                        <option>No</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button onclick="RemoveRow(this);return false;" type="button" class="btn btn-danger ">Remove</button>
+                                                </td>
+                                            </tr>
+                                            @{
+                                                var bank_indx = 0;
+                                            }
+                                            @foreach (var objsngle in Model.List_bank_account_info)
+                                            {
+
+                                                <tr class="dynrow">
+                                                    <td>
+                                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                                    {
+                                                    ddlId = "ddl_bank"+bank_indx.ToString(),
+                                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_bank
+                                                    .Select(a =>
+                                                    new SelectListItem
+                                                    {
+                                                    Text = a.bank_name,
+                                                    Value = a.gen_bank_id.ToString()
+                                                    }
+                                                    ).ToList()),
+                                                    selectedvalue = objsngle.gen_bank.gen_bank_id.ToString(),
+                                                    cssclass = "form-control ddl_bank",
+                                                    enable = true,
+                                                    isRequired = false,
+                                                    placeholder = "Select Bank"
+                                                    })
+                                                    </td>
+                                                    <td>
+                                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                                    {
+                                                    ddlId = "ddl_bank_branch"+bank_indx.ToString(),
+                                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_bankbranch
+                                                    .Select(a =>
+                                                    new SelectListItemExtended
+                                                    {
+                                                    Text = a.branch_name,
+                                                    Value = a.gen_bank_branch_id.ToString(),
+                                                    str_other_value=a.gen_bank_id.ToString()
+
+                                                    }
+                                                    ).ToList()),
+                                                    selectedvalue = objsngle.gen_bankbranch.gen_bank_branch_id.ToString(),
+                                                    cssclass = "form-control ddl_bank_branch",
+                                                    enable = true,
+                                                    isRequired = false,
+                                                    placeholder = "Select Branch "
+                                                    })
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control txt_acno" value="@objsngle.acno" type="text" />
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control txt_routingno" value="@objsngle.routingno" type="text" />
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control txt_swiftcode" value="@objsngle.swiftcode" type="text" />
+                                                    </td>
+                                                    <td>
+                                                        @{
+                                                            var strYes = objsngle.is_default == "Yes" ? "selected" : "";
+                                                            var strNo = objsngle.is_default == "Yes" ? "selected" : "";
+                                                        }
+                                                        <select class="form-control is_default">
+                                                            <option value="Yes" selected="@strYes">Yes</option>
+                                                            <option value="No" selected="@strNo">No</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <button onclick="RemoveRow(this);return false;" type="button" class="btn btn-danger ">Remove</button>
+                                                    </td>
+                                                </tr>
+                                                bank_indx++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="det6" tabpane_index="6">
+                        <div class="box">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <button id="btnItemSubGroup" onclick="AddItemSubGroup();return false;">Add Item Sub Group</button>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+
+                                    <table id="DTItemSubGroup" class="dataTable table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th><label class="labelNormal ">Item Sub Group</label></th>
+                                                <th><label class="labelNormal ">Period From </label></th>
+                                                <th><label class="labelNormal ">Period To </label></th>
+                                                <th><label class="labelNormal ">Supplier Type </label></th>
+                                                <th><label class="labelNormal ">Is Active </label></th>
+                                                <th><label class="labelNormal">Remove</label></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                          
+                                            @{
+                                                var item_subgroup_indx = 0;
+                                            }
+                                            @foreach (var objsngle in Model.List_item_subgroup_info)
+                                            {
+                                                <tr class="dynrow">
+                                                    <td>
+                                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                                    {
+                                                    ddlId = "ddl_item_sub_group"+item_subgroup_indx.ToString(),
+                                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_itemstructuregroupsub
+                                                    .Select(a =>
+                                                    new SelectListItem
+                                                    {
+                                                    Text = a.sub_group_name,
+                                                    Value = a.gen_item_structure_group_sub_id.ToString()
+                                                    }
+                                                    ).ToList()),
+                                                    selectedvalue =objsngle.item_structure_group.gen_item_structure_group_sub_id.ToString(),
+                                                    cssclass = "form-control ddl_item_sub_group",
+                                                    enable = true,
+                                                    isRequired = false,
+                                                    placeholder = "Select Item Sub Group"
+                                                    })
+                                                    </td>
+
+                                                   
+                                                    <td>
+                                                        @{
+                                                            var strImporter = objsngle.supplier_type == "Importer" ? "selected" : "";
+                                                            var strManufacturer = objsngle.supplier_type == "Manufacturer" ? "selected" : "";
+                                                        }
+                                                        <select class="form-control supplier_type">
+                                                            <option value="Importer" selected="@strImporter">Importer</option>
+                                                            <option value="Manufacturer" selected="@strManufacturer">Manufacturer</option>
+                                                        </select>
+
+                                                    </td>
+
+                                                    <td>
+                                                        @{
+                                                            var strIsactive = objsngle.is_active == "Yes" ? "selected" : "";
+                                                            var strInactactive = objsngle.is_active == "No" ? "selected" : "";
+                                                        }
+                                                        <select class="form-control is_active">
+                                                            <option value="Yes" selected="@strIsactive">Yes</option>
+                                                            <option value="No" selected="@strInactactive">No</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <button onclick="RemoveRow(this);return false;" type="button" class="btn btn-danger ">Remove</button>
+                                                    </td>
+                                                </tr>
+                                                item_subgroup_indx++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+      
+    </div>
+
+</form>
+
+
+
+
+

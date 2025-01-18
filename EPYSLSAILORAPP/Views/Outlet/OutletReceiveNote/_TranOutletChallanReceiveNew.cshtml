@@ -1,0 +1,293 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+
+@model EPYSLSAILORAPP.Domain.DTO.tran_delivery_outlet_challan_DTO;
+@{
+    ViewBag.Title = "Outlet Challan View";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+    .form-group1 {
+        margin-bottom: 3px !important;
+        padding: 0.1rem !important;
+        font-size: 12px !important;
+    }
+
+    #fileNamesContainer p {
+        margin-bottom: 0;
+    }
+</style>
+
+
+@{
+    var techpacklist = ViewBag.techpacklist;
+    if (techpacklist == null)
+    {
+        techpacklist = new List<SelectListItem>();
+    }
+}
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Outlet Challan View</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Delivery Challan No</label>
+                        <input style="width:100%" readonly asp-for="delivery_outlet_challan_no" type="text" class="border-#d1cccc-200 form-control " />
+                        <input style="width:100%" value="@Model.tran_delivery_outlet_challan_id" id="outlet_challan_id" type="hidden" class="border-#d1cccc-200 form-control " />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group" style="margin-bottom: 0.3rem;">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Challan Date</label>
+                        <input style="width:100%" asp-for="delivery_outlet_challan_date" type="date" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="delivery_outlet_challan_date" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Delivery From</label>
+                        <input style="width:100%" asp-for="SailorFactory" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Delivery To</label>
+                        <input style="width:100%" asp-for="outlet_name" type="text" class="border-#d1cccc-200 form-control " />
+                        <input style="width:100%" value="@Model.outlet_id" id="outlet_id" type="hidden" class="border-#d1cccc-200 form-control " />
+                      
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Delivery Address</label>
+                        <input style="width:100%" asp-for="delivery_address" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="delivery_address" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Vehicle Type</label>
+                        <input style="width:100%" asp-for="vehical_type" type="text" class="border-#d1cccc-200 form-control " />
+                        <input style="width:100%" value="@Model.transport_type" id="transport_id" type="hidden" class="border-#d1cccc-200 form-control " />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Vehicle Number</label>
+                        <input style="width:100%" asp-for="transport_number" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="transport_number" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Driver Name</label>
+                        <input style="width:100%" asp-for="driver_name" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="driver_name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Driver Contact No</label>
+                        <input style="width:100%" asp-for="driver_contact" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="driver_contact" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" style="margin-bottom: 0.3rem;">
+                        <label class="col-sm-5 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Challan Receive Date</label>
+                        <input style="width:100%" id="outlet_receive_date" type="date" class="border-#d1cccc-200 form-control " />
+                       
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Note</label>
+                        <input style="width:100%" asp-for="remarks" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="remarks" class="text-danger"></span>
+                    </div>
+                </div>
+               
+
+
+            </div>
+
+            <div class="row" id="divTablePacking">
+                <div class="col-md-12">
+                    <table style="font-size:9px;" id="DTOutletChallanReceive" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                        <thead>
+                            <tr>
+       
+                                <th><label class="labelNormal">Category</label></th>
+                                <th><label class="labelNormal">Style No</label></th>
+                                <th><label class="labelNormal">Color Code</label></th>
+                                <th><label class="labelNormal">Color</label></th>
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">Barcode</label></th>
+                                <th><label class="labelNormal">M.Unit </label></th>
+                                <th><label class="labelNormal">MRP</label></th>
+                                <th><label class="labelNormal">Distribute Qty</label></th>
+                                <th><label class="labelNormal">Challan Qty</label></th>
+                                <th><label class="labelNormal">Received Qty</label></th>
+                                <th><label class="labelNormal">Reject Qty</label></th>
+                                <th><label class="labelNormal">Short Qty</label></th>
+                                <th><label class="labelNormal">Value</label></th>
+                                <th><label class="labelNormal">Remarks</label></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int count = 1;
+                            }
+                            @foreach (var obj in Model.details)
+                            {
+                                var availableQty = obj.allocate_quantity - obj.challan_quantity;
+                                var tot_val = @obj.mrp * obj.challan_quantity;
+                                <tr>
+                                     <td><input disabled type='text' class='form-control item_id' value="@obj.style_item_product_name"></td>
+                                    <td style="display:none"><input disabled type='number' class='form-control style_item_product_id' value="@obj.style_item_product_id"></td>
+                                    <td><input disabled type='text' class='form-control' value="@obj.techpack_number"></td>
+                                    <td style="display:none"><input disabled type='number' class='form-control techpack_id' value="@obj.techpack_id"></td>
+                                    <td><input disabled type='text' class='form-control color_code' value="@obj.color_code"></td>
+
+                                    <td><input type='text' class='form-control color_code_background' style="background-color:@obj.color_code;"></td>
+
+                                    <td><input disabled type='text' class='form-control style_product_size' value="@obj.style_product_size"></td>
+                                    <td style="display:none"><input disabled type='number' class='form-control style_product_size_group_detid' value="@obj.style_product_size_group_detid"></td>
+
+                                    <td><input disabled type='text' class='form-control barcode' value="@obj.barcode"></td>
+                                    <td><input disabled type='text' class='form-control style_product_unit' value="@obj.style_product_unit"></td>
+                                    <td><input disabled type='number' class='form-control mrp' value="@obj.mrp"></td>
+                                    <td><input disabled type='number' class='form-control distribute_size_quantity' value="@obj.allocate_quantity"></td>
+                                    <td><input disabled type='number' class='form-control challan_quantity' value="@obj.challan_quantity"></td>                               
+                                    <td><input type='number' class='form-control receive_quantity' value="@obj.challan_quantity" onchange='updateBalanQtyReceive(this);'></td>
+                                    <td><input type='number' class='form-control reject_quantity' value=0 onchange='updateBalanQtyReject(this);'></td>
+                                    <td><input type='number' class='form-control shortQty' value=0></td>
+                                    <td><input type='number' class='form-control total_value' value="@tot_val"></td>
+                                    <td><input disabled type='text' class='form-control remarks' value="@obj.remarks"></td>
+
+                                </tr>
+
+                                count++;
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+     
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                <button style="width:180px;" type="button" class="btn btn-success " id="SaveOutletChallanReceive1" onclick="SaveOutletChallanReceive(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+                </div>
+            </div>
+   
+
+    </div>
+    <!-- /.card-body -->
+
+
+
+</form>
+
+
+<script>
+
+    function updateBalanQtyReceive(input) {
+        
+        const row = input.closest('tr');
+        const challan_quantity = parseInt(row.querySelector('.challan_quantity').value) || 0;
+        const receive_quantity = parseInt(row.querySelector('.receive_quantity').value) || 0;
+        const mrp = parseInt(row.querySelector('.mrp').value) || 0;
+        const reject_quantity = parseInt(row.querySelector('.reject_quantity').value) || 0;
+
+        const total_quantity = receive_quantity *  mrp;
+        row.querySelector('.total_value').value = total_quantity;
+
+        const shortQty = challan_quantity - (receive_quantity + reject_quantity);
+        row.querySelector('.shortQty').value = shortQty;
+
+             
+    }
+
+    function updateBalanQtyReject(input) {
+        const row = input.closest('tr');
+        const challan_quantity = parseInt(row.querySelector('.challan_quantity').value) || 0;
+        const receive_quantity = parseInt(row.querySelector('.receive_quantity').value) || 0;
+        const mrp = parseInt(row.querySelector('.mrp').value) || 0;
+        const reject_quantity = parseInt(row.querySelector('.reject_quantity').value) || 0;
+        
+        const shortQty = challan_quantity - (receive_quantity + reject_quantity);
+        row.querySelector('.shortQty').value = shortQty;
+    }
+
+</script>
+
+

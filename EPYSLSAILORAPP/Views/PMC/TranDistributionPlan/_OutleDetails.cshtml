@@ -1,0 +1,113 @@
+@using Newtonsoft.Json;
+@model List<EPYSLSAILORAPP.Domain.DTO.tran_distribution_plan_outlet_details_DTO>;
+@{
+    ViewBag.Title = " Plan";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<form method="POST" id="frmOutletDetails" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <div class="row">
+
+        <div class="box table-responsive" style="max-height: 50vh; overflow-y:auto;">
+
+                <table style="font-size:10px;" id="DTOutletDetails" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th><label class="labelNormal">SL No</label></th>
+                            <th><label class="labelNormal">Outlet</label></th>
+                            <th><label class="labelNormal">Quantity</label></th>
+
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                        }
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td>@count</td>
+
+                                <td><input type='text' disabled class='form-control outlet_name' value="@obj.outlet_name"></td>
+                                <td style="display:none"><input type='number' disabled class='form-control outlet_id' value="@obj.outlet_id"></td>
+                                <td><input type='number' class='form-control received_quantity' onfocusout="sumQuantity()" value="@obj.received_quantity"></td>
+
+
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2"><strong>Total  Quantity:</strong></td>
+                            <td><input type='number' disabled class='form-control' id="totalQuantity"  onfocusout="sumQuantity()" value="0"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+     
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4" style="text-align:right">
+            <button type="button" class="btn btn-success" onclick="AddFailedQty();"><i class="fa fa-save"></i>&nbsp;&nbsp;Done</button>
+
+        </div>
+
+    </div>
+
+</form>
+
+<script>
+    function sumQuantity() {
+        var total = 0;
+        $.each($("#DTOutletDetails tbody tr"), function (key, val) {
+
+            total = total + parseInt($(val).closest("tr").find(".received_quantity").val());
+
+        });
+        $("#totalQuantity").val(total);
+
+    }
+
+    function AddFailedQty() {
+      var  outlet_list = [];
+        $.each($("#DTOutletDetails tbody tr"), function (key, val) {
+           
+            var outlet = {
+                outlet_id: $(val).closest("tr").find(".outlet_id").val(),
+                received_quantity: parseInt($(val).closest("tr").find(".received_quantity").val())
+
+            }
+            outlet_list.push(outlet);
+
+        });
+        $(tr_parent_node).find(".outlet_param").val(JSON.stringify(outlet_list));
+        $(tr_parent_node).each(function () {
+            $(this).find('td').css('background-color', '#f4ee76');
+            $(this).find(".color_code").parent().next().css('background-color', $(tr_parent_node).find(".color_code").val());
+        });
+        closePopup_outlet();
+       
+
+        
+    }
+</script>
+
+
+
+
+

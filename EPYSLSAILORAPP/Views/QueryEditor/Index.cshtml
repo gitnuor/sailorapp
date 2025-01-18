@@ -1,0 +1,566 @@
+﻿@using Newtonsoft.Json;
+@using System.Data;
+@model EPYSLSAILORAPP.Domain.DTO.tran_plan_allocate_DTO;
+@{
+    ViewBag.Title = "Designer Distribution";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .qConnectedSortable {
+        border: 1px solid #000000;
+        position: relative;
+        top: 5px;
+        width: 120px;
+        /*height: 28px;*/
+        margin: 0;
+        padding: 1px;
+        display: inline-block;
+    }
+
+    .lowerdiv {
+        /*min-height: 150px;*/
+        padding: 15px;
+        width: 100%;
+        border: 0px;
+        background: lightblue;
+        top: auto;
+    }
+
+    .qConnectedSortable {
+        border: 1px solid #000000;
+        position: relative;
+        top: 5px;
+        width: 120px;
+        /*height: 41px;*/
+        margin: 0;
+        padding: 1px;
+        display: inline-block;
+    }
+
+    #mainsortable li {
+        border: 0px;
+        /*min-height: 27px;*/
+        position: relative;
+        top: 5px;
+        list-style-type: none;
+        float: left;
+        margin: 5px;
+    }
+
+    .ui-sortable-handle {
+        -ms-touch-action: none;
+        touch-action: none;
+        text-align: left;
+    }
+
+    .text-lg {
+        font-size: 22px !important;
+        /*line-height: 26px !important;*/
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    .liitem {
+        cursor: pointer;
+        float: left;
+        margin-left: -2px;
+        background: white;
+        font-family: Lucida Bright,Georgia,serif;
+        display: inline-box;
+        font-size: 11pt;
+        margin-top: 10px;
+        width: 100%;
+        padding: 5px;
+    }
+
+</style>
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Dashboard</h1>
+                </div>
+                <div class="col-sm-6" >
+                    <input type="text" style="width:60%;float:left;" class="form-control" id="txtfncname" />
+
+                    <button id="btngenquery" style="width:35%;float:right;" onclick="GenerateQuery();">Generate Query</button>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="row" style=" margin-left:-1px!important; border: 1px solid #efe7e7; margin-bottom: 16px!important;">
+            <div class="col-md-3" style=" margin-bottom: 12px;">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12" id="ddForm">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+
+                                <div class="row">
+                                </div>
+                            </div>
+
+                            @{
+                                DataTable dt = ViewBag.Tables;
+                            }
+
+                            <div id="questionTextContainer">
+
+                                <select id="ddlAllTables" class="  form-control" style="padding:10px;width:100%;border:0px;background: lightblue;top:auto;">
+
+                                    @for (int i = 0; i < dt.Rows.Count; i++)
+                                    {
+                                        <option> @dt.Rows[i]["table_name"].ToString()</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+
+                <div class="row" id="dvTables" style="max-height:1000px;overflow-y:scroll;">
+                </div>
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 12px;">
+                        <label>Query</label>
+                        <div contenteditable="true" id="dvQuery" style="min-height:1000px;width:100%;"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+      
+    </div>
+</div>
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 30% !important; max-width: 30% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Table Relation
+                        </h3>
+                    </div>
+                    <div class="col-md-6" >
+                       <button type="button" style="float:right;" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+        var relationList = [];
+        var tableColumnList = [];
+
+        function GenerateQuery() {
+
+            var addedcols = [];
+
+            if (CheckJoin() == 0) { 
+                showErrorAlert("","No Join Found for the red colored tables","Ok");
+                return;
+            }
+
+             var query = "SELECT \n";
+           
+            $.each($("#dvTables .tbldetl"), function (key, val) {
+                
+                var tblname = $(val).attr("table_name");
+
+                $.each($(val).find(".chkSelectColumn"), function (innerkey, chkval) {
+
+                    if ($(chkval).prop("checked")) {
+
+                        if (addedcols.filter(p => p.colname == $(chkval).attr("column_name")).length == 0)
+                        query += GetAbriviation(tblname) + "." + $(chkval).attr("column_name") + ",\n";
+
+                        var col = {
+                            colname: $(chkval).attr("column_name")
+                        };
+                        addedcols.push(col);
+                    }
+
+                });
+
+            });
+
+            query = query.replace(/,\s*$/, '');
+
+            query += " FROM \n";
+
+            var count = 0;
+
+            $.each($("#dvTables .tbldetl"), function (key, val) {
+
+                var tblname = $(val).attr("table_name");
+
+                if (count==0)
+                query += tblname + " " + GetAbriviation(tblname);
+
+                $.each($("#dvTables .tbldetl"), function (innerkey, innerval) {
+
+                    var inner_tblname = $(innerval).attr("table_name");
+
+                    var data_join = relationList.filter(p =>
+                        (p.referenced_table == tblname && p.referencing_table == inner_tblname) 
+                        // ||
+                        // (p.referenced_table == inner_tblname && p.referencing_table == tblname)
+                    );
+
+                    if (tblname != inner_tblname &&
+                        data_join.length > 0) {
+                        query +=  " INNER JOIN \n" +
+                            inner_tblname + " " + GetAbriviation(inner_tblname) + " ON \n"+
+                            GetAbriviation(tblname) + "." + data_join[0].referenced_column + " = " +
+                            GetAbriviation(inner_tblname) + "." + data_join[0].referencing_column+" \n";
+
+                    }
+
+                    count++;
+                });
+
+            });
+            var filter_params = ""; var return_params = ""; var where_condition = "";
+            
+            addedcols = [];
+            //chkSelectFilterColumn
+            $.each($("#dvTables .tbldetl"), function (key, val) {
+
+                var tblname = $(val).attr("table_name");
+
+                $.each($(val).find(".chkSelectFilterColumn"), function (innerkey, chkval1) {
+
+                    if ($(chkval1).prop("checked")) {
+                        var dtsinglecol = tableColumnList.filter(p => p.table_name == tblname
+                            && p.column_name == $(chkval1).attr("column_name"));
+
+                        if (where_condition.length==0)
+                            where_condition += " WHERE " + GetAbriviation(tblname) + "." + $(chkval1).attr("column_name") + " = " + $(chkval1).attr("column_name") + "_filter \n";
+                        else
+                            where_condition += " AND "+GetAbriviation(tblname) + "." + $(chkval1).attr("column_name") + " = " + $(chkval1).attr("column_name") + "_filter \n";
+
+                        filter_params +=   $(chkval1).attr("column_name")+"_filter " + dtsinglecol[0].data_type + ",\n";
+                    }
+
+                });
+
+              
+
+                $.each($(val).find(".chkSelectColumn"), function (innerkey, chkval2) {
+
+                    if ($(chkval2).prop("checked")) {
+                       
+                        var dtsinglecol = tableColumnList.filter(p => p.table_name == tblname
+                            && p.column_name == $(chkval2).attr("column_name"));
+
+                        if (addedcols.filter(p => p.colname == $(chkval2).attr("column_name")).length == 0) {
+                            
+                            return_params += $(chkval2).attr("column_name") + " " + dtsinglecol[0].data_type + ",\n";
+
+                            var col = {
+                                colname: $(chkval2).attr("column_name")
+                            };
+                            addedcols.push(col);
+                        }
+                       
+                      
+                    }
+
+                });
+
+            });
+
+            filter_params = filter_params.replace(/,\s*$/, '');
+            return_params = return_params.replace(/,\s*$/, '');
+            where_condition = where_condition.replace(/,\s*$/, '');
+
+            var strfunction = "create function " + $("#txtfncname").val() + "(" + filter_params + ")\n" +
+                "returns TABLE(" + return_params + ")\n" +
+                "language plpgsql\n" +
+                "as \n" +
+                "$$ \n" +
+
+                "BEGIN\n" +
+
+                query + "\n" +
+                where_condition +";\n"+
+
+                "END;\n" +
+                "$$;\n";
+            strfunction = strfunction.replace(/\n/g, "<br>");
+            $("#dvQuery").html(strfunction);
+        }
+
+        function GetAbriviation(text) {
+            var parts = text.split('_'); // Split the text by underscores
+
+            var result = ''; // Initialize result string
+
+            // Iterate through the parts starting from the second one
+            for (var i = 0; i < parts.length; i++) {
+                result += parts[i].charAt(0); // Append the first character after underscore
+            }
+
+            return result; // Return the result string
+        };
+
+        function CheckUncheckAllColumn(btn) {
+            if($(btn).prop("checked"))
+                $(btn).closest(".tbldetl").find(".tr_columns .chkSelectColumn").prop("checked", true);
+            else
+                $(btn).closest(".tbldetl").find(".tr_columns .chkSelectColumn").prop("checked", false);
+        }
+        function RemoveTable(btn) {
+            $(btn).closest(".single_db_table").remove();
+        }
+
+        function getUniqueValues(arr, column) {
+            return arr.map(item => item[column]) // Extract the specified column values
+                .filter((value, index, self) => self.indexOf(value) === index); // Filter out duplicate values
+        }
+
+        function LoadMakeRelation(btn) {
+           
+            var tables = getUniqueValues(tableColumnList, 'table_name');//.filter(p => p.table_name != $(btn).attr("table_name"));
+
+            tables=tables.filter(function (table) {
+                return table!= $(btn).attr("table_name");
+            });
+
+            var dropdown_self = $('<select disabled class="form-control" id="ddlTables_self"></select>');
+            dropdown_self.append($('<option>').text($(btn).attr("table_name")));
+
+            var dropdown_column_self = $('<select  class="form-control" id="ddlColumns_self"><option>Select</option></select>');
+            var cols = tableColumnList.filter(p => p.table_name == $(btn).attr("table_name"));
+
+            $.each(cols, function (index, value) {
+                $(dropdown_column_self).append($('<option>').text(value.column_name));
+            });
+
+            var dropdown = $('<select onchange="LoadDtColumns(this);" class="form-control" id="ddlTables"><option>Select</option></select>');
+           
+            var dropdown_column = $('<select class="form-control" id="ddlColumns"><option>Select</option></select>');
+
+            $.each(tables, function (index, value) {
+                dropdown.append($('<option>').text(value));
+            });
+
+            var html = "<div class='row'><div class='lg-12'>" +
+                "<label > Current Table </label>" +
+                $(dropdown_self).prop('outerHTML') +
+                "</div></div>" +
+                "<div class='row'><div class='lg-12'>" +
+                "<label >Current Column </label>" +
+                $(dropdown_column_self).prop('outerHTML') +
+                "</div></div>"+
+                 "<div class='row'><div class='lg-12'>" +
+                "<label > Reference Table </label>"+
+                $(dropdown).prop('outerHTML') +
+                "</div></div>"+
+                "<div class='row'><div class='lg-12'>" +
+                "<label > Reference Column </label>" +
+                $(dropdown_column).prop('outerHTML') +
+                "</div></div><div class='row'><div class='lg-12'><input type='button' onclick='AddJoin();' value='Join'/></div></div>";
+
+            $('#modalcontent').html(html);
+            $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+            $('#modalcontainer').modal("show");
+        }
+
+        function AddJoin() { 
+
+            var obj = {
+                referenced_column: $("#ddlColumns_self").val(),
+                referenced_table: $("#ddlTables_self").val(),
+                referencing_column: $("#ddlColumns").val(),
+                referencing_table: $("#ddlTables").val(),
+            }
+
+            if (relationList.filter(p => p.referenced_column == $("#ddlColumns_self").val()
+                && p.referenced_table == $("#ddlTables_self").val()
+                && p.referencing_column == $("#ddlColumns").val()
+                && p.referencing_table == $("#ddlTables").val()).length == 0)
+            relationList = relationList.concat(obj);
+            $('#modalcontent').append("");
+            $('#modalcontainer').modal("hide");
+
+            if (CheckJoin() == 0) {
+                showErrorAlert("", "No Join Found for the red colored tables", "Ok");
+                return;
+            }
+            else
+            {
+
+            }
+        }
+
+        function LoadDtColumns(elem)
+        {
+            var cols = tableColumnList.filter(p => p.table_name == $(elem).val());
+
+            $.each(cols, function (index, value) {
+                $("#modalcontent #ddlColumns").append($('<option>').text(value.column_name));
+            });
+        }
+
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function CheckJoin()
+        {
+
+            var isvalid = 1;
+
+            $.each($("#dvTables .tbldetl"), function (key,val) {
+                var tblname = $(val).attr("table_name");
+
+                var isjoin = 0;
+
+                $.each($("#dvTables .tbldetl"), function (innerkey, innerval) {
+                    var inner_tblname = $(innerval).attr("table_name");
+
+                    if (tblname != inner_tblname &&
+                        relationList.filter(p => 
+                           (p.referenced_table == tblname && p.referencing_table == inner_tblname) ||
+                            (p.referenced_table == inner_tblname && p.referencing_table == tblname)).length > 0) {
+
+                        isjoin++;
+                      
+                    }
+                   
+
+                });
+
+                if (isjoin==0) {
+                    isvalid = 0;
+                    $("#dvTables .tbldetl[table_name=" + tblname + "]").css("border", "5px red solid");
+                }
+                else
+                {
+                    $("#dvTables .tbldetl[table_name=" + tblname + "]").css("border", "");
+                }
+
+            });
+
+            return isvalid;
+        }
+
+        $(function () {
+
+            $(".chkSelect").click(function () {
+                var tblname = $(this).attr("table_name");
+
+                if ($(this).prop("checked")) {
+
+                    showLoader("Loading..........");
+
+                    try {
+                        ajaxGetHandler("/QueryEditor/GetTableDetails?tablename=" + tblname, null, function (data) {
+
+                            setTimeout(function () {
+                                hideLoader();
+                            }, 0);
+
+                            $("#dvTables").append(data);
+
+                            CheckJoin();
+
+                        }, true);
+
+
+                    } catch (e) {
+                        hideLoader();
+                    }
+                }
+                else {
+
+                }
+            });
+
+            $("#ddlAllTables").select2({ multiple: true });
+
+            var addedtbl = [];
+
+            $("#ddlAllTables").change(function () {
+
+                var data = $("#ddlAllTables").select2("data");
+
+               
+
+                for (var i = 0; i < data.length; i++) {
+
+                    var tblname = $("#ddlAllTables").select2("data")[i].id;
+
+                    if (addedtbl.filter(p => p.tblname == tblname).length == 0) {
+                        var singletbl = {
+                            tblname: tblname
+                        }
+                        addedtbl.push(singletbl);
+                    }
+                    else{
+                        continue;
+                    }
+
+                    //showLoader("Loading..........");
+
+                    try {
+                        ajaxGetHandler("/QueryEditor/GetTableDetails?tablename=" + tblname, null, function (data) {
+
+                            $("#dvTables").append(data);
+
+                            CheckJoin();
+
+                        }, true);
+
+
+                    } catch (e) {
+                        hideLoader();
+                    }
+
+                }
+            
+            });
+           
+
+        });
+
+    </script>
+}

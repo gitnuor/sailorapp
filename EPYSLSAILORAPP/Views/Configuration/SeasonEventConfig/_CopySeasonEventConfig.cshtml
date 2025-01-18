@@ -1,0 +1,177 @@
+﻿@model EPYSLSAILORAPP.Domain.Entity.BusinessPlanning.gen_season_event_config_ext
+@{
+    Layout = null;
+}
+
+<div class="box" style="border-width:0px;">
+
+    <div class="row">
+        <div class="col-md-6" style="margin-left: 141px;">
+            <input type="hidden" id="fiscal_year_id_copy" style="width:100%" class="border-gray-200 rounded-sm text-sm " />
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;margin-left: 149px;">Fiscal Year</label>
+                <div class="form-group">
+                    <input type="text" id="fiscal_year_text_copy" style="width:100%;text-align: center;" class="border-gray-200 rounded-sm text-sm " disabled />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table style="font-size:10px;" id="DTtranCopySeasonData" class=" table dataTable table-striped table-bordered" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Season</th>
+                <th>Event Title</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.seasonEventConficList)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" style="width:100%" class="border-gray-200 rounded-sm text-sm season_id" asp-for="season_id" value="@item.season_id" />
+                        <input type="hidden" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="added_by" value="@item.added_by" />
+                        <input type="text" style="width:100%" class="border-gray-200 rounded-sm text-sm season_name" asp-for="season_name" value="@item.season_name" disabled />
+                    </td>
+                    <td>
+                        <input type="text" style="width:100%" class="border-gray-200 rounded-sm text-sm event_title" asp-for="event_title" value="@item.event_title" />
+                    </td>
+                    <td>
+                        <input style="width:100%;" type="date" class="start_date border-gray-200 rounded-sm text-sm start_date" value="@item.start_date.Value.ToString("yyyy-MM-dd")">
+                    </td>
+                    <td>
+                        <input onchange="ChangeStartEndDate(this);" style="width:100%;" type="date" class="end_date border-gray-200 rounded-sm text-sm end_date" value="@item.end_date.Value.ToString("yyyy-MM-dd")" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-md-12" style="margin-left:647px;">
+            <button type="button" class="btn btn-primary" id="btnUpdateEvents" onclick="UpdateCopySeasonEventConfig(this);"><i class="fa fa-save"></i>&nbsp;&nbsp;Copy</button>
+            <button type="button" class="btn btn-danger" id="btnCancel"><i class="fa fa-angle-double-left"></i>&nbsp;Cancel</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // your script here
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* <div class="box" style="border-width:0px;">
+
+    <div class="row">
+        <div class="col-md-6" style="margin-left: 141px;">
+            <input type="hidden" id="fiscal_year_id_copy" style="width:100%" class="border-gray-200 rounded-sm text-sm " />
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;margin-left: 97px;">Fiscal Year</label>
+                <div class="form-group">
+                    <input type="text" id="fiscal_year_text_copy" style="width:100%;text-align: center;" class="border-gray-200 rounded-sm text-sm " disabled />
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    @foreach (var item in Model.seasonEventConficList)
+    {
+        <div>
+            <div class="row">
+                <input type="hidden" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="event_id" value="@item.event_id" />
+                <input type="hidden" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="added_by" value="@item.added_by" />
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Season</label>
+                        <div class="form-group">
+                            <input type="text" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="season_name" value="@item.season_name" disabled />
+                        </div>
+
+
+                    </div>
+                </div>
+              
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Event Title</label>
+
+                    <div class="form-group">
+                        <input type="text" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="event_title" value="@item.event_title" />
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Starte Date</label>
+
+                    <div class="form-group">
+
+                        <input style="width:100%;" type="date" id="start_date" class="border-gray-200 rounded-sm text-sm" value="@item.start_date.Value.ToString("yyyy-MM-dd")">
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">End Date</label>
+
+                    <div class="form-group">
+
+                        <input style="width:100%;" type="date" id="end_date" class="border-gray-200 rounded-sm text-sm" value="@item.end_date.Value.ToString("yyyy-MM-dd")">
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+       
+
+        <br />
+
+        <br />
+    }
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-primary" id="btnUpdateEvents"><i class="fa fa-save"></i>&nbsp;&nbsp;Update</button>
+            <button type="button" class="btn btn-danger" id="btnCancel"><i class="fa fa-angle-double-left"></i>&nbsp;Cancel</button>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+       
+    </script>
+
+    
+} *@

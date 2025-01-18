@@ -1,0 +1,229 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_fabric_allocation_req_DTO;
+@{
+    ViewBag.Title = "Fabric Allocation Transfer Requisition Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+    #DTTranFabricDetails tbody tr td, #DTTranFabricDetails {
+        /* white-space: nowrap; */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Fabric Allocation Requisition Transfer</h6>
+        </div>
+        <div class="card-body">
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-12" style="margin-bottom: 5px;text-align:left;">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Current Tech Pack</label>
+
+                            @await Component.InvokeAsync("S2TechPack", new
+                                {
+                                    ddlId = "techpackid",
+                                    selectedvalue = "",
+                                    cssclass = "form-control S2TechPack_Init",
+                                    isRequired = true,
+                                    isReadOnly = false,
+                                    placeholder = "Select Tech Pack",
+                                    preloaded = "",
+                                    model_parentid = "modalcontent"
+                                })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fabric</label>
+
+                            @await Component.InvokeAsync("S2GenItemMaster", new
+                                {
+                                    ddlId = "itemmaster",
+                                    selectedvalue = "",
+                                    cssclass = "form-control S2GenItemMaster_Init",
+                                    isRequired = true,
+                                    isReadOnly = false,
+                                    placeholder = "Select Fabric",
+                                    preloaded = "",
+                                    model_parentid = "modalcontent"
+                                })
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Measurement Unit</label>
+
+                            @await Component.InvokeAsync("GenericDropdownList", new
+                                {
+                                    ddlId = "ddl_measurement_unit_detail",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.list_measurement)),
+                                    selectedvalue = "",
+                                    cssclass = "form-control ddl_measurement_unit_detail",
+                                    enable = false,
+                                    isRequired = true,
+                                    placeholder = "Select Measurement Unit"
+                                })
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+                        <div class="form-group">
+
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Available Quantity</label>
+
+                            <input id="txt_total_stock_quantity" type="number" disabled class="form-control txt_total_stock_quantity" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-12" style="margin-bottom: 5px;text-align:left;">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Transfer From Tech Pack</label>
+
+                            @await Component.InvokeAsync("S2TechPack", new
+                                {
+                                    ddlId = "techpackid_from",
+                                    selectedvalue = "",
+                                    cssclass = "form-control S2TechPack_Init",
+                                    isRequired = true,
+                                    isReadOnly = false,
+                                    placeholder = "Select Tech Pack",
+                                    preloaded = "",
+                                    model_parentid = "modalcontent"
+                                })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fabric</label>
+
+                            <input id="frm_item_master_id" type="text" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Measurement Unit</label>
+
+                            <input id="frm_measutement_unit" type="text" disabled class="form-control" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+                        <div class="form-group">
+
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Available Quantity</label>
+
+                            <input id="txt_total_stock_quantity_from" type="text" disabled class="form-control txt_total_stock_quantity" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-12">
+
+                        <div class="form-group">
+
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Transfer Quantity</label>
+
+                            <input type="number" class="form-control " id="txt_transfer_quantity" />
+                            <span class="text-danger" data-valmsg-for="txt_transfer_quantity-error" data-valmsg-replace="true"></span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                        <button style="width:300px;" is_submit="1" type="button" class="btn btn-primary" id="btnSaveTranFabricAllocationReq" onclick="SaveTranFabricTransferReq(this);"><i class="fa fa-file-open"></i>&nbsp;Draft Save</button>
+
+                        <button style="width:300px;" is_submit="2" type="button" class="btn btn-primary" id="btnSaveTranFabricAllocationReq" onclick="SaveTranFabricTransferReq(this);"><i class="fa fa-file-open"></i>&nbsp;Submit For Approval</button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script>
+    $(function () {
+        
+    })
+</script>
+
+
+
+
+

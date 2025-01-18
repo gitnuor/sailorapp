@@ -1,0 +1,650 @@
+﻿@model EPYSLSAILORAPP.Domain.DTO.tran_range_plan_DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+</style>
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <input id="hd_range_plan_id" type="hidden" value="@ViewBag.range_plan_id" />
+        <input id="hd_fiscal_year_id" type="hidden" value="@ViewBag.fiscal_year_id" />
+        <input id="hd_event_id" type="hidden" value="@ViewBag.event_id" />
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Range Plan</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        @await Component.InvokeAsync("DataFilter")
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row" style="background-color: antiquewhite;padding-top: 5px;">
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Total Business Plan</label>
+                                        <input id="txtTotalBusinessPlan" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Total Event Plan</label>
+                                        <input id="txtTotalEventPlan" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Total Range Quantity</label>
+                                        <input id="txtTotalRangeQuantity" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Total MRP Value</label>
+                                        <input id="txtTotalRangePlanMRPValue" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Total CPU Value</label>
+                                        <input id="txtTotalRangePlanCPUValue" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:14.25%!important;display:none;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Product Added</label>
+                                        <input id="txtTotalAddedQntity" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:14.25%!important;display:none;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Product Remaining</label>
+                                        <input id="txtTotalNotAddedQntity" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <div class="card" style="max-height:700px;overflow-y:scroll;">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table style="font-size:10px;" id="DTTranRangePlan" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        @*      <th></th> *@
+                                        <th><label class="labelNormal">SL</label></th>
+                                        <th style="width:300px;"><label class="labelNormal">Product Details</label></th>
+                                        <th style="width:200px;"><label class="labelNormal  ">Product</label></th>
+                                        <th><label class="labelNormal ">Range Plan QTY</label></th>
+                                        <th><label class="labelNormal ">Size Info</label></th>
+
+                                        <th style="width:75px;"><label class="labelNormal ">MRP/Pcs</label></th>
+                                        <th><label class="labelNormal ">MRP Value</label></th>
+                                        <th style="width:75px;"> <label class="labelNormal ">CPU/Pcs</label></th>
+                                        <th><label class="labelNormal ">CPU Value</label></th>
+                                        <th><label class="labelNormal ">Priority</label></th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <label class="labelNormal" style="margin-bottom: 10px!important">Remarks</label>
+                                <div class="col-md-12">
+                                    <input style="width:100%;" type="text" asp-for="@Model.remarks" class="border-gray-200 rounded-sm text-sm">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" style="margin-bottom: 50px;">
+
+
+                                    <button style="width:150px;" type="button" class="btn btn-primary hidden" id="btnSaveRangePlan"><i class="fa fa-save btnsave_innericon"></i>&nbsp;&nbsp;Save</button>
+
+                                    <button disabled style="width:200px;float:right" type="button" class="btn btn-primary  hidden" id="btnFinalizeRangePlan"><i class="fa-light fa-file-pen"></i>&nbsp;Finalize</button>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+@section Scripts{
+    <script src="~/scripts/businessplanning/rangeplan.js" asp-append-version="true"></script>
+    <script>
+        var dt_source;
+        var obj_detailList = [];
+        var total_rangeplan_mrp_value = 0;
+        var total_rangeplan_cpu_value = 0;
+        var total_rangeplan_quantity = 0;
+        var bp_yearly_gross_sales = 0;
+        var bp_event_gross_sales = 0;
+
+        function getTotalByClass(custom_class) {
+
+            var total = 0;
+
+            $("#DTTranRangePlan ." + custom_class).each(function (index, element) {
+
+                total += parseFloat($(element).val());
+
+            });
+
+            return total;
+        }
+
+        function getTotalByColumn(column_name) {
+
+            var total = 0;
+
+            for (var i = 0; i < obj_detailList.length; i++) {
+
+                if (column_name == "cpu_value")
+                    total += obj_detailList[i].cpu_value == null ? 0 : parseFloat(obj_detailList[i].cpu_value);
+                else if (column_name == "mrp_value")
+                    total += obj_detailList[i].mrp_value == null ? 0 : parseFloat(obj_detailList[i].mrp_value);
+                else if (column_name == "range_plan_quantity")
+                    total += obj_detailList[i].range_plan_quantity == null ? 0 : parseInt(obj_detailList[i].range_plan_quantity);
+
+            }
+
+            return total;
+        }
+
+        function CheckEntryCompleteness(trow) {
+            var iscomplete = 1;
+
+            if ($(trow).find(".BtnSize").attr("iscomplete") != "Added")
+                iscomplete = 0;
+
+            if (parseFloat($(trow).find(".txtPerPcMRPVal").val()) == 0)
+                iscomplete = 0;
+
+            if (parseFloat($(trow).find(".txtPerPcCPUVal").val()) == 0)
+                iscomplete = 0;
+
+            if (parseInt($(trow).find(".txtRangePlanQnty").val()) == 0)
+                iscomplete = 0;
+
+            if ($(trow).find(".ddlPriority").val() == '')
+                iscomplete = 0;
+
+            if (iscomplete == 1) {
+                var style_item_product_id = $(trow).attr("style_item_product_id");
+
+                if (obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id)).length > 0) {
+
+                    if ((parseFloat(total_rangeplan_mrp_value) + parseFloat($(trow).find(".txtMRPVal").val())) >
+                        parseFloat($("#txtTotalEventPlan").val())) {
+
+                        showErrorAlert("Alert", "Total MRP Value Exceeds Event Business Plan ", "OK", function () {
+                            $(trow).find(".txtPerPcMRPVal").val('0');
+                            $(trow).find(".txtMRPVal").val('0');
+                            $(trow).find(".txtRangePlanQnty").val('0');
+                            $(trow).find(".txtPerPcCPUVal").val('0');
+                            $(trow).find(".txtCPUVal").val('0');
+                            $(trow).find(".ddlPriority").val('');
+
+
+                            for (var rowindexx = 0; rowindexx < obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].size_list.length; rowindexx++) {
+                                obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].size_list[rowindexx].size_per_pc_cpu_value = 0;
+                                obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].size_list[rowindexx].size_per_pc_mrp_value = 0;
+                                obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].size_list[rowindexx].size_quantity = 0;
+                            }
+
+                            var objtemp_size = JSON.parse(dt_source.rows().data().filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].strStyleSizes);
+
+                            for (var rowindexx = 0; rowindexx < objtemp_size.length; rowindexx++) {
+                                objtemp_size[rowindexx].size_per_pc_cpu_value = 0;
+                                objtemp_size[rowindexx].size_per_pc_mrp_value = 0;
+                                objtemp_size[rowindexx].size_quantity = 0;
+                            }
+                            dt_source.rows().data().filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].strStyleSizes = JSON.stringify(objtemp_size);
+                        });
+
+                        return;
+                    }
+                    else {
+
+                        obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].cpu_per_pc_value = parseFloat($(trow).find(".txtPerPcCPUVal").val());
+                        obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].cpu_value = parseFloat($(trow).find(".txtCPUVal").val());
+                        obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].mrp_per_pc_value = parseFloat($(trow).find(".txtPerPcMRPVal").val());
+                        obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].mrp_value = parseFloat($(trow).find(".txtMRPVal").val());
+                        obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].priority_id = parseInt($(trow).find(".ddlPriority").val());
+                        obj_detailList.filter(p => p.style_item_product_id == parseInt(style_item_product_id))[0].range_plan_quantity = parseInt($(trow).find(".txtRangePlanQnty").val());
+
+
+                        var curr_total_rangeplan_mrp_value = getTotalByColumn("mrp_value");
+                        var curr_total_rangeplan_cpu_value = getTotalByColumn("cpu_value");
+                        var curr_total_rangeplan_quantity = getTotalByColumn("range_plan_quantity");
+
+                        if ($("#txtTotalRangePlanMRPValue").val() == $("#txtTotalEventPlan").val()) {
+                            $("#btnFinalizeRangePlan").removeAttr("disabled");
+                        }
+                        else {
+                            // $("#btnFinalizeRangePlan").attr("disabled", "disabled");
+                        }
+
+                        var updated_totalrpvalue = curr_total_rangeplan_mrp_value + total_rangeplan_mrp_value;
+
+                        $("#txtTotalRangePlanMRPValue").val(updated_totalrpvalue);
+
+                        $("#txtTotalRangePlanCPUValue").val(curr_total_rangeplan_cpu_value + total_rangeplan_cpu_value);
+
+                        $("#txtTotalRangeQuantity").val(curr_total_rangeplan_quantity + total_rangeplan_quantity);
+
+                        $("#txtTotalAddedQntity").val($("#txtTotalAddedQntity").val() == "" ? "1" : parseInt($("#txtTotalAddedQntity").val()) + 1);
+
+                        $("#txtTotalNotAddedQntity").val(parseInt($("#txtTotalNotAddedQntity").val()) - 1);
+
+                        $(trow).find('td').addClass("jscompletedtrow");
+
+                        //     obj_detailList = obj_detailList.filter(function (obj) {
+                        //         return obj.style_item_product_id !== dt_source.rows().data()[index].style_item_product_id;
+                        //     });
+
+
+                    }
+                }
+                else {
+                    $(trow).find('td').removeClass("jscompletedtrow");
+                }
+            }
+        }
+
+        function jsdatatableloaded() {
+
+
+            for (var index = 0; index < dt_source.rows().data().length; index++) {
+                var obj = {
+                    range_plan_id: dt_source.rows().data()[index].range_plan_id,
+                    range_plan_detail_id: dt_source.rows().data()[index].range_plan_detail_id,
+                    style_item_product_id: dt_source.rows().data()[index].style_item_product_id,
+
+                    range_plan_quantity: dt_source.rows().data()[index].range_plan_quantity,
+                    mrp_per_pc_value: dt_source.rows().data()[index].mrp_per_pc_value,
+                    mrp_value: dt_source.rows().data()[index].mrp_value,
+                    cpu_per_pc_value: dt_source.rows().data()[index].cpu_per_pc_value,
+                    cpu_value: dt_source.rows().data()[index].cpu_value,
+                    priority_id: dt_source.rows().data()[index].priority_id,
+                    style_product_type_id: dt_source.rows().data()[index].style_product_type_id,
+                    tran_bp_year_id: dt_source.rows().data()[index].tran_bp_year_id,
+                    tran_bp_event_id: dt_source.rows().data()[index].tran_bp_event_id,
+
+                    size_list: JSON.parse(dt_source.rows().data()[index].strStyleSizes)
+
+                };
+
+                if (dt_source.rows().data()[0].total_rangeplan_mrp_value > 0)
+                    total_rangeplan_mrp_value = dt_source.rows().data()[0].total_rangeplan_mrp_value;
+
+                if (dt_source.rows().data()[0].total_rangeplan_cpu_value > 0)
+                    total_rangeplan_cpu_value = dt_source.rows().data()[0].total_rangeplan_cpu_value;
+
+                if (dt_source.rows().data()[0].total_rangeplan_quantity > 0)
+                    total_rangeplan_quantity = dt_source.rows().data()[0].total_rangeplan_quantity;
+
+                if (dt_source.rows().data()[0].bp_yearly_gross_sales > 0)
+                    bp_yearly_gross_sales = dt_source.rows().data()[0].bp_yearly_gross_sales;
+
+                if (dt_source.rows().data()[0].event_gross_sales > 0)
+                    bp_event_gross_sales = dt_source.rows().data()[0].event_gross_sales;
+
+                // if (obj_detailList.filter(p => p.style_item_product_id ==
+                //     dt_source.rows().data()[index].style_item_product_id).length > 0) {
+
+                //     obj_detailList = obj_detailList.filter(function (obj) {
+                //         return obj.style_item_product_id !== dt_source.rows().data()[index].style_item_product_id;
+                //     });
+                // }
+
+                if (obj_detailList.filter(p => p.style_item_product_id ==
+                    dt_source.rows().data()[index].style_item_product_id).length > 0) {
+
+                    var oldobj = obj_detailList.filter(p => p.style_item_product_id == dt_source.rows().data()[index].style_item_product_id)[0];
+                    oldobj = obj;
+                }
+                else {
+                    //if (obj.range_plan_quantity>0) {
+                    obj_detailList.push(obj);
+                    // }
+                }
+            }
+
+            if (obj_detailList.length > 0) { //
+                $("#btnSaveRangePlan").removeClass("hidden");
+                $("#btnFinalizeRangePlan").removeClass("hidden");
+            }
+            else {
+                $("#btnSaveRangePlan").addClass("hidden");
+                $("#btnFinalizeRangePlan").addClass("hidden");
+            }
+
+            if ($("#txtTotalRangePlanMRPValue").val() == $("#txtTotalEventPlan").val()) {
+                $("#btnFinalizeRangePlan").removeAttr("disabled");
+            }
+            else {
+                //$("#btnFinalizeRangePlan").attr("disabled", "disabled"); //temp
+            }
+
+
+            $("#txtTotalBusinessPlan").val(bp_yearly_gross_sales);
+            $("#txtTotalEventPlan").val(bp_event_gross_sales);
+            $("#txtTotalRangePlanMRPValue").val(total_rangeplan_mrp_value);
+            $("#txtTotalRangePlanCPUValue").val(total_rangeplan_cpu_value);
+            $("#txtTotalRangeQuantity").val(total_rangeplan_quantity);
+
+            //  $("#remarks").val(dt_source.rows().data()[0].remarks);
+            if (dt_source.rows().data().length > 0) {
+                $("#txtTotalAddedQntity").val(dt_source.rows().data()[0].totaladded);
+                $("#txtTotalNotAddedQntity").val(dt_source.rows().data()[0].totalnotadded);
+            }
+
+            $("#DTTranRangePlan .txtPerPcMRPVal").change(function () {
+                var range_qnty = $(this).parent().parent().find(".txtRangePlanQnty").val();
+                $(this).parent().parent().find(".txtMRPVal").val(parseFloat($(this).val()) * parseInt(range_qnty));
+                $(this).parent().parent().find(".txtPerPcCPUVal").attr("max", parseFloat($(this).val()));
+                CheckEntryCompleteness($(this).parent().parent());
+            });
+
+            $("#DTTranRangePlan .txtPerPcCPUVal").change(function () {
+                var range_qnty = $(this).parent().parent().find(".txtRangePlanQnty").val();
+                $(this).parent().parent().find(".txtCPUVal").val(parseFloat($(this).val()) * parseInt(range_qnty));
+                CheckEntryCompleteness($(this).parent().parent());
+            });
+
+            //txtRangePlanQnty
+
+            // $("#DTTranRangePlan .txtRangePlanQnty").change(function () {
+            //     var BtnSize = $(this).parent().parent().find(".BtnSize");
+            //     //
+            //     $(BtnSize).trigger("click");
+            //     $(BtnSize).text("Size");
+            //     $(BtnSize).attr("iscomplete", "NotAdded");
+            //     $(BtnSize).css("background-color", "");
+            // });
+
+            $("#DTTranRangePlan .ddlPriority").change(function () {
+
+                CheckEntryCompleteness($(this).parent().parent());
+            });
+
+
+        }
+
+        function ddlPriorityChange(ddl) {
+            CheckEntryCompleteness($(ddl).parent().parent());
+        }
+
+
+        function txtRangePlanQntyChange(txt) {
+            var BtnSize = $(txt).parent().parent().find(".BtnSize");
+            //
+            $(BtnSize).trigger("click");
+            $(BtnSize).text("Size");
+            $(BtnSize).attr("iscomplete", "NotAdded");
+            $(BtnSize).css("background-color", "");
+        }
+
+        function LoadPlanData() {
+
+            var input = {
+                fiscal_year_id: $("#hd_fiscal_year_id").val(),
+                event_id: $("#hd_event_id").val(),
+
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+
+                filter_option: $("#ddlFilterOption").val()
+            };
+
+            dt_source = $("#DTTranRangePlan").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/RangePlan/GetTranRangePlanYearData", data: input }),
+                "buttons": {
+                    "buttons": [
+                        {
+                            text: '<i class="fas fa-plus-square" aria-hidden="true"></i> Add',
+                            className: 'btn btn-primary mr-1',
+                            action: function (e, dt, node, config) {
+                                location.href = "/RangePlan/AddNew";
+                            }
+                        },
+                    ]
+                },
+
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false },
+                    { targets: 1, "visible": true, "sortable": false },
+                    { targets: 2, "visible": true, "sortable": false },
+                    { targets: 3, "visible": true, "sortable": false },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+                    $(row).attr('style_item_product_id', data.style_item_product_id);
+                    $(row).attr('range_plan_detail_id', data.range_plan_detail_id);
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('style_product_size_group_id', data.style_product_size_group_id);
+                    $(row).attr('total_rangeplan_mrp_value', data.total_rangeplan_mrp_value);
+                    $(row).attr('event_gross_sales', data.event_gross_sales);
+                    $(row).attr('bp_yearly_gross_sales', data.bp_yearly_gross_sales);
+
+                    $(row).attr('totaladded', data.totaladded);
+
+                    $(row).attr('totaladded', data.totaladded);
+                    $(row).attr('tran_range_plan_event_id', data.tran_range_plan_event_id);
+                    $(row).attr('is_finalized', data.is_finalized);//
+                    $(row).attr('is_separate_price', data.is_separate_price);
+
+                    if (data.is_separate_price == true) {
+                        $(row).find(".txtPerPcMRPVal").attr("disabled", "disabled");
+                    }
+
+                    if (data.range_plan_detail_id != null && data.range_plan_detail_id != 0) {
+                        $(row).find('td').css("background-color", "#c8e9e9!important");
+                        $(row).find('.BtnSize').text("Added");
+                        $(row).find('.BtnSize').attr("iscomplete", "Added");
+                        $(row).find('.BtnSize').css("background-color", "green");
+                    }
+                    else if (obj_detailList.filter(p => p.style_item_product_id == data.style_item_product_id
+                        && p.range_plan_quantity > 0).length > 0) {
+
+                        var saved_data = obj_detailList.filter(p => p.style_item_product_id == data.style_item_product_id)[0];
+                        $(row).find(".txtRangePlanQnty").val(saved_data.range_plan_quantity);
+                        $(row).find(".txtPerPcMRPVal").val(saved_data.mrp_per_pc_value);
+                        $(row).find(".txtMRPVal").val(saved_data.mrp_value);
+                        $(row).find(".txtPerPcCPUVal").val(saved_data.cpu_per_pc_value);
+                        $(row).find(".txtCPUVal").val(saved_data.cpu_value);
+                        $(row).find(".ddlPriority").val(saved_data.priority_id);
+                        dt_source.rows().data().filter(p => p.style_item_product_id == data.style_item_product_id)[0].strStyleSizes =
+                            JSON.stringify(saved_data.size_list);
+                        $(row).find('td').css("background-color", "#c8e9e9!important");
+                        $(row).find('.BtnSize').text("Added");
+                        $(row).find('.BtnSize').attr("iscomplete", "Added");
+                        $(row).find('.BtnSize').css("background-color", "green");
+                    }
+                },
+                "columns": [ //
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+
+                    { "data": "strtxtRangePlanQnty", "name": "strtxtRangePlanQnty", "autoWidth": true },
+
+                    { "data": "strBtnSize", "name": "strBtnSize", "autoWidth": true },
+
+                    { "data": "strtxtPerPcMRPVal", "name": "strtxtPerPcMRPVal", "autoWidth": true },
+                    { "data": "strtxtMRPVal", "name": "strtxtMRPVal", "autoWidth": true },
+                    { "data": "strtxtPerPcCPUVal", "name": "strtxtPerPcCPUVal", "autoWidth": true },
+                    { "data": "strtxtCPUVal", "name": "strtxtCPUVal", "autoWidth": true },
+                    { "data": "strPriorityDropDownHTML", "name": "strPriorityDropDownHTML", "autoWidth": true },
+
+
+                ]
+            });
+        }
+        $(function () {
+
+            //btnSaveBusinessPlan;
+
+            $("#hd_fiscal_year_id").change(function () {
+
+                LoadSeasonEventDropDown($("#hd_fiscal_year_id").val());
+
+            });
+
+            $("#btnSaveRangePlan").click(function () {
+
+                SaveData(0);
+
+            });
+            $("#btnFinalizeRangePlan").click(function () {
+
+                SaveData(1);
+
+            });
+
+            $("#btnLoadData").click(function () {
+                if ($("#hd_fiscal_year_id").val() == '') {
+                    $("#hd_fiscal_year_id").focus();
+                    $("#hd_fiscal_year_id").css("border", "1px solid red");
+                }
+                else if ($("#hd_event_id").val() == '') {
+                    $("#hd_event_id").focus();
+                    $("#hd_event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+                }
+                else {
+
+                    $("#hd_fiscal_year_id").css("border", "");
+                    $("#hd_event_id").parent().find(".select2-selection--single").css("border", "");
+
+                    LoadPlanData();
+
+                }
+
+            });
+
+            $("#ddlFilterOption").val(2);
+
+            LoadPlanData();
+
+            $("#ddltop_event").css("display", "none");
+            $("#ddldtop_fiscal_year").css("display", "none");
+
+            $("#btnBack").click(function () {
+                document.location = "/RangePlan/RangePlanCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+            });
+
+
+
+        });
+
+        function SaveData(isfinal) {
+
+
+            showLoader("Saving..........");
+
+
+            if (obj_detailList.filter(p => p.range_plan_quantity > 0).length == 0) {
+                showErrorAlert("Alert", "No Data to Save", "OK", function () {
+                    return;
+                });
+            }
+            else {
+
+                var objEvent = {
+                    tran_range_plan_event_id: dt_source.rows().data()[0].tran_range_plan_event_id != null ?
+                        dt_source.rows().data()[0].tran_range_plan_event_id : null,
+                    range_plan_id: $("#hd_range_plan_id").val() != "0" ? parseInt($("#hd_range_plan_id").val()) : null,
+                    tran_bp_event_id: obj_detailList[0].tran_bp_event_id,
+                    total_mrp_value: parseFloat($("#txtTotalRangePlanMRPValue").val()),
+                    total_cpu_value: parseFloat($("#txtTotalRangePlanCPUValue").val()),
+                    total_range_plan_quantity: parseInt($("#txtTotalRangeQuantity").val()),
+                    is_finalized: isfinal == 1 ? true : false
+                }
+
+                var request = {
+                    tran_bp_year_id: obj_detailList[0].tran_bp_year_id,
+                    range_plan_id: $("#hd_range_plan_id").val() != "0" ? parseInt($("#hd_range_plan_id").val()) : null,
+                    remarks: $("#remarks").val(),
+
+                    DetList: obj_detailList.filter(p => p.range_plan_quantity > 0),
+                    Event_Detail: objEvent
+
+                };
+
+                ajaxPostObjectHandler("/RangePlan/SaveRangePlan", request, function (response) {
+                    hideLoader();
+                    if (response.status_Code == "200") {
+
+                        connection.invoke("SendNoticationToUser", "Range Plan Approval", "RangePlan/RangePlanApprovalLanding", response.link).catch(err =>
+                            console.error(err.toString())
+                        );
+
+                        showSuccessAlertAutoClose("Success", response.status_Result, "OK", function () {
+                            document.location = "/RangePlan/RangePlanCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+                            $("#btnSaveRangePlan").prop("enabled", true);
+                            $("#btnSaveRangePlan").find(".fa-save").attr("class", "fa fa fa-save");
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+            }
+        }
+
+
+
+    </script>
+
+ }

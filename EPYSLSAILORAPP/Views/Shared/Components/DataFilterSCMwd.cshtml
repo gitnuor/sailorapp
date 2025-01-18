@@ -1,0 +1,97 @@
+﻿<div class="card-body" style="margin-top: 10px;background-color: aliceblue;">
+    <div class="row">
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year *</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                    {
+                        ddlId = "fiscal_year_id",
+                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.fiscal_year_list)),
+                        selectedvalue = ViewBag.fiscal_year_id,
+                        cssclass = "form-control",
+                        enable = false,
+                        isRequired = true,
+                        placeholder = "Select Fiscal Year"
+                    })
+            </div>
+        </div>
+        <div class="col-md-2">
+
+            <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Season Events *</label>
+
+            @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                    ddlId = "event_id",
+                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.event_list)),
+                    selectedvalue = ViewBag.event_id,
+                    cssclass = "form-control",
+                    enable = false,
+                    isRequired = true,
+                    placeholder = "Select Fiscal Year"
+                })
+
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Select Supplier</label>
+                @await Component.InvokeAsync("S2GenSupplier", new
+                    {
+                        ddlId = "sup_fil",
+                        selectedvalue = "",
+                        cssclass = "form-control S2GenSupplier_filter",
+                        isRequired = false,
+                        isReadOnly = false,
+                        placeholder = "Select Supplier",
+                        preloaded = "",
+                        model_parentid = "modalcontainer"
+                    })
+
+            </div>
+
+        </div>
+       @*  <div class="col-md-3">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Unit</label>
+
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                    {
+                        ddlId = "delivery_unit_id",
+                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.DeliveryUnits)),
+                        selectedvalue = "",
+                        cssclass = "form-control",
+                        enable = true,
+                        isRequired = true,
+                        placeholder = "select"
+                    })
+            </div>
+
+        </div> *@
+        <div class="col-md-2" style="width:20%">
+            <div class="form-group">
+                <button style="margin-top:30px;" type="button" class="btn btn-primary" id="btnLoadData"><i class="fa fa-plus"></i>&nbsp;Load Data</button>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        
+
+
+
+    });
+
+
+
+
+
+
+</script>

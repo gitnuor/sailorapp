@@ -1,0 +1,100 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.gen_tran_transport_DTO;
+@{
+    ViewBag.Title = "GenTranTransport Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+     <div class="card">
+         <div class="card-header">
+               <h6 class="card-title">GenTranTransport Add</h6> 
+         </div>
+         <!-- /.card-header -->
+         <div class="card-body">
+                		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Transport Type</label>
+					 <input style="width:100%"    asp-for="transport_type" type="text" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="transport_type" class="text-danger"></span>
+				</div>
+			</div>
+
+		</div>
+		</div>
+
+
+
+                <div class="row">
+
+                    <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                         <button style="width:300px;" type="button" class="btn btn-success " id="btnSaveGenTranTransport" onclick="SaveGenTranTransport(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+                    </div>
+               </div>
+         </div>
+         <!-- /.card-body -->
+     </div>
+  
+ 
+</form>
+
+
+
+
+

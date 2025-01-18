@@ -1,0 +1,12 @@
+create sequence gen_financial_information_gen_financial_information_id_seq;
+
+alter sequence gen_financial_information_gen_financial_information_id_seq owner to postgres;
+
+alter sequence gen_financial_information_gen_financial_information_id_seq owned by gen_supplier_financial_information.gen_suplier_financial_information_id;
+
+grant select, update, usage on sequence gen_financial_information_gen_financial_information_id_seq to anon;
+
+grant select, update, usage on sequence gen_financial_information_gen_financial_information_id_seq to authenticated;
+
+grant select, update, usage on sequence gen_financial_information_gen_financial_information_id_seq to service_role;
+

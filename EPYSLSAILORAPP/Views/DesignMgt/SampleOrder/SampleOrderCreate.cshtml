@@ -1,0 +1,1068 @@
+﻿@model EPYSLSAILORAPP.Domain.DTO.tran_va_plan_DTO;
+@{
+    ViewBag.Title = "Sample Order";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+    
+</style>
+
+<div class="content-wrapper">
+    <input id="hd_range_plan_id" type="hidden" value="@Model.tran_range_plan_id" />
+    <input id="hd_va_plan_id" type="hidden" value="@Model.tran_va_plan_id" />
+    <input id="hd_encoded_fiscal_year" type="hidden" value="@ViewBag.encoded_fiscal_year" />
+    <input id="hd_tran_va_plan_event_id" type="hidden" value="@ViewBag.tran_va_plan_event_id" />
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Sample Order</h6>
+                        </div>
+
+                        @await Component.InvokeAsync("DataFilter")
+
+                    </div>
+
+
+                </div>
+                <!-- /.col -->
+            </div>
+
+            <div class="row">
+                <div class="col-md-12" id="tab_bar_style">
+                    <ul id="tab_precosting" class="nav nav-tabs">
+                        <li class="active" tab_index="1">
+                            <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">PENDING LIST</a>
+                        </li>
+                        <li class="" tab_index="2">
+                            <a href="#det2" style="text-decoration: unset;" class=" tab_link " data-toggle="tab">PENDING TRADING LIST</a>
+                        </li>
+                       
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                            <table style="font-size:12px;" id="DTTranSampleOrder" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+
+                                        <th><label class="labelNormal">SL</label></th>
+                                        <th style="width:40%;text-align:center"><label class="labelNormal">Product Details</label></th>
+                                        <th style="width: 10%;text-align:center"><label class="labelNormal ">Style Code & Qty</label></t>
+                                        <th style="width:30%;text-align:center"><label class="labelNormal "> Added Sample</label></th>
+                                        <th style="width:10%;text-align:center"><label class="labelNormal ">Action</label></th>
+
+
+                                    </tr>  
+                                </thead>
+                            </table>
+
+                        </div>
+                        <div class="tab-pane " id="det2" tabpane_index="2">
+                            <table style="font-size:12px;" id="DTTranSampleOrdertrading" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+
+                                        <th><label class="labelNormal">SL</label></th>
+                                        <th style="width:30%;text-align:center"><label class="labelNormal">Product Details</label></th>
+                                        <th style="width: 10%;text-align:center"><label class="labelNormal ">Style Code & Qty</label></t>
+                                        <th style="width: 10%;text-align:center"><label class="labelNormal ">Trading Type</label></t>
+                                        <th style="width:30%;text-align:center"><label class="labelNormal "> Added Sample</label></th>
+                                        <th style="width:10%;text-align:center"><label class="labelNormal ">Action</label></th>
+
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                       
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer_common" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 90% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Sample Order And Bill Of Material(BOM)
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    @* <script src="~/scripts/businessplanning/SampleOrder.js" asp-append-version="true"></script> *@
+    <script>
+        var dt_source;
+        var obj_detailList = [];
+        var IsNotDesigner = '@ViewBag.IsNotDesigner';
+
+     
+        var tran_va_plan_id = 0;
+        var tran_va_plan_event_id = 0;
+        var formData = new FormData();;
+        var listAttachments = [];
+
+        var list_deleted_detl = [];
+
+        var list_deleted_subgroup = [];
+        var list_deleted_embellishment = [];
+
+       
+        function btnAddDeleteRow(btn) {
+            if ($(btn).text() == "Remove") {
+
+
+                var tran_sample_order_detl_id = $(btn).attr("tran_sample_order_detl_id");
+
+                if (tran_sample_order_detl_id != '' || tran_sample_order_detl_id != '0') {
+                    var obj = {
+                        tran_sample_order_detl_id: tran_sample_order_detl_id,
+                        tran_sample_order_id: $("#modalcontent-common #tran_sample_order_id").val(),
+                        color_code: $(btn).parent().parent().find(".txtColor  Code").val(),
+                        style_product_size_group_detid: $(btn).parent().parent().find(".ddlProductSizeDet").val(),
+                        order_quantity: $(btn).parent().parent().find(".txtorder_quantity").val(),
+                        style_product_unit_id: $(btn).parent().parent().find(".ddlProductUnit").val(),
+                        current_state: 3
+                    }
+
+                    list_deleted_detl.push(obj);
+                }
+
+                $(btn).closest(".tbl_tr").remove();
+
+                calc_total();
+
+            }
+            else { //Add
+                if (checkcompleteness($(btn).closest(".tbl_tr")) == true) {
+                    $(btn).text("Remove");
+                    $(btn).css("background-color", "#df7373");
+                }
+
+            }
+
+        }
+
+        function checkcompleteness(tr) {
+            var ret = true;
+
+            $(tr).find(".txtColorCode").css("border", "");
+            $(tr).find(".ddlProductSizeDet").css("border", "");
+            $(tr).find(".txtorder_quantity").css("border", "");
+            $(tr).find(".ddlProductUnit").css("border", "");
+
+            if ($(tr).find(".txtColorCode").val() == "") {
+                $(tr).find(".txtColorCode").css("border", "1px solid red");
+                ret = false;
+            }
+
+            if ($(tr).find(".ddlProductSizeDet").val() == '') {
+                $(tr).find(".ddlProductSizeDet").css("border", "1px solid red");
+                ret = false;
+            }
+
+            if ($(tr).find(".txtorder_quantity").val() == "" || $(tr).find(".txtorder_quantity").val() == "0") {
+                $(tr).find(".txtorder_quantity").css("border", "1px solid red");
+                ret = false;
+            }
+
+            if ($(tr).find(".ddlProductUnit").val() == '') {
+                $(tr).find(".ddlProductUnit").css("border", "1px solid red");
+                ret = false;
+            }
+
+            return ret;
+
+        }
+
+        function LoadColorFromBox(txt) {
+            $(txt).parent().find(".txtColorCode").val($(txt).val());
+
+        }
+
+        function btnAddNewRow(btn) {
+
+
+            var wholediv = $("#DTTranSampleOrderSize tbody tr:nth-child(1)").clone();
+            var count = $("#DTTranSampleOrderSize tbody tr").length+2;
+            $(wholediv).removeAttr("style");
+            $(wholediv).find("input[type=text]").val("");
+            $(wholediv).find("input[type=number]").val("0");
+            $(wholediv).find(".ddl_color").attr("id", "ddl_color_" + count);;
+            $(wholediv).find("select").val(null);
+            $(wholediv).removeClass("tr_first");
+            $(wholediv).attr("tran_sample_order_detl_id", "0");
+            $(wholediv).find(".btnAddDeleteRow").text("Add");
+            $(wholediv).find(".btnAddDeleteRow").css("background-color", "");
+            $("#DTTranSampleOrderSize tbody").append(wholediv);
+
+            RegisterS2ColorByElement($(wholediv).find(".ddl_color"));
+        }
+
+        function calc_total() {
+            $("#order_quantity").val(getTotalByClassInsideTable("#DTTranSampleOrderSize", "txtorder_quantity"));
+        };
+
+        function BtnSampleOrderBOMAddUpdate(btn) {
+
+
+            var row_index = $(btn).parent().parent().attr("row_index");
+
+            var style_product = $(btn).parent().parent().find("td:eq(2)").text();
+            var range_plan_qnty = $(btn).parent().parent().find("td:eq(3)").text();
+
+
+            var objStyle = {
+                row_index: $(btn).parent().parent().attr("row_index"),
+                tran_va_plan_detl_style_id: $(btn).attr("tran_va_plan_detl_style_id"),
+                no_of_style: $(btn).parent().parent().find(".ddlNoOfStyle").val(),
+                style_code: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index")) - 1].style_code,
+                style_item_product_id: $(btn).attr("style_item_product_id"),
+                style_quantity: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index")) - 1].style_quantity,
+
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                style_product: $(btn).parent().parent().find("td:eq(2)").text(),
+                style_product_detail: $(btn).parent().parent().find("td:eq(1)").text(),
+                style_product_size_group_id: $(btn).attr("style_product_size_group_id"),
+                fiscal_year_id: $("#fiscal_year_id").val(),
+
+                range_plan_detail_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index")) - 1].range_plan_detail_id,
+                range_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index")) - 1].range_plan_id,
+                tran_range_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index")) - 1].tran_range_plan_event_id,
+                style_master_category_id: $(btn).attr("style_master_category_id"),
+
+                tran_va_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index")) - 1].tran_va_plan_id,
+                tran_va_plan_detl_id: $(btn).attr("tran_va_plan_detl_id"),
+                tran_va_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index")) - 1].tran_va_plan_event_id,
+
+                str_style_size: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index")) - 1].strjsonSizeList
+
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/SampleOrder/SampleOrderBOMAdd?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    $("#modalcontent-common .ddl_item_sub_structure").select2({
+                        placeholder: "Select",
+                        dropdownParent: $("#modalcontainer_common"),
+                        allowClear: true
+
+                    });
+
+                    $.each($("#DTTranSampleOrderSize tbody tr:not(:first-child)"), function (key, val) {
+
+                        RegisterS2ColorByElement($(val).find(".ddl_color"));
+
+                    });
+
+
+                    loadEvents();
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function loadEvents() {
+
+            $('#modalcontainer_common .ddl_item_sub_structure').on('select2:unselect', function (e) {
+
+                const removedOption = e.params.data; // Get the removed option data
+
+                if ($(removedOption.element).attr("tran_sample_order_subgroup_id") != "0") {
+
+                    var obj_remove_item = {
+                        gen_item_structure_group_sub_id: removedOption.id,
+                        tran_sample_order_subgroup_id: $(removedOption.element).attr("tran_sample_order_subgroup_id"),
+                        current_state: 3
+                    }
+
+                    list_deleted_subgroup.push(obj_remove_item);
+                }
+
+            });
+
+            $('#modalcontainer_common #ddl_s2embellishment_ids').on('select2:unselect', function (e) {
+
+                const removedOption = e.params.data; // Get the removed option data
+
+                if ($(removedOption.element).attr("secondary_id") != "0") {
+
+                    var obj_remove_item = {
+                        embellishment_id: removedOption.id,
+                        tran_sample_order_embellishment_id: $(removedOption.element).attr("secondary_id"),
+                        current_state: 3
+                    }
+
+                    list_deleted_embellishment.push(obj_remove_item);
+                }
+
+            });
+
+            $("#modalcontent-common .btnImageUpload").click(function () {
+                $("#modalcontent-common #attachments").attr("imagetype", $(this).attr("imagetype"));
+                $("#modalcontent-common #attachments").trigger("click");
+            });
+
+            $("#modalcontent-common #attachments").change(function () {
+
+                var files = this.files;
+
+                var size = $(this)[0].files.length;
+
+                var imagetype = $(this).attr("imagetype");
+
+                formData = new FormData();
+
+                for (var i = 0; i < size; i++) {
+
+                    var reader = new FileReader();
+
+                    reader.onload = (function (singlefile) {
+
+                        var filename = singlefile.name;
+
+                        var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                        return function (e) {
+
+                            var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                            var indx = listAttachments.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+                            var attachfile = {
+                                filename: filename,
+                                filetype: filetype,
+                                extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                base64string: base64String,
+                                server_filename: "",
+                                current_state: 1,
+                                fileindex: indx,
+                                imagetype: imagetype
+                            };
+
+                            listAttachments.push(attachfile);
+
+                            AddImageHtml(attachfile);
+
+                            base64String = "";
+
+                        }
+
+
+                    })($(this)[0].files[i]);
+
+                    reader.readAsDataURL($(this)[0].files[i]);
+
+
+                }
+
+            });
+        }
+
+
+
+        function AddImageHtml(file) {
+            var fileextension = getFileExtension(file.filename);
+            //var fileicon = getFileIcon(fileextension, index);
+
+            var base64string = 'data: ' + file.filetype + '; base64, ' + file.base64string;
+
+            var strhtml = '<div index="' + file.fileindex + '"  class="col-lg-6 dvSingleAttachment" >' +
+
+                '<img onclick="ShowImage(' + base64string + ');" style="width: 180px; height: 200px;" src="data: ' + base64string + '" /> ' +
+                '<a  mailattachmentid="-1" index="' + file.fileindex + '" class=" attachmentLink' + file.fileindex + '" onclick="removeAtachments(this,' + file.fileindex + ')" > <span class="spanClose">X</span></a>' +
+                '<span style="color:blue;text-decoration:underline;overflow: hidden;display: inherit;height: 45px;">' + file.filename + '</span></div>';
+
+            $("#modalcontent-common #frames_" + file.imagetype).append(strhtml);
+
+        }
+        //
+        function removeAtachments(elem, index) {
+       
+            if (listAttachments[index].current_state == 1) {
+                listAttachments = listAttachments.filter(p => p.fileindex != index);
+            }
+            else {
+                listAttachments[index].current_state = 3;
+            }
+            $(elem).closest(".dvSingleAttachment").remove();
+        }
+
+        function btnViewSampleOrderDet(elem) {
+
+
+            let tr = $(elem).parent().parent();
+
+            var rowindex = parseInt($(tr).attr("row_index")) - 1;
+
+            let row = dt_source.row(tr);
+
+            if (row.child.isShown()) {
+
+                row.child.remove();
+
+            }
+            else {
+                tr.parent().find(".DTTranSampleOrderData").parent().parent().remove();
+
+                row.child(dt_source.rows().data()[rowindex].str_sameple_order_dt_html).show();
+                $(tr).parent().find(".detl_toprow").attr("rowindex", rowindex);
+                $(tr).parent().find(".detl_toprow").attr("style_product_size_group_id", $(elem).attr("style_product_size_group_id"));
+            }
+        }
+
+        function EditSampleOrder(btn, tran_sample_order_id) {
+            list_deleted_detl = [];
+            list_deleted_subgroup = [];
+            list_deleted_embellishment = [];
+
+            listAttachments = [];
+            var row_index = parseInt($(btn).closest(".master_table_row").attr("row_index"))-1;
+          
+            var objStyle = {
+
+                tran_sample_order_id: tran_sample_order_id,
+                style_code: dt_source.rows().data()[row_index].style_code,
+                style_item_product_id: dt_source.rows().data()[row_index].style_item_product_id,
+                style_product: dt_source.rows().data()[row_index].style_item_product_name,
+                style_product_detail: dt_source.rows().data()[row_index].product_details,
+                style_master_category_id: dt_source.rows().data()[row_index].style_master_category_id,
+                fiscal_year_id: $("#fiscal_year_id").val()
+            }
+
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/SampleOrder/SampleOrderBOMEdit?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    $("#modalcontent-common .ddl_item_sub_structure").select2({
+                        placeholder: "Select",
+                        dropdownParent: $("#modalcontainer_common"),
+                        allowClear: true
+
+                    });
+
+                    
+
+                    loadEvents();
+
+
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+
+        function LoadDesignerDistributionData() {
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+
+            };
+
+
+            var dt_search = {
+                filterId: '#DTTranSampleOrder_filter input[type=search]',
+                tableId: "#DTTranSampleOrder",
+                placeholder: 'Clear Search',
+                btn_text: 'Clear Search',
+                ajax_url: "/SampleOrder/GetTranSampleOrderData",
+                input: input,
+                hideFirstColumn: false,
+                createdRow_func: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "13px");
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+
+                },
+                columns: [
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_code_qty", "name": "style_code_qty", "autoWidth": true },
+                    { "data": "str_sameple_order_dt_html", "name": "str_sameple_order_dt_html", "autoWidth": true },
+                    { "data": "btnSampleOrderBOMAddUpdate", "name": "btnSampleOrderBOMAddUpdate", "autoWidth": true }
+                ],
+                btn_class_name: 'btn btn-custom'
+            };
+            initialize_datatable(dt_search);
+
+        }
+        function LoadDesignerDistributionDataWithTrading() {
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+
+            };
+
+
+            var dt_search = {
+                filterId: '#DTTranSampleOrdertrading_filter input[type=search]',
+                tableId: "#DTTranSampleOrdertrading",
+                placeholder: 'Clear Search',
+                btn_text: 'Clear Search',
+                ajax_url: "/SampleOrder/GetSampleOrderTradingData",
+                input: input,
+                hideFirstColumn:false,
+               
+                createdRow_func: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "13px");
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+
+                },
+                columns: [
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_code_qty", "name": "style_code_qty", "autoWidth": true },
+                    { "data": "trading_type", "name": "trading_type", "autoWidth": true },
+                    { "data": "str_sameple_order_dt_html", "name": "str_sameple_order_dt_html", "autoWidth": true },
+                    { "data": "btnSampleOrderBOMAddUpdate", "name": "btnSampleOrderBOMAddUpdate", "autoWidth": true }
+                ],
+                btn_class_name: 'btn btn-custom'
+            };
+            initialize_datatable(dt_search);
+
+        }
+
+        function ViewDesignerAssignDetails() {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/ValueAdditionPlan/DesignerAssignDetailsView?tran_va_event_id=" + getQueryStringParameter('tran_va_plan_event_id'), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        
+
+        function closePopup_popup() {
+            $('#modalcontent-common_popup').html("");
+
+            $('#modalcontainer_common_popup').modal("hide");
+
+            $('#modalcontainer_common_popup').on('hidden.bs.modal', function () {
+                $('body').addClass('modal-open');
+            });
+        }
+        function closePopup() {
+            $('#modalcontent-common').html("");
+
+            $('#modalcontainer_common').modal("hide");
+        }
+        $(function () {
+
+            LoadDesignerDistributionData();
+            LoadDesignerDistributionDataWithTrading();
+            BindTabEvents("tab_bar_style");
+
+            if (IsNotDesigner.length > 0) {
+                showErrorAlert("Alert", IsNotDesigner, "OK", function () {
+                    document.location = "/Dashboard/Index";
+
+                });
+            }
+
+            $("#btnLoadData").click(function () {
+                if ($("#fiscal_year_id").val() == '') {
+                    $("#fiscal_year_id").focus();
+                    $("#fiscal_year_id").css("border", "1px solid red");
+                }
+                else if ($("#event_id").val() == '') {
+                    $("#event_id").focus();
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+                }
+                else {
+
+                    $("#fiscal_year_id").css("border", "");
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                    LoadDesignerDistributionData();
+
+                }
+
+            });
+
+            $(".filterOption").hide();
+
+            $("#btnBack").click(function () {
+                document.location = "/SampleOrder/SampleOrderCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+            });
+
+          
+
+        });
+
+
+        function SaveSamepleOrderAndBOM(btn) {
+
+            var List_Embellishment = [];
+            var List_Subgroup = [];
+
+            $.each($("#ddl_item_sub_structure1").val(), function (key, val) {
+                //console.log(val)
+                var obj = {
+                    gen_item_structure_group_sub_id: val
+                }
+                List_Subgroup.push(obj);
+            });
+            $.each($("#ddl_item_sub_structure2").val(), function (key, val) {
+                //console.log(val)
+                var obj = {
+                    gen_item_structure_group_sub_id: val
+                }
+                List_Subgroup.push(obj);
+            });
+            $.each($("#ddl_item_sub_structure3").val(), function (key, val) {
+                //console.log(val)
+                var obj = {
+                    gen_item_structure_group_sub_id: val
+                }
+                List_Subgroup.push(obj);
+            });
+
+            $.each($("#ddl_s2embellishment_ids").val(), function (key, val) {
+                //console.log(val)
+                var obj = {
+                    embellishment_id: val
+                }
+                List_Embellishment.push(obj);
+            });
+
+            var List_detl = [];
+
+            $.each($("#DTTranSampleOrderSize tbody tr"), function (key, val) {
+
+                if (!$(val).hasClass("tr_first")) {
+
+                    if (check_value($(val).find(".txtorder_quantity").val()) != null && check_value($(val).find(".ddlProductSizeDet").val()) != null && check_value($(val).find(".ddlProductUnit").val()) != null) {
+
+                        var obj = {
+                            tran_sample_order_id: null,
+                            color_code: $(val).find(".txtColorCode").val(),
+                            style_product_size_group_detid: $(val).find(".ddlProductSizeDet").val(),
+                            order_quantity: $(val).find(".txtorder_quantity").val(),
+                            style_product_unit_id: $(val).find(".ddlProductUnit").val()
+                        }
+
+                        List_detl.push(obj);
+                    }
+                }
+            });
+
+            if (List_detl.length == 0) {
+
+                showErrorAlert("Alert", "Please Add Color Wise Size Info", "OK", function () {
+
+
+                });
+                return;
+            }
+            
+            else if (List_Subgroup.length == 0) {
+
+                showErrorAlert("Alert", "Please Provide Sub Group ", "OK", function () {
+
+
+
+                });
+                return;
+            }
+            else if (listAttachments.length == 0) {
+
+                showErrorAlert("Alert", "Please Add Product Images ", "OK", function () {
+
+                });
+                return;
+            }
+
+            var objFit = {
+                style_fit_info_id: $("#modalcontent-common #fit_name").val(),
+                fit_info: $("#modalcontent-common #fit_name > option:selected").text(),
+            }
+
+            var objPattern = {
+                style_pattern_id: $("#modalcontent-common #pattern").val(),
+                pattern_info: $("#modalcontent-common #pattern > option:selected").text(),
+            }
+
+            var objData = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                designer_member_id: $("#modalcontent-common #designer_member_id").val() == "" ? null : $("#modalcontent-common #designer_member_id").val(),
+                tran_va_plan_detl_id: $("#modalcontent-common #tran_va_plan_detl_id").val() == "" ? null : $("#modalcontent-common #tran_va_plan_detl_id").val(),
+                tran_va_plan_detl_style_id: $("#modalcontent-common #tran_va_plan_detl_style_id").val() == "" ? null : $("#modalcontent-common #tran_va_plan_detl_style_id").val(),
+                tran_sample_order_id: null,
+                tran_sample_order_number: null,
+                order_date: $("#modalcontent-common #order_date").val(),
+                delivery_date: $("#modalcontent-common #delivery_date").val(),
+                delivery_unit_id: $("#modalcontent-common #delivery_unit_id").val(),
+                order_quantity: $("#modalcontent-common #order_quantity").val(),
+                remarks: $("#modalcontent-common #remarks").val(),
+
+                obj_fit_name: check_value($("#modalcontent-common #fit_name").val()) != null ? objFit : null,
+                obj_pattern: check_value($("#modalcontent-common #pattern").val()) != null ? objPattern : null,
+
+                List_SubGroup: List_Subgroup,
+                List_Embellishmet: List_Embellishment,
+                List_base64String_File: listAttachments,
+
+                List_Detl: List_detl
+
+            }
+
+            $("#ddl_s2embellishment_ids").parent().find(".select2-selection").css("border", "");
+
+            if (_cusFormValidate("frmAdd")) {
+
+                if (List_Subgroup.length == 0) {
+                    return;
+                    showErrorAlert("Alert", "Please Add SubGroup", "OK", function () {
+                        return;
+                    });
+                }
+
+                else if (listAttachments.length == 0) {
+                    return;
+                    showErrorAlert("Alert", "Please Add Product Image", "OK", function () {
+                        $("#ddl_s2embellishment_ids").parent().find(".select2-selection").css("border", "1px solid red");
+                    });
+                }
+                else if (List_detl.length == 0) {
+                    return;
+                    showErrorAlert("Alert", "Please Add Detail", "OK", function () {
+                        return;
+                    });
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/SampleOrder/SaveSamepleOrderAndBOM", objData, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+                        LoadDesignerDistributionData();
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+                            //document.location = "/SampleOrder/SampleOrderCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+                            closePopup();
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+            }
+            else {
+                showErrorAlert("Alert", "Please provide all the required data", "OK", function () {
+
+                });
+            }
+        }
+
+        function UpdateSamepleOrderAndBOM(btn) {
+
+            var List_Embellishment = [];
+            var List_Subgroup = [];
+            $.each($("#ddl_item_sub_structure1").val(), function (key, val) {
+                //console.log(val)
+                var strid = $($("#ddl_item_sub_structure1").select2('data')[key].element).attr("tran_sample_order_subgroup_id");
+                var obj = {
+                    gen_item_structure_group_sub_id: val,
+                    tran_sample_order_subgroup_id: checknullValue(strid) == true ? strid : null,
+                    current_state: checknullValue(strid) == true ? 2 : 1
+                }
+                List_Subgroup.push(obj);
+            });
+            $.each($("#ddl_item_sub_structure2").val(), function (key, val) {
+                //console.log(val)
+                var strid = $($("#ddl_item_sub_structure2").select2('data')[key].element).attr("tran_sample_order_subgroup_id");
+
+                var obj = {
+                    gen_item_structure_group_sub_id: val,
+                    tran_sample_order_subgroup_id: checknullValue(strid) == true ? strid : null,
+                    current_state: checknullValue(strid) == true ? 2 : 1
+                }
+                List_Subgroup.push(obj);
+            });
+            $.each($("#ddl_item_sub_structure3").val(), function (key, val) {
+                //console.log(val)
+                var strid = $($("#ddl_item_sub_structure3").select2('data')[key].element).attr("tran_sample_order_subgroup_id");
+                var obj = {
+                    gen_item_structure_group_sub_id: val,
+                    tran_sample_order_subgroup_id: checknullValue(strid) == true ? strid : null,
+                    current_state: checknullValue(strid) == true ? 2 : 1
+                }
+                List_Subgroup.push(obj);
+            });
+
+            var List_Embellishment = [];
+
+            $.each($("#ddl_s2embellishment_ids").val(), function (key, val) {
+                //console.log(val)
+
+                var strid = $($("#ddl_s2embellishment_ids").select2('data')[key].element).attr("secondary_id");
+
+                var obj = {
+                    embellishment_id: val,
+                    tran_sample_order_embellishment_id: strid,
+                    current_state: (!strid) ? 1 : 2
+                }
+
+                List_Embellishment.push(obj);
+            });
+
+            var List_detl = [];
+
+            $.each($("#DTTranSampleOrderSize tbody tr:visible"), function (key, val) {
+
+                var obj = {
+                    tran_sample_order_detl_id: $(val).attr("tran_sample_order_detl_id") == "0" ? null : $(val).attr("tran_sample_order_detl_id"),
+                    tran_sample_order_id: $("#modalcontent-common #tran_sample_order_id").val(),
+                    color_code: $(val).find(".txtColorCode").val(),
+                    style_product_size_group_detid: $(val).find(".ddlProductSizeDet").val(),
+                    order_quantity: $(val).find(".txtorder_quantity").val(),
+                    style_product_unit_id: $(val).find(".ddlProductUnit").val(),
+                    current_state: $(val).attr("tran_sample_order_detl_id") == "0" ? 1 : 2
+                }
+
+                List_detl.push(obj);
+
+            });
+
+            var objFit = {
+                style_fit_info_id: $("#modalcontent-common #fit_name").val(),
+                fit_info: $("#modalcontent-common #fit_name > option:selected").text(),
+            }
+
+            var objPattern = {
+                style_pattern_id: $("#modalcontent-common #pattern").val(),
+                pattern_info: $("#modalcontent-common #pattern > option:selected").text(),
+            }
+
+            var objData = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                designer_member_id: $("#modalcontent-common #designer_member_id").val() == "" ? null : $("#modalcontent-common #designer_member_id").val(),
+
+                tran_va_plan_detl_id: $("#modalcontent-common #tran_va_plan_detl_id").val() == "" ? null : $("#modalcontent-common #tran_va_plan_detl_id").val(),
+                tran_va_plan_detl_style_id: $("#modalcontent-common #tran_va_plan_detl_style_id").val() == "" ? null : $("#modalcontent-common #tran_va_plan_detl_style_id").val(),
+
+                tran_sample_order_id: check_value($("#modalcontent-common #tran_sample_order_id").val()),
+                tran_sample_order_number: $("#modalcontent-common #tran_sample_order_number").val(),
+                order_date: $("#modalcontent-common #order_date").val(),
+                
+                delivery_date: $("#modalcontent-common #delivery_date").val(),
+                delivery_unit_id: $("#modalcontent-common #delivery_unit_id").val(),
+                order_quantity: $("#modalcontent-common #order_quantity").val(),
+                remarks: $("#modalcontent-common #remarks").val(),
+
+                obj_fit_name: check_value($("#modalcontent-common #fit_name").val()) != null ? objFit : null,
+                obj_pattern: check_value($("#modalcontent-common #pattern").val()) != null ? objPattern : null,
+
+
+                List_SubGroup: List_Subgroup.concat(list_deleted_subgroup),
+                List_Embellishmet: List_Embellishment.concat(list_deleted_embellishment),
+                List_base64String_File: listAttachments,
+                List_Detl: List_detl.concat(list_deleted_detl)
+            }
+
+
+            if (_cusFormValidate("frmAdd")) {
+                if (List_Subgroup.length == 0) {
+                    return;
+                    showErrorAlert("Alert", "Please Add SubGroup", "OK", function () {
+                        return;
+                    });
+                }
+                
+                else if (listAttachments.length == 0) {
+                    return;
+                    showErrorAlert("Alert", "Please Add Product Image", "OK", function () {
+                        $("#ddl_s2embellishment_ids").parent().find(".select2-selection").css("border", "1px solid red");
+                    });
+                }
+                else if (List_detl.length == 0) {
+                    return;
+                    showErrorAlert("Alert", "Please Add Detail", "OK", function () {
+                        return;
+                    });
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/SampleOrder/UpdateSamepleOrderAndBOM", objData, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+                        LoadDesignerDistributionData();
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+                            //document.location = "/SampleOrder/SampleOrderCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+                            closePopup();
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+            }
+            else {
+                showErrorAlert("Alert", "Please provide all the required data", "OK", function () {
+
+                });
+            }
+        }
+      
+
+    </script>
+
+ }

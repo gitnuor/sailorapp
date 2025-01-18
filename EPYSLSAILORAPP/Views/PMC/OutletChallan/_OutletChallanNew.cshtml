@@ -1,0 +1,351 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Application.DTO.RPC.rpc_tran_outlet_challan_request_DTO;
+@{
+    ViewBag.Title = "Outlet Challan Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+@{
+    var techpacklist = ViewBag.techpacklist;
+    if (techpacklist == null)
+    {
+        techpacklist = new List<SelectListItem>();
+    }
+}
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Outlet Challan Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                 <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Delivery Challan No</label>
+                            <input style="width:100%" readonly placeholder="Auto Generated"  type="text" class="border-#d1cccc-200 form-control " />
+                        </div>
+                 </div>
+
+                  <div class="col-md-3">
+                        <div class="form-group" style="margin-bottom: 0.3rem;">
+                            <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Challan Date</label>
+                            <input style="width:100%" asp-for="del_outlet_challan_date" type="date" class="border-#d1cccc-200 form-control " />
+                            <span asp-validation-for="del_outlet_challan_date" class="text-danger"></span>
+                        </div>
+                   </div>
+
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Delivery From</label>
+                        <input style="width:100%" asp-for="SailorFactory" type="text" class="border-#d1cccc-200 form-control " />
+                        
+                    </div>
+                </div>
+
+               <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Delivery To</label>
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "outlet_id",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.outletList)),
+                                selectedvalue = "",
+                                cssclass = "form-control outlet_id",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "--Select Outlet--"
+                            })
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Delivery Address</label>
+                        <input style="width:100%" asp-for="delivery_address" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="delivery_address" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Vehicle Type</label>
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "transport_id",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.transportTypeList)),
+                                selectedvalue = "",
+                                cssclass = "form-control transport_id",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "--Select--"
+                            })
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Vehicle Number</label>
+                        <input style="width:100%" asp-for="vehicle_number" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="vehicle_number" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Driver Name</label>
+                        <input style="width:100%" asp-for="driver_name" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="driver_name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Driver Contact No</label>
+                        <input style="width:100%" asp-for="driver_contact_no" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="driver_contact_no" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Note</label>
+                        <input style="width:100%" asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="note" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                <div class="form-group">
+                        <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Techpack</label>
+
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "techpack_id",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(techpacklist),
+                                selectedvalue = "",
+                                cssclass = "form-control",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "select"
+                            })
+                  
+                    <span asp-validation-for="techpack_id" class="text-danger"></span>
+                        
+                    </div>
+                    
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" onclick="AddTeckpackDetl();" style="margin-left: -22px;margin-top: 23px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                    </div>
+                </div>
+
+              
+
+            </div>
+ 
+                <div class="row" id="divTablePacking" style="display:none">
+                    <div class="col-md-12">
+                        <table style="font-size:9px;" id="DTOutletChallanList" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th><label class="labelNormal">SL No</label></th>
+                                    <th><label class="labelNormal">Category</label></th>
+                                    <th><label class="labelNormal">Style No</label></th>
+                                    <th><label class="labelNormal">Color Code</label></th>
+                                    <th><label class="labelNormal">Color</label></th>
+                                    <th><label class="labelNormal">Size</label></th>
+                                    <th><label class="labelNormal">Barcode</label></th>
+                                    <th><label class="labelNormal">M.Unit </label></th>
+                                    <th><label class="labelNormal">MRP</label></th>
+                                    <th><label class="labelNormal">Allocate Qty</label></th>
+                                    <th><label class="labelNormal">Challan Qty</label></th>
+                                    <th><label class="labelNormal">Available Qty</label></th>                                    
+                                    <th><label class="labelNormal">Value</label></th>
+                                    <th><label class="labelNormal">Remarks</label></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+           
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+                <button type="button" class="btn btn-success " id="SaveOutletChallan1" onclick="SaveOutletChallan(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+
+
+
+</form>
+
+
+<script>
+
+    $('#outlet_id').on('change', function(){
+        
+        var outletid = $('#outlet_id').val();
+
+        ajaxGetHandler("/OutletChallan/GetOutletAddress?outletid=" + outletid, null, function (data) {
+
+            $('#delivery_address').val(data.data);
+
+        });
+    });
+
+
+   // $('#techpack_id').on('change', function () {
+    function AddTeckpackDetl(btn) {
+            
+            var techpack_id = $('#techpack_id').val();
+
+            ajaxGetHandler("/OutletChallan/GetOutletDetails?techpack_id=" + techpack_id, null, function (data) {
+
+                $("#divTablePacking").show();
+                var table = document.getElementById("DTOutletChallanList").getElementsByTagName('tbody')[0];
+               // table.innerHTML = '';
+                var sl_no = 0;
+                data.data.forEach(function (item) {
+                    var newRow = table.insertRow(table.rows.length);
+                    sl_no++;
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    var cell3 = newRow.insertCell(2);
+                    var cell4 = newRow.insertCell(3);
+                    var cell5 = newRow.insertCell(4);
+                    var cell6 = newRow.insertCell(5);
+                    var cell7 = newRow.insertCell(6);
+                    var cell8 = newRow.insertCell(7);
+                    var cell9 = newRow.insertCell(8);
+                    var cell10 = newRow.insertCell(9);
+                    var cell11 = newRow.insertCell(10);
+                    var cell12 = newRow.insertCell(11);
+                    var cell13 = newRow.insertCell(12);
+                    var cell14 = newRow.insertCell(13);
+                    var cell15 = newRow.insertCell(14);
+                    var cell16 = newRow.insertCell(15);
+                    var cell17 = newRow.insertCell(16);
+                    var cell18 = newRow.insertCell(17);
+
+                    cell1.innerHTML = `<input disabled type='number' class='form-control sl_no' value=` + sl_no + ` >`;
+                    cell1.style.width = "4%";
+                    cell2.innerHTML = "<input  type='text' class='form-control style_item_product_name' value='" + item.style_item_product_name + "' >";
+                    cell2.style.width = "14%";
+                    cell3.innerHTML = "<input disabled type='text' class='form-control techpack_number' value=" + item.techpack_number + " >";
+                    cell3.style.width = "12%";
+
+                    cell4.innerHTML = "<input disabled type='text'class='form-control color_code' value=" + item.color_code + " >";
+                    cell5.style.background = item.color_code;
+
+                    cell6.innerHTML = "<input disabled type='text'class='form-control style_product_size' value=" + item.style_product_size + " >";
+                    cell6.style.width = "8%";
+                    cell7.innerHTML = "<input disabled type='number'class='form-control style_product_size_group_detid' value=" + item.style_product_size_group_detid + " >";
+                    cell7.style.display = "none";
+                    cell8.innerHTML = "<input disabled type='text'class='form-control barcode' value=" + item.barcode + " >";
+                    cell8.style.width = "7%";
+                    cell9.innerHTML = "<input disabled type='number'class='form-control style_product_unit_id' value=" + item.style_product_unit_id + " >";
+                    cell9.style.display = "none";
+                    cell10.innerHTML = "<input disabled type='text'class='form-control style_product_unit' value=" + item.style_product_unit + " >";
+                    cell10.style.width = "5%";
+                    cell11.innerHTML = "<input disabled type='number'class='form-control mrp' value=" + item.mrp + " >";
+                    cell11.style.width = "8%";
+                    cell12.innerHTML = "<input disabled type='number' disabled class='form-control distributed_quantity' value=" + item.distributed_quantity + " >";
+                    cell12.style.width = "8%";
+
+                    cell13.innerHTML = "<input  type='number'  class='form-control challan_quantity' onchange='updateBalanQty(this);'>";
+                    cell14.innerHTML = "<input  type='number' class='form-control available_quantity'>";
+
+                    cell15.innerHTML = "<input  type='number' disabled class='form-control total_mrp_value' value= 0 >";
+                    cell15.style.width = "8%";
+                    cell16.innerHTML = "<input  type='text' class='form-control note'>";
+                    cell16.style.width = "8%";
+
+                    cell17.innerHTML = "<input  type='number' class='form-control techpack_id' value=" + item.techpack_id + " >";
+                    cell17.style.display = "none";
+                    cell18.innerHTML = "<input  type='number' class='form-control style_item_product_id' value=" + item.style_item_product_id + " >";
+                    cell18.style.display = "none";
+                });
+            });
+        }
+   // });
+
+
+    function updateBalanQty(input) {
+        
+        const row = input.closest('tr');
+        const distributed_quantity = parseInt(row.querySelector('.distributed_quantity').value) || 0;
+        const challan_quantity = parseInt(row.querySelector('.challan_quantity').value) || 0;
+        const mrp = parseInt(row.querySelector('.mrp').value) || 0;
+
+        const available_quantity = distributed_quantity - challan_quantity;
+        row.querySelector('.available_quantity').value = available_quantity;
+
+        const totalVal = mrp * challan_quantity;
+        row.querySelector('.total_mrp_value').value = totalVal;
+    }
+
+    $(document).ready(function () {
+        $('#techpack_id').select2({
+            placeholder: "Select an option",
+            allowClear: true
+        });
+    });
+
+</script>

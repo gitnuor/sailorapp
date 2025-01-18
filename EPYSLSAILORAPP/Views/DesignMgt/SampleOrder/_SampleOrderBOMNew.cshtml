@@ -1,0 +1,495 @@
+﻿@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Application.DTO.Tran_DesignMgt.tran_sample_order_DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .row {
+        margin: 3px !important;
+    }
+
+    .box {
+        margin-bottom: 0px !important;
+    }
+
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+</style>
+
+<input type="hidden" asp-for="designer_member_id">
+<input type="hidden" asp-for="tran_va_plan_detl_id">
+<input type="hidden" asp-for="tran_va_plan_detl_style_id">
+
+<div class="box" style="margin-top:7px;">
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="box">
+                <div class="row" style="">
+                    <div class="col-md-3">
+
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Name</label>
+
+                            <input style="width:100%" disabled asp-for="style_product" type="text" class="border-gray-200 rounded-sm  form-control  color_code_gen" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Details</label>
+
+                            <input style="width:100%" asp-for="style_product_details" type="text" disabled class="border-gray-200 rounded-sm  form-control  color_code_gen" />
+
+                        </div>
+                    </div>
+
+                    @*  <div class="col-md-3">
+
+                    <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Designer :</label>
+
+                    <input style="width:100%" disabled value="@Model.designer" type="text" class="border-gray-200 rounded-sm  form-control  color_code_gen" />
+
+                    </div>
+                    </div> *@
+                </div>
+                <form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+                    <div class="row" style="">
+                        @*  <div class="col-md-3">
+
+                        <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sample Order Date :</label>
+
+
+                        <input style="width:100%" asp-for="order_date" type="date" class="border-gray-200 rounded-sm  form-control  color_code_gen required" />
+                        <span asp-validation-for="order_date" class="text-danger"></span>
+                        </div>
+                        </div> *@
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Date :</label>
+
+                                <input style="width:100%" min="@DateTime.Now.ToString("yyyy-MM-dd")" asp-for="delivery_date" type="date" class="border-gray-200 rounded-sm  form-control  color_code_gen required" />
+                                <span asp-validation-for="delivery_date" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Unit :</label>
+
+                                @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                        ddlId = "delivery_unit_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(Model.List_Unit),
+                                        selectedvalue = "",
+                                        cssclass = "form-control  ",
+                                        enable = true,
+                                        isRequired = true,
+                                        placeholder = "Select Delivery Unit"
+                                    })
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Code :</label>
+
+                                <input style="width:100%" disabled asp-for="style_code" type="text" min="0" class="border-gray-200 rounded-sm  form-control  color_code_gen" />
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="row" style="">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fit :</label>
+                                @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                        ddlId = "fit_name",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.style_fit_list),
+                                        selectedvalue = "",
+                                        cssclass = "form-control  ",
+                                        enable = true,
+                                        isRequired = false,
+                                        placeholder = "Select Fit "
+                                    })
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Pattern :</label>
+
+                                @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                        ddlId = "pattern",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.style_pattern_list),
+                                        selectedvalue = "",
+                                        cssclass = "form-control  ",
+                                        enable = true,
+                                        isRequired = false,
+                                        placeholder = "Select Pattern "
+                                    })
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="">
+
+                        <div class="col-md-12" style="margin-bottom: 7px;">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note :</label>
+
+                                <input style="width:100%" asp-for="remarks" type="text" class="border-gray-200 rounded-sm  form-control  color_code_gen" />
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="box">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-danger " id="btnAddRow" onclick="btnAddNewRow(this)" style="width:100%;">
+                            Add Color
+                        </button>
+                    </div>
+                    <div class="col-md-4" style="text-align:right;">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Order Quantity :</label>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <input style="width:100%" disabled asp-for="order_quantity" type="number" min="0" class="border-gray-200 rounded-sm  form-control  " />
+
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="row">
+
+                    <table style="font-size:10px;" id="DTTranSampleOrderSize" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                @* <th><label class="labelNormal">SL</label></th> *@
+                                <th><label class="labelNormal">Color</label></th>
+                                <th><label class="labelNormal  ">Size</label></th>
+                                <th><label class="labelNormal ">Quantity</label></th>
+
+                                <th><label class="labelNormal "> Unit</label></th>
+
+
+                                <th style="width:80px;"><label class="labelNormal ">Remove</label></th>
+
+
+                            </tr>
+                        </thead>
+                        @{
+                            var color_index = 1;
+                        }
+                        @foreach (var obj in Model.List_Detl)
+                        {
+
+                            var objColorSingle = new SelectListItem { Text = obj.txtcolor_code, Value = obj.txtcolor_code };
+
+                            if (obj.RowNumber == 1)
+                            {
+                                <tr class="tbl_tr tr_first" style="display:none">
+                                    @* <td>@obj.RowNumber</td> *@
+                                    <td>
+                                        @await Component.InvokeAsync("S2GenColor", new
+                                            {
+                                                ddlId = "ddl_color",
+                                                cssclass = "form-control ddl_color txtColorCode",
+                                                isRequired = false,
+                                                isReadOnly = false,
+                                                placeholder = "Select Color",
+                                                preloaded = "",
+                                                model_parentid = "modalcontainer_common",
+                                                isMultiple = true,
+                                                isOnLoad = false
+                                            })
+                                    </td>
+                                    <td>@Html.Raw(obj.strddlSizeHTML)</td>
+                                    <td>@Html.Raw(obj.txtorder_quantity)</td>
+                                    <td>@Html.Raw(obj.strddlUnitHTML)</td>
+                                    <td>@Html.Raw(obj.btnAddDeleteRowHTML)</td>
+                                    <td style="display:none"><input type="number" id="row_color_index" value="@color_index" /></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr class="tbl_tr">
+                                    @* <td>@obj.RowNumber</td> *@
+                                    <td>
+                                        @await Component.InvokeAsync("S2GenColor", new
+                                            {
+                                                ddlId = ("ddl_color" + color_index.ToString()),
+                                                cssclass = "form-control ddl_color txtColorCode",
+                                                isRequired = false,
+                                                isReadOnly = false,
+                                                placeholder = "Select Color",
+                                                preloaded = Newtonsoft.Json.JsonConvert.SerializeObject(objColorSingle),
+                                                model_parentid = "modalcontainer_common",
+                                                isMultiple = true,
+                                                isOnLoad = false
+                                            })
+                                    </td>
+                                    <td>@Html.Raw(obj.strddlSizeHTML)</td>
+                                    <td>@Html.Raw(obj.txtorder_quantity)</td>
+                                    <td>@Html.Raw(obj.strddlUnitHTML)</td>
+                                    <td>@Html.Raw(obj.btnAddDeleteRowHTML)</td>
+                                   
+                                </tr>
+
+                                color_index++;
+                            }
+                        }
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+</div>
+
+<div class="row" style=" margin-left:-1px!important; border: 1px solid #efe7e7;">
+    <div class="col-md-4" style="margin-top: 7px;">
+
+        @{
+            var index = 0;
+        }
+        <div class="card">
+
+            <!-- /.card-header -->
+            <div class="card-body">
+                @foreach (var objsinglegroup in Model.List_Mapped_Structure)
+                {
+                    <div class="box">
+                        <div class="box-header">
+                            <h6 class="box-title">@objsinglegroup.structure_group_name :</h6>
+                        </div>
+                        <div class="row" style="">
+
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+                                    
+                                    @if (objsinglegroup.List.Count > 0)
+                                    {
+                                        var strid = "ddl_item_sub_structure" + objsinglegroup.item_structure_group_id.ToString();
+
+                                        <select id="@strid" multiple class="form-control ddl_item_sub_structure select_style" style="width:100%">
+                                            
+                                            @foreach (var objoption in Model.List_Structure_det.Where(p => p.item_structure_group_id == objsinglegroup.item_structure_group_id))
+                                            {
+
+                                                var strSelected = (objsinglegroup.List.Where(p => p.gen_item_structure_group_sub_id == objoption.gen_item_structure_group_sub_id
+                                                ).ToList().Count > 0
+
+                                                ) ? "selected" : "";
+                                                if (string.IsNullOrEmpty(strSelected))
+                                                {
+                                                    <option value="@objoption.gen_item_structure_group_sub_id">
+                                                        @objoption.sub_group_name
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option selected value="@objoption.gen_item_structure_group_sub_id">
+                                                        @objoption.sub_group_name
+                                                    </option>
+                                                }
+                                            }
+
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    index++;
+                }
+
+
+                <div class="box">
+                    <div class="box-header">
+                        <h6 class="box-title">Embellishments:</h6>
+                    </div>
+                    <div class="row" style="">
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+
+                                @await Component.InvokeAsync("S2Embellishment", new
+                                    {
+                                        ddlId = "ddl_s2embellishment_ids",
+                                        selectedvalue = "",
+                                        cssclass = "form-control ddl_s2embellishment select_style",
+                                        isRequired = false,
+                                        isReadOnly = false,
+                                        placeholder = "Select Embellishment",
+                                        preloaded = Model.style_embellishment_ids,
+                                        model_parentid = "modalcontainer_common",
+                                        isMultiple = true
+                                    })
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+
+
+
+    </div>
+    <div class="col-md-8" style="margin-top: 7px;">
+        <input type="file" style="display:none" id="attachments" multiple />
+
+        <div class="row">
+            <div class="col-md-6" style="margin-bottom: 5px;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Front</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="box">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-danger btnImageUpload" imagetype="@EPYSLSAILORAPP.Domain.Image_Position_Type.Front.ToString()" style="width:200px;">
+                                        Select Front Part Images
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="row" id="frames_@EPYSLSAILORAPP.Domain.Image_Position_Type.Front.ToString()">
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <div class="col-md-6" style="margin-bottom: 5px;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Back</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="box">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-danger btnImageUpload" imagetype="@EPYSLSAILORAPP.Domain.Image_Position_Type.Back.ToString()" style="width:200px;">
+                                        Select Back Part Images
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="row" id="frames_@EPYSLSAILORAPP.Domain.Image_Position_Type.Back.ToString()">
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+<div class="row">
+    <div class="col-md-12" style="margin-bottom: 5px;">
+
+        @* <button style="width:150px;" type="button" class="btn btn-secondary  " id="btnBack"><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;&nbsp;Cancel</button>
+        *@
+
+        <button style="width:200px;" type="button" class="btn btn-primary " id="btnSaveSampleOrder" onclick="SaveSamepleOrderAndBOM(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+    </div>
+</div>
+
+
+<script>
+
+
+</script>
+
+
+
+

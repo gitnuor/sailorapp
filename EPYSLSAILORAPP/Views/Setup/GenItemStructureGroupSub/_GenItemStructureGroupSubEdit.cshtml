@@ -1,0 +1,298 @@
+@using EPYSLSAILORAPP.Application.DTO;
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.RPC.rpc_proc_gen_item_structure_group_sub_edit_DTO;
+@{
+    ViewBag.Title = "Item Structure Sub Group Mapping Edit";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <input type="hidden" id="gen_item_structure_group_sub_id" value="@Model.gen_item_structure_group_sub_id">
+    <input type="hidden" id="gen_item_master_id" value="@Model.gen_item_master_id">
+
+    <div class="box" style="margin-top:7px;">
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Item Structure Sub Group Segment Mapping</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Item Structure Group </label>
+
+                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                    ddlId = "item_structure_group_id",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_gen_item_structure_group
+                                    .Select(a =>
+                                    new SelectListItemExtended
+                                    {
+                                    Text = a.structure_group_name,
+                                    Value = a.item_structure_group_id.ToString()
+                                    }
+                                    ).ToList()),
+                                    selectedvalue = Model.item_structure_group_id.ToString(),
+                                    cssclass = "form-control ",
+                                    enable = true,
+                                    isRequired = false,
+                                    placeholder = "Select Item Structure Sub Group "
+                                    })
+                                    <span asp-validation-for="item_structure_group_id" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sub Group Name</label>
+                                    <input style="width:100%" asp-for="sub_group_name" type="text" class="border-#d1cccc-200 form-control" />
+                                    <span asp-validation-for="sub_group_name" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Measurement Unit </label>
+
+                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                    ddlId = "measurement_unit_id",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_gen_measurement_unit
+                                    .Select(a =>
+                                    new SelectListItemExtended
+                                    {
+                                    Text = a.unit_name,
+                                    Value = a.gen_measurement_unit_id.ToString()
+                                    }
+                                    ).ToList()),
+                                    selectedvalue =Model.measurement_unit_id.ToString(),
+                                    cssclass = "form-control",
+                                    enable = true,
+                                    isRequired = false,
+                                    placeholder = "Select Measurement Unit ",
+                                    })
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Default Measurement Unit Detail </label>
+
+                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                    ddlId = "default_measurement_unit_detail_id",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_measurement_unit_detail
+                                    .Select(a =>
+                                    new SelectListItemExtended
+                                    {
+                                    Text = a.unit_detail_title,
+                                    Value = a.gen_measurement_unit_detail_id.ToString(),
+                                    str_other_value=a.gen_measurement_unit_id.ToString()
+                                    }
+                                    ).ToList()),
+                                    selectedvalue = Model.default_measurement_unit_detail_id.ToString(),
+                                    cssclass = "form-control",
+                                    enable = true,
+                                    isRequired = false,
+                                    placeholder = "Select Measure Unit Detail ",
+                                    isBindDataSource=true
+                                    })
+
+
+                                </div>
+                            </div>
+                        </div>
+                       @*  <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Secondary Measurement Unit Id</label>
+
+                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                    ddlId = "secondary_measurement_unit_id",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_gen_measurement_unit
+                                    .Select(a =>
+                                    new SelectListItemExtended
+                                    {
+                                    Text = a.unit_name,
+                                    Value = a.gen_measurement_unit_id.ToString()
+                                    }
+                                    ).ToList()),
+                                    selectedvalue = Model.secondary_measurement_unit_id.ToString(),
+                                    cssclass = "form-control",
+                                    enable = true,
+                                    isRequired = false,
+                                    placeholder = "Select Secondary Measurement Unit ",
+                                    })
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Secondary Measurement Unit Detail Id</label>
+
+                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                    ddlId = "secondary_measurement_unit_detail_id",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject( Model.List_measurement_unit_detail
+                                    .Select(a =>
+                                    new SelectListItemExtended
+                                    {
+                                    Text = a.unit_detail_title,
+                                    Value = a.gen_measurement_unit_detail_id.ToString(),
+                                    str_other_value=a.gen_measurement_unit_id.ToString()
+                                    }
+                                    ).ToList()),
+                                    selectedvalue = Model.secondary_measurement_unit_detail_id.ToString(),
+                                    cssclass = "form-control",
+                                    enable = true,
+                                    isRequired = false,
+                                    placeholder = "Select Secondary Measure Unit Detail ",
+                                    isBindDataSource=true
+                                    })
+                                </div>
+                            </div>
+                        </div> *@
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Mapping Info</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Mapped Segment List</label>
+
+                                    @await Component.InvokeAsync("S2GenSegment", new
+                                    {
+                                    ddlId = "segment_ids",
+
+                                    selectedvalue = "",
+                                    cssclass = "form-control  S2GenSegment",
+                                    isRequired = false,
+                                    isReadOnly = false,
+                                    placeholder = "Select Segment",
+                                    preloaded=Model.gen_segment_mapp_list,
+                                    model_parentid="modalcontainer_common"
+                                    })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" style="min-height:380px;    margin: 20px;">
+                            <div class="card-header">
+                                <h6 class="card-title">Segment Sorting (Drag Item to Sort)</h6>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                         
+                                            <ul id="ulSegments">
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+            @if (Model.gen_item_master_id == null)
+            {
+                <button style="width:300px;" type="button" class="btn btn-success " id="btnUpdateGenItemStructureGroupSub" onclick="UpdateGenItemStructureGroupSub(this);"><i class="fa fa-file-open"></i>&nbsp;Update</button>
+            }
+            else
+            {
+                <button style="width:300px;" type="button" class="btn btn-danger " id="btnClose" onclick="closePopup();"><i class="fa fa-file-open"></i>&nbsp;Close</button>
+
+            }
+        </div>
+    </div>
+</form>
+
+
+
+
+

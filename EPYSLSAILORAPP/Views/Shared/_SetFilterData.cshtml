@@ -1,0 +1,54 @@
+﻿@using Newtonsoft.Json;
+
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+}
+
+<div class="box">
+    <div class="row">
+
+        <div class="col-md-8">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "ddl_fiscal_year_id",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.fiscal_year_list)),
+                selectedvalue = ViewBag.fiscal_year_id,
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Fiscal Year"
+                })
+            </div>
+        </div>
+        <div class="col-md-4">
+
+            <button style="width:100%;margin-top:31px;" type="button" class="btn btn-primary  " id="btnSetFilter" onclick="SetFilterData(this);"><i class="fa fa-file-pen"></i>&nbsp;Set </button>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Event</label>
+
+                <select class="form-control" id="ddl_event_id" onchange="SetFilterData(this);">
+                    <option>----Select Event----</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+   @*  <div class="row">
+        <div class="col-md-12">
+
+            <button style="width:100%" type="button" class="btn btn-primary  " id="btnSetFilter" onclick="SetFilterData(this);"><i class="fa fa-file-pen"></i>&nbsp;Set </button>
+
+        </div>
+
+    </div> *@
+</div>
+

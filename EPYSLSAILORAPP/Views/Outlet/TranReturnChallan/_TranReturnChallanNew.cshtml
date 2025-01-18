@@ -1,0 +1,258 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_return_challan_DTO;
+@{
+    ViewBag.Title = "Return Challan Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Return Challan Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Return No</label>
+                        <input style="width:100%" readonly asp-for="return_no" type="text" class="border-#d1cccc-200 form-control" />
+                        <input type="hidden" id="tran_outlet_challan_id" value="@Model.tran_outlet_challan_id">
+                        <input type="hidden" id="tran_outlet_challan_receive_id" value="@Model.tran_outlet_challan_receive_id">
+                        <span asp-validation-for="return_no" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Received No</label>
+                        <input style="width:100%" readonly asp-for="outlet_receive_no" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Received Date</label>
+                        <input style="width:100%" readonly asp-for="outlet_receive_date" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Return Date</label>
+                        <input style="width:100%" asp-for="return_date" type="date" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="return_date" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Vehicle Type</label>
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "transport_id",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.transportTypeList)),
+                                selectedvalue = "",
+                                cssclass = "form-control vehicle_type",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "--Select--"
+                            })
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Vehicle Number</label>
+                        <input style="width:100%" asp-for="vehicle_number" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Driver Name</label>
+                        <input style="width:100%" asp-for="driver_name" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="driver_name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Driver Contact No</label>
+                        <input style="width:100%" asp-for="driver_contact_no" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="driver_contact_no" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Return From</label>
+
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "return_from",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.outletList)),
+                                selectedvalue = "",
+                                cssclass = "form-control vehicle_type",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "--Select--"
+                            })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Return To</label>
+                        <input style="width:100%" readonly asp-for="return_to_name" type="text" class="border-#d1cccc-200 form-control " />
+                        <input type="hidden" id="return_to" value="@Model.return_to">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note</label>
+                        <input style="width:100%" asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="note" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <table style="font-size:9px;" id="DTPListOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th><label class="labelNormal">SL No</label></th>
+                                <th><label class="labelNormal">Techpack</label></th>
+                                <th><label class="labelNormal">Style Code</label></th>
+                                <th><label class="labelNormal">Color</label></th>
+                                <th><label class="labelNormal">Barcode</label></th>
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">M.Unit</label></th>
+                                <th><label class="labelNormal">MRP</label></th>
+                                <th><label class="labelNormal">Rejected Qty </label></th>
+                                <th><label class="labelNormal">Already Return Qty</label></th>
+                                <th><label class="labelNormal">Return Qty </label></th>
+                                <th><label class="labelNormal">Remarks</label></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int count = 1;
+                            }
+                            @foreach (var obj in Model.TranReturnChallanDetails_List)
+                            {
+                                <tr>
+
+                                    <td><input type='number' disabled class='form-control sl_no' value="@count"></td>
+                                    <td style="display:none"><input type='text' disabled class='form-control techpack_id' value="@obj.techpack_id"></td>
+                                    <td><input type='text' class='form-control' disabled value="@obj.techpack_number" /></td>
+                                    <td><input type='text' disabled class='form-control style_code' value="@obj.style_code"></td>
+                                    <td style="display:none"><input type='text' disabled class='form-control color_code' value="@obj.color_code"></td>
+                                    <td style="background: @obj.color_code;"></td>
+                                    <td style="display:none"><input type='text' disabled class='form-control style_product_size_group_detid' value="@obj.style_product_size_group_detid"></td>
+                                    <td><input type='text' class='form-control barcode' disabled value="@obj.barcode"></td>
+                                    <td><input type='text' class='form-control style_product_size' disabled value="@obj.style_product_size"></td>
+                                    <td><input type='text' class='form-control style_product_unit' disabled value="@obj.style_product_unit"></td>
+                                    <td style="display:none"><input type='text' disabled class='form-control style_product_unit_id' value="@obj.style_product_unit_id"></td>
+                                    <td><input type='text' class='form-control mrp' disabled value="@obj.mrp"></td>
+                                    <td><input type='number' class='form-control reject_quantity' disabled value="@obj.reject_quantity"></td>
+                                    <td><input type='number' class='form-control already_return_quantity' disabled value="@obj.already_return_quantity"></td>
+                                    <td><input type='number' class='form-control return_quantity'></td>
+                                    <td><input type='text' class='form-control notes'></td>
+
+
+                                </tr>
+                                count++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button type="button" class="btn btn-success " id="btnSaveTranReturnChallan" onclick="SaveTranReturnChallan(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+                </div>
+
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+
+
+

@@ -1,0 +1,527 @@
+@model EPYSLSAILORAPP.Domain.DTO.gen_item_structure_group_sub_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "GenItemStructureGroupSub List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Item Structure Sub Group Mapping</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddGenItemStructureGroupSub(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="DTGenItemStructureGroupSub" class="table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+
+                                                <th>Sub Group Name</th>
+                                                <th>M. Unit</th>
+                                                <th>Default M Unit Det</th>
+                                                <th>Secondary M. Unit</th>
+                                                <th>Secondary M. Unit Det</th>
+
+
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            GenItemStructureGroupSub
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .ul_svg_style
+    {
+        border: 1px solid black;
+        background: cornflowerblue;
+        color: white;
+        padding: 7px;
+        width: 13%;
+        cursor: pointer;
+    }
+</style>
+@section Scripts {
+    <script>
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddGenItemStructureGroupSub() {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/GenItemStructureGroupSub/GenItemStructureGroupSubNew", null, function (data) {
+
+                hideLoader();
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+                RegisterEvents();
+
+
+
+            });
+
+        }
+
+        function Load_UL() {
+            $("#ulSegments").empty();
+
+            var segment_list = $("#modalcontent #segment_ids").select2("data");
+
+            for (var i = 0; i < segment_list.length; i++) {
+
+                var li = $('<li class="ui-state-default" style="padding: 8px;  margin: 12px; width: 261px; list-style: none; text-align: center;color: blueviolet;font-size: 15px;">' +
+                    '<svg aria-hidden="true" class="ul_svg_style" focusable="false" data-prefix="fas" data-icon="arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="svg-inline--fa fa-arrow-up fa-fw fa-xl"><path fill="currentColor" d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" class=""></path></svg>' +
+                    '<input class="ul_inside_text form-control" style="width: 80%; float: right;margin-top: -1px"/></li>');
+
+                $(li).attr("segment_id", segment_list[i].id);
+                $(li).find(".ul_inside_text").val(segment_list[i].text);
+
+                //if ($("#ulSegments").find("li[segment_id=" + segment_list[i].id + "]").length == 0) {
+                $("#ulSegments").append(li);
+                // }
+
+            }
+
+            $("#ulSegments").sortable();
+        }
+
+        function RegisterEvents() {
+           
+
+            $("#modalcontent #segment_ids").change(function () {
+
+                Load_UL();
+            });
+
+            $("#modalcontent #measurement_unit_id").change(function () {
+
+                var itemList = JSON.parse($("#default_measurement_unit_detail_id").attr("objectlist"));
+
+                itemList = itemList.filter(p => p.str_other_value == $(this).val());
+
+                $("#default_measurement_unit_detail_id").empty();;
+
+                $.each(itemList, function (index, item) {
+                    $("#default_measurement_unit_detail_id").append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            });
+
+            $("#modalcontent #secondary_measurement_unit_id").change(function () {
+
+                var itemList = JSON.parse($("#secondary_measurement_unit_detail_id").attr("objectlist"));
+
+                itemList = itemList.filter(p => p.str_other_value == $(this).val());
+
+                $("#secondary_measurement_unit_detail_id").empty();;
+
+                $.each(itemList, function (index, item) {
+                    $("#secondary_measurement_unit_detail_id").append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            });
+        }
+
+        function EditGenItemStructureGroupSub(btn) {
+
+
+            var gen_item_structure_group_sub_id = $(btn).attr("gen_item_structure_group_sub_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/GenItemStructureGroupSub/GenItemStructureGroupSubEdit?gen_item_structure_group_sub_id=" + gen_item_structure_group_sub_id, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    RegisterEvents();
+
+                    Load_UL();
+
+                    if (check_value($("#modalcontent #gen_item_master_id").val()) != null) {
+
+                        $('#modalcontent input').attr("disabled", "disabled");
+                        $('#modalcontent li').attr("disabled", "disabled");
+                        $('#modalcontent select').attr("disabled", "disabled");
+
+                        showErrorAlert("Alert", "Item has been already created. You can't change mapping now.", "OK", function () {
+
+                        });
+                    }
+                    
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function ViewGenItemStructureGroupSub(btn) {
+
+            var gen_item_structure_group_sub_id = $(btn).attr("gen_item_structure_group_sub_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/GenItemStructureGroupSub/GenItemStructureGroupSubView?gen_item_structure_group_sub_id=" + gen_item_structure_group_sub_id, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    RegisterEvents();
+
+                    Load_UL();
+
+                    $('#modalcontent input').attr("disabled", "disabled");
+                    $('#modalcontent li').attr("disabled", "disabled");
+                    $('#modalcontent select').attr("disabled", "disabled");
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function SaveGenItemStructureGroupSub(btn) {
+
+            var mapp_list = [];
+
+            $.each($("#ulSegments li"), function (key, val) {
+
+                var obj = {
+                    gen_item_structure_group_sub_id: check_value($('#modalcontent #gen_item_structure_group_sub_id').val()),
+                    gen_segment_id: $(val).attr("segment_id"),
+                    segment_text: $(val).find(".ul_inside_text").val()
+                };
+
+                mapp_list.push(obj);
+
+            });
+            var obj_GenItemStructureGroupSub = {
+                gen_item_structure_group_sub_id: check_value($('#modalcontent #gen_item_structure_group_sub_id').val()),
+                item_structure_group_id: check_value($('#modalcontent #item_structure_group_id').val()),
+                sub_group_name: $('#modalcontent #sub_group_name').val(),
+                measurement_unit_id: check_value($('#modalcontent #measurement_unit_id').val()),
+                default_measurement_unit_detail_id: check_value($('#modalcontent #default_measurement_unit_detail_id').val()),
+                secondary_measurement_unit_id: check_value($('#modalcontent #secondary_measurement_unit_id').val()),
+                secondary_measurement_unit_detail_id: check_value($('#modalcontent #secondary_measurement_unit_detail_id').val()),
+
+                measurement_unit: $('#modalcontent #measurement_unit_id option:selected').text(),
+                default_measurement_unit_detail: $('#modalcontent #default_measurement_unit_detail_id option:selected').text(),
+
+                // secondary_measurement_unit: check_value($('#modalcontent #secondary_measurement_unit_id').val()) != null ? $('#modalcontent #secondary_measurement_unit_id option:selected').text() : '',
+                // secondary_measurement_unit_detail: check_value($('#modalcontent #secondary_measurement_unit_detail_id').val()) != null ? $('#modalcontent #secondary_measurement_unit_detail_id option:selected').text() : '',
+
+                List_Mapping: mapp_list
+            }
+
+            if (_cusFormValidate("frmAdd")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/GenItemStructureGroupSub/SaveGenItemStructureGroupSub", obj_GenItemStructureGroupSub, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenItemStructureGroupSubData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function UpdateGenItemStructureGroupSub(btn) {
+
+            var mapp_list = [];
+
+            $.each($("#ulSegments li"), function (key, val) {
+
+                var obj = {
+                    gen_item_structure_group_sub_id: check_value($('#modalcontent #gen_item_structure_group_sub_id').val()),
+                    gen_segment_id: $(val).attr("segment_id"),
+                    segment_text: $(val).find(".ul_inside_text").val()
+                };
+
+                mapp_list.push(obj);
+
+            });
+
+            var obj_GenItemStructureGroupSub = {
+                gen_item_structure_group_sub_id: check_value($('#modalcontent #gen_item_structure_group_sub_id').val()),
+                item_structure_group_id: check_value($('#modalcontent #item_structure_group_id').val()),
+                sub_group_name: $('#modalcontent #sub_group_name').val(),
+                measurement_unit_id: check_value($('#modalcontent #measurement_unit_id').val()),
+                default_measurement_unit_detail_id: check_value($('#modalcontent #default_measurement_unit_detail_id').val()),
+                secondary_measurement_unit_id: check_value($('#modalcontent #secondary_measurement_unit_id').val()),
+                secondary_measurement_unit_detail_id: check_value($('#modalcontent #secondary_measurement_unit_detail_id').val()),
+
+                measurement_unit: $('#modalcontent #measurement_unit_id option:selected').text(),
+                default_measurement_unit_detail: $('#modalcontent #default_measurement_unit_detail_id option:selected').text(),
+                
+                // secondary_measurement_unit: check_value($('#modalcontent #secondary_measurement_unit_id').val()) != null ? $('#modalcontent #secondary_measurement_unit_id option:selected').text() : '',
+                // secondary_measurement_unit_detail: check_value($('#modalcontent #secondary_measurement_unit_detail_id').val()) != null ? $('#modalcontent #secondary_measurement_unit_detail_id option:selected').text() : '',
+
+                List_Mapping: mapp_list
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+
+                ajaxPostObjectHandler("/GenItemStructureGroupSub/UpdateGenItemStructureGroupSub", obj_GenItemStructureGroupSub, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenItemStructureGroupSubData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteGenItemStructureGroupSub(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_GenItemStructureGroupSub = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/GenItemStructureGroupSub/DeleteGenItemStructureGroupSub", obj_GenItemStructureGroupSub, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenItemStructureGroupSubData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            });
+        }
+
+        $(function () {
+
+            LoadGenItemStructureGroupSubData();
+
+        });
+
+        function LoadGenItemStructureGroupSubData() {
+
+            var dt_search = {
+
+                filterId: '#DTGenItemStructureGroupSub_filter input[type=search]',
+                tableId: "#DTGenItemStructureGroupSub"
+
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search Subgroup Name',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+
+                "ajax": $.fn.dataTable.json({ url: "/GenItemStructureGroupSub/GetGenItemStructureGroupSubData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("gen_item_structure_group_sub_id", data.gen_item_structure_group_sub_id);
+
+                },
+                "columns": [
+
+
+                    { "data": "sub_group_name", "name": "sub_group_name", "autoWidth": true },
+                    { "data": "measurement_unit", "name": "measurement_unit", "autoWidth": true },
+                    { "data": "default_measurement_unit_detail", "name": "default_measurement_unit_detail", "autoWidth": true },
+                    { "data": "secondary_measurement_unit", "name": "secondary_measurement_unit", "autoWidth": true },
+                    { "data": "secondary_measurement_unit_detail", "name": "secondary_measurement_unit_detail", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

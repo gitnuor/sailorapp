@@ -1,0 +1,382 @@
+﻿@page "/Index"
+@{
+    ViewBag.Title = "Product Size Config ";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Product Size Config</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                            <button style="" type="button" class="btn btn-primary" id="btnNewProductSizeSetup"><i class="fa fa-plus"></i>&nbsp;New Size Group</button>
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="DTProductSizeConfig" class="table table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><label class="labelNormal ">SL</label></th>
+
+
+
+                                        <th><label class="labelNormal ">Size Group Name</label></th>
+                                        <th><label class="labelNormal ">All Sizes</label></th>
+                                        <th><label class="labelNormal ">Is Separate Price</label></th>
+
+
+                                        <th style="width:300px"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+<div id="modalcontainer_common" class="modal fade hidden-print" role="dialog">
+    <div class="modal-dialog" style="width: 40% !important; max-width: 40% !important; ">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px;padding:10px;background-color: #318db6;color: white;">
+                <h5 class="modal-title">New Product Setup</h5>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        var dt_detable;
+
+        var deleted_detail_size = [];
+
+        function EditClick(btn) {
+
+            try {
+
+                showLoader("Loading..........");
+
+
+                ajaxGetHandler("/ProductSizeConfig/ProductSizeConfigEdit", { style_product_size_group_id: $(btn).attr("style_product_size_group_id") }, function (response) {
+                    hideLoader();
+                    $('#modalcontent-common').html(response);
+
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+
+                    $('#modalcontainer_common').modal("show");
+
+                    loadpopup_detailsData();
+
+
+                }, false);
+
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+        function jsdatatableloaded() {
+
+
+        }
+
+        function DeleteDetailSize(btn) {
+            if ($(btn).attr("detid") != "0") {
+
+                var obj = {
+                    style_product_size_group_detid: check_value($(btn).attr("detid")),
+                    style_product_size_group_id: null,
+                    style_product_size: null,
+                    current_state: 3
+                };
+                deleted_detail_size.push(obj);
+            }
+
+            $(btn).parent().parent().remove();
+
+        }
+
+        function addnewrow(e) {
+
+
+            if ($('#modalcontent-common #DTProductSizeDetlConfig tbody tr').length == 1 &&
+                $('#modalcontent-common #DTProductSizeDetlConfig tbody tr').find(".dataTables_empty").length > 0)//dataTables_empty
+            {
+                $('#modalcontent-common #DTProductSizeDetlConfig tbody tr').remove();
+            }
+
+            $("#DTProductSizeDetlConfig tbody").append('<tr><td>' +
+                (parseInt($('#modalcontent-common #DTProductSizeDetlConfig tbody tr').length) + 1) + '</td><td>' +
+                '<input style_product_size_group_id="0" style_product_size_group_detid="0" type="text" class=" txt_product_size_group_detid border-gray-200 rounded-sm text-sm" style="width:100%" value="" >' +
+                '</td><td><button type="button" onclick="DeleteDetailSize(this);return false;" style="width: 120px;" class="btn btn-secondary btnDelete" detid="0">Delete</button></td></tr>');
+
+        }
+
+        function loadpopup_detailsData() {
+            var input = {
+                strMasterID: $('#modalcontent-common #hd_style_product_size_group_id').val()
+            };
+            dt_detable = $("#modalcontent-common #DTProductSizeDetlConfig").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/ProductSizeConfig/GetProductSizeConfig_Detl_Data", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": false },
+                    { targets: 1, "visible": true, "sortable": false },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+                    $(row).attr('style_product_size_group_id', data.style_item_product_id);
+
+                },
+                "drawCallback": function (settings) {
+
+                },
+                "bFilter": false,
+                "bPaginate": false,
+                "bInfo": false,
+                "columns": [
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "str_style_product_size", "name": "str_style_product_size", "autoWidth": true },
+                    { "data": "str_delete_button", "name": "str_delete_button", "autoWidth": true },
+                ]
+            });
+        }
+
+        function loadData() {
+
+            var dt_search = {
+
+                filterId: '#DTProductSizeConfig_filter input[type=search]',
+                tableId: "#DTProductSizeConfig"
+
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search Sizegroup Name',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/ProductSizeConfig/GetProductSizeConfigData", data: null }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": false },
+                    { targets: 1, "visible": true, "sortable": false },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+                    $(row).attr('style_product_size_group_id', data.style_item_product_id);
+
+                },
+                // "bFilter": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                "columns": [
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+
+                    { "data": "style_product_size_group_name", "name": "style_product_size_group_name", "autoWidth": true },
+                    //
+                    { "data": "strSizes", "name": "strSizes", "autoWidth": true },
+
+                    { "data": "str_is_separate_price", "name": "str_is_separate_price", "autoWidth": true },
+
+
+                    {
+                        "data": "datatablebuttonscode", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    }
+                ]
+            });
+        }
+
+
+
+        function closepopup() {
+            $('#modalcontainer_common').modal("hide");
+
+            $('#modalcontent-common').html("");
+        }
+
+        function SaveProductSize() {
+
+            var detailList = [];
+
+            $("#modalcontent-common .txt_product_size_group_detid").each(function (index, element) {
+                var obj = {
+                    style_product_size_group_detid: check_value($(element).attr("style_product_size_group_detid")),
+                    style_product_size_group_id: check_value($(element).attr("style_product_size_group_id")),
+                    style_product_size: $(element).val(),
+                    current_state: check_value($(element).attr("style_product_size_group_detid")) == null ? 1 : 2
+
+                };
+
+                if ($(element).val().length > 0)
+                    detailList.push(obj);
+            });
+
+
+            if (!_cusFormValidate("frmAdd")) {
+                return;
+            }
+            else if (detailList.length == 0) {
+                showErrorAlert("Alert", "Please provide at least one size", "OK", function () {
+                    return;
+                });
+            }
+            else {
+
+                showLoader("Saving..........");
+
+
+                var request = {
+                    style_product_size_group_id: parseInt($("#modalcontainer_common #hd_style_product_size_group_id").val()),
+                    style_product_size_group_name: $("#modalcontainer_common #style_product_size_group_name").val(),
+                    is_separate_price: $("#is_separate_price").prop("checked"),
+                    DetList: detailList.concat(deleted_detail_size)
+                };
+
+                ajaxPostObjectHandler("/ProductSizeConfig/SaveProductSizeConfig", request, function (response) {
+                    hideLoader();
+                    if (response.status_Code == "200") {
+                        deleted_detail_size = [];
+                        loadData();
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+                            $('#modalcontent-common').html("");
+                            $('#modalcontainer_common').modal("hide");
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+                            $("#btnAddEvents").prop("enabled", true);
+                            $("#btnAddEvents").find(".fa-save").attr("class", "fa fa fa-save");
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteClick(btn) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                try {
+
+                    showLoader("Deleting..........");
+
+                    ajaxGetHandler("/ProductSizeConfig/ProductSizeConfigDelete?style_product_size_group_id=" + $(btn).attr("detid"), null, function (response) {
+
+                        hideLoader();
+
+                        loadData();
+
+                    }, false);
+
+                } catch (e) {
+                    hideLoader();
+                }
+            });
+
+
+
+        }
+
+
+        $(function () {
+
+
+            $("#btnNewProductSizeSetup").click(function () {
+
+                try {
+
+                    showLoader("Loading..........");
+
+
+                    ajaxGetHandler("/ProductSizeConfig/ProductSizeConfigNew", { fiscal_year_id: "" }, function (response) {
+
+                        hideLoader();
+
+                        $('#modalcontent-common').html(response);
+
+                        $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+
+                        $('#modalcontainer_common').modal("show");
+
+
+                    }, false);
+
+
+
+                } catch (e) {
+                    hideLoader();
+                }
+
+            });
+
+
+            loadData();
+        });
+    </script>
+
+ }

@@ -1,0 +1,509 @@
+@model EPYSLSAILORAPP.Application.DTO.RPC.rpc_tran_finishing_receive_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Finishing Receive Landing";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+<style>
+
+    #tab_precostinglanding.nav-tabs > li.active > a,
+    #tab_precostinglanding.nav-tabs > li.active > a:hover,
+    #tab_precostinglanding.nav-tabs > li.active > a:focus,
+    #tab_precostinglanding.nav-tabs > li > a.active,
+    #tab_precostinglanding.nav-tabs > li > a:hover,
+    #tab_precostinglanding.nav-tabs > li > a:focus {
+        color: #555;
+        cursor: default;
+        background-color: khaki;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+
+</style>
+
+<div class="content-wrapper">
+    <label style="display:none" class="col-sm-6 col-form-label-sm text-left" id="service_work_order_id1" style="font-size:12px;margin-bottom: 0; padding: 0;"></label>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Finishing Receive</h6>
+                        </div>
+                        @*  @await Component.InvokeAsync("DataFilterSCMwd") *@
+                        <!-- /.card-header -->
+
+
+                    </div>
+                    
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precostinglanding" class="nav nav-tabs">
+                                        <li class="active" tab_index="1">
+                                            <a href="#det1" style="text-decoration: unset;width: 170px;" class="active tab_link  " data-toggle="tab">PENDING LIST</a>
+                                        </li>
+                                        <li class="" tab_index="2">
+                                            <a href="#det2" style="text-decoration: unset;width: 170px;" class=" tab_link  " data-toggle="tab">RECEIVED LIST</a>
+                                        </li>
+                                        
+
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                                            <div class="card">
+
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <table id="DTFinishingReceivePendingList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Techpack No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal  ">Techpack Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Item Category</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Merchandiser</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Action</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det2" tabpane_index="2">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTFinishReceiveDraftList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Finish Receive No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Finish Receive Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal ">Techpack Number</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Style Type </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal ">Action</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 80% !important; ">
+        <div class="modal-content" id="modalcontent_1" style="overflow-y: scroll;">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Finishing Receive
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopupLanding();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="~/Views/MCD/TranMcdReceive/_TranReckAdd.cshtml" />
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section Scripts {
+    <script>
+        var listAttachments = [];
+        var DeleteList = [];
+        function closePopupLanding() {
+            
+            event.preventDefault();
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+            //location.reload();
+        }
+
+        function updateDefectpercentage(input) {
+            var failQty = parseInt(input.parentElement.parentElement.cells[11].querySelector('.failQty').value);
+            var recQty = input.parentElement.parentElement.cells[7].querySelector('.recQty').value;
+            var defect = (failQty / recQty) * 100;
+            input.parentElement.parentElement.cells[12].querySelector('.defect').value = defect;
+        }
+
+        function TranFinishingReceiveAdd(btn) {
+            
+            //var tran_sewing_output_id = $(btn).attr("tran_sewing_output_id");
+            var techpack_id = $(btn).attr("techpack_id");
+            
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FinishingReceive/TranFinishingReceiveAdd?techpack_id=" + techpack_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+                    $("#modalcontent  #gen_finishing_process_id").removeAttr("placeholder");
+                    $("#modalcontent  #gen_finishing_process_id").attr("multiple", "multiple");
+                    $("#modalcontent  #gen_finishing_process_id option:eq(0)").remove();
+                    $("#modalcontent  #gen_finishing_process_id").val('').trigger('change');
+                    $("#modalcontent  #gen_finishing_process_id").select2({
+                        allowClear: true,
+                        placeholder: "Select Placement"
+                    });
+
+                });
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+
+        function ViewFinishingReceiveDetails(btn) {
+
+            var tran_finish_receive_id = $(btn).attr("tran_finish_receive_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FinishingReceive/FinishingProcessView?id=" + tran_finish_receive_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+
+
+        function SaveFinishingReceive(btn) {
+            
+            
+            // if (!_cusFormValidate("frmAddReceive")) {
+            //    return;
+            // }
+            finishingProcess = []
+            details = []
+
+            var ItemCategory = $('#ItemCategory').val();
+            var style_item_product_id = $('#style_item_product_id').val();
+            var FinishingReceiveDate = $('#FinishingReceiveDate').val();
+            var techpackid = $('#techpack_id').val();
+            var tran_sewing_output_id = $('#tran_sewing_output_id').val();
+
+            var selectedProcessNames = $("#gen_finishing_process_id option:selected").map(function () {
+                return $(this).text();
+            }).get();
+      
+            // selectedProcessNames.
+            //     forEach
+            //     (
+            //         function (value, index) {
+
+            //             var objprocess = {};                     
+            //             objprocess["gen_finishing_process_id"] = value;
+            //             objprocess["finishing_process_name"] = value;
+            //             finishingProcess.push(objprocess);
+            //         }
+            //     );
+
+            $("#gen_finishing_process_id option:selected").each(function () {
+                var objprocess = {};
+                objprocess["gen_finishing_process_id"] = $(this).val(); // Captures the value (id)
+                objprocess["finishing_process_name"] = $(this).text(); // Captures the text (name)
+                finishingProcess.push(objprocess);
+            });
+          
+
+
+            $.each($("#DTBatchDetailReceive tbody tr"), function (key, val) {
+
+                var obj = {
+
+                    color_code: $(val).find(".color_code").val(),
+                    size_name: $(val).find(".size_name").val(),
+                    color_quantity: $(val).find(".colorQty").val(),
+                    qc_pass_quantity: $(val).find(".qc_pass_quantity").val(),
+                    finish_receive_qty: $(val).find(".rec_qty").val()
+                    // style_item_product_id: $(val).find(".partId").val()
+                };
+                details.push(obj);
+
+            });
+
+            var obj_emb_finishing_receive = {
+                techpack_id: techpackid,
+                style_item_product_id: style_item_product_id,
+                tran_finish_receive_date: FinishingReceiveDate,
+                style_item_product_category: ItemCategory,
+                tran_sewing_output_id: tran_sewing_output_id == "" ? 0 : tran_sewing_output_id,
+
+                is_submitted: 1,
+
+                finishingProcessdetails: finishingProcess,
+                details: details
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/FinishingReceive/SaveFinishingReceive", obj_emb_finishing_receive, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                if (response.status_Code == "200") {
+
+                    LoadFinishingReceivePendingData();
+                    LoadFinishingReceiveDraftData();
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopupLanding();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+
+        function LoadDataOnReady() {
+            LoadFinishingReceivePendingData();
+            LoadFinishingReceiveDraftData();
+
+            activeChange();
+
+
+        }
+
+
+        $(function () {
+            
+
+           
+
+        });
+
+        function activeChange() {
+            
+            $('#tab_precostinglanding.nav-tabs > li').click(function () {
+                // Remove active class from all tabs
+                $('#tab_precostinglanding.nav-tabs > li').removeClass('active');
+                // Add active class to the clicked tab
+                $(this).addClass('active');
+                // Remove active class from all tab links
+                $('#tab_precostinglanding.nav-tabs > li > a').removeClass('active');
+                // Add active class to the clicked tab link
+                $(this).find('a').addClass('active');
+                // Remove active class from all tab contents
+                $('.tab-content > .tab-pane').removeClass('active');
+                // Add active class to the corresponding tab content
+                var tabContentId = $(this).find('a').attr('href');
+                $(tabContentId).addClass('active');
+            });
+        }
+
+        $("#btnLoadData").click(function () {
+            if ($("#fiscal_year_id").val() == '') {
+                $("#fiscal_year_id").focus();
+                $("#fiscal_year_id").css("border", "1px solid red");
+            }
+            else if ($("#event_id").val() == '') {
+                $("#event_id").focus();
+                $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+            }
+            else {
+
+                $("#fiscal_year_id").css("border", "");
+                $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+            }
+
+        });
+
+
+        function LoadFinishingReceivePendingData() {
+            
+            var input = {
+                fiscal_year_id: $('#ddldtop_fiscal_year').val(),
+                event_id: $('#ddltop_event').val()
+                
+
+
+            };
+            var dt = $("#DTFinishingReceivePendingList").DataTable({
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/FinishingReceive/GetFinishingReceivePendingData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("receive_no", data.receive_no);
+
+                },
+                "columns": [
+
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    {
+                        "data": "output_date",
+                        "name": "output_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "style_item_product_category", "style_item_product_category": "name", "autoWidth": true },
+                    { "data": "merchandiser_name", "merchandiser_name": "process_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+        function LoadFinishingReceiveDraftData() {
+            
+            var input = {
+                fiscal_year_id: $('#ddldtop_fiscal_year').val(),
+                event_id: $('#ddltop_event').val()
+
+
+            };
+            var dt = $("#DTFinishReceiveDraftList").DataTable({
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/FinishingReceive/GetFinishingReceiveDraftData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_finish_receive_no", data.tran_finish_receive_no);
+
+                },
+                "columns": [
+
+                    { "data": "tran_finish_receive_no", "name": "tran_finish_receive_no", "autoWidth": true },
+                    {
+                        "data": "tran_finish_receive_date",
+                        "name": "tran_finish_receive_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+
+                    { "data": "style_item_product_category", "name": "style_item_product_category", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+       
+
+        
+
+
+    </script>
+}
+
+
+
+
+

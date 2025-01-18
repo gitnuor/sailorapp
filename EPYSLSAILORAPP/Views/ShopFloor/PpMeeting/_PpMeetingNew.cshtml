@@ -1,0 +1,164 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_pp_meeting_DTO;
+@{
+    ViewBag.Title = "TranPpMeeting Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">PP Meeting Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Tech Pack</label><span style="color: red; font-weight: bold;">*</span>
+                        @await Component.InvokeAsync("S2TechPackforPP", new
+                            {
+
+                                ddlId = "techpack_id",
+                                selectedvalue = "",
+                                cssclass = "form-control S2TechPack",
+                                isRequired = false,
+                                isReadOnly = false,
+                                placeholder = "Select Tech Pack",
+                                preloaded = "",
+                                model_parentid = "modalcontainer"
+                            })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Meeting Conducted Date</label><span style="color: red; font-weight: bold;">*</span>
+                        <input style="width:100%" asp-for="meeting_conducted_date" type="date" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="meeting_conducted_date" class="text-danger"></span>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Meeting Conducted By</label>
+                        <input style="width:100%" readonly asp-for="conducted_by" type="text" class="border-#d1cccc-200 form-control" />
+                        <span asp-validation-for="meeting_conducted_by" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Remarks</label>
+                        @* <input style="width:100%" asp-for="remarks" type="text" class="border-#d1cccc-200 form-control " /> *@
+                        <textarea style="width:100%" asp-for="remarks" class="form-control"></textarea>
+
+                        <span asp-validation-for="remarks" class="text-danger"></span>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="labelNormal " style="font-weight:bold;"></label>
+                        <input type="file" class="form-control" asp-for="imagePath" style="height:48px;" />
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <img id="imagePreview" src="~/images/no_image_available.jpg" style="width:100px; height:100px; border:1px solid blue; border-radius:10px; padding:10px; " alt="no image" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+            </div>
+
+
+
+
+
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+                    <button type="submit" class="btn btn-success " id="btnSaveTranPpMeeting" onclick="SaveTranPpMeeting(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+
+</form>
+
+<script>
+
+
+</script>
+
+
+
+
+

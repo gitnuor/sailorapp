@@ -1,0 +1,106 @@
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Application.DTO.RPC.rpc_tran_finishing_production_DTO;
+@{
+    ViewBag.Title = "Add Detail";
+    Layout = null;
+
+}
+@* <style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style> *@
+
+
+
+
+    <div class="box" style="height:400px;">
+        <div class="row">
+
+            <div class="col-md-4" style="padding-top:5px;">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Color</label>
+
+                    @await Component.InvokeAsync("GenericDropdownList", new
+                        {
+                            ddlId = "ddl_color",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.Colors)),
+                            selectedvalue = "",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = true,
+                            placeholder = "--Color--"
+                        })
+                </div>
+            </div>
+
+            <div class="col-md-1" style="text-align:right;top:40px;" id="btnColorDetails">
+                @*  <button type="button" class="btn btn-primary  btnSaveNext" onclick="AddPlan(this)">Done</button> *@
+                <button type="button" style="width: 70px;" class="btn btn-success" onclick="AddProductionColorDetails();">&nbsp;&nbsp;Add</button>
+
+            </div>
+
+        </div>
+       
+
+    </div>
+
+
+@* 
+<script>
+   
+    function getPartWiseBatch(selectElement) {
+        
+         $("#btnOk").show();
+        
+        var genGarmentPartId = $('#ddl_part').val();
+        var workOrderId = $("#WorkOrderId").val();
+        var colorCode = $('#ddl_color').val();
+
+        ajaxGetHandler("/EmbellishmentReceive/GetPartWiseBatch?workOrderId=" + workOrderId + "&colorCode=" + encodeURIComponent(colorCode) + "&genGarmentPartId=" + genGarmentPartId, null, function (data) {
+            // Clear existing rows
+            var table = document.getElementById("DTReceiveOutput").getElementsByTagName('tbody')[0];
+            $('#DTReceiveOutput tbody').empty();
+
+            // Append new rows
+            if (data && data.length > 0) {
+                data.forEach(function (item, index) {
+                    var newRow = table.insertRow(table.rows.length);
+
+                    var cell0 = newRow.insertCell(0);
+                    var cell1 = newRow.insertCell(1);
+                    var cell2 = newRow.insertCell(2);
+                    var cell3 = newRow.insertCell(3);
+                    var cell4 = newRow.insertCell(4);
+
+
+                    cell0.innerHTML = "<input type='checkbox' class='form-control is_select' style='height:15px;width:15px;'>";
+                    cell1.innerHTML = "<input type='text' disabled class='form-control batch_no' value='" + item.batch_no + "'>";
+                    cell2.innerHTML = "<input type='text' disabled class='form-control color_code' value='" + item.color_code + "'>";
+                    cell3.innerHTML = "<input type='text' disabled class='form-control garment_part_name' value='" + item.garment_part_name + "'>";
+                    cell4.innerHTML = "<input type='text' disabled class='form-control tran_cutting_color_batch_id' value='" + item.tran_cutting_color_batch_id + "'>";
+
+                    cell4.style.display = "none";
+                });
+
+                $('#divReceiveOutput').show();
+            } else {
+                alert('No data found for the selected part.');
+            }
+        });
+    }
+
+    function closePopup_detl() {
+        $('#modalcontent_plan').html("");
+        $('#modalcontainer_plan').modal("hide");
+        $('#modalcontainer_plan').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+</script>
+ *@
+
+
+
+

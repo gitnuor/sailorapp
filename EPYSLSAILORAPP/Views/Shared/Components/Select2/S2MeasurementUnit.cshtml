@@ -1,0 +1,60 @@
+﻿
+@{
+    // Layout = "_LayoutViewComponent";
+    Layout = null;
+}
+@{
+    string id = ViewBag.selectid, cssclass = ViewBag.ddlcss; bool? isReadOnly = ViewBag.isReadOnly; string selectedvalue = ViewBag.selectedvalue; bool? isRequired = ViewBag.isRequired; string placeholder = ViewBag.placeholder;
+
+    var attributes = new System.Collections.Generic.Dictionary<string, object>();
+
+    attributes.Add("id", id);
+    attributes.Add("name", id);
+    attributes.Add("class", cssclass);
+    attributes.Add("style", "height:37px;");
+
+    if (isReadOnly.HasValue && isReadOnly == true)
+    {
+        attributes.Add("disabled", "disabled");
+    }
+
+    if (isRequired.HasValue && isRequired==true)
+    {
+        attributes.Add("data-val", "true");
+        attributes.Add("data-val-required", "Required*");
+    }
+
+    if (!string.IsNullOrEmpty(placeholder))
+    {
+        attributes.Add("placeholder", placeholder);
+    }
+    else
+    {
+        attributes.Add("placeholder", "Select");
+    }
+
+}
+
+@Html.DropDownList(id, (List<SelectListItem>)ViewBag.list_measurement, "- Select -", attributes)
+
+@{
+    if (isRequired.HasValue && isRequired == true)
+    {
+        <span class="field-validation-valid text-danger" data-valmsg-for="@id" data-valmsg-replace="true"></span>
+        <div class="help-block with-errors"></div>
+    }
+}
+
+@if (!string.IsNullOrEmpty(selectedvalue))
+{
+    <script type="text/javascript">
+            function chneckdr()
+            {}
+            $(function () {
+
+                $("#@id").val('@selectedvalue');
+
+            });
+    </script>
+
+}

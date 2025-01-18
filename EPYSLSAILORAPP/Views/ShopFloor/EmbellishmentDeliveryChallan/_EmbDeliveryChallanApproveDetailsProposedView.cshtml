@@ -1,0 +1,964 @@
+﻿@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+
+@model EPYSLSAILORAPP.Domain.DTO.tran_embellish_delivery_challan_DTO;
+@{
+    ViewBag.Title = "Embellishment Delivery Chalan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+    .form-group1 {
+        margin-bottom: 3px !important;
+        padding: 0.1rem !important;
+        font-size: 12px !important;
+    }
+
+    #fileNamesContainer p {
+        margin-bottom: 0;
+    }
+</style>
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Embellishment Delivery Chalan</h6>
+        </div>
+        <!-- /.card-header -->
+        <label class="col-sm-6 col-form-label-sm text-left" id="del_chalan_id" style="font-size:12px;margin-bottom: 0; padding: 0;display:none">@Model.embellish_delivery_challan_id</label>
+        <input type="hidden" id="supplierId" value="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Challan No</label>
+                            <input style="width:100%" readonly asp-for="@Model.embellish_delivery_challan_no" type="text" class="border-#d1cccc-200 form-control " />
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group1" style="margin-bottom: 0.3rem;">
+                            <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Challan Date</label>
+                            <input readonly style="width:100%" id="ChallanDate" asp-for="@Model.embellish_delivery_challan_date" type="date" class="border-#d1cccc-200 form-control " />
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Unit Name</label>
+                            <input readonly style="width:100%" id="unitName" asp-for="@Model.unit_name" type="text" class="border-#d1cccc-200 form-control " />
+                            <input type="hidden" id="unitId" value="@Model.gen_unit_id">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Unit Address</label>
+                            <input readonly style="width:100%" type="text" id="unitAddress" asp-for="@Model.unit_address" class="border-#d1cccc-200 form-control " />
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="row" style="display:none">
+            <div class="col-md-6">
+                <input type="file" style="display:none" id="attachments" multiple />
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button type="button" class="btn " style="width:100px;background:#218838;color: #fff;font-size: 12px;" id="btnUpload" onclick="uploadFile(this);">
+                                File Upload
+                            </button>
+                        </div>
+
+                        <div class="col-md-8" style="margin-left: -30px;font-size: 12px;">
+                            <div id="fileNamesContainer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row" id="purchaseDetrails" style="">
+            <div class="col-md-12">
+                <div class="box">
+
+                    <table style="font-size:10px;" id="DTBatchDetail" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><label class="labelNormal">Bundle No</label></th>
+                                <th style=""><label class="labelNormal">Barcode No</label></th>
+                                <th style=""><label class="labelNormal">Color Code</label></th>
+                                <th><label class="labelNormal">Batch No</label></th>
+                                <th><label class="labelNormal">Part Name</label></th>
+                                <th style="width:200px;"><label class="labelNormal">size</label></th>
+                                <th><label class="labelNormal">Bundle Qty</label></th>
+                                <th><label class="labelNormal">Process Name</label></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBodywork">
+                            @{
+                                int count = 1;
+                            }
+                            @foreach (var obj in @Model.TranEmbellishDeliveryChallanDetail_List)
+                            {
+                                <tr>
+
+
+                                    <td><input disabled type='text' class='form-control item_id' value="@obj.bundle_number"></td>
+                                    <td><input disabled type='text' class='form-control' value="@obj.bundle_barcode"></td>
+                                    <td><input disabled type='text' class='form-control' value="@obj.color_code"></td>
+                                    <td><input disabled type='text' class='form-control uom' value="@obj.batch_no"></td>
+                                    <td><input disabled type='text' class='form-control totalPrice' value="@obj.garment_part_name"></td>
+                                    <td><input disabled type='text' class='form-control totalPrice' value="@obj.style_size"></td>
+                                    <td><input disabled type='text' class='form-control totalPrice' value="@obj.bundle_quantity"></td>
+                                    <td><input disabled type='text' class='form-control remarks' value="@obj.process_name"></td>
+
+                                </tr>
+
+                                count++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.is_submitted == 2 && Model.is_approved == null)
+        {
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button style="width:180px;" type="button" class="btn btn-success " id="btnSaveFabricPo1" onclick="ApprovedDetailDeliveryChalan(this);"><i class="fa fa-file-open"></i>&nbsp;Approve</button>
+
+                </div>
+            </div>
+        }
+
+    </div>
+    <!-- /.card-body -->
+</form>
+
+<div id="modalcontainer_common_popup" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #bc7b20;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Add Details
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_popup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common_popup">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalcontainer_detl" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 50% !important; max-width: 50% !important; font-size: 14px; ">
+        <div class="modal-content" style="overflow-y: scroll;">
+
+            <div class="modal-header" style="padding:0px;background-color: #c9b426;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Batch
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose_detl" class="btn btn-danger btn-md cancel" onclick="closePopup_detl();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent_detl">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function AddBatch() {
+
+        $('#modalcontainer_detl').modal("show");
+        var techpack_id = $("#techpack_id").val();
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/EmbellishmentDeliveryChallan/GetBatchDetaiils?techpack_id=" + techpack_id, null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 0);
+
+            $('#modalcontent_detl').html(data);
+            $('#modalcontainer_detl').modal({ backdrop: 'static', keyboard: false });
+            $('#modalcontainer_detl').modal("show");
+
+        });
+    }
+
+    var batch_List = [];
+    var batchno = 0;
+
+    function AddFabric() {
+
+        var obj_fabric_List = [];
+
+        $.each($("#DTTranFabricDetailsList tbody tr"), function (key, val) {
+
+            if ($(this).find(".is_select")[0].checked) {
+
+                var batch_id = check_textbox_value($(this).find(".batch_id"));
+
+                ajaxGetHandler("/EmbellishmentDeliveryChallan/GetBatchWiseBundleDetaiils?batch_id=" + batch_id, null, function (data) {
+
+                    var table = document.getElementById("DTBatchDetail").getElementsByTagName('tbody')[0];
+                    var serialNo = table.rows.length + 1;
+                    // while (table.firstChild) {
+                    //        table.removeChild(table.firstChild);
+                    //    }
+
+
+                    var existingBatchIds = [];
+                    // var batchId1 = '';
+                    // $('#DTBatchDetail tbody tr').each(function () {
+                    //      batchId1 = $(this).find('.batchIdhidden').val();
+
+                    // });
+                    // });
+
+                    var isDuplicate = false;
+                    var duplicateBatchNo = '';
+                    // Check for duplicates
+                    $('#DTBatchDetail tbody tr').each(function () {
+                        var existingBatchId = $(this).find('.batchIdhidden').val();
+                        if (existingBatchId == batch_id) {
+                            isDuplicate = true;
+                            duplicateBatchNo = $(this).find('.batch_no').val(); // Store the batch number
+                            return false; // Exit the loop if duplicate is found
+                        }
+                    });
+
+                    // if (batchId1 !== batch_id)
+
+                    if (!isDuplicate) {
+                        data.data.forEach(function (obj, index) {
+
+
+                            var newRow = table.insertRow(table.rows.length);
+
+                            var serialCell = newRow.insertCell(0);
+                            serialCell.innerHTML = serialNo;
+                            serialNo++; // Increment the serial number
+
+                            var cell1 = newRow.insertCell(1);
+                            var cell2 = newRow.insertCell(2);
+                            var cell3 = newRow.insertCell(3);
+                            var cell4 = newRow.insertCell(4);
+                            var cell5 = newRow.insertCell(5);
+                            var cell6 = newRow.insertCell(6);
+                            var cell7 = newRow.insertCell(7);
+                            var cell8 = newRow.insertCell(8);
+                            var cell9 = newRow.insertCell(9);
+                            var cell10 = newRow.insertCell(10);
+                            var cell11 = newRow.insertCell(11);
+
+
+
+                            cell1.innerHTML = "<input disabled type='text'   class='form-control bundle_number'  value=" + obj.bundle_number + " >";
+                            cell2.innerHTML = "<input disabled type='text'   class='form-control bundle_barcode'          value=" + obj.bundle_barcode + " >";
+                            cell3.innerHTML = "<input disabled type='text'   class='form-control color_code'             value=" + obj.color_code + ">";
+                            cell4.innerHTML = "<input disabled type='text'   class='form-control batch_no'  value=" + obj.batch_no + ">";
+                            cell5.innerHTML = "<input disabled type='text'   class='form-control garment_part_name'       value=" + obj.garment_part_name + " >";
+                            cell6.innerHTML = "<input disabled type='text'   class='form-control style_size'   value=" + obj.style_size + ">";
+                            cell7.innerHTML = "<input disabled type='text'       class='form-control bundle_quantity'  value=" + obj.bundle_quantity + ">";
+                            cell8.innerHTML = "<input disabled type='text'   class='form-control bundle_barcode'     value=" + obj.bundle_barcode + ">";
+                            cell9.innerHTML = "<input disabled type='text'   class='form-control batchIdhidden'     value=" + obj.tran_cutting_color_batch_id + ">";
+                            cell10.innerHTML = "<input disabled type='text'   class='form-control bundleId'     value=" + obj.tran_cutting_color_batch_garment_part_bundle_id + ">";
+                            cell11.innerHTML = "<input disabled type='text'   class='form-control partId'     value=" + obj.gen_garment_part_id + ">";
+                        });
+                    }
+                    else {
+
+                        alert(duplicateBatchNo + " " + "already added!");
+                    }
+
+
+                    // }
+
+
+                });
+            }
+        });
+
+    }
+
+
+    function closePopup_detl() {
+        $('#modalcontent_detl').html("");
+        $('#modalcontainer_detl').modal("hide");
+        $('#modalcontainer_detl').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+
+
+
+
+    // function AddEmbDetail() {
+    $('#gen_process_master_id').change(function () {
+
+        var newRowHtml = `<tr>
+                                        <td><input type='text' class='form-control' value=''></td>
+                                        <td><input style='' type='text' class='form-control' value=''></td>
+                                        <td><input style='' type='text' class='form-control' value=''></td>
+                                        <td><input style='' type='text' class='form-control' value=''></td>
+                                        <td><input type='text' class='form-control' value=''></td>
+                                        <td><input type='text' class='form-control' value=''></td>
+                                        <td><input type='number' class='form-control' value=''></td>
+                                        <td><input type='number' class='form-control' value=''></td>
+                                        <td><input type='number' class='form-control' value=''></td>
+                                        <td><input type='number' class='form-control' value=''></td>
+                                    </tr>`;
+        $('#tableBodywork').append(newRowHtml);
+
+        var data1 = @Html.Raw(Json.Serialize(ViewBag.ModelData3));
+
+        var selectedProcessNames = $("#gen_process_master_id option:selected").map(function () {
+            return $(this).text();
+        }).get();
+
+        var filteredData = data1.filter(function (item) {
+            return selectedProcessNames.includes(item.process_name);
+        });
+
+        BindData(filteredData);
+    });
+
+    // Function to bind data to the table
+    function BindData(data1) {
+        var tbody = $('#tableBodywork');
+        tbody.empty(); // Clear existing rows
+
+        // var measurement_unit_id = '';
+        var dropdownHtml = `@await Component.InvokeAsync("S2MeasurementUnit", new
+        {
+            ddlId = "gen_measurement_unit_detail_id",
+            selectedvalue = "",//"gen_measurement_unit_detail_id",
+            cssclass = "form-control S2MeasurementUnit",
+            isRequired = false,
+            isReadOnly = false,
+            placeholder = "Select Construction",
+            preloaded = "",
+            model_parentid = "modalcontainer_common"
+        })`;
+
+        $.each(data1, function (index, item) {
+
+            var colorCodes = item.color_code.split(',');
+            var colorSizequantity = item.style_color_size_quantity.split(',').map(Number);
+            var genGarmentPartId = item.gen_garment_part_id.split(',').map(Number);
+            var isFirstRow = true;
+
+            colorCodes.forEach(function (colorCode, idx) {
+                var row = `<tr>`;
+                if (isFirstRow) {
+                    row += `<td rowspan='${colorCodes.length}'>${item.process_name}</td>`;
+                    isFirstRow = false;
+                }
+                row += `<td><input type='text' readonly class='form-control embid'  value='${item.tran_tech_pack_embellishment_info_id}'></td>`;
+                row += `<td><input type='text' readonly class='form-control processid'  value='${item.gen_process_master_id}'></td>`;
+                row += `<td><input type='text' readonly class='form-control colcode' value='${colorCode}'></td>`;
+                row += `<td><input type='text' readonly class='form-control genpartid' value='${genGarmentPartId[idx]}'></td>`;
+
+                row += `<td>${dropdownHtml}</td>`;
+                row += `<td><input type='number' readonly  class='form-control colorQty' value='${colorSizequantity[idx]}' ></td>`;
+                row += `<td><input type='number' class='form-control qty'></td>`;
+                row += `<td><input type='number' class='form-control rate' ></td>`;
+                row += `<td><input type='number' class='form-control value' ></td>`;
+                row += `</tr>`;
+                tbody.append(row);
+            });
+        });
+    }
+
+    $(document).on('input', '.qty, .rate', function () {
+
+        var $row = $(this).closest('tr');
+        var colorQty = parseFloat($row.find('.colorQty').val());
+        var qty = parseFloat($row.find('.qty').val());
+        var rate = parseFloat($row.find('.rate').val());
+
+        var value = qty * rate;
+
+        if (qty > colorQty) {
+            alert("Quantity cannot exceed Color Quantity!");
+            qty = colorQty;
+            $row.find('.qty').val(colorQty);
+
+            value = qty * rate;
+        }
+        $row.find('.value').val(value.toFixed(2));
+    });
+
+</script>
+
+<script>
+    var obj_fabric_List = [];
+
+    function AddNewFabric(btn) {
+
+        $("#modalcontainer_common").addClass("custom-class");
+        var item_structure_group_id = $("#gen_item_structure_group_id").val();
+        var gen_item_structure_group_sub_id = $("#ddlSubCategory").val();
+
+        try {
+            ajaxGetHandler("/FabricRequisition/AddNewFabric?item_structure_group_id=" + item_structure_group_id + "&gen_item_structure_group_sub_id=" + gen_item_structure_group_sub_id + "&measurement_unit_id=" + 7, null, function (data) {
+                hideLoader();
+                $('#modalcontent-common_popup').html(data);
+                $('#modalcontainer_common_popup').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer_common_popup').modal("show");
+
+                if (typeof LoadGenSegmentDetlDropDownByClass != 'undefined') {
+                    
+                }
+
+                $("#modalcontent-common_popup .S2GenSegmentDetl").val(null).trigger('change.select2');
+
+                $("#modalcontent-common_popup #txtorderqnty").val($("#order_quantity").val());
+                $("#modalcontent-common_popup #txtgroupname").val($("#ddlSubCategory option:selected").text());
+
+            }, true);
+
+
+        } catch (e) {
+            hideLoader();
+        }
+
+    }
+    function closePopup_popup() {
+        $('#modalcontent-common_popup').html("");
+
+        $('#modalcontainer_common_popup').modal("hide");
+
+        $('#modalcontainer_common_popup').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+
+    function GetAllSegment() {
+        var alltext = "";
+
+        for (var id = 1; id <= 15; id++) {
+            if ($("#modalcontent-common_popup #segment_det" + id + "_id").length > 0) {
+                alltext += $("#modalcontent-common_popup #segment_det" + id + "_id > option:selected").text() + " ";
+            }
+
+        }
+
+        if (alltext.length == 0) {
+            alltext = $("#txtgroupname").val();
+        }
+
+        return alltext;
+    }
+    function SaveFabric(btn) {
+
+        var obj = {
+            item_structure_group_id: $("#gen_item_structure_group_id").val(),
+            item_structure_sub_group_id: $("#gen_item_structure_group_sub_id").val(),
+            row_index: obj_fabric_List.length,
+            item_name: GetAllSegment(),
+            item_spec: "",
+            measurement_unit: $("#modalcontent-common_popup #ddl_measurement_unit > option:selected").text(),
+
+            segment_det1_id: $("#modalcontent-common_popup #segment_det1_id").length > 0 ? $("#modalcontent-common_popup #segment_det1_id").val() : null,
+            segment_det1_text: $("#modalcontent-common_popup #segment_det1_id").length > 0 ? $("#modalcontent-common_popup #segment_det1_id > option:selected").text() : "",
+            segment_det2_id: $("#modalcontent-common_popup #segment_det2_id").length > 0 ? $("#modalcontent-common_popup #segment_det2_id").val() : null,
+            segment_det2_text: $("#modalcontent-common_popup #segment_det2_id").length > 0 ? $("#modalcontent-common_popup #segment_det2_id > option:selected").text() : "",
+            segment_det3_id: $("#modalcontent-common_popup #segment_det3_id").length > 0 ? $("#modalcontent-common_popup #segment_det3_id").val() : null,
+            segment_det3_text: $("#modalcontent-common_popup #segment_det3_id").length > 0 ? $("#modalcontent-common_popup #segment_det3_id > option:selected").text() : "",
+            segment_det4_id: $("#modalcontent-common_popup #segment_det4_id").length > 0 ? $("#modalcontent-common_popup #segment_det4_id").val() : null,
+            segment_det4_text: $("#modalcontent-common_popup #segment_det4_id").length > 0 ? $("#modalcontent-common_popup #segment_det4_id > option:selected").text() : "",
+            segment_det5_id: $("#modalcontent-common_popup #segment_det5_id").length > 0 ? $("#modalcontent-common_popup #segment_det5_id").val() : null,
+            segment_det5_text: $("#modalcontent-common_popup #segment_det5_id").length > 0 ? $("#modalcontent-common_popup #segment_det5_id > option:selected").text() : "",
+            segment_det6_id: $("#modalcontent-common_popup #segment_det6_id").length > 0 ? $("#modalcontent-common_popup #segment_det6_id").val() : null,
+            segment_det6_text: $("#modalcontent-common_popup #segment_det6_id").length > 0 ? $("#modalcontent-common_popup #segment_det6_id > option:selected").text() : "",
+            segment_det7_id: $("#modalcontent-common_popup #segment_det7_id").length > 0 ? $("#modalcontent-common_popup #segment_det7_id").val() : null,
+            segment_det7_text: $("#modalcontent-common_popup #segment_det7_id").length > 0 ? $("#modalcontent-common_popup #segment_det7_id > option:selected").text() : "",
+            segment_det8_id: $("#modalcontent-common_popup #segment_det8_id").length > 0 ? $("#modalcontent-common_popup #segment_det8_id").val() : null,
+            segment_det8_text: $("#modalcontent-common_popup #segment_det8_id").length > 0 ? $("#modalcontent-common_popup #segment_det8_id > option:selected").text() : "",
+            segment_det9_id: $("#modalcontent-common_popup #segment_det9_id").length > 0 ? $("#modalcontent-common_popup #segment_det9_id").val() : null,
+            segment_det9_text: $("#modalcontent-common_popup #segment_det9_id").length > 0 ? $("#modalcontent-common_popup #segment_det9_id > option:selected").text() : "",
+            segment_det10_id: $("#modalcontent-common_popup #segment_det10_id").length > 0 ? $("#modalcontent-common_popup #segment_det10_id").val() : null,
+            segment_det10_text: $("#modalcontent-common_popup #segment_det10_id").length > 0 ? $("#modalcontent-common_popup #segment_det10_id > option:selected").text() : "",
+            segment_det11_id: $("#modalcontent-common_popup #segment_det11_id").length > 0 ? $("#modalcontent-common_popup #segment_det11_id").val() : null,
+            segment_det11_text: $("#modalcontent-common_popup #segment_det11_id").length > 0 ? $("#modalcontent-common_popup #segment_det11_id > option:selected").text() : "",
+            segment_det12_id: $("#modalcontent-common_popup #segment_det12_id").length > 0 ? $("#modalcontent-common_popup #segment_det12_id").val() : null,
+            segment_det12_text: $("#modalcontent-common_popup #segment_det12_id").length > 0 ? $("#modalcontent-common_popup #segment_det12_id > option:selected").text() : "",
+            segment_det13_id: $("#modalcontent-common_popup #segment_det13_id").length > 0 ? $("#modalcontent-common_popup #segment_det13_id").val() : null,
+            segment_det13_text: $("#modalcontent-common_popup #segment_det13_id").length > 0 ? $("#modalcontent-common_popup #segment_det13_id > option:selected").text() : "",
+            segment_det14_id: $("#modalcontent-common_popup #segment_det14_id").length > 0 ? $("#modalcontent-common_popup #segment_det14_id").val() : null,
+            segment_det14_text: $("#modalcontent-common_popup #segment_det14_id").length > 0 ? $("#modalcontent-common_popup #segment_det14_id > option:selected").text() : "",
+            segment_det15_id: $("#modalcontent-common_popup #segment_det15_id").length > 0 ? $("#modalcontent-common_popup #segment_det15_id").val() : null,
+            segment_det15_text: $("#modalcontent-common_popup #segment_det15_id").length > 0 ? $("#modalcontent-common_popup #segment_det15_id > option:selected").text() : "",
+            measurement_unit_detail_id: $("#modalcontent-common_popup #ddl_measurement_unit").val(),
+
+            current_state: 1,
+        };
+        for (var i = 1; i <= 15; i++) {
+            var propertyName = "segment_det" + i + "_text";
+            if (obj[propertyName]) {
+                if (obj.item_spec !== "") {
+                    obj.item_spec += ","; // Add comma only if obj.item_spec is not empty
+                }
+                obj.item_spec += obj[propertyName];
+            }
+        }
+        if (
+            obj_fabric_List.filter(p =>
+                p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id &&
+                p.segment_det1_id == check_textbox_value($("#modalcontent-common_popup #segment_det1_id")) &&
+                p.segment_det2_id == check_textbox_value($("#modalcontent-common_popup #segment_det2_id")) &&
+                p.segment_det3_id == check_textbox_value($("#modalcontent-common_popup #segment_det3_id")) &&
+                p.segment_det4_id == check_textbox_value($("#modalcontent-common_popup #segment_det4_id")) &&
+                p.segment_det5_id == check_textbox_value($("#modalcontent-common_popup #segment_det5_id")) &&
+                p.segment_det6_id == check_textbox_value($("#modalcontent-common_popup #segment_det6_id")) &&
+                p.segment_det7_id == check_textbox_value($("#modalcontent-common_popup #segment_det7_id")) &&
+                p.segment_det8_id == check_textbox_value($("#modalcontent-common_popup #segment_det8_id")) &&
+                p.segment_det9_id == check_textbox_value($("#modalcontent-common_popup #segment_det9_id")) &&
+                p.segment_det10_id == check_textbox_value($("#modalcontent-common_popup #segment_det10_id")) &&
+                p.segment_det11_id == check_textbox_value($("#modalcontent-common_popup #segment_det11_id")) &&
+                p.segment_det12_id == check_textbox_value($("#modalcontent-common_popup #segment_det12_id")) &&
+                p.segment_det13_id == check_textbox_value($("#modalcontent-common_popup #segment_det13_id")) &&
+                p.segment_det14_id == check_textbox_value($("#modalcontent-common_popup #segment_det14_id")) &&
+                p.segment_det15_id == check_textbox_value($("#modalcontent-common_popup #segment_det15_id"))
+            ).length == 0
+        ) {
+            obj_fabric_List.push(obj);
+
+            $("#DTTranPreCostingDetail .btnclsmasterpage[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").css("display", "block");
+
+            $("#DTTranPreCostingDetail .editfabric[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").attr("value", "Edit(" + obj_fabric_List.filter(p => p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id).length + ")")
+        }
+
+
+        if (obj_fabric_List) {
+
+            ajaxGetHandler("/FabricRequisition/AddFabricDetailsMaster?input=" + JSON.stringify(obj_fabric_List), null, function (data) {
+
+                hideLoader();
+                console.log(data);
+
+                $('#modalcontainer_common_popup').modal("hide");
+                var table = document.getElementById("DTTranFabricDetails").getElementsByTagName('tbody')[0];
+                var newRow = table.insertRow(table.rows.length);
+
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+                var cell6 = newRow.insertCell(5);
+                var cell7 = newRow.insertCell(6);
+                var cell8 = newRow.insertCell(7);
+                var cell9 = newRow.insertCell(8);
+                var cell10 = newRow.insertCell(9);
+                var cell11 = newRow.insertCell(10);
+                var cell12 = newRow.insertCell(11);
+                var cell13 = newRow.insertCell(12);
+                var cell14 = newRow.insertCell(13);
+
+                cell1.innerHTML = "<input disabled type='number'class='form-control item_id' value=" + data + " >";
+                cell2.innerHTML = "<input disabled type='text'class='form-control' value=" + obj.item_name + " >";
+                cell3.innerHTML = obj.item_spec;
+                cell4.innerHTML = "<input type='text'  class='form-control quantity' name='quantity' >";
+                cell5.innerHTML = "<input disabled type='text'class='form-control uom' value=" + obj.measurement_unit + " >";
+
+                cell6.innerHTML = "<input disabled type='number'class='form-control alrecQty'>";
+                cell7.innerHTML = "<input type='number'class='form-control chalanQty'> ";
+                cell8.innerHTML = "<input type='number'class='form-control recQty'>";
+                cell9.innerHTML = "<input type='number'class='form-control randomQty'>";
+                cell10.innerHTML = "<input type='number'class='form-control aql'>";
+                cell11.innerHTML = "<input type='number'class='form-control passQty'>";
+                cell12.innerHTML = "<input type='number'class='form-control failQty'>";
+                cell13.innerHTML = "<input type='number'class='form-control defect'>";
+                cell14.innerHTML = "<input type='text'class='form-control remarks'>";
+
+                // cell1.innerHTML = "<input disabled type='number'class='form-control item_id' value=" + data + " >";
+                // cell2.innerHTML = "<input disabled type='text'class='form-control' value=" + obj.item_name + " >";
+                // cell3.innerHTML = obj.item_spec;
+                //cell4.innerHTML = "<input type='number'class='form-control quantity' name='quantity'>";
+                //cell5.innerHTML = "<input disabled type='text'class='form-control' value=" + obj.measurement_unit + " >";
+                // cell6.innerHTML = "<button class='btn btn-danger' aria-hidden='true' onclick='deleteRow(this)'><i class='fa fa-trash' aria-hidden='true'></i></button>"; // Delete button with specified classes
+                //cell7.innerHTML = "<input type='hidden'class='form-control uom' value=" + obj.measurement_unit_detail_id + ">";
+                //cell7.style.display = "none";
+                obj_fabric_List = [];
+            });
+        }
+
+
+        $("#modalcontent-common_popup .S2GenSegment").val(null).trigger('change.select2');
+
+    }
+
+    function deleteRow(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    // function CalcTotalEmbellConsumption(txt) {
+    //     var totalcons = 0;
+
+    //     var poQnty = parseInt($(txt).parent().parent().find(".quantity").val());
+    //     var alradyrecQty = parseInt($(txt).parent().parent().find(".recQty").val());
+    //     var chalanQty = poQnty - alradyrecQty;
+    //     $(txt).parent().parent().find(".chalanQty").val(chalanQty);
+
+    //     var recQty = poQnty - alradyrecQty;
+    //     $(txt).parent().parent().find("#receivedQ").val(recQty);
+
+    //     if (checknullValue($(txt).parent().parent().find(".txtembell_Order_quantity").val())) {
+    //         totalcons = orderqnty * parseFloat($(txt).parent().parent().find(".txtembell_Order_quantity").val());
+    //     }
+
+    //     if (checknullValue(waste)) {
+    //         totalcons += (waste / 100);
+    //     }
+
+    //     $(txt).parent().parent().find(".txtembell_TotalRequirement").val(totalcons.toFixed(2));
+
+    //     if ($(txt).parent().parent().find(".txtembell_CostPerUnit").val() != "0") {
+    //         CalcTotalEmbellPrice($(txt).parent().parent().find(".txtembell_CostPerUnit"));
+    //     }
+    // }
+
+</script>
+
+<script>
+    var obj_Accessories_List = [];
+    function AddNewAccessories(btn) {
+
+
+
+        $("#modalcontainer_common").addClass("custom-class");
+        var item_structure_group_id = $("#item_structure_group_id").val();
+        var item_structure_group_id1 = $("#gen_item_structure_group_id").val();
+        var group = "";
+        var gen_item_structure_group_sub_id = 0;
+
+
+        if (item_structure_group_id == 2) {
+            gen_item_structure_group_sub_id = $("#ddlSewing").val();
+            group = $("#modalcontainer #ddlSewing option:selected").text();
+
+        }
+        if (item_structure_group_id == 3) {
+            group = $("#modalcontainer #ddlFinishing option:selected").text();
+            gen_item_structure_group_sub_id = $("#ddlFinishing").val();
+        }
+
+
+        try {
+            ajaxGetHandler("/AccessoriesRequisition/AddNewAccessories?item_structure_group_id=" + item_structure_group_id + "&gen_item_structure_group_sub_id=" + gen_item_structure_group_sub_id + "&measurement_unit_id=" + 7, null, function (data) {
+                hideLoader();
+                $('#modalcontent-common_popup').html(data);
+                $('#modalcontainer_common_popup').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer_common_popup').modal("show");
+
+                if (typeof LoadGenSegmentDetlDropDownByClass != 'undefined') {
+                    
+                }
+
+                $("#modalcontent-common_popup .S2GenSegmentDetl").val(null).trigger('change.select2');
+
+
+                $("#modalcontent-common_popup #txtgroupname").val(group);
+
+            }, true);
+
+
+        } catch (e) {
+            hideLoader();
+        }
+
+    }
+
+    $('#modalcontainer #item_structure_group_id').on('change', function () {
+
+        const selectedValue = $(this).val();
+
+
+        if (selectedValue == 2) {
+
+
+            $("#sewing").show();
+            $("#finishing").hide();
+        }
+        if (selectedValue == 3) {
+            $("#sewing").hide();
+            $("#finishing").show();
+        }
+
+    });
+
+
+    function closePopup_popup() {
+        $('#modalcontent-common_popup').html("");
+
+        $('#modalcontainer_common_popup').modal("hide");
+
+        $('#modalcontainer_common_popup').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+
+    function GetAllSegment() {
+        var alltext = "";
+
+        for (var id = 1; id <= 15; id++) {
+            if ($("#modalcontent-common_popup #segment_det" + id + "_id").length > 0) {
+                alltext += $("#modalcontent-common_popup #segment_det" + id + "_id > option:selected").text() + " ";
+            }
+
+        }
+
+        if (alltext.length == 0) {
+            alltext = $("#txtgroupname").val();
+        }
+
+        return alltext;
+    }
+    function SaveAccessories(btn) {
+
+        var obj = {
+            item_structure_group_id: $("#item_structure_group_id").val(),
+            item_structure_sub_group_id: $("#gen_item_structure_group_sub_id").val(),
+            row_index: obj_Accessories_List.length,
+            item_name: GetAllSegment(),
+            item_spec: "",
+            measurement_unit: $("#modalcontent-common_popup #ddl_measurement_unit > option:selected").text(),
+
+            segment_det1_id: $("#modalcontent-common_popup #segment_det1_id").length > 0 ? $("#modalcontent-common_popup #segment_det1_id").val() : null,
+            segment_det1_text: $("#modalcontent-common_popup #segment_det1_id").length > 0 ? $("#modalcontent-common_popup #segment_det1_id > option:selected").text() : "",
+            segment_det2_id: $("#modalcontent-common_popup #segment_det2_id").length > 0 ? $("#modalcontent-common_popup #segment_det2_id").val() : null,
+            segment_det2_text: $("#modalcontent-common_popup #segment_det2_id").length > 0 ? $("#modalcontent-common_popup #segment_det2_id > option:selected").text() : "",
+            segment_det3_id: $("#modalcontent-common_popup #segment_det3_id").length > 0 ? $("#modalcontent-common_popup #segment_det3_id").val() : null,
+            segment_det3_text: $("#modalcontent-common_popup #segment_det3_id").length > 0 ? $("#modalcontent-common_popup #segment_det3_id > option:selected").text() : "",
+            segment_det4_id: $("#modalcontent-common_popup #segment_det4_id").length > 0 ? $("#modalcontent-common_popup #segment_det4_id").val() : null,
+            segment_det4_text: $("#modalcontent-common_popup #segment_det4_id").length > 0 ? $("#modalcontent-common_popup #segment_det4_id > option:selected").text() : "",
+            segment_det5_id: $("#modalcontent-common_popup #segment_det5_id").length > 0 ? $("#modalcontent-common_popup #segment_det5_id").val() : null,
+            segment_det5_text: $("#modalcontent-common_popup #segment_det5_id").length > 0 ? $("#modalcontent-common_popup #segment_det5_id > option:selected").text() : "",
+            segment_det6_id: $("#modalcontent-common_popup #segment_det6_id").length > 0 ? $("#modalcontent-common_popup #segment_det6_id").val() : null,
+            segment_det6_text: $("#modalcontent-common_popup #segment_det6_id").length > 0 ? $("#modalcontent-common_popup #segment_det6_id > option:selected").text() : "",
+            segment_det7_id: $("#modalcontent-common_popup #segment_det7_id").length > 0 ? $("#modalcontent-common_popup #segment_det7_id").val() : null,
+            segment_det7_text: $("#modalcontent-common_popup #segment_det7_id").length > 0 ? $("#modalcontent-common_popup #segment_det7_id > option:selected").text() : "",
+            segment_det8_id: $("#modalcontent-common_popup #segment_det8_id").length > 0 ? $("#modalcontent-common_popup #segment_det8_id").val() : null,
+            segment_det8_text: $("#modalcontent-common_popup #segment_det8_id").length > 0 ? $("#modalcontent-common_popup #segment_det8_id > option:selected").text() : "",
+            segment_det9_id: $("#modalcontent-common_popup #segment_det9_id").length > 0 ? $("#modalcontent-common_popup #segment_det9_id").val() : null,
+            segment_det9_text: $("#modalcontent-common_popup #segment_det9_id").length > 0 ? $("#modalcontent-common_popup #segment_det9_id > option:selected").text() : "",
+            segment_det10_id: $("#modalcontent-common_popup #segment_det10_id").length > 0 ? $("#modalcontent-common_popup #segment_det10_id").val() : null,
+            segment_det10_text: $("#modalcontent-common_popup #segment_det10_id").length > 0 ? $("#modalcontent-common_popup #segment_det10_id > option:selected").text() : "",
+            segment_det11_id: $("#modalcontent-common_popup #segment_det11_id").length > 0 ? $("#modalcontent-common_popup #segment_det11_id").val() : null,
+            segment_det11_text: $("#modalcontent-common_popup #segment_det11_id").length > 0 ? $("#modalcontent-common_popup #segment_det11_id > option:selected").text() : "",
+            segment_det12_id: $("#modalcontent-common_popup #segment_det12_id").length > 0 ? $("#modalcontent-common_popup #segment_det12_id").val() : null,
+            segment_det12_text: $("#modalcontent-common_popup #segment_det12_id").length > 0 ? $("#modalcontent-common_popup #segment_det12_id > option:selected").text() : "",
+            segment_det13_id: $("#modalcontent-common_popup #segment_det13_id").length > 0 ? $("#modalcontent-common_popup #segment_det13_id").val() : null,
+            segment_det13_text: $("#modalcontent-common_popup #segment_det13_id").length > 0 ? $("#modalcontent-common_popup #segment_det13_id > option:selected").text() : "",
+            segment_det14_id: $("#modalcontent-common_popup #segment_det14_id").length > 0 ? $("#modalcontent-common_popup #segment_det14_id").val() : null,
+            segment_det14_text: $("#modalcontent-common_popup #segment_det14_id").length > 0 ? $("#modalcontent-common_popup #segment_det14_id > option:selected").text() : "",
+            segment_det15_id: $("#modalcontent-common_popup #segment_det15_id").length > 0 ? $("#modalcontent-common_popup #segment_det15_id").val() : null,
+            segment_det15_text: $("#modalcontent-common_popup #segment_det15_id").length > 0 ? $("#modalcontent-common_popup #segment_det15_id > option:selected").text() : "",
+            measurement_unit_detail_id: $("#modalcontent-common_popup #ddl_measurement_unit").val(),
+
+            current_state: 1,
+        };
+        for (var i = 1; i <= 15; i++) {
+            var propertyName = "segment_det" + i + "_text";
+            if (obj[propertyName]) {
+                if (obj.item_spec !== "") {
+                    obj.item_spec += ","; // Add comma only if obj.item_spec is not empty
+                }
+                obj.item_spec += obj[propertyName];
+            }
+        }
+        if (
+            obj_Accessories_List.filter(p =>
+                p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id &&
+                p.segment_det1_id == check_textbox_value($("#modalcontent-common_popup #segment_det1_id")) &&
+                p.segment_det2_id == check_textbox_value($("#modalcontent-common_popup #segment_det2_id")) &&
+                p.segment_det3_id == check_textbox_value($("#modalcontent-common_popup #segment_det3_id")) &&
+                p.segment_det4_id == check_textbox_value($("#modalcontent-common_popup #segment_det4_id")) &&
+                p.segment_det5_id == check_textbox_value($("#modalcontent-common_popup #segment_det5_id")) &&
+                p.segment_det6_id == check_textbox_value($("#modalcontent-common_popup #segment_det6_id")) &&
+                p.segment_det7_id == check_textbox_value($("#modalcontent-common_popup #segment_det7_id")) &&
+                p.segment_det8_id == check_textbox_value($("#modalcontent-common_popup #segment_det8_id")) &&
+                p.segment_det9_id == check_textbox_value($("#modalcontent-common_popup #segment_det9_id")) &&
+                p.segment_det10_id == check_textbox_value($("#modalcontent-common_popup #segment_det10_id")) &&
+                p.segment_det11_id == check_textbox_value($("#modalcontent-common_popup #segment_det11_id")) &&
+                p.segment_det12_id == check_textbox_value($("#modalcontent-common_popup #segment_det12_id")) &&
+                p.segment_det13_id == check_textbox_value($("#modalcontent-common_popup #segment_det13_id")) &&
+                p.segment_det14_id == check_textbox_value($("#modalcontent-common_popup #segment_det14_id")) &&
+                p.segment_det15_id == check_textbox_value($("#modalcontent-common_popup #segment_det15_id"))
+            ).length == 0
+        ) {
+            obj_Accessories_List.push(obj);
+
+            $("#DTTranPreCostingDetail .btnclsmasterpage[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").css("display", "block");
+
+            $("#DTTranPreCostingDetail .editAccessories[gen_item_structure_group_sub_id='" + gen_item_structure_group_sub_id + "']").attr("value", "Edit(" + obj_Accessories_List.filter(p => p.gen_item_structure_group_sub_id == gen_item_structure_group_sub_id).length + ")")
+        }
+
+
+        if (obj_Accessories_List) {
+
+            ajaxGetHandler("/AccessoriesRequisition/AddAccessoriesDetailsMaster?input=" + JSON.stringify(obj_Accessories_List), null, function (data) {
+
+                hideLoader();
+
+
+                closePopup_popup();
+                var table = document.getElementById("DTTranFabricDetails").getElementsByTagName('tbody')[0];
+                var newRow = table.insertRow(table.rows.length);
+
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+                var cell6 = newRow.insertCell(5);
+                var cell7 = newRow.insertCell(6);
+                var cell8 = newRow.insertCell(7);
+                var cell9 = newRow.insertCell(8);
+                var cell10 = newRow.insertCell(9);
+                var cell11 = newRow.insertCell(10);
+                var cell12 = newRow.insertCell(11);
+                var cell13 = newRow.insertCell(12);
+                var cell14 = newRow.insertCell(13);
+
+                cell1.innerHTML = "<input disabled type='number'class='form-control item_id' value=" + data + " >";
+                cell2.innerHTML = "<input disabled type='text'class='form-control' value=" + obj.item_name + " >";
+                cell3.innerHTML = obj.item_spec;
+                cell4.innerHTML = "<input type='text'  class='form-control quantity' name='quantity' >";
+                cell5.innerHTML = "<input disabled type='text'class='form-control uom' value=" + obj.measurement_unit + " >";
+
+                cell6.innerHTML = "<input type='number'class='form-control alrecQty'>";
+                cell7.innerHTML = "<input type='number'class='form-control chalanQty'>";
+                cell8.innerHTML = "<input type='number'class='form-control recQty'>";
+                cell9.innerHTML = "<input type='number'class='form-control randomQty'>";
+                cell10.innerHTML = "<input type='number'class='form-control aql'>";
+                cell11.innerHTML = "<input type='number'class='form-control passQty'>";
+                cell12.innerHTML = "<input type='number'class='form-control failQty'>";
+                cell13.innerHTML = "<input type='number'class='form-control defect'>";
+                cell14.innerHTML = "<input type='text'class='form-control remarks'>";
+
+                obj_Accessories_List = [];
+            });
+        }
+
+
+        $("#modalcontent-common_popup .S2GenSegment").val(null).trigger('change.select2');
+
+    }
+
+    function deleteRow(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+
+
+</script>
+
+

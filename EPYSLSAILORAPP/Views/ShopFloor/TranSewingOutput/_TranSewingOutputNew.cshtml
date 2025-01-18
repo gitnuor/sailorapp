@@ -1,0 +1,335 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_sewing_output_DTO;
+@{
+    ViewBag.Title = "TranSewingOutput Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Sewing Output Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Output Date</label>
+                        <input style="width:100%" asp-for="output_date" type="date" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="output_date" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;"> Product Category</label>
+                        <input style="width:100%" readonly asp-for="style_item_product_category" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techpack Number</label>
+                        <input style="width:100%" readonly asp-for="techpack_number" type="text" class="border-#d1cccc-200 form-control " />
+                        <input type="hidden" id="techpack_id" value="@Model.techpack_id">
+                        <input type="hidden" id="tran_sewing_input_id" value="@Model.tran_sewing_input_id">
+                        <input type="hidden" id="tran_sewing_allocation_plan_id" value="@Model.tran_sewing_allocation_plan_id">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Merchandiser</label>
+                        <input style="width:100%" readonly asp-for="merchandiser_name" type="text" class="border-#d1cccc-200 form-control" />
+
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note</label>
+                        <input style="width:100%" asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="note" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Hour Output</label>
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "hour_output",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.HourOutput)),
+                                selectedvalue = "",
+                                cssclass = "form-control",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "--Hour--"
+                            })
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Line Number</label>
+
+                        @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                                ddlId = "ddl_line_no",
+                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.LineNumber)),
+                                selectedvalue = "",
+                                cssclass = "form-control",
+                                enable = true,
+                                isRequired = true,
+                                placeholder = "--Line--"
+                            })
+                    </div>
+                </div>
+                <div class="col-md-4" style="margin-top: 3%;">
+                    <button type="button" class="btn btn-primary " id="btnAddLineTable" onclick="AddLineTable(this);"><i class="fa fa-file-open"></i>&nbsp;Add Line</button>
+                </div>
+            </div>
+            <div class="row" id="divTablePlan" style="display:none">
+
+                <div class="col-md-12">
+
+                    <table style="font-size:9px;" id="DTPlanOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th><label class="labelNormal">Line No</label></th>
+                                <th><label class="labelNormal">Color</label></th>                                
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">Input Qty</label></th>
+                                <th><label class="labelNormal">Transfer Qty</label></th>
+                                <th><label class="labelNormal">Production Qty</label></th>
+                                <th><label class="labelNormal">QC Pass Qty</label></th>
+                                <th><label class="labelNormal">QC Failed Qty</label></th>                                
+                                <th><label class="labelNormal">Transfer Out</label></th>
+                                <th><label class="labelNormal">Yet to Qty</label></th>
+                                <th><label class="labelNormal">QC Params</label></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button type="button" class="btn btn-success " id="btnSaveTranSewingOutput" onclick="SaveTranSewingOutput(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+                </div>
+            </div>
+        </div>
+
+
+
+      
+    </div>
+ 
+
+
+</form>
+<div id="modalcontainer_qc" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 20% !important; max-width:20% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #177771;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            QC Failed
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_qc();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent_qc">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var tr_parent_node = {};
+    function AddLineTable(btn) {
+        var tran_sewing_input_id = $("#tran_sewing_input_id").val();
+        var production_line_id = $("#ddl_line_no").val();
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/TranSewingOutput/AddLine?tran_sewing_input_id=" + tran_sewing_input_id + "&production_line_id=" + production_line_id, null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 0);
+
+            $("#divTablePlan").show();
+            var table = document.getElementById("DTPlanOutput").getElementsByTagName('tbody')[0];
+
+            data.data.forEach(function (item) {
+                var newRow = table.insertRow(table.rows.length);
+
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+                var cell6 = newRow.insertCell(5);
+                var cell7 = newRow.insertCell(6);
+                var cell8 = newRow.insertCell(7);
+                var cell9 = newRow.insertCell(8);
+                var cell10 = newRow.insertCell(9);
+                var cell11 = newRow.insertCell(10);
+                var cell12 = newRow.insertCell(11);
+                var cell13 = newRow.insertCell(12);
+                var cell14 = newRow.insertCell(13);
+                var cell15 = newRow.insertCell(14);
+
+                cell1.innerHTML = "<input disabled type='number' class='form-control production_line_id' value=" + item.production_line_id + ">";
+                cell1.style.display = "none";
+                cell2.innerHTML = "<input disabled type='text' class='form-control line_name' value=" + item.line_name + ">";
+                cell3.innerHTML = `<input type='text' disabled class= 'form-control color_code' value=` + item.color_code + `>`;
+                cell3.style.display = "none";
+                cell4.style.background = item.color_code;
+                cell5.innerHTML = "<input disabled type='number' class='form-control style_product_size_group_detid' value=" + item.style_product_size_group_detid + ">";
+                cell5.style.display = "none";
+                cell6.innerHTML = `<input type='text' disabled class= 'form-control size_name' value=` + item.size_name + `>`;                
+                cell7.innerHTML = `<input type='number' disabled class= 'form-control input_quantity' value=` + item.input_quantity + `>`;              
+                cell8.innerHTML = `<input type='number' disabled class= 'form-control transfer_quantity' value='0'>`;
+                cell9.innerHTML = `<input type='number' disabled class= 'form-control production_quantity'  >`;
+                cell10.innerHTML = `<input type='number'  class= 'form-control qc_pass_quantity' onfocusout="CalculateRow(this)" >`;
+                cell11.innerHTML = `<input type='number'  class= 'form-control qc_failed_quantity' onfocusout="CalculateRow(this)">`;
+                cell12.innerHTML = `<input type='number' disabled class= 'form-control transfer_out' value='0'>`;
+                cell13.innerHTML = `<input type='number' disabled class= 'form-control yet_to_quantity'>`;
+                cell14.innerHTML = "<button type='button' onclick='AddQcParam(this)'  class='btn btn-primary'><i class='fa fa-gear' aria-hidden='true'></i></button>";
+                cell15.innerHTML = `<input type='text' disabled class= 'form-control qc_param'>`;
+                cell15.style.display = "none";
+            });
+
+
+        });
+
+
+    }
+
+    function AddQcParam(e) {
+        tr_parent_node=e.parentNode.parentNode;
+       
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/TranSewingOutput/QCFailedDetails", null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 50);
+
+            $('#modalcontent_qc').html(data);
+            $('#modalcontainer_qc').modal({ backdrop: 'static', keyboard: false });
+            $('#modalcontainer_qc').modal("show");
+
+        });
+    }
+
+    function closePopup_qc() {
+        $('#modalcontent_qc').html("");
+        $('#modalcontainer_qc').modal("hide");
+        $('#modalcontainer_qc').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+
+
+    function CalculateRow(e) {
+        if (parseInt(e.value) > parseInt($(e).closest("tr").find(".input_quantity").val())) { e.value = 0; return; }
+        var input_qty = parseInt($(e).closest("tr").find(".input_quantity").val());
+        var qc_pass_quantity = parseInt($(e).closest("tr").find(".qc_pass_quantity").val());
+        var qc_failed_quantity = parseInt($(e).closest("tr").find(".qc_failed_quantity").val());
+        var yet_to_quantity = input_qty - qc_pass_quantity - qc_failed_quantity;
+        $(e).closest("tr").find(".yet_to_quantity").val(yet_to_quantity);
+        $(e).closest("tr").find(".production_quantity").val(qc_pass_quantity + qc_failed_quantity);
+    
+    
+    }
+</script>
+
+
+

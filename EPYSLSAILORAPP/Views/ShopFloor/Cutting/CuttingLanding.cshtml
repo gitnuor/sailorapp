@@ -1,0 +1,743 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_cutting_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Cutting List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Cutting Plan</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active" tab_index="1">
+                                            <a style="text-decoration:unset;" class="tab_link active" aria-current="page" href="#draft" data-toggle="tab">Pending List</a>
+                                        </li>
+
+
+                                        <li class="" tab_index="2">
+                                            <a style="text-decoration:unset;" class="tab_link" href="#submitted" data-toggle="tab">Running List</a>
+                                        </li>
+                                        <li class="" tab_index="3">
+                                            <a style="text-decoration:unset;" class="tab_link" href="#approved" data-toggle="tab">Completed List</a>
+                                        </li>
+                                     
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="draft" tabpane_index="1">
+                                            <div class="box">
+                                                <table id="DTTranCuttingPending" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Techpack</th>
+                                                            <th>Meeting Conducted by</th>
+                                                            <th>Meeting Conducted date</th>
+                                                            <th>Event</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane " id="submitted" tabpane_index="2">
+                                            <div class="box">
+                                                <table id="DTTranCuttingRunning" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>Techpack</th>
+                                                            <th>Meeting Conducted by</th>
+                                                            <th>Meeting Conducted date</th>
+                                                            <th>Event</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="approved" tabpane_index="3">
+                                            <div class="box">
+                                                <table id="DTTranCuttingCompleted" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Techpack</th>
+                                                            <th>Meeting Conducted by</th>
+                                                            <th>Meeting Conducted date</th>
+                                                            <th>Event</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+
+
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 90% !important; font-size: 14px; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Cutting
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalCuttingDetails" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 70% !important; max-width: 70% !important; font-size: 14px; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #104616;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Cutting
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_details();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="max-height: 700px; overflow-y: auto;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontentCuttingDeatails">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var color_code = '';
+        var batch_no = 0;
+        var no_of_lay = 0;
+        var sizeArray = [];
+        var BundleCounter = 0;
+        var can_add_new = false;
+        var total_cutting_output = 0;
+        var tran_cutting_color_batch_size_summery = [];
+
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+        function closePopup_details() {
+            $('#modalcontentCuttingDeatails').html("");
+            $('#modalCuttingDetails').modal("hide");
+            $('#modalCuttingDetails').on('hidden.bs.modal', function () {
+                $('body').addClass('modal-open');
+            });
+        }
+        function BatchCreate(btn) {
+            var techpack_id = $(btn).attr("techpack_id");
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/Cutting/CuttingNew?techpack_id=" + techpack_id, null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+            });
+
+
+        }
+        function ViewCuttingPlan(btn) {
+            var tran_cutting_id = $(btn).attr("tran_cutting_id");
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/Cutting/CuttingView?tran_cutting_id=" + tran_cutting_id, null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+            });
+
+
+        }
+        function EditCutting(btn, batch_no) {
+            var techpack_id = $("#techpack_id").val();
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+            ajaxGetHandler("/Cutting/GetCuttingDetails?techpack_id=" + techpack_id + "&p_color_code=" + encodeURIComponent(color_code), null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontentCuttingDeatails').html(data);
+                $('#modalCuttingDetails').modal({ backdrop: 'static', keyboard: false });
+                $('#modalCuttingDetails').modal("show");
+                BindTabEvents("tab_cutting");
+
+                var hiddenInput = document.getElementById("size_text");
+                var sizeTextValue = hiddenInput.value;
+                var decodedSizeTextValue = decodeEntities(sizeTextValue);
+                sizeArray = JSON.parse(decodedSizeTextValue);
+                $("#batch_no_for_cutting").val(batch_no);
+
+            });
+        }
+
+        function decodeEntities(encodedString) {
+            var textArea = document.createElement('textarea');
+            textArea.innerHTML = encodedString;
+            return textArea.value;
+        }
+        function EditTranCutting(btn) {
+
+
+            var tran_cutting_id = $(btn).attr("tran_cutting_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/Cutting/CuttingingEdit?tran_cutting_id=" + tran_cutting_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function ViewTranCutting(btn) {
+
+            var tran_cutting_id = $(btn).attr("tran_cutting_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/Cutting/CuttingView?tran_cutting_id=" + tran_cutting_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function SaveTranCutting(btn) {
+            var BundelArray = [];
+            var GarmentPartDetails = [];
+            var GarmentPart = [];
+            var BatchFabricDetails = [];
+            var BatchColor = {};
+            var BatchInformation = {};
+
+
+
+            $.each($("#DTPartDetailsList tbody tr"), function (key, val) {
+
+                var obj = {
+
+                    gen_garment_part_id: check_textbox_value($(this).find(".gen_garment_part_id")),
+                    garment_part_name: $(this).find(".garment_part_name").text(),
+                    batch_no: $("#batch_no_for_cutting").val()
+
+                };
+                GarmentPart.push(obj);
+
+
+            });
+            sizeArray.forEach(function (sizeObj) {
+                GarmentPart.forEach(function (gp) {
+                    $.each($("#DTBundle_" + gp.gen_garment_part_id + "-" + sizeObj.style_product_size_group_detid + " tbody tr"), function (key, val) {
+
+                        var obj = {
+                            batch_no: $("#batch_no_for_cutting").val(),
+                            gen_garment_part_id: gp.gen_garment_part_id,
+                            style_product_size_group_detid: sizeObj.style_product_size_group_detid,
+                            bundle_number: check_textbox_value($(this).find(".bundle_no")),
+                            bundle_quantity: check_textbox_value($(this).find(".b_qty"))
+                        };
+                        BundelArray.push(obj);
+                    });
+
+
+
+                });
+
+            });
+            GarmentPart.forEach(function (gp) {
+                $.each($("#DTPartratio_" + gp.gen_garment_part_id + " tbody tr"), function (key, val) {
+
+                    var obj = {
+                        batch_no: $("#batch_no_for_cutting").val(),
+                        gen_garment_part_id: gp.gen_garment_part_id,
+                        style_size: $(this).find(".size").text(),
+                        style_product_size_group_detid: check_textbox_value($(this).find(".style_product_size_group_detid")),
+                        ratio: check_textbox_value($(this).find(".ratio")),
+                        output_quantity: check_textbox_value($(this).find(".output_quantity"))
+                    };
+                    GarmentPartDetails.push(obj);
+                });
+
+
+
+            });
+
+            console.log();
+
+            var batch_to_save = batch_List.find(function (batch) {
+                return batch.batch_no === batch_no;
+            });
+
+
+            var row = document.getElementById("row_" + batch_no);
+            batch_to_save.cutting_date_start = row.cells[1].querySelector("input, select, div").value;
+            batch_to_save.cutting_date_end = row.cells[2].querySelector("input, select, div").value;
+            if (row.cells[8].querySelector("input[type='checkbox']").checked) batch_to_save.is_contrast = 1;
+            if (row.cells[9].querySelector("input[type='checkbox']").checked) batch_to_save.is_hand_cut = 1;
+            batch_to_save.pattern_type = row.cells[10].querySelector("input, select, div").value;
+            batch_to_save.marker_type = row.cells[11].querySelector("input, select, div").value;
+
+
+            var obj_TranCuttingColor = {};
+            can_add_new = true;
+            $.each($("#DTColor tbody tr"), function (key, val) {
+
+                if ($(this).find(".color").text().trim() == color_code) {
+
+                    $(this).find(".cutting_total").text(0);
+
+                    obj_TranCuttingColor = {
+
+
+                        color_code: color_code,
+                        allocated_unit_id: 1,
+                        allocated_unit: $(this).find(".alloc_unit_name").text(),
+                        total_quantity: parseInt($(this).find(".quantity").text()),
+                        total_cut: total_cutting_output
+
+
+                    }
+
+
+                }
+
+
+
+            });
+            var obj_TranCutting = {
+                style_code: $('#modalcontent #style_code').val(),
+                techpack_id: $('#modalcontent #techpack_id').val(),
+                techpack_number: $('#modalcontent #techpack_number').val(),
+                tran_pp_meeting_id: $('#modalcontent #tran_pp_meeting_id').val(),
+                all_processes: $('#modalcontent #all_processes').val(),
+                remarks: $('#modalcontent #remarks').val(),
+                cutting_color: obj_TranCuttingColor,
+                batch_info: batch_to_save,
+                bundles: BundelArray,
+                garment_parts: GarmentPart,
+                garment_part_details: GarmentPartDetails,
+                tran_cutting_color_batch_size_summery: tran_cutting_color_batch_size_summery
+
+            }
+
+
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/Cutting/SaveCutting", obj_TranCutting, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                if (response.status_Code == "200") {
+
+                    LoadTranCuttingData();
+
+                    total_cutting_output = 0;
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+                        tran_cutting_color_batch_size_summery = [];
+                        closePopup();
+                        closePopup_details();
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+
+        function UpdateTranCutting(btn) {
+
+            var obj_TranCuttingColor = {
+                tran_cutting_color_id: check_value($('#tran_cutting_color_id').val()),
+                tran_cutting_id: check_value($('#tran_cutting_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                color_code: $('#color_code').val(),
+                allocated_unit_id: check_value($('#allocated_unit_id').val()),
+                allocated_unit: $('#allocated_unit').val(),
+                total_quantity: check_value($('#total_quantity').val()),
+                delivery_date: $('#delivery_date').val(),
+                total_cut: check_value($('#total_cut').val()),
+                remarks: $('#remarks').val(),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+
+            }
+
+
+            var obj_TranPpMeeting = {
+                tran_pp_meeting_id: check_value($('#tran_pp_meeting_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                remarks: $('#remarks').val(),
+                meeting_conducted_by: check_value($('#meeting_conducted_by').val()),
+                meeting_conducted_date: $('#meeting_conducted_date').val(),
+                event_id: check_value($('#event_id').val()),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                added_by: check_value($('#added_by').val()),
+                date_added: $('#date_added').val(),
+                updated_by: check_value($('#updated_by').val()),
+                date_updated: $('#date_updated').val(),
+
+            }
+
+            var obj_TranTechPack = {
+                tran_techpack_id: check_value($('#tran_techpack_id').val()),
+                tran_designer_review_id: check_value($('#tran_designer_review_id').val()),
+                techpack_number: $('#techpack_number').val(),
+                techpack_date: $('#techpack_date').val(),
+                costing_smv: $('#costing_smv').val(),
+                teckpack_style_code: $('#teckpack_style_code').val(),
+                aop_style: $('#aop_style').val(),
+                merchandiser_id: check_value($('#merchandiser_id').val()),
+                production_availability_path: $('#production_availability_path').val(),
+                vat: $('#vat').val(),
+                photoshoot: $('#photoshoot').val(),
+                e_com: $('#e_com').val(),
+                sample_ok: $('#sample_ok').val(),
+                follow_style: $('#follow_style').val(),
+                need_production_approval: $('#need_production_approval').val(),
+                iron: $('#iron').val(),
+                fabric_allocation: $('#fabric_allocation').val(),
+                additional_comments: $('#additional_comments').val(),
+                photos: $('#photos').val(),
+                size_details: $('#size_details').val(),
+                approved_by: check_value($('#approved_by').val()),
+                approve_date: $('#approve_date').val(),
+                approve_remarks: $('#approve_remarks').val(),
+                added_by: check_value($('#added_by').val()),
+                updated_by: check_value($('#updated_by').val()),
+                date_added: $('#date_added').val(),
+                date_updated: $('#date_updated').val(),
+                color_wise_size_quantity: $('#color_wise_size_quantity').val(),
+                tech_pack_costing_quantity: check_value($('#tech_pack_costing_quantity').val()),
+                is_ack: check_value($('#is_ack').val()),
+                ack_date: $('#ack_date').val(),
+                product_composition: $('#product_composition').val(),
+                spi: $('#spi').val(),
+                sleeve_details: $('#sleeve_details').val(),
+                fiscal_year_id: check_value($('#fiscal_year_id').val()),
+                event_id: check_value($('#event_id').val()),
+                embellishment_detl: $('#embellishment_detl').val(),
+                is_submitted: check_value($('#is_submitted').val()),
+                is_approved: check_value($('#is_approved').val()),
+
+            }
+
+
+
+            var obj_TranCutting = {
+                style_code: $('#modalcontent #style_code').val(),
+                all_processes: $('#modalcontent #all_processes').val(),
+                remarks: $('#modalcontent #remarks').val(),
+
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+
+                ajaxPostObjectHandler("/TranCutting/UpdateTranCutting", obj_TranCutting, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranCuttingData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteTranCutting(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_TranCutting = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/TranCutting/DeleteTranCutting", obj_TranCutting, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranCuttingData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                }, true);
+
+            });
+        }
+
+        $(function () {
+            BindTabEvents("tab_bar_style");
+            LoadTranCuttingData();
+
+        });
+
+        function LoadTranCuttingData() {
+            var dt = $("#DTTranCuttingPending").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/Cutting/GetPendingCuttingPlans" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_cutting_id", data.tran_cutting_id);
+
+                },
+                "columns": [
+
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "conducted_by", "name": "conducted_by", "autoWidth": true },
+                    { "data": "meeting_conducted_date", "name": "meeting_conducted_date", "autoWidth": true },
+
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+
+            var dt = $("#DTTranCuttingRunning").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/Cutting/GetRunningCuttingPlans" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_cutting_id", data.tran_cutting_id);
+
+                },
+                "columns": [
+
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "conducted_by", "name": "conducted_by", "autoWidth": true },
+                    { "data": "meeting_conducted_date", "name": "meeting_conducted_date", "autoWidth": true },
+
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+
+            var dt = $("#DTTranCuttingCompleted").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/Cutting/GetCompletedCuttingPlans" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_cutting_id", data.tran_cutting_id);
+
+                },
+                "columns": [
+
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "conducted_by", "name": "conducted_by", "autoWidth": true },
+                    { "data": "meeting_conducted_date", "name": "meeting_conducted_date", "autoWidth": true },
+
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

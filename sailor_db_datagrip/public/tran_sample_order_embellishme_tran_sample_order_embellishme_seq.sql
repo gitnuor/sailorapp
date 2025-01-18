@@ -1,0 +1,12 @@
+create sequence tran_sample_order_embellishme_tran_sample_order_embellishme_seq;
+
+alter sequence tran_sample_order_embellishme_tran_sample_order_embellishme_seq owner to postgres;
+
+alter sequence tran_sample_order_embellishme_tran_sample_order_embellishme_seq owned by tran_sample_order_embellishment.tran_sample_order_embellishment_id;
+
+grant select, update, usage on sequence tran_sample_order_embellishme_tran_sample_order_embellishme_seq to anon;
+
+grant select, update, usage on sequence tran_sample_order_embellishme_tran_sample_order_embellishme_seq to authenticated;
+
+grant select, update, usage on sequence tran_sample_order_embellishme_tran_sample_order_embellishme_seq to service_role;
+

@@ -1,0 +1,718 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_mcd_receive_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Fabric Requisition Slip Approve List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+<style>
+
+    #tab_precostinglanding.nav-tabs > li.active > a,
+    #tab_precostinglanding.nav-tabs > li.active > a:hover,
+    #tab_precostinglanding.nav-tabs > li.active > a:focus,
+    #tab_precostinglanding.nav-tabs > li > a.active,
+    #tab_precostinglanding.nav-tabs > li > a:hover,
+    #tab_precostinglanding.nav-tabs > li > a:focus {
+        color: #555;
+        cursor: default;
+        background-color: khaki;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+
+</style>
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Fabric Requisition Slip Approve List</h6>
+                        </div>
+                       @*  @await Component.InvokeAsync("DataFilterMCD") *@
+                        <br />
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display:none">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddItem();" style="margin-left: 0px;width:150px;display:none;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+
+                            <div class="form-group row" style="margin-bottom:0.3rem">
+                                <label class="col-sm-2 col-form-label-sm text-right" style="font-size:14px">PO No <span class="text-danger ml-005">*</span></label>
+                                <div class="col-sm-4">
+                                    @await Component.InvokeAsync("S2TranScmPo", new
+                                        {
+                                            ddlId = "po_id",
+                                            selectedvalue = "",
+                                            cssclass = "form-control S2TranScmPo",
+                                            isRequired = true,
+                                            isReadOnly = false,
+                                            placeholder = "Select PO",
+                                            preloaded = "",
+
+                                        })
+                                    <span asp-validation-for="po_id" class="text-danger"></span>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                       
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precostinglanding" class="nav nav-tabs">
+                                        <li class="active" tab_index="1">
+                                            <a href="#det1" style="text-decoration: unset;width: 170px;" class="active tab_link  " data-toggle="tab">PENDING LIST</a>
+                                        </li>
+                                        <li class="" tab_index="2">
+                                            <a href="#det2" style="text-decoration: unset;width: 170px;" class=" tab_link  " data-toggle="tab">APPROVED LIST</a>
+                                        </li>
+                                        
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                                            <div class="card">
+
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <table id="DTFabricRequisitionProposedSlip" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th><label class="labelNormal">Requisition Slip No</label></th>
+                                                                <th style="width:300px;"><label class="labelNormal">Requisition Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal  ">Techpach No</label></th>
+                                                                <th><label class="labelNormal">Requisition By</label></th>
+                                                                <th><label class="labelNormal "> Action</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det2" tabpane_index="2">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTFabricRequisitionApprovedSlip" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th><label class="labelNormal">Requisition Slip No</label></th>
+                                                                <th style="width:300px;"><label class="labelNormal">Requisition Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal  ">Techpach No</label></th>
+                                                                <th><label class="labelNormal">Requisition By</label></th>
+                                                                <th><label class="labelNormal "> Action</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* <div class="card">                
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="DTFabricRequisitionProposedSlip" class="table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th><label class="labelNormal">Requisition Slip No</label></th>
+                                                <th style="width:300px;"><label class="labelNormal">Requisition Date</label></th>
+                                                <th style="width:200px;"><label class="labelNormal  ">Techpach No</label></th>
+                                                <th><label class="labelNormal">Requisition By</label></th>
+                                                <th><label class="labelNormal "> Action</label></th>
+
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div> *@
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 80% !important; ">
+        <div class="modal-content" id="modalcontent_1" style="overflow-y: scroll;">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Fabric Requisition Slip
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="~/Views/MCD/TranMcdReceive/_TranReckAdd.cshtml" />
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section Scripts {
+    <script>
+        var listAttachments = [];
+        var DeleteList = [];
+        function closePopup() {
+            event.preventDefault();
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+            //location.reload();
+        }
+
+        function AddItem() {
+            //$('#po_id').on('change', function () {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/FabricRequisitionSlip/AddFabricRequsitionSlipNew", null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+               
+
+            });
+        }
+
+
+
+        function updateDefectpercentage(input) {
+            var failQty = parseInt(input.parentElement.parentElement.cells[11].querySelector('.failQty').value);
+            var recQty = input.parentElement.parentElement.cells[7].querySelector('.recQty').value;
+            var defect = (failQty / recQty) * 100;
+            input.parentElement.parentElement.cells[12].querySelector('.defect').value = defect;
+        }
+
+        function uploadFile() {
+
+            $("#modalcontainer #attachments").trigger("click");
+        };
+        function EditFabricPo(btn) {
+
+            listAttachments = [];
+            var po_id = $(btn).attr("po_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricPo/FabricPoEdit?po_id=" + po_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+                   
+                    $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+
+                    $("#modalcontainer #attachments").change(function () {
+                        var files = this.files;
+                        var size = $(this)[0].files.length;
+                        formData = new FormData();
+
+                        for (var i = 0; i < size; i++) {
+                            var reader = new FileReader();
+
+                            reader.onload = (function (singlefile) {
+
+                                var filename = singlefile.name;
+                                var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                                return function (e) {
+
+                                    var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                                    var indx = listAttachments.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+
+                                    var attachfile = {
+                                        filename: filename,
+                                        filetype: filetype,
+                                        extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                        base64string: base64String,
+                                        server_filename: "",
+                                        CurrentState: 1,
+                                        fileindex: indx
+                                    };
+
+                                    listAttachments.push(attachfile);
+
+                                    $("#fileNamesContainer").append('<p>' + filename + '</p>');
+
+
+                                    base64String = "";
+
+                                }
+
+
+                            })($(this)[0].files[i]);
+
+                            reader.readAsDataURL($(this)[0].files[i]);
+
+
+                        }
+                    });
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function EditFabricRequisitionSlip(btn) {
+            
+            var requisition_slip_id = $(btn).attr("requisition_slip_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricRequisitionSlipApprove/FabricRequisitionSlipEdit?requisition_slip_id=" + requisition_slip_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function ViewFabricRequisitionSlip(btn) {
+            
+            var requisition_slip_id = $(btn).attr("requisition_slip_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricRequisitionSlipApprove/FabricRequisitionSlipEdit?requisition_slip_id=" + requisition_slip_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+        function SaveFabricRequisitionSlip(btn) {
+            
+            // if (!_cusFormValidate("frmAddReceive")) {
+            //    return;
+            // }
+
+            details = []
+
+            var selectedTeckpack = $('#techpack_id').select2("data");
+            var requisition_by = $('#requisition_by').val();
+            var remarks = $('#remarks').val();
+            var gen_item_structure_group_sub_id = $('#gen_item_structure_group_sub_id').val();
+            // var vehicalNo = $('#vehical_no').val();
+            // var tollerence = $('#tollerence').val();
+            // var delevary_status = $('#modalcontent #ddldeliverystatus1').find('option:selected').text();
+            // var transaction_mode = $('#modalcontent #ddltranmode1').find('option:selected').text();
+            // var transport_type = $('#modalcontent #ddlTransport1').find('option:selected').text();
+
+
+            $.each($("#DTTranFabricDetailRow tbody tr"), function (key, val) {
+
+                var obj = {
+                    techpack_id: selectedTeckpack[0].id,
+                    gen_item_master_id: $(this).find("td").eq(1).text(),//$(this).find("td").eq(1).find("input").val(),
+                    measurement_unit_detail_id: $(this).find("td").eq(3).text(), //$(this).find("td").eq(3).find("input").val(),
+
+                    available_stock_quantity: $(this).find("td").eq(5).find("input").val(),//$(this).find("td").eq(5).val(),
+                    booking_quantity: $(this).find("td").eq(6).find("input").val(),//$(this).find("td").eq(6).text(),
+                    requisition_quantity: $(this).find("td").eq(8).find("input").val(),
+                    remarksDtl: $(this).find("td").eq(9).find("input").val(),
+                    gen_item_structure_group_sub_id: $(this).find("td").eq(10).text()
+
+                };
+                details.push(obj);
+
+            });
+
+            var obj_FabricRequisitionSlip = {
+                techpack_id: selectedTeckpack[0].id,
+                requisition_date: $('#modalcontent #requisition_date').val(),
+                requisition_by: requisition_by,
+                remarks: remarks,
+                is_submitted: 0,
+                gen_item_structure_group_sub_id: details[0].gen_item_structure_group_sub_id,//check_value($('#modalcontent #gen_item_structure_group_sub_id').val()),
+
+                //tollerence: tollerence == null || tollerence === "" ? 0 : tollerence,
+
+                details: details
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/FabricRequisitionSlip/SaveFabricRequisitionSlip", obj_FabricRequisitionSlip, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                var requisition_slip_id;
+                // if (response.status_Code == "200") {
+                //     LoadFabricRequisitionSlipData();
+                //     showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                //         closePopup();
+
+                //     });
+                if (response.status_Code === "200") {
+                    console.log(response.data);
+                    // Show success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Successful.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        showCancelButton: true,
+                        cancelButtonText: 'Propose for Approval',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            closePopup();
+                        } else {
+                            requisition_slip_id = response.data;
+                            proposeForApproval(requisition_slip_id);
+                        }
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        // $('#ProposedForApproveBtn').click(function () {
+        //     // Perform actions for proposing for approval
+        //     proposeForApproval();
+        // });
+
+        function proposeForApproval(requisition_slip_id) {
+            
+            var is_submitted = 1;
+
+            $.ajax({
+                url: '/FabricRequisitionSlip/ProposeForApproval',
+                type: 'POST',
+                // dataType: 'json',
+                data: { Id: requisition_slip_id },
+
+                //contentType: 'application/json',
+
+                success: function (response) {
+                    if (response.status_Code === "200") {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Proposed for Approval',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                closePopup();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        function ApproveFabricRequisitionSlip(btn) {
+            
+            var obj_Approval = {
+                requisition_slip_id: $('#requisition_slip_id').val(),
+                //is_approved: 1
+
+            }
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/FabricRequisitionSlipApprove/UpdateForApproval", obj_Approval, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+
+                if (response.status_Code == "200") {
+
+                    LoadFabricRequisitionSlipProposedData();
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function DeleteFabricPo(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_FabricPo = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/FabricPo/DeleteFabricPo", obj_FabricPo, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadReceiveData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                }, true);
+
+            });
+        }
+
+        $(function () {
+          
+ 
+            LoadFabricRequisitionSlipProposedData();
+            LoadFabricRequisitionSlipApprovedData();
+     
+            activeChange();
+
+        });
+
+        function activeChange() {
+            $('#tab_precostinglanding.nav-tabs > li').click(function () {
+                // Remove active class from all tabs
+                $('#tab_precostinglanding.nav-tabs > li').removeClass('active');
+                // Add active class to the clicked tab
+                $(this).addClass('active');
+                // Remove active class from all tab links
+                $('#tab_precostinglanding.nav-tabs > li > a').removeClass('active');
+                // Add active class to the clicked tab link
+                $(this).find('a').addClass('active');
+                // Remove active class from all tab contents
+                $('.tab-content > .tab-pane').removeClass('active');
+                // Add active class to the corresponding tab content
+                var tabContentId = $(this).find('a').attr('href');
+                $(tabContentId).addClass('active');
+            });
+        }
+
+
+
+        function LoadFabricRequisitionSlipProposedData() {
+            
+            var dt = $("#DTFabricRequisitionProposedSlip").DataTable({
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/FabricRequisitionSlipApprove/GetFabricRequisitionSlipProposedData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("requisition_slip_id", data.requisition_slip_id);
+
+                },
+                "columns": [
+
+                    { "data": "requisition_slip_no", "name": "requisition_slip_no", "autoWidth": true },
+                    {
+                        "data": "requisition_date",
+                        "name": "requisition_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+        function LoadFabricRequisitionSlipApprovedData() {
+            
+            var dt = $("#DTFabricRequisitionApprovedSlip").DataTable({
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/FabricRequisitionSlipApprove/GetFabricRequisitionSlipApprovedData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("requisition_slip_id", data.requisition_slip_id);
+
+                },
+                "columns": [
+
+                    { "data": "requisition_slip_no", "name": "requisition_slip_no", "autoWidth": true },
+                    {
+                        "data": "requisition_date",
+                        "name": "requisition_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

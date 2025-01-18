@@ -1,0 +1,132 @@
+@{
+  
+    Layout = null;
+}
+@{
+    string selectid = ViewBag.selectid;
+    int delay = 2;
+    int minimumInputLength = 0;
+    bool isReadOnly = ViewBag.isReadOnly;
+
+    string strisReadOnly = isReadOnly.ToString().ToLower();
+   
+    bool isRequired = ViewBag.isRequired;
+
+  
+    string placeholder = ViewBag.placeholder;
+    string ddlcss = ViewBag.ddlcss;
+
+
+    if (isRequired == true)
+    {
+        <select name="@selectid"  id="@selectid" class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box"
+                data-val="true" data-val-required="Please Select">
+            <option>@placeholder</option>
+        </select>
+        <span class="field-validation-valid text-danger" data-valmsg-for="@selectid" data-valmsg-replace="true"></span>
+    }
+    else
+    {
+        <select name="@selectid" id="@selectid"  class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box">
+            <option>@placeholder</option>
+        </select>
+
+    }
+}
+
+
+@if (ViewBag.data == null)
+{
+    <script type="text/javascript">
+
+
+
+        var model_parentid = '@ViewBag.model_parentid';
+        //var strplaceholder = '@placeholder';
+
+        function Load{TableName}DropDownByClass(model_parentid, ddlclass) {
+
+            $.each($('.' + ddlclass), function (key, val) {
+
+                var select2Options = returnSelect2Options();
+                select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+                select2Options.minimumInputLength = @minimumInputLength;
+                select2Options.multiple = false;
+                select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid + ' .modal-content') : null,
+
+                    select2Options.disabled = @strisReadOnly.ToLower();
+                select2Options.ajax.url = '/Select2/{TableName}DetailList', select2Options.ajax.type = 'GET';
+                select2Options.ajax.data = function (params) {
+                    return {
+                      
+                        pageSize: 10,
+                        pageNum: params.page || 1,
+                        searchTerm: params.term || null
+                    };
+                },
+     
+                    $("#"+$(val).attr("id")).select2(
+                        select2Options
+                    );
+
+            })
+
+
+        }
+
+        $(function () {
+
+
+
+        });
+
+    </script>
+}
+else
+{
+    <script>
+
+        function GetPreLoadedValues() {
+
+            var dat = @Html.Raw(ViewBag.data);
+            return dat;
+        }
+
+        $(function () {
+
+
+            var model_parentid = '@ViewBag.model_parentid';
+
+            var dat = @Html.Raw(ViewBag.data);
+            if (dat != undefined) {
+                var select2Options = returnSelect2Options();
+                select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+                select2Options.minimumInputLength = @minimumInputLength;
+                select2Options.multiple = false;
+                select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid + ' .modal-content') : null,
+                    select2Options.disabled = @strisReadOnly.ToLower();
+                select2Options.ajax.url = '/Select2/{TableName}DetailList', select2Options.ajax.type = 'GET';
+                select2Options.ajax.data = function (params) {
+                    return {
+                       
+                        pageSize: 10,
+                        pageNum: params.page || 1,
+                        searchTerm: params.term || null
+                    };
+                },
+
+        @*   $('#@selectid').select2(
+                select2Options
+                );
+                *@
+                    $('#@selectid').append('<option value="' + dat[0].Value + '" selected="selected"">' + dat[0].Text + '</option>');
+                $('#@selectid').select2(select2Options);
+                $('#@selectid').trigger('change');
+            }
+
+        });
+    </script>
+}
+
+
+

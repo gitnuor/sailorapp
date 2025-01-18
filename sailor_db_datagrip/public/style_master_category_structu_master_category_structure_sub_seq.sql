@@ -1,0 +1,12 @@
+create sequence style_master_category_structu_master_category_structure_sub_seq;
+
+alter sequence style_master_category_structu_master_category_structure_sub_seq owner to postgres;
+
+alter sequence style_master_category_structu_master_category_structure_sub_seq owned by style_master_category_structure_subgroup_mapping.master_category_structure_subgroup_mapping_id;
+
+grant select, update, usage on sequence style_master_category_structu_master_category_structure_sub_seq to anon;
+
+grant select, update, usage on sequence style_master_category_structu_master_category_structure_sub_seq to authenticated;
+
+grant select, update, usage on sequence style_master_category_structu_master_category_structure_sub_seq to service_role;
+

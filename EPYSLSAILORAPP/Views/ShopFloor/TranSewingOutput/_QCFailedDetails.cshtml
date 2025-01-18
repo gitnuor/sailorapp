@@ -1,0 +1,108 @@
+@using Newtonsoft.Json;
+@model List<EPYSLSAILORAPP.Domain.DTO.qc_failed_details_DTO>;
+@{
+    ViewBag.Title = " Plan";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<form method="POST" id="frmAddFabric" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;" id="DTParamList" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th><label class="labelNormal">SL No</label></th>
+                            <th><label class="labelNormal">QC Prameter</label></th>
+                            <th><label class="labelNormal">QC Failed Quantity</label></th>
+
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                        }
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td>@count</td>
+
+                                <td><input type='text' disabled class='form-control qc_parameter_name' value="@obj.qc_parameter_name"></td>
+                                <td><input type='number' class='form-control qc_failed_quantity' onfocusout="sumQuantity()" value="@obj.qc_failed_quantity"></td>
+
+
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2"><strong>Total Failed Quantity:</strong></td>
+                            <td><input type='number' class='form-control' id="totalFailedQuantity"  onfocusout="sumQuantity()" value="0"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4" style="text-align:right">
+            <button type="button" class="btn btn-success" onclick="AddFailedQty();"><i class="fa fa-save"></i>&nbsp;&nbsp;Done</button>
+
+        </div>
+
+    </div>
+
+</form>
+
+<script>
+    function sumQuantity() {
+        var total = 0;
+        $.each($("#DTParamList tbody tr"), function (key, val) {
+
+            total = total + parseInt($(val).closest("tr").find(".qc_failed_quantity").val());
+
+        });
+        $("#totalFailedQuantity").val(total);
+
+    }
+
+    function AddFailedQty() {
+      var  qc_list = [];
+        $.each($("#DTParamList tbody tr"), function (key, val) {
+           
+            var qc = {
+                qc_parameter_name: $(val).closest("tr").find(".qc_parameter_name").val(),
+                qc_failed_quantity: parseInt($(val).closest("tr").find(".qc_failed_quantity").val())
+
+            }
+            qc_list.push(qc);
+
+        });
+        $(tr_parent_node).closest("tr").find(".qc_param").val(JSON.stringify(qc_list));
+        closePopup_qc();
+       
+
+        
+    }
+</script>
+
+
+
+
+

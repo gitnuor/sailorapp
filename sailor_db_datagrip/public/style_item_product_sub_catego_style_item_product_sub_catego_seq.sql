@@ -1,0 +1,12 @@
+create sequence style_item_product_sub_catego_style_item_product_sub_catego_seq;
+
+alter sequence style_item_product_sub_catego_style_item_product_sub_catego_seq owner to postgres;
+
+alter sequence style_item_product_sub_catego_style_item_product_sub_catego_seq owned by style_item_product_sub_category.style_item_product_sub_category_id;
+
+grant select, update, usage on sequence style_item_product_sub_catego_style_item_product_sub_catego_seq to anon;
+
+grant select, update, usage on sequence style_item_product_sub_catego_style_item_product_sub_catego_seq to authenticated;
+
+grant select, update, usage on sequence style_item_product_sub_catego_style_item_product_sub_catego_seq to service_role;
+

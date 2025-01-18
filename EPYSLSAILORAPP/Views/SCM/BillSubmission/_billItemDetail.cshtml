@@ -1,0 +1,177 @@
+﻿@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+
+@*  @model List<rpc_tran_mcd_receive_detail_DTO> *@
+
+@* @model List<rpc_proc_sp_get_data_tran_scm_po_DTO>; *@
+
+@model EPYSLSAILORAPP.Domain.DTO.tran_scm_bill_submission_DTO; 
+   
+@*  @model EPYSLSAILORAPP.Domain.RPC.rpc_tran_mcd_receive_detail_DTO  *@
+
+@{
+    ViewBag.Title = "";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<form method="POST" id="frmAddTermDetails" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;" id="DTTranFabricDetails" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th><label class="labelNormal">Item Code</label></th>
+                            <th><label class="labelNormal">Item Name</label></th>
+                            <th style="width:350px;"><label class="labelNormal">Item Spec</label></th>
+                            <th><label class="labelNormal">Quantity</label></th>
+                            <th><label class="labelNormal">UOM</label></th>
+                            <th><label class="labelNormal">Unit Price</label></th>
+                            <th><label class="labelNormal">Total Price</label></th>
+                            <th><label class="labelNormal">Remarks</label></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                            decimal tp = 0;
+                        }
+                        @foreach (var obj in Model.detItem)
+                        {
+                            decimal ttl = (@obj.total_price != null) ? Convert.ToDecimal(@obj.total_price) : 0;
+                            <tr>
+                                <td><input disabled type='number' class='form-control item_id' value="@obj.gen_item_master_id"></td>
+                                <td><input disabled type='text' class='form-control' value="@obj.item_name"></td>
+                                <td><input disabled type='text' class='form-control' value="@obj.item_spec"></td>
+                                <td><input disabled type='number' class='form-control quantity' value="@obj.receive_quantity"></td>
+                                <td><input disabled type='text' class='form-control uom' value="@obj.measurement_unit"></td>
+                                <td><input disabled type='number' class='form-control unitPrice' value="@obj.unit_price"></td>
+                                <td><input disabled type='number' class='form-control totalPrice' value="@ttl"></td>
+                                <td><input disabled type='text' class='form-control remarks' value="@obj.remarks"></td>
+
+                            </tr>
+
+                            count++;
+                            tp = tp + ttl;
+                        }
+                        <tr>
+                            <td colspan="3" rowspan="10"></td>
+
+                            <td><b>Total PO Amount</b></td>
+
+                            <td></td>
+                            <td></td>
+                            <td><input type='number' disabled class='form-control CalculateTotal' asp-for="total_po_amount"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td></td>
+                            <td></td>
+                            <td style="text-align:center"><b>%</b></td>
+                            <td style="text-align:center"><b>Amount</b></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td></td>
+                            <td><b>Loading</b></td>
+                            <td><input type='number' class='form-control' asp-for="loading_cost_in_percentage"></td>
+                            <td><input type='number' class='form-control CalculateTotal' asp-for="loading_cost"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td></td>
+                            <td><b>Transport</b></td>
+                            <td><input type='number' class='form-control' asp-for="transport_cost_in_percentage"></td>
+                            <td><input type='number' class='form-control CalculateTotal' asp-for="transport_cost"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td></td>
+                            <td></td>
+                            <td><b>Total Addition</b></td>
+
+                            <td><input type='number' class='form-control' id="total_with_addition"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td></td>
+                            <td><b>Discount</b></td>
+                            <td style="text-align:center"><input type='number' class='form-control' asp-for="discount_in_percentage"></td>
+                            <td style="text-align:center"><input type='number' class='form-control CalculateTotal' asp-for="discount_amount"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td></td>
+                            <td></td>
+                            <td><b>Total Deduction</b></td>
+
+                            <td><input type='number' class='form-control' id="total_with_deduction"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td></td>
+                            <td><b>VAT</b></td>
+                            <td><input type='number' class='form-control' asp-for="vat_in_percentage"></td>
+                            <td><input type='number' class='form-control CalculateTotal' asp-for="vat_amount"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td></td>
+                            <td></td>
+                            <td><b>Total Without Vat</b></td>
+
+                            <td><input type='number' class='form-control' id="total_without_vat"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td><b>SUB Total</b></td>
+
+                            <td></td>
+                            <td></td>
+                            <td><input type='number' readonly class='form-control' asp-for="total_value"></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <div class="row" style="display:none">
+
+        <div class="col-md-12" style="margin-top: 20px;;text-align:right;">
+
+            <button style="width:100px;" type="button" class="btn btn-success " id="btnSaveBillSubmission" onclick="SaveBillSubmission(this);"><i class="fa fa-file-open"></i>&nbsp;Add</button>
+
+        </div>
+    </div>
+ 
+
+</form>
+
+
+
+
+
+
+
+

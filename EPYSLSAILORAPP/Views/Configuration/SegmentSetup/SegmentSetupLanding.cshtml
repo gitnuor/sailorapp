@@ -1,0 +1,405 @@
+﻿@page "/Index"
+@{
+    ViewBag.Title = "Segment Setup";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<script type="text/javascript">
+    localStorage.setItem("pageName", "ViewBag.PageName");
+    localStorage.setItem("menuId", "ViewBag.MenuId");
+</script>
+@*
+ *@
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Segment Setup</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <button style="" type="button" class="btn btn-primary" id="btnNewProductSizeSetup"><i class="fa fa-plus"></i>&nbsp;New Segment</button>
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="DTSegmentSetup" class="table dataTable  table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><label class="labelNormal ">SL</label></th>
+
+                                        <th><label class="labelNormal ">Segment Name</label></th>
+
+                                        <th><label class="labelNormal ">Display Name</label></th>
+
+                                        <th><label class="labelNormal ">Is Item</label></th>
+
+                                        @*   <th><label class="labelNormal ">Is Active</label></th> *@
+
+                                        <th style="width:200px"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer_common" class="modal fade hidden-print" role="dialog">
+    <div class="modal-dialog" style="width: 40% !important; max-width: 40% !important; ">
+        <div class="modal-content" style="    width: 958px;">
+            <div class="modal-header" style="padding:10px;padding:10px;background-color: #318db6;color: white;">
+                <h5 class="modal-title">New Segment Setup</h5>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        var List_Deleted = [];
+
+        var dt_detable;
+
+        function EditClick(btn) {
+
+            try {
+                setTimeout(function () {
+                    showLoader("Loading..........");
+                }, 0);
+
+                ajaxGetHandler("/SegmentSetup/SegmentSetupEdit", { gen_segment_id: $(btn).attr("gen_segment_id") }, function (response) {
+                    hideLoader();
+                    $('#modalcontent-common').html(response);
+
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+
+
+                    $('#modalcontainer_common').modal("show");
+
+                    loadDetailsData();
+
+
+                }, false);
+
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+        function jsdatatableloaded() {
+
+
+        }
+        // "ajax": $.fn.dataTable.json({ url: "/SegmentSetup/GetSegmentSetupData", data: null }),
+
+        function loadData() {
+            var dt_search = {
+
+                filterId: '#DTSegmentSetup_filter input[type=search]',
+                tableId: "#DTSegmentSetup"
+
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search Segment',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+                
+                "ajax": $.fn.dataTable.json({ url: "/SegmentSetup/GetSegmentSetupData" }),
+                
+                columnDefs: [
+
+                    { targets: 1, "visible": true, "sortable": true },
+                    { targets: 2, "visible": true, "sortable": false },
+                    { targets: 3, "visible": true, "sortable": false },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+                    $(row).attr('gen_segment_id', data.gen_segment_id);
+
+                },
+                // "bFilter": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                "columns": [
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+
+                    { "data": "gen_segment_name", "name": "gen_segment_name", "autoWidth": true },
+                    { "data": "display_name", "name": "gen_segment_name", "autoWidth": true },
+
+                    { "data": "str_is_item_segment", "name": "str_is_item_segment", "autoWidth": true },
+
+                    //  { "data": "str_is_active", "name": "str_is_active", "autoWidth": true },
+
+                    {
+                        "data": "datatablebuttonscode", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    }
+                ]
+            });
+        }
+
+        function loadDetailsData() {
+
+            var objfilter = {
+                MasterID: $("#hd_gen_segment_id").val()
+            }
+
+            var dt = $("#DTSegmentSetup_Delt").DataTable(
+                {
+                    "ajax": $.fn.dataTable.json({ url: "/SegmentSetup/GetSegmentSetup_Detl_Data", data: objfilter }),
+
+                    columnDefs: [
+
+                        { targets: 1, "visible": true, "sortable": true },
+                        { targets: 2, "visible": true, "sortable": false },
+
+
+                    ],
+                    createdRow: function (row, data, dataIndex) {//
+                        // $(row).attr('gen_segment_id', data.gen_segment_id);
+
+                    },
+
+                    "columns": [
+                        { "data": "row_number", "name": "row_number", "autoWidth": true },
+
+                        { "data": "segment_value", "name": "segment_value", "autoWidth": true },
+
+                        {
+                            "data": "datatablebuttonscode", render: function (data, type, full, row) {
+                                return data;
+                            }
+                        }
+                    ]
+                });
+        }
+
+        function RemoveRow(btn) {
+
+            if ($(btn).attr("gen_segment_detl_id") != "0") {
+
+                var obj = {
+                    gen_segment_detl_id: $(btn).attr("gen_segment_detl_id"),
+                    gen_segment_id: $('#hd_gen_segment_id').val(),//$(btn).attr("gen_segment_id"),
+                    segment_value: $(btn).val(),
+
+                    current_state: 3
+                }
+
+                List_Deleted.push(obj);
+            }
+
+            $(btn).parent().parent().remove();
+        }
+
+
+        function AddNewRow() {
+            if ($('#modalcontent-common #DTSegmentSetup_Delt tbody tr').length == 1 &&
+                $('#modalcontent-common #DTSegmentSetup_Delt tbody tr').find(".dataTables_empty").length > 0)//dataTables_empty
+            {
+                $('#modalcontent-common #DTSegmentSetup_Delt tbody tr').remove();
+            }
+
+            $("#DTSegmentSetup_Delt tbody").append('<tr><td>' +
+                (parseInt($('#modalcontent-common #DTSegmentSetup_Delt tbody tr').length) + 1) + '</td><td>' +
+                '<input gen_segment_id="0" gen_segment_detl_id="0" type="text" class=" txt_segment_value border-gray-200 rounded-sm text-sm" style="width:100%" value="" >' +
+                '</td><td>' +
+                '<button gen_segment_id="0" gen_segment_detl_id = "0" onclick = "RemoveRow(this)" type = "button" class= "btn btn-danger " style = "width:70px;    height: 25px;" >' +
+                'Remove' +
+                '</button></td></tr>');
+        }
+
+        function UpdateSegment() {
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+            var detailList = [];
+
+            $("#modalcontent-common .txt_segment_value").each(function (index, element) {
+                var obj = {
+                    gen_segment_detl_id: $(element).attr("gen_segment_detl_id") != "0" &&
+                        $(element).attr("gen_segment_detl_id") != null ? $(element).attr("gen_segment_detl_id")
+                        : null,
+                    gen_segment_id: $(element).attr("gen_segment_id") != "0" &&
+                        $(element).attr("gen_segment_id") != null ? $(element).attr("gen_segment_id") : null,
+                    segment_value: $(element).val(),
+
+                    current_state: $(element).attr("gen_segment_detl_id") == "0" ||
+                        $(element).attr("gen_segment_detl_id") == null ? 1 : 2
+                };
+
+                if ($(element).val().length > 0)
+                    detailList.push(obj);
+            });
+
+            var request = {
+                gen_segment_id: parseInt($("#modalcontainer_common #hd_gen_segment_id").val()),
+                gen_segment_name: $("#modalcontainer_common #gen_segment_name").val(),
+                display_name: $("#modalcontainer_common #display_name").val(),
+                is_item_segment: $("#is_item_segment").prop("checked"),
+                DetList: detailList.concat(List_Deleted)
+            };
+
+            ajaxPostObjectHandler("/SegmentSetup/UpdateSegmentSetup", request, function (response) {
+                hideLoader();
+                if (response.status_Code == "200") {
+                    loadData();
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+                        $('#modalcontent-common').html("");
+                        $('#modalcontainer_common').modal("hide");
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+        }
+
+        function SaveSegment() {
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+            var detailList = [];
+
+            $("#modalcontent-common .txt_segment_value").each(function (index, element) {
+                var obj = {
+                    gen_segment_detl_id: $(element).attr("gen_segment_detl_id") != "0" &&
+                        $(element).attr("gen_segment_detl_id") != null ? $(element).attr("gen_segment_detl_id")
+                        : null,
+                    gen_segment_id: $(element).attr("gen_segment_id") != "0" &&
+                        $(element).attr("gen_segment_id") != null ? $(element).attr("gen_segment_id") : null,
+                    segment_value: $(element).val()
+                };
+
+                if ($(element).val().length > 0)
+                    detailList.push(obj);
+            });
+
+            var request = {
+                gen_segment_id: parseInt($("#modalcontainer_common #hd_gen_segment_id").val()),
+                gen_segment_name: $("#modalcontainer_common #gen_segment_name").val(),
+                display_name: $("#modalcontainer_common #display_name").val(),
+                is_item_segment: $("#is_item_segment").prop("checked"),
+                DetList: detailList
+            };
+
+            ajaxPostObjectHandler("/SegmentSetup/SaveSegmentSetup", request, function (response) {
+                hideLoader();
+                if (response.status_Code == "200") {
+                    loadData();
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+                        $('#modalcontent-common').html("");
+                        $('#modalcontainer_common').modal("hide");
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+
+        function CancelExecution() {
+            $('#modalcontainer_common').modal("hide");
+
+            $('#modalcontent-common').html("");
+        }
+
+        $(function () {
+
+
+            $("#btnNewProductSizeSetup").click(function () {
+
+                try {
+
+                    ajaxGetHandler("/SegmentSetup/SegmentSetupNew", { fiscal_year_id: "" }, function (response) {
+                        hideLoader();
+                        $('#modalcontent-common').html(response);
+
+                        $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+
+                        $('#modalcontainer_common').modal("show");
+
+
+                    }, false);
+
+
+
+                } catch (e) {
+                    hideLoader();
+                }
+
+            });
+
+
+            loadData();
+        });
+    </script>
+
+}

@@ -1,0 +1,87 @@
+﻿@using EPYSLSAILORAPP.Domain.DTO;
+@using Newtonsoft.Json;
+@model List<EPYSLSAILORAPP.Application.DTO.Tran_MerchandisingMgt.tran_purchase_requisition_dtl_DTO>;
+@{
+    ViewBag.Title = "";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<form method="POST" id="frmAddAccesories" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;" id="DTAccDetailsList" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th><label class="labelNormal">Select</label></th>
+                            <th><label class="labelNormal">Combo</label></th>
+                            <th><label class="labelNormal">Item Code</label></th>
+                            <th><label class="labelNormal">Item Sub Group</label></th>
+                            <th style="width:45%;"><label class="labelNormal">Item Name</label></th>
+                            @* <th><label class="labelNormal">Item Spec</label></th> *@
+                            <th><label class="labelNormal">Quantity</label></th>
+                            <th><label class="labelNormal">UOM</label></th>
+
+
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                        }
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td style="text-align:center;width:2%"><input type='checkbox' class='form-control is_select' style="height:15px;width:15px;"></td>
+                                <td style="width:12%"><input type='text' disabled class='form-control color_code' value="@obj.color_code"></td>
+                                <td style="width:8%"><input type='text' disabled class='form-control item_id' value="@obj.item_id"></td>
+                                <td style="width:10%"><input type='text' disabled class='form-control sub_group_name' value="@obj.sub_group_name"></td>
+                                <td style="display:none"><input type='text' disabled class='form-control gen_item_structure_group_sub_id' value="@obj.gen_item_structure_group_sub_id"></td>
+                                <td><input type='text' disabled class='form-control item_name' value="@obj.item_name"></td>
+                                <td style="display:none"><input type='text' disabled class='form-control item_spec' value="@obj.item_spec"></td>
+                                <td style="display:none"><input type='text' class='form-control uom' value="@obj.uom"></td>
+                                <td style="width:15%"><input type='number' class='form-control item_quantity' value="@obj.item_quantity"></td>
+                                <td style="width:8%"><input type='text' disabled class='form-control uomText' value="@obj.uomText"></td>
+
+
+
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2" style="text-align:right">
+            <button type="button" class="btn btn-success" onclick="AddAccesories();"><i class="fa fa-save"></i>&nbsp;&nbsp;Add</button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+
+
+
+
+
+

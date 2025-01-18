@@ -1,0 +1,348 @@
+﻿@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_plan_allocate_DTO;
+@{
+    ViewBag.Title = "Designer Distribution";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .qConnectedSortable {
+        border: 1px solid #000000;
+        position: relative;
+        top: 5px;
+        width: 120px;
+        /*height: 28px;*/
+        margin: 0;
+        padding: 1px;
+        display: inline-block;
+    }
+
+    .lowerdiv {
+        /*min-height: 150px;*/
+        padding: 15px;
+        width: 100%;
+        border: 0px;
+        background: lightblue;
+        top: auto;
+    }
+
+    .qConnectedSortable {
+        border: 1px solid #000000;
+        position: relative;
+        top: 5px;
+        width: 120px;
+        /*height: 41px;*/
+        margin: 0;
+        padding: 1px;
+        display: inline-block;
+    }
+
+    #mainsortable li {
+        border: 0px;
+        /*min-height: 27px;*/
+        position: relative;
+        top: 5px;
+        list-style-type: none;
+        float: left;
+        margin: 5px;
+    }
+
+    .ui-sortable-handle {
+        -ms-touch-action: none;
+        touch-action: none;
+        text-align: left;
+    }
+
+    .text-lg {
+        font-size: 22px !important;
+        /*line-height: 26px !important;*/
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    .liitem {
+        cursor: pointer;
+        float: left;
+        margin-left: -2px;
+        background: white;
+        font-family: Lucida Bright,Georgia,serif;
+        display: inline-box;
+        font-size: 11pt;
+        margin-top: 10px;
+        width: 100%;
+        padding: 5px;
+    }
+
+</style>
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<input type="hidden" id="hd_no_of_style" value="@Model.no_of_style" />
+<input type="hidden" id="hd_style_code_gen" value="@Model.style_code_gen" />
+
+<input type="hidden" id="hd_style_item_product_id" value="@Model.style_item_product_id" />
+
+<input type="hidden" id="hd_range_plan_id" value="@Model.range_plan_id" />
+<input type="hidden" id="hd_range_plan_detail_id" value="@Model.range_plan_detail_id" />
+
+<input type="hidden" id="hd_tran_va_plan_id" value="@Model.tran_va_plan_id" />
+
+<input type="hidden" id="hd_tran_va_plan_detl_id" value="@Model.tran_va_plan_detl_id" />
+
+<div class="row" style=" margin-left:-1px!important; border: 1px solid #efe7e7; margin-bottom: 16px!important;">
+    <div class="col-md-3" style=" margin-bottom: 12px;">
+
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 col-xs-12">
+                <select style="width:100%" id="ddlDesignerMember">
+                    <option value="">Select Designer</option>
+                    @foreach (var objdesigner in Model.List_team_members)
+                    {
+                        <option value="@objdesigner.userid">@objdesigner.name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 col-xs-12" id="ddForm">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6 col-xs-6">
+                                <label class="labelNormal " style="margin-bottom: 14px!important;font-weight:bold;">Styles</label>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-xs-6">
+
+                                <button onclick="AssignDesigner();" style="width:100px;padding-top: 0.25rem;" type="button" class="btn btn-secondary  " id="btnAssignDesigner">&nbsp;&nbsp;Assign</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="questionTextContainer">
+
+                        <ul id="chosen_list" class="chosen_list keyed_item_list qConnectedSortable ui-sortable lowerdiv" style="min-height:555px;padding:10px;width:100%;border:0px;background: lightblue;top:auto;">
+                            @foreach (var objstyle in Model.List_style.Where(p => p.designer_member_id == null))
+                            {
+
+                                <li tran_va_plan_detl_style_id="@objstyle.tran_va_plan_detl_style_id" class="ui-sortable-handle liitem item_style">
+                                    <span style="font-size:12px;">
+                                        <table style="width:100%">
+                                            @if (@objstyle.trading_type > 0)                                            
+                                            {
+
+                                                <tr style="vertical-align:middle">
+                                                    <td colspan="1" style="font-size:12px;text-align: center;color:blue">
+                                                        <b>@objstyle.trading_type_name</b>
+                                                    </td>
+                                                </tr>
+                                            
+                                            }
+                                            <tr style="vertical-align:middle;width:100%;">
+                                                <td>
+                                                    <b>@objstyle.style_code ( <label class="lblqnty">@objstyle.List_ColorInfo.Sum(p=>p.style_color_quantity).ToString() </label>)</b>
+                                                    <input type="checkbox" style="float:right;" class="chkSelect" tran_va_plan_detl_style_id="@objstyle.tran_va_plan_detl_style_id">
+
+                                                </td>
+
+                                            </tr>
+                                            <tr style="vertical-align:middle">
+                                                <td>
+
+                                                    @foreach (var singlcolor in objstyle.List_ColorInfo)
+                                                    {
+                                                        <input type="text" value="@singlcolor.color_code" style="width:120px;height: 18px;margin-top: -4px;">
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                            <tr style="vertical-align:middle">
+
+                                                <td colspan="1" style="font-size: 10px;">
+                                                    <b>@string.Join(",", objstyle.List_Embellishment.Select(p => p.text)) </b>
+                                                </td>
+                                            </tr>
+
+                                           
+                                        </table>
+                                    </span>
+                                </li>
+
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9" style="margin-bottom: 12px;">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Name :</label>
+
+                    <input style="width:100%" value="@ViewBag.style_product" type="text" id="txtProductName" disabled class="border-gray-200 rounded-sm text-sm color_code_gen" />
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Range Plan Quantity</label>
+
+                    <input style="width:100%" value="@ViewBag.range_plan_qnty" type="number" id="txtRangePlanQnty" disabled a class="border-gray-200 rounded-sm text-sm no_of_color" />
+
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+
+                    <button style="width:150px;margin-top: 31px;" type="button" class="btn btn-primary  " onclick="FinalizeDesignerAssignAdd();" id="btnFinalizeDesignerAssign"><i class="fa-light fa-file-pen" aria-hidden="true"></i>&nbsp;&nbsp;Finalize Assign</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="dvTeamMembers" style="max-height:500px;overflow-y:scroll;">
+            @foreach (var objdesigner in Model.List_team_members.OrderBy(p => p.userid))
+            {
+                var singledesignerData = Model.List_Designer_Assign.
+                Where(p => p.designer_member_id == objdesigner.userid).ToList();
+
+                <div class="col-lg-4 col-sm-4 col-xs-4 each_team_member_section">
+                    <div class="form-group" style="background-color: beige;height: 48px;">
+                        @if (string.IsNullOrEmpty(objdesigner.emp_pic))
+                        {
+                            <img style="height: 50px;width: 60px;margin-top: -5px;float: left;border-radius: 50%;overflow:hidden;" src="/images/default_designer2.jpg">
+                        }
+                        else
+                        {
+                            <img style="height: 50px;width: 60px;margin-top: -5px;float: left;border-radius: 50%;overflow:hidden;" src="/images/emp_pic/@objdesigner.emp_pic">
+                        }
+                        <label class="labelNormal lblmemberinfo" name="@objdesigner.name" userid="@objdesigner.userid"
+                               style="float:left;margin-bottom: 10px!important;font-weight:bold;    margin-left: 12px;">@objdesigner.name</label>
+
+                        <label class="labelNormal lblmemberinfo_total"
+                               no_of_style="@singledesignerData.Sum(p=>p.no_of_style).ToString()"
+                               total_style_quantity="@singledesignerData.Sum(p=>p.total_style_quantity).ToString()"
+                               style="float:right; margin-top: -10px;margin-bottom: 8px!important;font-weight:bold;">
+                            (@singledesignerData.Sum(p=>p.no_of_style).ToString()-@singledesignerData.Sum(p=>p.total_style_quantity).ToString())
+                        </label>
+
+                    </div>
+                    <ul userid="@objdesigner.userid" class="sortable qConnectedSortable ui-sortable keyed_item_list" style="min-height:250px;padding:0px;padding-left: 10px;
+                        padding-right: 10px;width:100%;border:0px;background: #e1e5e7 !important;top:auto;">
+
+                        @{
+                            var objstyleList = Model.List_style.Where(p => p.designer_member_id == objdesigner.userid).ToList();
+                            if (objstyleList.Count > 0)
+                            {
+                                foreach (var objstyle in objstyleList)
+                                {
+                                    var isdraggable = objstyle.tran_sample_order_id > 0 ? "undraggable" : "";
+                                    var backcolor = objstyle.tran_sample_order_id > 0 ? "background-color: #f1cbcf" : "";
+                                    <li tran_sample_order_id="@objstyle.tran_sample_order_id" tran_va_plan_detl_style_id="@objstyle.tran_va_plan_detl_style_id" class="ui-sortable-handle liitem item_style @isdraggable">
+                                        
+                                    <span style="font-size:12px;">
+
+                                            <table style="width:100%;@backcolor">
+                                                @if (@objstyle.trading_type > 0)
+                                                {
+
+                                                    <tr style="vertical-align:middle">
+                                                        <td colspan="1" style="font-size:12px;text-align: center;color:blue">
+                                                            <b>@objstyle.trading_type_name</b>
+                                                        </td>
+                                                    </tr>
+
+                                                }
+                                                <tr style="vertical-align:middle;width:100%;">
+                                                    <td>
+                                                        <b>@objstyle.style_code ( <label class="lblqnty">@objstyle.List_ColorInfo.Sum(p=>p.style_color_quantity).ToString() </label>)</b>
+                                                        @if (objstyle.tran_sample_order_id == 0)
+                                                        {
+                                                            <input type="checkbox" onchange="DesignerUnAssign(this);" checked style="float:right;" class="chkSelect" tran_va_plan_detl_style_id="@objstyle.tran_va_plan_detl_style_id">
+                                                        }
+                                                    </td>
+
+                                                </tr>
+
+                                                <tr style="vertical-align:middle">
+                                                    <td>
+
+                                                        @foreach (var singlcolor in objstyle.List_ColorInfo)
+                                                        {
+                                                            <input type="text" value="@singlcolor.color_code" style="font-size: 9px;width:78px;height: 18px;">
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                                <tr style="vertical-align:middle">
+
+                                                    <td colspan="1" style="    font-size: 10px;">
+                                                        <b>@string.Join(",", objstyle.List_Embellishment.Select(p => p.text))</b>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </span>
+                                    </li>
+                                }
+
+                            }
+                        }
+
+                    </ul>
+
+                </div>
+
+            }
+        </div>
+
+    </div>
+
+
+</div>
+
+<div id="modalcontainer_common_popup" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 95% !important; max-width: 95% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #bc7b20;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Designer Load Details
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_popup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common_popup">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

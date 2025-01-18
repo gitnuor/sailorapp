@@ -1,0 +1,221 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Application.DTO.Tran_DesignMgt.tran_tech_pack_DTO;
+@{
+    ViewBag.Title = "Service Work Order";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+    .form-group1 {
+        margin-bottom: 3px !important;
+        padding: 0.1rem !important;
+        font-size: 12px !important;
+    }
+
+    #fileNamesContainer p {
+        margin-bottom: 0;
+    }
+</style>
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Service Work Order</h6>
+        </div>
+        <!-- /.card-header -->
+        <input type="hidden" id="supplierId" value="">
+        <div class="row" style="">
+            <div class="col-md-12">
+                <div class="box">
+                    <table style="font-size:10px;" id="DTTranPreCostingDetailEmbellishment" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                        <thead>
+                            <tr>
+                                @* <th><label class="labelNormal">SL</label></th> *@
+                                <th><label class="labelNormal">Embellishment</label></th>
+                                <th style="width:150px;"><label class="labelNormal  ">M. Unit</label></th>
+                                <th style="width:70px;"><label class="labelNormal  ">Con/Pc</label></th>
+                                <th style="width:70px;"><label class="labelNormal  ">Wastage(%)</label></th>
+                                <th><label class="labelNormal  ">Total Req</label></th>
+                                <th><label class="labelNormal  ">Cost/Unit</label></th>
+                                <th><label class="labelNormal  ">Total Cost</label></th>
+                                @*  <th><label class="labelNormal ">Action Type</label></th> *@
+
+                            </tr>
+                        </thead>
+                        @{
+                            var embellishment_list = (List<rpc_sp_get_sampleorder_embellishment_det_DTO>)ViewBag.embellishment;
+                        }
+
+                        <tr style="margin-top:20px;">
+                            <td colspan="8">
+                                <h6 class="box-title">Embellishment :</h6>
+                            </td>
+
+                        </tr>
+                        @foreach (var objsingle_embell in embellishment_list)
+                        {
+
+                            <tr embellishment_id="@objsingle_embell.embellishment_id">
+                                <td>
+                                    @objsingle_embell.style_embellishment_name
+                                </td>
+                                <td>
+                                    @await Component.InvokeAsync("S2MeasurementUnit", new
+                                        {
+                                            ddlId = "measurement_unit" + objsingle_embell.embellishment_id.ToString() + "_id",
+                                            measurement_unit_id = objsingle_embell.embellishment_id,
+                                            selectedvalue = "",
+                                            cssclass = "form-control S2MeasurementUnit",
+                                            isRequired = false,
+                                            isReadOnly = false,
+                                            placeholder = "Select Construction",
+                                            preloaded = "",
+                                            model_parentid = "modalcontainer_common"
+                                        })
+
+                                </td>
+                                <td>
+                                    <input style="width:70px;" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Order_quantity" />
+                                </td>
+                                <td>
+                                    <input style="width:70px;" type="number" onchange="CalcTotalEmbellConsumption(this);" class="border-#d1cccc-200 form-control txtembell_Wastage" />
+                                </td>
+                                <td>
+                                    <input disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtembell_TotalRequirement" />
+                                </td>
+                                <td>
+                                    <input style="width:100%" type="number" onchange="CalcTotalEmbellPrice(this);" class="border-#d1cccc-200 form-control txtembell_CostPerUnit" />
+                                </td>
+                                <td>
+                                    <input disabled style="width:100%" type="number" class="border-#d1cccc-200 form-control txtembell_TotalCost" />
+                                </td>
+                                @*  <td>
+                            <input style="width:100%" type="button" class="border-#d1cccc-200 form-control btn btn-danger" value="Remove" />
+                            </td> *@
+                            </tr>
+
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.card-body -->
+</form>
+
+<div id="modalcontainer_common_popup" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #bc7b20;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Add Details
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_popup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common_popup">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalcontainer_common_popup1" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #bc7b20;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Add Details
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_popup1();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common_popup1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

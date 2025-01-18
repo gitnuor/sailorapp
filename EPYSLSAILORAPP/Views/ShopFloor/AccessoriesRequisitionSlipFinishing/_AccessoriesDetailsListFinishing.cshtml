@@ -1,0 +1,190 @@
+﻿@using Newtonsoft.Json;
+@model List<EPYSLSAILORAPP.Domain.RPC.rpc_tran_mcd_requisition_slip_DTO>;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<form method="POST" id="frmAddFabric" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;" id="DTTranFabricDetailsList" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th style="width:350px;display:none"><label class="labelNormal">Assocories Details</label></th>
+                            <th style="width:350px;display:none"><label class="labelNormal">Item Id</label></th>
+                            @if (!string.IsNullOrEmpty(Model.FirstOrDefault()?.segment_header1))
+                            {
+                                <th style="width:200px;"><label class="labelNormal">@Model.FirstOrDefault().segment_header1</label></th>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.FirstOrDefault()?.segment_header2))
+                            {
+                                <th style="width:150px;"><label class="labelNormal">@Model.FirstOrDefault().segment_header2</label></th>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.FirstOrDefault()?.segment_header3))
+                            {
+                                <th style="width:70px;"><label class="labelNormal">@Model.FirstOrDefault().segment_header3</label></th>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.FirstOrDefault()?.segment_header4))
+                            {
+                                <th style="width:70px;"><label class="labelNormal">@Model.FirstOrDefault().segment_header4</label></th>
+                            }
+                            <th><label class="labelNormal  ">Combo</label></th>
+                            <th><label class="labelNormal  ">Measurement Type</label></th>
+                            <th style="width:350px;display:none"><label class="labelNormal  ">Measurement Unit Id</label></th>
+                            <th style="width:60px;"><label class="labelNormal  ">total recv Qty</label></th>
+                            <th style="width:60px;"><label class="labelNormal  ">Stock Qty</label></th>
+                            <th style="width:350px;display:none"><label class="labelNormal">gen subgroup ID</label></th>
+                            <th><label class="labelNormal ">Action</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                        }
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td style="display:none;"><input type='text' hidden class='form-control item_id' value="@obj.all_segment_text" style="visibility:hidden"></td>
+                                <td style="display:none;"><input type='text' hidden class='form-control gen_item_id' value="@obj.gen_item_master_id" style="visibility:hidden"></td>
+                                @if (!string.IsNullOrEmpty(Model.FirstOrDefault()?.segment_det1_text))
+                                {
+                                    <td><input disabled type='text' class='form-control item_id' value="@obj.segment_det1_text"></td>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FirstOrDefault()?.segment_det2_text))
+                                {
+                                    <td><input disabled type='text' class='form-control item_id' value="@obj.segment_det2_text"></td>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FirstOrDefault()?.segment_det3_text))
+                                {
+                                    <td><input disabled type='text' class='form-control item_id' value="@obj.segment_det3_text"></td>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FirstOrDefault()?.segment_det4_text))
+                                {
+                                    <td><input disabled type='text' class='form-control item_id' value="@obj.segment_det4_text"></td>
+                                }
+                                <td><input disabled type='text' class='form-control color_code' value="@obj.color_code"></td>
+                                <td><input disabled type='text' class='form-control measurementUnit' value="@obj.measurement_unit"></td>
+                                <td style="display:none;"><input type='text' hidden class='form-control gen_munit_id' value="@obj.measurement_unit_detail_id" style="visibility:hidden"></td>
+                                <td><input disabled type='number' class='form-control available_stock_quantity_requsition' value="@obj.total_received_quantity"></td>
+                                <td><input disabled type='number' class='form-control available_stock_quantity' value="@obj.available_stock_quantity"></td>
+                                <td style="display:none;"><input type='text' hidden class='form-control total_requisition_quantity' value="@obj.total_requisition_quantity" style="visibility:hidden"></td>
+                                <td style="display:none;"><input type='text' hidden class='form-control gen_subGroup_id' value="@obj.gen_item_structure_group_sub_id" style="visibility:hidden"></td>
+                                <td><input  type="button" value="Add" class="addSewingRowFinishing" style="width:50px; background:green;color:#fff;font-weight:600;"></td>
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script>
+
+
+
+    $('#modalcontainer_common_popup').on('shown.bs.modal', function () {
+        $('#DTTranFabricDetailsList .addSewingRowFinishing').each(function () {
+            var rowIndex = $(this).closest('tr').index();
+            if (sessionStorage.getItem('row-' + rowIndex + '-disabled') === 'false') {
+                $(this).prop('disabled', true);
+            }
+        });
+    });
+
+    $(".addSewingRowFinishing").click(function () { 
+         
+            //var stystockqty = parseInt($('.available_stock_quantity').val());
+            var total_requisition_quantity = parseInt($('.total_requisition_quantity').val());
+            var available_stock_quantity_requsition = parseInt($('.available_stock_quantity_requsition').val());
+
+        if (total_requisition_quantity != 0) {
+            if (total_requisition_quantity > available_stock_quantity_requsition || total_requisition_quantity == available_stock_quantity_requsition) {
+
+                showErrorAlert("Alert", "Already all stock item  sent for requisition !!!", "OK");
+                $('#modalcontainer #DTTranSewingDetailRow').hide();
+                //$('.reqQuantityaccsew').val('');
+            }
+            }
+        // Select input fields in the same row
+        var itemName = $(this).closest("tr").find(".item_id").val();
+        var itemId = $(this).closest("tr").find(".gen_item_id").val();
+        var munitId = $(this).closest("tr").find(".gen_munit_id").val();
+        var gen_subGroup_id = $(this).closest("tr").find(".gen_subGroup_id").val();
+
+        var measurementUnit = $(this).closest("tr").find(".measurementUnit").val(); // Assuming measurement unit input is the second input
+        var available_stock_quantity = $(this).closest("tr").find(".available_stock_quantity").val();
+        var bookingQty = $(this).closest("tr").find(".bookingQty").val();
+        var alreadyReqQty = $(this).closest("tr").find(".total_requisition_quantity").val();
+        var totalRecevQty = $(this).closest("tr").find(".available_stock_quantity_requsition").val();
+        var colorCode = $(this).closest("tr").find(".color_code").val();
+        // Construct HTML for new row
+        var newRowHtml = "<tr>" +
+
+            "<td><input class='form-control' disabled type='text' style='width: 500px;' value='" + itemName + "'></td>" +
+            "<td style='display:none'><input type='text' class='itemId' value='" + itemId + "'></td>" +
+            "<td><input disabled type='text' class='form-control measurementUnit' style='width: 80px;' value='" + measurementUnit + "'></td>" +
+            "<td><input disabled type='text' class='colorCode' style='width: 80px;' value='" + colorCode + "'></td>" +
+            "<td style='display:none'><input type='number'  class='measurementUnitId' value='" + munitId + "'></td>" +
+            "<td><input disabled type='number' style='width: 70px;' class='form-control totalRecevQty' value='" + totalRecevQty + "'></td>" +
+            "<td><input disabled type='number' style='width: 70px;' class='form-control avlStockQunty' value='" + available_stock_quantity + "'></td>" +
+            "<td><input class='form-control alreadyReqQty' disabled type='number' style='width: 120px;' value='" + alreadyReqQty + "'></td>" +
+            "<td><input type='number' class='form-control reqQuantityaccsew' style='width: 70px;'></td>" +
+
+            "<td style='display:none'><input type='text' class='gen_subGroup_id' value='" + gen_subGroup_id + "'></td>" +
+            "<td><input type='text' class='form-control remarksDtl' style='width: 80px;'></td>" +
+            //"<td> <button class='btn btn-danger' aria - hidden='false' onclick = 'deleteRow(this)' > <i class='fa fa-trash' aria - hidden='true' > </i></button ></td>" +
+            "<td><button id='deleterowbutton' onclick='deleteRow(this)'> <i class='fa fa-trash fa-x text-danger' style='font-size:large'></i></button ></td>" +
+            "</tr>";
+
+        // Append new row to the tbody of the data table
+        $("#modalcontainer #DTTranFinishingDetailRow tbody").append(newRowHtml);
+
+        $(this).prop('disabled', true);
+
+        // Store the disabled state in session storage
+        var rowIndex = $(this).closest('tr').index();
+        sessionStorage.setItem('row-' + rowIndex + '-disabled', 'true');
+
+    });
+
+    function deleteRow(button) {
+        var row = button.parentNode.parentNode;
+        //row.parentNode.removeChild(row);
+
+        var rowIndex = $(row).closest('tr').index();
+
+        row.parentNode.removeChild(row);
+
+        sessionStorage.removeItem('row-' + rowIndex + '-disabled');
+
+
+        // Re-enable the corresponding "Add" button
+        // $('#DTTranFabricDetailsList .addFabricRow').each(function () {
+        //     var currentRowIndex = $(this).closest('tr').index();
+        //     if (currentRowIndex === rowIndex) {
+        //         $(this).prop('disabled', false);
+        //     }
+        // });
+
+    }
+
+</script>
+
+
+
+
+

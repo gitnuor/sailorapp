@@ -1,0 +1,1186 @@
+﻿@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using EPYSLSAILORAPP.Domain;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Application.DTO.Tran_DesignMgt.tran_tech_pack_DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+</style>
+<input type="hidden" asp-for="designer_member_id">
+<input type="hidden" asp-for="tran_designer_review_id">
+<input type="hidden" asp-for="tran_va_plan_detl_id">
+<input type="hidden" asp-for="tran_sample_order_id">
+
+<input type="hidden" asp-for="style_item_product_id">
+<input type="hidden" asp-for="style_item_product_name">
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <div class="box" style="margin-top:7px;">
+
+        <div class="row">
+
+            <div class="col-md-7">
+                <div class="box">
+                    <div class="row" style="">
+
+                        <div class="col-md-4">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Name</label>
+
+                                <input style="width:100%" disabled asp-for="style_product" type="text" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Details</label>
+
+                                <input style="width:100%" asp-for="style_product_details" type="text" disabled class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="">
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Order Number</label>
+
+                                <input style="width:100%" disabled asp-for="tran_sample_order_number" type="text" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sample Order Date :</label>
+
+
+                                <input disabled style="width:100%" asp-for="order_date" type="date" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Date :</label>
+
+                                <input disabled style="width:100%" asp-for="delivery_date" type="date" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Unit :</label>
+
+                                @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                        ddlId = "delivery_unit_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(Model.List_Unit),
+                                        selectedvalue = "",
+                                        cssclass = "form-control  ",
+                                        enable = false,
+                                        isRequired = true,
+                                        placeholder = "Select Delivery Unit"
+                                    })
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="row" style="">
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Designer :</label>
+
+                                <input style="width:100%" disabled value="@Model.designer" type="text" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Total Quantity :</label>
+
+                                <input disabled style="width:100%" asp-for="pre_costing_quantity" type="number" min="0" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Code :</label>
+
+                                <input style="width:100%" disabled asp-for="style_code" type="text" min="0" class="border-gray-200 form-control " />
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Sample Quantity :</label>
+
+                                <input disabled style="width:100%" asp-for="order_quantity" type="number" min="0" class="border-#d1cccc-200 form-control " />
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row" style="">
+
+                        <div class="col-md-3" style="">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="font-weight:bold;">Tech Pack Date :</label>
+
+                                <input style="width:100%" asp-for="techpack_date" type="date" class="border-#d1cccc-200 form-control  " />
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" style="">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="font-weight:bold;">Product Composition :</label>
+
+                                @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                        ddlId = "ddlproduct_composition",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.product_composition_List),
+                                        selectedvalue = "",
+                                        cssclass = "form-control  ",
+                                        enable = true,
+                                        isRequired = false,
+                                        placeholder = "Select Product Composition"
+                                    })
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" style="">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="font-weight:bold;">Sleeve Style :</label>
+
+                                @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                        ddlId = "ddlsleeve_details",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.style_sleeve_info_List),
+                                        selectedvalue = "",
+                                        cssclass = "form-control  ",
+                                        enable = true,
+                                        isRequired = false,
+                                        placeholder = "Select Sleeve Style"
+                                    })
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" style="">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="font-weight:bold;">Costing SMV(Sewing) :</label>
+
+                                <input style="width:100%" id="costing_smv" value="@Model.smv" type="number" class="border-#d1cccc-200 form-control  " />
+                                <span asp-validation-for="costing_smv" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row" style="">
+
+                        <div class="col-md-3" style="">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="font-weight:bold;">AOP Style :</label>
+                                <br />
+
+                                @Html.RadioButtonFor(m => m.aop_style, "Yes")
+                                <label for="html">Yes</label>
+
+                                @Html.RadioButtonFor(m => m.aop_style, "No")
+                                <label for="css">No</label>
+
+                                <span asp-validation-for="aop_style" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3" style="">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="font-weight:bold;">SPI :</label>
+                                <input style="width:100%" asp-for="spi" type="text" class="border-#d1cccc-200 form-control  " />
+                                <span asp-validation-for="spi" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3" style="">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="font-weight:bold;">Merchandiser :</label>
+
+                                @await Component.InvokeAsync("S2TeamMemberList", new
+                                    {
+                                        team_group_id = Convert.ToInt64(Team_Category.Merchandiser).ToString(),
+                                        ddlId = "merchandiser_id",
+                                        selectedvalue = "",
+                                        cssclass = "form-control S2TeamMemberList",
+                                        isRequired = false,
+                                        isReadOnly = false,
+                                        isMultiple = false,
+                                        placeholder = "Select Merchant",
+                                        preloaded = "",
+                                        model_parentid = "modalcontent"
+                                    })
+
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="">
+
+                            <div class="form-group">
+                                <label class="labelNormal " style="font-weight:bold;">Techpack Style Code :</label>
+
+                                <input style="width:100%" asp-for="teckpack_style_code" type="text" class="border-#d1cccc-200 form-control  " />
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+
+            <div class="col-md-5">
+                <div class="box">
+                    <div class="row">
+                        <label class="labelNormal">Product Images</label>
+                    </div>
+                </div>
+                <div class="box" style="min-height: 317px;">
+
+
+                    <div class="row" id="frames" style="max-height: 260px;overflow: auto;white-space: nowrap; overflow-x: auto;overflow-y: hidden;">
+
+                        @{
+                            var image_index = 0;
+                        }
+                        @foreach (var obj in Model.List_base64String_File.Where(p => p.imagetype == Image_Position_Type.Front.ToString() || p.imagetype == Image_Position_Type.Back.ToString()))
+                        {
+                            <div index="@image_index" class="col-lg-4 dvSingleAttachment">
+                                <img onclick="ShowImage(this);" style="width: 180px; height: 200px;" src="@obj.base64string" />
+                                <a mailattachmentid="-1" index="' + file.fileindex + '" class=" attachmentLink @image_index " onclick="removeAtachments(this,@image_index)"></a>'
+                                <span style="color:blue;text-decoration:underline;overflow: hidden;display: inherit;height: 45px;">@obj.filename</span>
+                            </div>
+                            image_index++;
+                        }
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="tab_bar_style">
+                <ul id="tab_techpack" class="nav nav-tabs">
+                    <li class="active " tab_index="1">
+                        <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">Fabrication Info</a>
+                    </li>
+                    <li class="disablelink" tab_index="2">
+                        <a href="#det2" style="text-decoration: unset;" class=" tab_link " data-toggle="tab">Check List Info</a>
+                    </li>
+
+                    <li class="disablelink" tab_index="3">
+                        <a href="#det3" style="text-decoration: unset;" class=" tab_link " data-toggle="tab">Size Wise Color Info </a>
+                    </li>
+                    <li class="disablelink" tab_index="4">
+                        <a href="#det4" style="text-decoration: unset;" class="tab_link  " data-toggle="tab">Embellishment Info </a>
+                    </li>
+                    <li class="disablelink" tab_index="5">
+                        <a href="#det5" style="text-decoration: unset;" class=" tab_link " data-toggle="tab">Techpack Image</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="det1" tabpane_index="1">
+                        <div class="box">
+                            <div class="row" style="">
+
+                                <div class="col-md-12">
+                                    @{
+                                        var index = 0;
+                                    }
+                                    <table style="font-size:10px;" id="DTTranPreCostingDetail" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                @* <th><label class="labelNormal">SL</label></th> *@
+                                                <th><label class="labelNormal">Fabrication & Item (Specification)</label></th>
+
+
+                                            </tr>
+                                        </thead>
+                                        @if (Model.List_Mapped_Structure != null)
+                                        {
+                                            foreach (var objsinglegroup in Model.List_Mapped_Structure)
+                                            {
+
+                                                <tr style="margin-top:20px;">
+                                                    <td colspan="3">
+                                                        <h6 class="box-title">@objsinglegroup.structure_group_name :</h6>
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    @if (objsinglegroup.List_sub_group.Count > 0)
+                                                    {
+
+                                                        <td>
+                                                            @if (objsinglegroup.List_sub_group.Count > 0)
+                                                            {
+                                                                var str = "";
+
+                                                                @foreach (var objoption in objsinglegroup.List_sub_group.Where(p => p.item_structure_group_id == objsinglegroup.item_structure_group_id))
+                                                                {
+                                                                    var objFabricDet = Model.List_PreCostingDet_rpc.Where(p => p.gen_item_structure_group_sub_id == objoption.gen_item_structure_group_sub_id);
+
+                                                                    foreach (var objsingleFabricDet in objFabricDet)
+                                                                    {
+                                                                        str += objsingleFabricDet.all_segment_text + "(<span class='lbl'>" + objoption.sub_group_name + "</span>)<br/>";
+                                                                    }
+
+                                                                }
+                                                                <label class="labelNormal " style="font-weight:normal;">@Html.Raw(str)</label>
+                                                            }
+
+                                                        </td>
+
+                                                    }
+                                                </tr>
+
+                                            }
+
+                                        }
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <button type="button" class="btn btn-primary  btnSaveNext" onclick="btnSaveNextClick(this)" style="margin-left: 21px;width:300px;"><i class="fa fa-forward"></i>Next</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane " id="det2" tabpane_index="2">
+
+                        <div class="box">
+                            <div class="row" style="">
+
+                                <div class="col-md-12">
+
+                                    <table style="font-size:10px;" id="DTCheckList" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th><label class="labelNormal">Check List</label></th>
+
+                                                <th><label class="labelNormal">Status</label></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">Productin Availability Path</label>
+
+                                                </td>
+                                                <td>
+                                                    <select id="production_availability_path" class="form-control production_availability_path">
+                                                        <option value="Inhouse Production">Inhouse Production</option>
+                                                        <option value="Sub-Contract">Sub-Contract</option>
+                                                        <option value="Full FOB">Full FOB</option>
+                                                        <option value="Trading">Trading</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">Vat</label>
+
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.vat, "Yes")
+                                                            <label for="html">Yes</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.vat, "No")
+                                                            <label for="css">No</label>
+                                                        </div>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">Photoshoot</label>
+
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.photoshoot, "Yes")
+                                                            <label for="html">Yes</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.photoshoot, "No")
+                                                            <label for="css">No</label>
+                                                        </div>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">E-Com</label>
+
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.e_com, "Yes")
+                                                            <label for="html">Yes</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.e_com, "No")
+                                                            <label for="css">No</label>
+                                                        </div>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">Sample OK</label>
+
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.sample_ok, "Yes")
+                                                            <label for="html">Yes</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.sample_ok, "No")
+                                                            <label for="css">No</label>
+                                                        </div>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">Follow Style</label>
+
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.follow_style, "Yes")
+                                                            <label for="html">Yes</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.follow_style, "No")
+                                                            <label for="css">No</label>
+                                                        </div>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">Need Production Approval</label>
+
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.need_production_approval, "Yes")
+                                                            <label for="html">Yes</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.need_production_approval, "No")
+                                                            <label for="css">No</label>
+                                                        </div>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">Iron</label>
+
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.iron, "Yes")
+                                                            <label for="html">Yes</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.iron, "No")
+                                                            <label for="css">No</label>
+                                                        </div>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">Fabric Allocation</label>
+
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.fabric_allocation, "Yes")
+                                                            <label for="html">Yes</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @Html.RadioButtonFor(m => m.fabric_allocation, "No")
+                                                            <label for="css">No</label>
+                                                        </div>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <label class="labelNormal" style="">Additional Comments </label>
+
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" asp-for="additional_comments" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+
+
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <button type="button" class="btn btn-primary  btnSaveNext" onclick="btnSaveNextClick(this)" style="margin-left: 21px;width:300px;"><i class="fa fa-forward"></i>Next</button>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane" id="det3" tabpane_index="3">
+                        <div class="box">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary  btnAddColor" onclick="btnAddColorClick(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Color</button>
+                            </div>
+                        </div>
+                        <div class="box">
+
+                            <div class="row">
+
+                                <table id="dtcolorcodestyle" class="dtcolorcodestyle table dataTable table-striped table-bordered no-footer" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:160px;">
+                                                <label class="  labelNormal">SL</label>
+                                            </th>
+                                            <th>
+                                                <label class="labelNormal  ">Color Code</label>
+                                            </th>
+
+                                            @foreach (var objSize in Model.List_plan_detl_style.FirstOrDefault().List_ColorInfo[0].List_ColorSizeInfo)
+                                            {
+                                                <th style="text-align:right">
+                                                    <label class="labelNormal ">@objSize.style_product_size</label>
+                                                </th>
+                                            }
+                                            <th style="text-align:right">
+                                                <label class="labelNormal  ">Total</label>
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            var color_index = 1;
+                                        }
+                                        @foreach (var objColor in Model.List_detl_style_color)
+                                        {
+                                            string tr_id = color_index == 1 ? "tr_first" : "";
+
+                                            var objColorSingle = new SelectListItem { Text = objColor.color_code, Value = objColor.color_code };
+
+
+                                            if (color_index == 1)
+                                            {
+                                                <tr style="display:none;">
+
+                                                    <td class="row_sl" style="text-align: center;">@color_index.ToString()</td>
+                                                    <td style="text-align: left;">
+
+                                                        @await Component.InvokeAsync("S2GenColor", new
+                                                            {
+                                                                ddlId = "ddl_color1",
+                                                                cssclass = "form-control ddl_color txtColorCode",
+                                                                isRequired = false,
+                                                                isReadOnly = false,
+                                                                placeholder = "Select Color",
+                                                                preloaded = "",
+                                                                model_parentid = "dvmodalcontent",
+                                                                isMultiple = true,
+                                                                isOnLoad = false
+                                                            })
+                                                    </td>
+
+                                                    @{
+
+                                                        foreach (var objSize in objColor.List_ColorSizeInfo)
+                                                        {
+                                                            <td>
+                                                                <input value="0" style_product_size_group_detid="0" tran_va_plan_detl_style_color_id="0" tran_va_plan_detl_style_color_size_id="0" style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="0" onchange="ColorSizeQuantityChanged(this)" class="border-gray-200 rounded-sm txtColorSizeQuantity" />
+                                                            </td>
+                                                        }
+
+                                                        <td>
+                                                            <input style="text-align: right;width:100%" type="number" min="0" disabled class="border-gray-200 rounded-sm txtTotalColorSizeQuantity" value="0" />
+                                                        </td>
+                                                    }
+
+                                                </tr>
+                                            }
+
+                                            <tr id="@tr_id">
+
+                                                <td class="row_sl" style="text-align: center;">@color_index.ToString()</td>
+                                                <td style="text-align: left;">
+
+                                                    @await Component.InvokeAsync("S2GenColor", new
+                                                        {
+                                                            ddlId = ("ddl_color" + color_index.ToString()),
+                                                            cssclass = "form-control ddl_color txtColorCode",
+                                                            isRequired = false,
+                                                            isReadOnly = false,
+                                                            placeholder = "Select Color",
+                                                            preloaded = Newtonsoft.Json.JsonConvert.SerializeObject(objColorSingle),
+                                                            model_parentid = "dvmodalcontent",
+                                                            isMultiple = true,
+                                                            isOnLoad = false
+                                                        })
+                                                </td>
+
+                                                @{
+
+                                                    foreach (var objSize in objColor.List_ColorSizeInfo)
+                                                    {
+                                                        <td>
+                                                            <input value="@objSize.style_color_size_quantity" style_product_size_group_detid="@objSize.style_product_size_group_detid" tran_va_plan_detl_style_color_id="@objSize.tran_va_plan_detl_style_color_id" tran_va_plan_detl_style_color_size_id="@objSize.tran_va_plan_detl_style_color_size_id" style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="@objSize.style_product_size_group_detid" onchange="ColorSizeQuantityChanged(this)" class="border-gray-200 rounded-sm txtColorSizeQuantity" />
+                                                        </td>
+                                                    }
+
+                                                    <td>
+                                                        <input style="text-align: right;width:100%" type="number" min="0" disabled class="border-gray-200 rounded-sm txtTotalColorSizeQuantity" value="@objColor.List_ColorSizeInfo.Sum(p=>p.style_color_size_quantity)" />
+                                                    </td>
+                                                }
+
+                                            </tr>
+
+                                            color_index++;
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="row">
+
+                                <button type="button" class="btn btn-primary  btnSaveNext" onclick="btnSaveNextClick(this)" style="margin-left: 21px;width:300px;"><i class="fa fa-forward"></i>Next</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="det4" tabpane_index="4">
+                        <div class="box">
+                            <div class="row" style="">
+                                <table style="font-size:10px;" id="DTTranPreCostingDetailEmbellishment" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                    <thead>
+                                        <tr>
+
+                                            <th style="width:200px;"><label class="labelNormal">Embellishment</label></th>
+                                            <th><label class="labelNormal  ">Supplier</label></th>
+                                            <th><label class="labelNormal  ">Is Garments Form</label></th>
+
+                                        </tr>
+                                    </thead>
+                                    @{
+                                        var embellishment_list = new List<rpc_sp_get_sampleorder_embellishment_det_DTO>();
+
+                                        if (ViewBag.embellishment != null)
+                                        {
+                                            embellishment_list = (List<rpc_sp_get_sampleorder_embellishment_det_DTO>)ViewBag.embellishment;
+                                        }
+
+                                        var embelishment_detail_list = (List<gen_process_master_detail_entity>)ViewBag.Genprocessmasterdetail_List;
+
+                                    }
+
+                                    <tr style="margin-top:20px;">
+                                        <td colspan="8">
+                                            <h6 class="box-title">Embellishment :</h6>
+                                        </td>
+
+                                    </tr>
+
+                                    @{
+
+                                        var embel_id = 0;
+
+                                        foreach (var objsingle_embell in embellishment_list)
+                                        {
+
+
+                                            string strgarmentform = "is_garment_form" + embel_id.ToString() + " is_garment_form";
+
+                                            <tr class="table_embell_row" embellishment_id="@objsingle_embell.embellishment_id">
+                                                <td>
+                                                    <label class="labelNormal" style="float:left;    margin-top: 6px;">@objsingle_embell.style_embellishment_name</label>
+
+                                                    <button type="button" embellishment_id="@objsingle_embell.embellishment_id" style="float:right;" class="btn btn-primary  btnAddSubProcess" onclick="AddSubProcessHtml(this);"><i class="fa fa-file-open"></i>Add Sub-Process</button>
+                                                </td>
+                                                <td>
+                                                    @await Component.InvokeAsync("S2GenSupplier", new
+                                                        {
+                                                            ddlId = "gen_supplier_" + objsingle_embell.tran_sample_order_embellishment_id.ToString() + "_id",
+
+                                                            selectedvalue = "",
+                                                            cssclass = "form-control S2GenSupplier",
+                                                            isRequired = true,
+                                                            isReadOnly = false,
+                                                            placeholder = "Select Supplier",
+                                                            preloaded = "",
+                                                            model_parentid = "dvmodalcontent"
+                                                        })
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <input type="radio" class="@strgarmentform" name="@strgarmentform" value="Yes">
+                                                            <label for="html">Yes</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input type="radio" class="@strgarmentform" name="@strgarmentform" value="Yes">
+                                                            <label for="css">No</label>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </td>
+
+                                            </tr>
+
+
+                                            embel_id++;
+
+                                            strgarmentform = "is_garment_form" + embel_id.ToString() + " is_garment_form";
+
+                                            <tr class="subprocess" embellishment_id="@objsingle_embell.embellishment_id" style="display:none;">
+                                                <td colspan="3" style="padding-left:90px;background-color: beige;">
+                                                    @{
+                                                        var Genprocessmasterdetail_List = embelishment_detail_list.
+                                                        Where(p => p.gen_process_master_id == objsingle_embell.embellishment_id)
+                                                        .Select(a =>
+                                                        new SelectListItem
+                                                            {
+                                                                Text = a.sub_process_name,
+                                                                Value = a.gen_process_master_detail_id.ToString()
+                                                            }
+                                                        ).ToList();
+
+                                                    }
+                                                    <div id="dvSubProcess" class="dvSubProcess" style="border: 1px solid gray;">
+                                                        <div class="row" style='margin:1px!important;'>
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        <button class="btninnerClose" onclick="RemoveSubProcess(this);"><i class="fa fa-remove"></i></button>
+                                                                    </div>
+                                                                    <div class="col-md-5" style="padding-top:5px;">
+                                                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                                                            {
+                                                                                ddlId = "ddl_garment_part" + embel_id.ToString(),
+                                                                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.garment_part_List)),
+                                                                                selectedvalue = "",
+                                                                                cssclass = "form-control ddl_garment_part",
+                                                                                enable = true,
+                                                                                isRequired = true,
+                                                                                placeholder = "Garment Part"
+                                                                            })
+                                                                    </div>
+                                                                    <div class="col-md-5" style="padding-top:5px;">
+                                                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                                                            {
+                                                                                ddlId = "ddl_embel_details" + embel_id.ToString(),
+                                                                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(Genprocessmasterdetail_List),
+                                                                                selectedvalue = "",
+                                                                                cssclass = "form-control ddl_embel_details",
+                                                                                enable = true,
+                                                                                isRequired = true,
+                                                                                placeholder = "Sub Process"
+                                                                            })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                @{
+                                                                    color_index = 0;
+                                                                }
+
+                                                                <div class="row dvSubProcessColor">
+
+                                                                    @foreach (var objColor in Model.List_detl_style_color)
+                                                                    {
+
+                                                                        // <div class="col-md-1">
+                                                                        //     <input type="checkbox" style="margin-top:10px;" class="chkColor" checked tran_va_plan_detl_style_color_id="@objColor.tran_va_plan_detl_style_color_id" value="@objColor.color_code">
+                                                                        //     <input type="color" style="height:21px;width:18px;" disabled class="border-gray-200 rounded-sm txtColorPicker" value="@objColor.color_code" />
+
+                                                                        // </div>
+
+                                                                        // <div class="col-md-2" style="text-align:left;">
+                                                                        //     <input disabled value="@objColor.color_code" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" type="text" class="border-gray-200 rounded-sm txtColorCode" style="width:70px;line-height:0.5rem;font-size:0.5rem;margin-top:6px;" />
+                                                                        // </div>
+
+                                                                        color_index++;
+                                                                    }
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            embel_id++;
+
+                                            strgarmentform = "is_garment_form" + embel_id.ToString() + " is_garment_form";
+
+
+                                            <tr class="addedsubprocess" embellishment_id="@objsingle_embell.embellishment_id">
+                                                <td colspan="3" style="padding-left:90px;background-color: beige;">
+
+                                                    <div id="dvSubProcess" class="dvSubProcess" style="border: 1px solid gray;">
+                                                        <div class="row" style='margin:1px!important;'>
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <div class="col-md-2" style="width:5%">
+                                                                        
+                                                                         </div>
+                                                                    <div class="col-md-5" style="padding-top:5px;width:22%">
+                                                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                                                            {
+                                                                                ddlId = "ddl_garment_part" + embel_id.ToString(),
+                                                                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.garment_part_List)),
+                                                                                selectedvalue = "",
+                                                                                cssclass = "form-control ddl_garment_part",
+                                                                                enable = true,
+                                                                                isRequired = true,
+                                                                                placeholder = "Garment Part"
+                                                                            })
+                                                                    </div>
+                                                                    <div class="col-md-5" style="padding-top:5px;width:22%">
+                                                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                                                            {
+                                                                                ddlId = "ddl_embel_details" + embel_id.ToString(),
+                                                                                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(Genprocessmasterdetail_List),
+                                                                                selectedvalue = "",
+                                                                                cssclass = "form-control ddl_embel_details",
+                                                                                enable = true,
+                                                                                isRequired = true,
+                                                                                placeholder = "Sub Process"
+                                                                            })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                @{
+                                                                    color_index = 0;
+                                                                }
+
+                                                                <div class="row dvSubProcessColor" id="">
+
+                                                                     @foreach (var objColor in Model.List_detl_style_color)
+                                                                     {
+
+                                                                    //     <div class="col-md-1">
+                                                                    //         <input type="checkbox" style="margin-top:10px;" checked class="chkColor" tran_va_plan_detl_style_color_id="@objColor.tran_va_plan_detl_style_color_id" value="@objColor.color_code">
+                                                                    //         <input type="color" style="height:21px;width:22px;" disabled class="border-gray-200 rounded-sm txtColorPicker" value="@objColor.color_code" />
+
+                                                                    //     </div>
+
+                                                                    //     <div class="col-md-2" style="text-align:left;">
+                                                                    //         <input disabled value="@objColor.color_code" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" type="text" class="border-gray-200 rounded-sm txtColorCode" style="width:70px;line-height:0.5rem;font-size:0.5rem;margin-top:6px;" />
+                                                                    //     </div>
+
+                                                                    //     color_index++;
+                                                                     }
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            embel_id++;
+                                        }
+
+                                    }
+                                </table>
+
+                            </div>
+                            <div class="row">
+
+                                <button type="button" class="btn btn-primary  btnSaveNext" onclick="btnSaveNextClick(this)" style="margin-left: 21px;width:300px;"><i class="fa fa-forward"></i>Next</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="det5" tabpane_index="5">
+                        <input type="file" style="display:none" id="attachments" multiple />
+                        <div class="box">
+                            <div class="row">
+
+                                <div class="col-md-4" style="margin-bottom: 5px;">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title"> Technical Sheet</h3>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <div class="box">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <button type="button" class="btn btn-danger btnImageUpload" onclick="uploadFile(this);" imagetype="@EPYSLSAILORAPP.Domain.Image_Position_Type.TechSheet.ToString()" style="width:250px;">
+                                                            Select Technical Sheet Images
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="box">
+                                                <div class="row" id="techpackframes_@EPYSLSAILORAPP.Domain.Image_Position_Type.TechSheet.ToString()">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4" style="margin-bottom: 5px;">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Embellishment</h3>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <div class="box">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <button type="button" class="btn btn-danger btnImageUpload" onclick="uploadFile(this);" imagetype="@EPYSLSAILORAPP.Domain.Image_Position_Type.Embellishment.ToString()" style="width:250px;">
+                                                            Select Embellishment Images
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="box">
+                                                <div class="row" id="techpackframes_@EPYSLSAILORAPP.Domain.Image_Position_Type.Embellishment.ToString()">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4" style="margin-bottom: 5px;">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Measurement Chart</h3>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <div class="box">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <button type="button" class="btn btn-danger btnImageUpload" onclick="uploadFile(this);" imagetype="@EPYSLSAILORAPP.Domain.Image_Position_Type.Measurement_Chart.ToString()" style="width:250px;">
+                                                            Select Measurement Chart Images
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="box">
+                                                <div class="row" id="techpackframes_@EPYSLSAILORAPP.Domain.Image_Position_Type.Measurement_Chart.ToString()">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                        @* <div class="box">
+
+                        <div class="row">
+
+                        <button type="button" class="btn btn-primary  btnSaveNext" onclick="btnSaveNextClick(this)" style="margin-left: 0px;width:100px;"><i class="fa fa-forward"></i>Next</button>
+
+                        </div>
+                        </div> *@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+            <button style="width:300px;" disabled type="button" class="btn btn-primary" is_submit="1" id="btnSaveTechPack" onclick="SaveTechPack(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+            <button style="width:200px;float: right;" type="button" disabled class="btn btn-primary " is_submit="2" id="btnSendForApproval" onclick="SaveTechPack(this);"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;Send For Approval</button>
+
+        </div>
+    </div>
+</form>
+
+
+<script>
+
+    $(function () {
+        $.each($("#dtcolorcodestyle tbody tr:not(:first-child)"), function (key, val) {
+
+            RegisterS2ColorByElement($(val).find(".ddl_color"));
+
+        });
+
+    });
+
+</script>
+
+
+
+

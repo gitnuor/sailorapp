@@ -1,0 +1,1044 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_embellish_delivery_challan_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Embellishment Delivery Challan Landing";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+<style>
+
+    #tab_precostinglanding.nav-tabs > li.active > a,
+    #tab_precostinglanding.nav-tabs > li.active > a:hover,
+    #tab_precostinglanding.nav-tabs > li.active > a:focus,
+    #tab_precostinglanding.nav-tabs > li > a.active,
+    #tab_precostinglanding.nav-tabs > li > a:hover,
+    #tab_precostinglanding.nav-tabs > li > a:focus {
+        color: #555;
+        cursor: default;
+        background-color: khaki;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+
+</style>
+
+<div class="content-wrapper">
+    <label style="display:none" class="col-sm-6 col-form-label-sm text-left" id="service_work_order_id1" style="font-size:12px;margin-bottom: 0; padding: 0;"></label>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Embellishment Delivery Challan Landing</h6>
+                        </div>
+                        @*  @await Component.InvokeAsync("DataFilterSCMwd") *@
+                        <!-- /.card-header -->
+
+
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precostinglanding" class="nav nav-tabs">
+                                        <li class="active" tab_index="1">
+                                            <a href="#det1" style="text-decoration: unset;width: 170px;" class="active tab_link  " data-toggle="tab">PENDING LIST</a>
+                                        </li>
+                                        <li class="" tab_index="2">
+                                            <a href="#det2" style="text-decoration: unset;width: 170px;" class=" tab_link  " data-toggle="tab">DRAFT LIST</a>
+                                        </li>
+                                        <li class="" tab_index="3">
+                                            <a href="#det3" style="text-decoration: unset;width: 200px;" class=" tab_link  " data-toggle="tab">PROPOSED LIST</a>
+                                        </li>
+                                        <li class="" tab_index="4">
+                                            <a href="#det4" style="text-decoration: unset;width: 170px;" class=" tab_link  " data-toggle="tab">APPROVED LIST</a>
+                                        </li>
+
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                                            <div class="card">
+
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <table id="DTDeliveryChallanPendingList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Service Work Order No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Service Work Order Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal  ">Techpack No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Delivery Unit </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Action</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det2" tabpane_index="2">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTDeliveryChallanDraftList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Delivery Challan No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Challan Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Techpack No </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Service Unit Name</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Status</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det3" tabpane_index="3">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTDeliveryChallanProposedList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Delivery Challan No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Challan Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Techpack No </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Service Unit Name</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Status</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det4" tabpane_index="4">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTDeliveryChallanApprovedList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width:200px;"><label class="labelNormal">Delivery Challan No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Challan Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Techpack No </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Service Unit Name</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Status</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 80% !important; ">
+        <div class="modal-content" id="modalcontent_1" style="overflow-y: scroll;">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Delivary Challan Detail
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="~/Views/MCD/TranMcdReceive/_TranReckAdd.cshtml" />
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section Scripts {
+    <script>
+        var listAttachments = [];
+        var DeleteList = [];
+        function closePopup() {
+            event.preventDefault();
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+            //location.reload();
+        }
+
+        function AddItem() {
+            //$('#po_id').on('change', function () {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/FabricRequisitionSlip/AddFabricRequsitionSlipNew", null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+               
+
+            });
+        }
+
+
+
+        function updateDefectpercentage(input) {
+            var failQty = parseInt(input.parentElement.parentElement.cells[11].querySelector('.failQty').value);
+            var recQty = input.parentElement.parentElement.cells[7].querySelector('.recQty').value;
+            var defect = (failQty / recQty) * 100;
+            input.parentElement.parentElement.cells[12].querySelector('.defect').value = defect;
+        }
+
+        function uploadFile() {
+
+            $("#modalcontainer #attachments").trigger("click");
+        };
+        function EditFabricPo(btn) {
+
+            listAttachments = [];
+            var po_id = $(btn).attr("po_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricPo/FabricPoEdit?po_id=" + po_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+                   
+                    $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+
+                    $("#modalcontainer #attachments").change(function () {
+                        var files = this.files;
+                        var size = $(this)[0].files.length;
+                        formData = new FormData();
+
+                        for (var i = 0; i < size; i++) {
+                            var reader = new FileReader();
+
+                            reader.onload = (function (singlefile) {
+
+                                var filename = singlefile.name;
+                                var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                                return function (e) {
+
+                                    var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                                    var indx = listAttachments.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+
+                                    var attachfile = {
+                                        filename: filename,
+                                        filetype: filetype,
+                                        extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                        base64string: base64String,
+                                        server_filename: "",
+                                        CurrentState: 1,
+                                        fileindex: indx
+                                    };
+
+                                    listAttachments.push(attachfile);
+
+                                    $("#fileNamesContainer").append('<p>' + filename + '</p>');
+
+
+                                    base64String = "";
+
+                                }
+
+
+                            })($(this)[0].files[i]);
+
+                            reader.readAsDataURL($(this)[0].files[i]);
+
+
+                        }
+                    });
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function EditFabricRequisitionSlip(btn) {
+
+            var requisition_slip_id = $(btn).attr("requisition_slip_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricRequisitionSlipApprove/FabricRequisitionSlipEdit?requisition_slip_id=" + requisition_slip_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function ViewFabricRequisitionSlip(btn) {
+
+            var requisition_slip_id = $(btn).attr("requisition_slip_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricRequisitionSlipApprove/FabricRequisitionSlipEdit?requisition_slip_id=" + requisition_slip_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function TranDeliveryWorkOrderAdd(btn) {
+
+            var service_work_order_id = $(btn).attr("service_work_order_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/EmbellishmentDeliveryChallan/TranDeliveryWorkOrderAdd?service_work_order_id=" + service_work_order_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+
+                    // var contactPersonData = $('#contactPerson').val();
+                    // $('#supplier_id').select2();
+                    // $('#supplier_id').on('change', function () {
+                    //
+                    //     var selectedSupplier = $(this).select2("data");
+                    //     if (selectedSupplier.length > 0) {
+                    //         $('#supplier_concern_person').val(contactPersonData);
+                    //     } else {
+
+                    //         $('#supplier_concern_person').val("");
+                    //     }
+                    // });
+
+
+                    // $("#modalcontent  #gen_process_master_id").removeAttr("placeholder");
+                    // $("#modalcontent  #gen_process_master_id").attr("multiple", "multiple");
+                    // $("#modalcontent  #gen_process_master_id option:eq(0)").remove();
+                    // $("#modalcontent  #gen_process_master_id").val('').trigger('change');
+                    // $("#modalcontent  #gen_process_master_id").select2({
+                    //     allowClear: true,
+                    //     placeholder: "Select Placement"
+                    // });
+
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function ViewTranMcdReturn(btn) {
+
+            var purchase_return_id = $(btn).attr("purchase_return_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranMcdPurchaseReturn/TranMcdReturnView?purchase_return_id=" + purchase_return_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function SaveEmbDeliveryChallan(btn,isSubmit) {
+            
+
+            // if (!_cusFormValidate("frmAddReceive")) {
+            //    return;
+            // }
+
+            details = []
+
+            var ChallanDate = $('#ChallanDate').val();
+            var WorkOrderId = $('#WorkOrderId').val();
+            var techpackid = $('#techpack_id').val();
+            var unitName = $('#unitName').val();
+            var unitAddress = $('#unitAddress').val();
+            var unitId = $('#unitId').val();
+
+            //var genProcessMasterId = $('#gen_process_master_id').val();
+            //var remarks = $('#remarks').val();
+
+            $.each($("#DTBatchDetail tbody tr"), function (key, val) {
+
+                var obj = {
+                    bundle_number: $(val).find(".bundle_number").val(),  //$(this).find("td").eq(1).find("input").val(),
+                    bundle_barcode: $(val).find(".bundle_barcode").val(),  //$(this).find("td").eq(2).find("input").val(),
+                    color_code: $(val).find(".color_code").val(), //$(this).find("td").eq(3).find("input").val(),
+                    batch_no: $(val).find(".batch_no").val(),
+                    garment_part_name: $(val).find(".garment_part_name").val(),
+                    style_size: $(val).find(".style_size").val(), //$(this).find("td").eq(5).find("input").val(),
+                    bundle_quantity: $(val).find(".bundle_quantity").val(), //$(this).find("td").eq(6).find("input").val(),
+                    tran_cutting_color_batch_id: $(val).find(".batchIdhidden").val(),  //$(this).find("td").eq(7).find("input").val(),
+                    tran_cutting_color_batch_garment_part_bundle_id: $(val).find(".bundleId").val(),
+                    gen_garment_part_id: $(val).find(".partId").val()
+
+
+                };
+                details.push(obj);
+
+            });
+
+            var obj_emb_delivery_challan = {
+                techpack_id: techpackid,
+                service_work_order_id: WorkOrderId,
+                gen_unit_id: unitId,
+                embellish_delivery_challan_date: ChallanDate,
+                unit_name: unitName,
+                unit_address: unitAddress,
+                is_submitted: isSubmit,
+
+                TranEmbellishDeliveryChallanDetail_List: details
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/EmbellishmentDeliveryChallan/SaveEmbDeliveryChallan", obj_emb_delivery_challan, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                if (response.status_Code == "200") {
+
+                    LoadDeliveryChallanPendingData();
+                    LoadDeliveryChallanDraftData();
+                    LoadDeliveryChallanApprovedData();
+                    LoadDeliveryChallanProposedData();
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+                        closePopup_details();
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function ViewEmbDeliveryChallanDetails(btn) {
+
+            var embellish_delivery_challan_id = $(btn).attr("embellish_delivery_challan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/EmbellishmentDeliveryChallan/EmbDeliveryChallanDetails?embellish_delivery_challan_id=" + embellish_delivery_challan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+        // $('#ProposedForApproveBtn').click(function () {
+        //     // Perform actions for proposing for approval
+        //     proposeForApproval();
+        // });
+
+
+
+        function ViewEmbDeliveryChallanDetailsForProposed(btn) {
+
+            var embellish_delivery_challan_id = $(btn).attr("embellish_delivery_challan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/EmbellishmentDeliveryChallan/EmbDeliveryChallanDetailsForProposed?embellish_delivery_challan_id=" + embellish_delivery_challan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+        function ViewEmbDeliveryChallanApprovedDetails(btn) {
+
+            var embellish_delivery_challan_id = $(btn).attr("embellish_delivery_challan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/EmbellishmentDeliveryChallan/EmbDeliveryChallanApprovedDetails?embellish_delivery_challan_id=" + embellish_delivery_challan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+
+
+        function ProposedForApproval(btn) {
+
+            var obj_Approval = {
+                embellish_delivery_challan_id: $('#del_chalan_id').text(),
+                is_submitted:1,
+               // is_approved: null
+
+            }
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/EmbellishmentDeliveryChallan/ProposedForApprovalOrApprove", obj_Approval, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                if (response.status_Code == "200") {
+
+                    LoadDeliveryChallanPendingData();
+                    LoadDeliveryChallanDraftData();
+                    LoadDeliveryChallanApprovedData();
+                    LoadDeliveryChallanProposedData();
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function ViewEmbDeliveryChallanApproveDetails(btn) {
+
+            var embellish_delivery_challan_id = $(btn).attr("embellish_delivery_challan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/EmbellishmentDeliveryChallan/EmbDeliveryChallanApproveDetails?embellish_delivery_challan_id=" + embellish_delivery_challan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function ApprovedDetailDeliveryChalan(btn) {
+
+            var obj_Approval = {
+                embellish_delivery_challan_id: $('#del_chalan_id').text(),
+                is_submitted: 2
+                
+
+            }
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/EmbellishmentDeliveryChallan/ProposedForApprovalOrApprove", obj_Approval, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                if (response.status_Code == "200") {
+
+                    LoadDeliveryChallanPendingData();
+                    LoadDeliveryChallanDraftData();
+                    LoadDeliveryChallanApprovedData();
+                    LoadDeliveryChallanProposedData();
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function DeleteFabricPo(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_FabricPo = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/FabricPo/DeleteFabricPo", obj_FabricPo, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadReceiveData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                }, true);
+
+            });
+        }
+
+        $(function () {
+            // LoadTranPODropDownByClass();
+
+            LoadDeliveryChallanPendingData();
+            LoadDeliveryChallanDraftData();
+            LoadDeliveryChallanApprovedData();
+            LoadDeliveryChallanProposedData();
+
+
+            activeChange();
+
+        });
+
+        function activeChange() {
+            $('#tab_precostinglanding.nav-tabs > li').click(function () {
+                // Remove active class from all tabs
+                $('#tab_precostinglanding.nav-tabs > li').removeClass('active');
+                // Add active class to the clicked tab
+                $(this).addClass('active');
+                // Remove active class from all tab links
+                $('#tab_precostinglanding.nav-tabs > li > a').removeClass('active');
+                // Add active class to the clicked tab link
+                $(this).find('a').addClass('active');
+                // Remove active class from all tab contents
+                $('.tab-content > .tab-pane').removeClass('active');
+                // Add active class to the corresponding tab content
+                var tabContentId = $(this).find('a').attr('href');
+                $(tabContentId).addClass('active');
+            });
+        }
+
+
+        $("#btnLoadData").click(function () {
+            if ($("#fiscal_year_id").val() == '') {
+                $("#fiscal_year_id").focus();
+                $("#fiscal_year_id").css("border", "1px solid red");
+            }
+            else if ($("#event_id").val() == '') {
+                $("#event_id").focus();
+                $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+            }
+            else {
+
+                $("#fiscal_year_id").css("border", "");
+                $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+
+
+            }
+
+        });
+
+
+        function LoadDeliveryChallanPendingData() {
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#supplier_id").val()
+
+
+            };
+            var dt = $("#DTDeliveryChallanPendingList").DataTable({
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/EmbellishmentDeliveryChallan/GetEmbellishmentDeliveryChallanPendingData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("receive_no", data.receive_no);
+
+                },
+                "columns": [
+
+                    { "data": "service_work_order_no", "name": "service_work_order_no", "autoWidth": true },
+                    {
+                        "data": "service_work_date",
+                        "name": "service_work_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+        function LoadDeliveryChallanDraftData() {
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#supplier_id").val()
+
+
+            };
+            var dt = $("#DTDeliveryChallanDraftList").DataTable({
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/EmbellishmentDeliveryChallan/GetDeliveryChallanDraftData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("service_work_order_no", data.service_work_order_no);
+
+                },
+                "columns": [
+
+                    { "data": "embellish_delivery_challan_no", "name": "embellish_delivery_challan_no", "autoWidth": true },
+                    {
+                        "data": "embellish_delivery_challan_date",
+                        "name": "embellish_delivery_challan_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+        function LoadDeliveryChallanProposedData() {
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#supplier_id").val()
+
+
+            };
+            var dt = $("#DTDeliveryChallanProposedList").DataTable({
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/EmbellishmentDeliveryChallan/GetDeliveryChallanProposedData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("service_work_order_no", data.service_work_order_no);
+
+                },
+                "columns": [
+
+                    { "data": "embellish_delivery_challan_no", "name": "embellish_delivery_challan_no", "autoWidth": true },
+                    {
+                        "data": "embellish_delivery_challan_date",
+                        "name": "embellish_delivery_challan_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+
+        function LoadDeliveryChallanApprovedData() {
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#supplier_id").val()
+
+
+            };
+            var dt = $("#DTDeliveryChallanApprovedList").DataTable({
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/EmbellishmentDeliveryChallan/GetDeliveryChallanApprovedData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("service_work_order_no", data.service_work_order_no);
+
+                },
+                "columns": [
+
+                    { "data": "embellish_delivery_challan_no", "name": "embellish_delivery_challan_no", "autoWidth": true },
+                    {
+                        "data": "embellish_delivery_challan_date",
+                        "name": "embellish_delivery_challan_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

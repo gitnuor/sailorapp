@@ -1,0 +1,100 @@
+﻿@model EPYSLSAILORAPP.Domain.Entity.BusinessPlanning.gen_season_event_config_ext
+@{
+    Layout = null;
+}
+
+
+<div class="box" style="border-width:0px;">
+  
+    <div class="row">
+        <input type="hidden" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="event_id" />
+        <input type="hidden" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="added_by" />
+        <input type="hidden"  style="width:100%" Value="@Model.date_added.Value.ToString("yyyy-MM-dd")" class="border-gray-200 rounded-sm text-sm " id="date_added" />
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "ddl_fiscal_year_id",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.fiscal_year_list)),
+                selectedvalue = Model.fiscal_year_id.ToString(),
+                cssclass = "form-control",
+                enable = false,
+                isRequired = true,
+                placeholder = "Select Fiscal Year"
+                })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Season</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "ddl_season",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.season_list)),
+                selectedvalue = Model.season_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Season"
+                })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Event Title</label>
+
+            <div class="form-group">
+                <input type="text" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="event_title" />
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Starte Date</label>
+
+            <div class="form-group">
+
+                <input  style="width:100%;" type="date" asp-for="start_date" class="border-gray-200 rounded-sm text-sm">
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">End Date</label>
+
+            <div class="form-group">
+
+                <input style="width:100%;" type="date" asp-for="end_date" class="border-gray-200 rounded-sm text-sm">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-primary" id="btnUpdateEvents"><i class="fa fa-save"></i>&nbsp;&nbsp;Update</button>
+            <button type="button" class="btn btn-danger" id="btnCancel"><i class="fa fa-angle-double-left"></i>&nbsp;Cancel</button>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        $(function () {
+           
+
+        });
+    </script>
+}

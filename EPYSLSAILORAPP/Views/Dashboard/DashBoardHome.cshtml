@@ -1,0 +1,210 @@
+﻿@page "/Index"
+@* @using EPYSLSAILORAPP.Application.DTO.BusinessPlanning;
+@using EPYSLSAILORAPP.Application.Interface.Common;
+@using EPYSLSAILORAPP.Infrastructure.Services.Common;
+@using Microsoft.Extensions.Configuration;
+@inject IRedisService<GenSeasonEventConfigurationDTO> _redisgenseasoneventconfigurationservice;
+@inject IConfiguration _configuration; *@
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+    // _redisgenseasoneventconfigurationservice = new RedisService<GenSeasonEventConfigurationDTO>(_configuration);
+}
+
+<style>
+    .h2dashboard {
+        margin-left: 57px;
+        color: darkorchid;
+    }
+</style>
+
+
+<script>
+
+    // google.charts.load('current', { 'packages': ['timeline'] });
+    // google.charts.load("current", { 'packages': ['corechart'] });
+
+    function cleanOutletName(outletName) {
+        return outletName.replace(/\n/g, '').trim();
+    }
+
+    function drawColumnChart() {
+
+
+
+        var dataTableArray = [];
+
+        ajaxGetHandler("/Dashboard/GetOutlateData", null, function (data) {
+
+
+            // Formatting and adding rows
+            data.forEach(function (item) {
+                var outletName = cleanOutletName(item.outlet_name);
+                dataTableArray.push([outletName, item.total_sales, ""]);
+            });
+
+            // Adding the header row
+            dataTableArray.unshift(["Element", "Outlet", { role: "style" }]);
+            var data = google.visualization.arrayToDataTable(dataTableArray);
+
+
+            var view = new google.visualization.DataView(data);
+            view.setColumns([0, 1,
+                {
+                    calc: "stringify",
+                    sourceColumn: 1,
+                    type: "string",
+                    role: "annotation"
+                },
+                2]);
+
+            var options = {
+                title: "Outlet Wise Business Plan",
+                width: 1500,
+                height: 400,
+                bar: { groupWidth: "70%" },
+                legend: { position: "none" },
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById("dvoutletsales"));
+            chart.draw(view, options);
+
+        });
+
+
+
+    }
+    function formatDate(dateString) {
+        var parts = dateString.split('T')[0].split('-');
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+    function drawCalendarChart() {
+        var container = document.getElementById('dvtimeline');
+        var chart = new google.visualization.Timeline(container);
+        var dataTable = new google.visualization.DataTable();
+
+
+
+        dataTable.addColumn({ type: 'string', id: 'Term' });
+        dataTable.addColumn({ type: 'string', id: 'Name' });
+        dataTable.addColumn({ type: 'date', id: 'Start' });
+        dataTable.addColumn({ type: 'date', id: 'End' });
+
+        ajaxGetHandler("/Dashboard/GetCalenderData", null, function (data) {
+
+            var dataarr = [];
+            data.forEach(function (item) {
+                var eventTitle = item.event_title.replace(/\n/g, ' (').replace('(', ' (').replace(')', ')');
+                var formattedStartDate = formatDate(item.start_date);
+                var formattedEndDate = formatDate(item.end_date);
+                var item = [item.row_number.toString(), eventTitle, formattedStartDate, formattedEndDate]
+
+                dataarr.push(item);
+
+            });
+
+            dataTable.addRows(dataarr);
+            chart.draw(dataTable);
+
+        });
+
+
+
+
+    }
+</script>
+
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Dashboard</h1>
+                </div>
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+
+        <div class="row" id="swCard" style="display:none">
+
+            <div class="card" style="height:max-content;width:100%;">
+                <div class="col-lg-12">
+
+                    <div class="box">
+                        <div class="box-header">
+                            <div class="text-center">
+                                <h5 class="box-title my-auto"><b>Season Wise(Crore)</b></h5>
+
+                            </div>
+                        </div>
+                        <div class="box-body" style="background: antiquewhite;">
+                            <div id="dvtimeline" style="height:350px;width:100%;"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row" id="owCard" style="display:none">
+            <div class="card">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <div class="text-center">
+                                <h5 class="box-title my-auto"><b>Outlet Wise(Crore)</b></h5>
+                            </div>
+                        </div>
+                        <div class="box-body" style="background: darkseagreen;">
+                            <div id="dvoutletsales" class="col-lg-6" style="height:auto;width:50%;zoom:0.78;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+
+<script>
+
+    var filterset = '@ViewBag.FilterExist';
+
+    function testsss() { 
+    }
+ 
+
+    $(document).ready(function () {
+        // 
+        if (getQueryStringParameter("load_filter") != null &&
+            getQueryStringParameter("load_filter") == "1")
+            {
+            switchFiscalYear();
+
+            $('#ddldtop_fiscal_year').css("display", "block");
+            $('#ddltop_event').css("display", "block");
+            }
+
+        ajaxGetHandler("/Dashboard/StoreCache", null, function (data) {
+            google.charts.setOnLoadCallback(drawCalendarChart);
+            google.charts.setOnLoadCallback(drawColumnChart);
+            $("#swCard").show(); $("#owCard").show();
+        });
+
+       
+    });
+
+</script>
+

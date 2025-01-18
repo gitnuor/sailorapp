@@ -1,0 +1,18 @@
+CREATE OR REPLACE FUNCTION {TableName}_update(
+  {InputParamsWithType}
+)
+RETURNS VOID AS $$
+DECLARE
+  
+    {NewIDVariables}
+
+BEGIN
+    {UpdateQuery}
+
+    {UpdateQuery_Details}
+
+    EXCEPTION
+    WHEN OTHERS THEN
+    RAISE EXCEPTION 'Error inserting data into {TableName}: %', SQLERRM;
+END;
+$$ LANGUAGE plpgsql;

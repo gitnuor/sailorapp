@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr" data-nav-layout="vertical" class="light" data-header-styles="light" data-menu-styles="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title | Sailor ERP</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/assets/img/brand-logos/favicon.ico">
+
+    <!-- Main JS -->
+    @*<link href="~/Content/google-fonts-local.css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic" rel="stylesheet" />*@
+    <link href="~/synto_themes/plugins/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+    <script src="~/synto_themes/plugins/libs/jquery/jquery.js" asp-append-version="true"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" crossorigin="anonymous" />
+    <!-- Main JS -->
+    <script src="~/Synto_Themes/plugins/js/main.js" asp-append-version="true"></script>
+    
+    @* <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" /> *@
+  
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+   
+    <!-- Style Css -->
+    <link rel="stylesheet" href="~/Synto_Themes/plugins/css/style.css" asp-append-version="true" crossorigin="anonymous">
+    
+    <link href="~/synto_themes/plugins/libs/holdon/holdon.min.css" rel="stylesheet" asp-append-version="true" crossorigin="anonymous" />
+
+    <!-- Simplebar Css -->
+    <link rel="stylesheet" href="~/Synto_Themes/plugins/libs/simplebar/simplebar.min.css" asp-append-version="true" crossorigin="anonymous">
+
+    <!-- Color Picker Css -->
+    <link rel="stylesheet" href="~/Synto_Themes/plugins/libs/simonwep/pickr/themes/nano.min.css" asp-append-version="true" crossorigin="anonymous">
+
+    <!-- Select2 Css -->
+    <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
+
+    <script src="~/lib/customjs/select2proxy.js" asp-append-version="true"></script>
+    <!-- Sync fusion  Css -->
+    <link href="~/synto_themes/plugins/libs/syncfusion-ej2/material.css" rel="stylesheet" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="~/dist/css/vendor-datatables.min.css" asp-append-version="true" crossorigin="anonymous" />
+    <!-- Toaster Css -->
+    <link href="~/synto_themes/plugins/libs/toastr.js/toastr.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+    <link href="~/lib/sweetalert2/sweetalert2.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+    <link href="~/lib/animate.css/animate.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+    <link href="~/lib/datatables-1.13.6/css/datatables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/datatables-1.13.6/css/jquery.datatables.min.css" rel="stylesheet" />
+ 
+    <link href="~/lib/jquery.ui/jquery-ui.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <!-- @* @RenderSection("Css",false/*required*/) *@ -->
+    @await RenderSectionAsync("Css", required: false)
+
+</head>
+<body class="">
+
+    <!-- Start::main-switcher -->
+    @*  <partial name="~/Views/Shared/layouts/_switcher.cshtml" /> *@
+    <!-- End::main-switcher -->
+
+    <div class="page">
+
+        <!-- Start::app-sidebar -->
+        <partial name="~/Views/Shared/layouts/_app-sidebar.cshtml" />
+        <!-- End::app-sidebar -->
+        <!-- Start::app-header -->
+        <partial name="~/Views/Shared/layouts/_app-header.cshtml" />
+        <!-- End::app-header -->
+        <!--Main layout-->
+        <main style="height:50%">
+             @RenderBody()
+        </main>
+        <!--Main layout-->
+        <!-- Start::main-footer -->
+        <partial name="~/Views/Shared/layouts/_footer.cshtml" />
+        <!-- End::main-footer -->
+        <!-- Start::main-modal -->
+        <partial name="~/Views/Shared/layouts/_modal.cshtml" />
+        <!-- End::main-modal -->
+
+    </div>
+    <!-- page closed -->
+    <!-- Back To Top -->
+    <div class="scrollToTop">
+        <span class="arrow"><i class="ri-arrow-up-s-fill text-xl"></i></span>
+    </div>
+
+    <div id="responsive-overlay"></div>
+
+    <!-- popperjs -->
+    <script src="~/Synto_Themes/plugins/libs/popperjs/core/umd/popper.min.js" asp-append-version="true"></script>
+
+    <!-- Color Picker JS -->
+    <script src="~/Synto_Themes/plugins/libs/simonwep/pickr/pickr.es5.min.js" asp-append-version="true"></script>
+
+    <!-- sidebar JS -->
+    <script src="~/Synto_Themes/plugins/js/defaultmenu.js" asp-append-version="true"></script>
+
+    <!-- sticky JS -->
+    <script src="~/Synto_Themes/plugins/js/sticky.js" asp-append-version="true"></script>
+
+    <!-- Switch JS -->
+    <script src="~/Synto_Themes/plugins/js/switch.js" asp-append-version="true"></script>
+
+    <!-- Preline JS -->
+    <script src="~/Synto_Themes/plugins/libs/preline/preline.js" asp-append-version="true"></script>
+
+    <!-- Simplebar JS -->
+    <script src="~/Synto_Themes/plugins/libs/simplebar/simplebar.min.js" asp-append-version="true"></script>
+    
+    <!-- Select2 JS -->
+    <script src="~/lib/select2/js/select2.full.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="~/synto_themes/plugins/libs/toastr.js/toastr.min.js" asp-append-version="true"></script>
+
+   
+    <script src="~/lib/jquery.ui/jquery-ui.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Custom JS -->
+    <script src="~/Synto_Themes/plugins/js/custom.js" asp-append-version="true"></script>
+
+    <script src="~/lib/moment/moment.js"></script>
+    <!-- Custom-Switcher JS -->
+    <script src="~/Synto_Themes/plugins/js/custom-switcher.js" asp-append-version="true"></script>
+    @* <script src="~/synto_themes/plugins/libs/axios/axios.min.js" asp-append-version="true"></script> *@
+    @* <script src="~/synto_themes/plugins/js/init.js" asp-append-version="true"></script> *@
+    <script src="~/synto_themes/plugins/libs/holdon/holdon.min.js" asp-append-version="true"></script>
+    @* <script src="~/synto_themes/plugins/libs/syncfusion-ej2/ej2.min.js" asp-append-version="true"></script> *@
+@*     <script src="~/scripts/common/common-helpers.js" asp-append-version="true"></script>
+    <script src="~/scripts/common/app.js" asp-append-version="true"></script> *@
+    <script src="~/lib/blockui/jquery.blockui.js"></script>
+    <script src="~/dist/js/vendor-datatables.min.js" asp-append-version="true"></script>
+    <script src="~/lib/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/lib/customjs/datatableproxy.js" asp-append-version="true"></script>
+    <script src="~/lib/customjs/jqajaxproxy.js" asp-append-version="true"></script>
+    <script src="~/lib/easy-number-separator-master/easy-number-separator.js"></script>
+    <script src="~/lib/customjs/utilityfunctions.js" asp-append-version="true"></script>
+
+</body>
+</html>

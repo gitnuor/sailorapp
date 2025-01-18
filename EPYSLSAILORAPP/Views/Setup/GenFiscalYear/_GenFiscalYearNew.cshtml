@@ -1,0 +1,131 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Application.DTO.GenTables.gen_fiscal_year_dto;
+@{
+    ViewBag.Title = "GenFiscalYear Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Add Fiscal Year</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Year No</label>
+                        <input style="width:100%" asp-for="year_no" id="year_no" type="number" class="border-#d1cccc-200 form-control" />
+                        <span asp-validation-for="year_no" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Year Name</label>
+                        <input style="width:100%" asp-for="year_name" id="year_name" type="text" class="border-#d1cccc-200 form-control" />
+                        <span asp-validation-for="year_name" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+           
+                
+           
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Start Date</label>
+                        <input style="width:100%" asp-for="start_date" id="start_date" type="date" class="border-#d1cccc-200 form-control" />
+                        <span asp-validation-for="start_date" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">End Date</label>
+                        <input style="width:100%" asp-for="end_date" id="end_date" type="date" class="border-#d1cccc-200 form-control" />
+                        <span asp-validation-for="end_date" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+           
+                
+          
+
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button style="width:300px;" type="button" class="btn btn-success " id="btnSaveGenFiscalYear" onclick="SaveFiscalYear(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+
+</form>
+
+
+
+
+

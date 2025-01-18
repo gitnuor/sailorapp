@@ -1,0 +1,1293 @@
+﻿@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery antiforgery
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-nav-layout="vertical" class="light" data-header-styles="light" data-menu-styles="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title | Sailor ERP</title>
+
+    <link rel="shortcut icon" href="~/assets/img/brand-logos/favicon.ico">
+
+    <link rel="stylesheet" href="~/dist/css/sailor-style-bundle.min.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.0.0/ckeditor5.css">
+
+    <link href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css" rel="stylesheet" />
+   
+   
+  
+
+   
+
+
+   
+   
+
+
+    @await RenderSectionAsync("Css", required: false)
+
+    <script src="~/dist/js/sailor-js_bundle.min.js" asp-append-version="true"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+
+    @* <script type="text/javascript" src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap4.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.bootstrap4.js"></script> *@
+
+   
+   
+
+
+
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.0.0/ckeditor5.js",
+                "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.0.0/"
+            }
+        }
+    </script>
+   
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    
+
+    <style>
+        #ulonlineusers .list-group-item:first-child {
+            border-top-right-radius: 4px;
+            border-top-left-radius: 4px;
+        }
+
+        #ulonlineusers .list-group-item {
+            position: relative;
+            display: block;
+            padding: 10px 15px;
+            margin-bottom: -1px;
+            /*   background-color: #fff; */
+            border: 1px solid #ddd;
+        }
+
+        #ulonlineusers .text-left {
+            text-align: left;
+        }
+
+        .messagebox_profilename {
+            position: relative;
+            display: flex;
+            margin-left: -25%;
+            margin-right: 14px;
+            margin-top: 20%;
+        }
+
+        .group_chat_badge {
+            position: relative;
+            display: none;
+            margin-top: -27px;
+            width: 37px;
+            left: 79%;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-left: 12px;
+            color: #fff;
+            background-color: #007bff;
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px; /* Adjust the width as needed */
+            z-index: 9999; /* Ensure it appears above other content */
+            margin: 10px; /* Add some margin from the edge */
+        }
+
+            /* Optional: Adjust the height if necessary */
+            .chat-window .card-body {
+                max-height: 400px; /* Adjust as needed */
+                overflow-y: auto;
+            }
+
+        .user_user_badge {
+            display: inline-block;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.375rem;
+            position: absolute;
+            margin-top: -95px;
+            font-size: 16px;
+            margin-left: 12px;
+            color: #fff;
+            background-color: #007bff;
+        }
+
+        .messagebox_file {
+            /*  width: 250px;
+                                            height: 71px; */
+            font-size: 50px;
+        }
+
+        .messagebox_filename {
+            color: blue;
+            text-decoration: underline;
+            overflow: hidden;
+            display: block;
+            height: 35px;
+            font-size: 10px;
+            margin-left: 49px;
+            margin-top: -40px;
+            line-height: 16.5px;
+        }
+
+        .direct-chat-primary .right > .direct-chat-text {
+            background-color: #8cdff3;
+            border-color: #007bff;
+            color: black;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+
+        const connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+
+        let pageIndex = 2; // Starting from page 2 since page 1 is already loaded
+        let isLoading = false;
+
+        connection.on("ReceiveMessage", (message) => {
+            showAdminMessage(message);
+        });
+        //
+        connection.on("ReceiveChatMessageNotification", (userId, count, message, message_json) => {
+
+            if ($("#ulonlineusers li[userid='" + userId + "']").length > 0) {
+
+                $("#ulonlineusers li[userid='" + userId + "']").find(".user_user_badge").text(count);
+
+                $("#ulonlineusers li[userid='" + userId + "']").prependTo('#ulonlineusers');
+
+                if ($("#chat-window").css("display") == "block" && $("#dvChatUser").text() == userId) {
+
+                    $("#dvChatUser").text(userId);
+                    $("#btnSendChat").attr("userid", userId);
+
+                    if ($("#dvChatUserMessages").html().length == 0) {
+                        LoadChatHistory(userId, $("#ulonlineusers li[userid='" + userId + "']").find(".chat_user").attr("src"));
+                    }
+                    else {
+                        if (message.length > 0) {
+
+                            $("#dvChatUserMessages").append(createReceiverMsgTemplate(
+                                userId,
+                                formatTimestamp(new Date()),
+                                message,
+                                $("#ulonlineusers li[userid='" + userId + "']").find(".chat_user").attr("src")));
+                        }
+                        else if (message_json.length > 0) {
+
+                            var file = JSON.parse(message_json);
+
+                            var fileextension = getFileExtension(file.filename);
+
+                            var strhtml = `<div  class="dvChatAttachment" >
+                                                    <i class="fa-solid fa-file messagebox_file" onclick="DownloadChatFile('${file.server_filename}','${file.filename}');" style="color: gray;"></i>
+                                                    <span class="messagebox_filename" >${file.filename}</span>
+                                           </div>`;
+
+                            $("#dvChatUserMessages").append(createReceiverMsgTemplate(
+                                userId,
+                                formatTimestamp(new Date()),
+                                strhtml,
+                                $("#ulonlineusers li[userid='" + userId + "']").find(".chat_user").attr("src")));
+
+                        }
+                    }
+
+                    const chatWindow = document.getElementById('dvChatUserMessages');
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+                else {
+
+                    if ($("#dv_control_sidebar_dark").css("display") == "none") {
+                        $("#liopenlineuser").trigger("click");
+                    }
+
+                }
+            }
+
+        });
+
+        connection.on("ReceiveSystemNotification", (userId, title, tran_notification_id, notification_link, count) => {
+
+            $("#spnnotificationbadge").text(count);
+
+            if ($("#dvsystemnotification a").length == 0) {
+                LoadSystemNotificationHistory();
+            }
+            else {
+                if ($("#dvsystemnotification a[notification_id='" + tran_notification_id + "']").length == 0) {
+
+                    $("#dvsystemnotification").prepend(createSystemNotification(tran_notification_id, title, notification_link));
+                }
+            }
+        });
+
+        connection.on("RefreshClientOnFiscalYearChange", (userId, title, tran_notification_id, notification_link, count) => {
+          
+            document.location.reload();
+
+        });
+
+
+        connection.on("UserLogOut", (userId) => {
+            showSuccessAlertAutoClose("Alert", "Another User Logged In with Same User ID", "OK", function () {
+                document.location = "/account/LogOff";
+            },5000);
+            
+        });
+
+        connection.on("ReceiveGroupChatMessageNotification", (groupId, chat_group_name, userId, user_pic, count, message, message_json) => {
+
+            if ($("#dvtopmessagebox a[group_id='" + groupId + "']").length > 0) {
+
+                if (count > 0) {
+                    $("#dvtopmessagebox a[group_id='" + groupId + "']").find(".group_chat_badge").css("display", "block");
+                    $("#dvtopmessagebox a[group_id='" + groupId + "']").find(".group_chat_badge").text(count);
+                }
+                else {
+                    $("#dvtopmessagebox a[group_id='" + groupId + "']").find(".group_chat_badge").css("display", "none");
+
+                }
+
+                $("#dvtopmessagebox a[group_id='" + groupId + "']").prependTo('#dvtopmessagebox');
+
+                if ($("#chat-window").css("display") == "block" && $("#dvChatUser").attr("groupid") == groupId) {
+
+                    $("#dvChatUser").text(chat_group_name);
+                    $("#dvChatUser").attr("groupId", groupId);
+                    $("#btnSendChat").attr("userid", "0");
+                    $("#btnSendChat").attr("groupId", groupId);
+
+                    if ($("#dvChatUserMessages").html().length == 0) {
+                        LoadGroupChat("Group Name", groupId);
+                    }
+                    else {
+                        if (message.length > 0) {
+
+                            $("#dvChatUserMessages").append(createReceiverMsgTemplate(
+                                userId,
+                                formatTimestamp(new Date()),
+                                message,
+                                user_pic));
+                        }
+                        else if (message_json.length > 0) {
+
+                            var file = JSON.parse(message_json);
+
+                            var fileextension = getFileExtension(file.filename);
+
+                            var strhtml = `<div  class="dvChatAttachment" >
+                                                          <i class="fa-solid fa-file messagebox_file" onclick="DownloadChatFile('${file.server_filename}','${file.filename}');" style="color: gray;"></i>
+                                                          <span class="messagebox_filename" >${file.filename}</span>
+                                                   </div>`;
+
+                            $("#dvChatUserMessages").append(createReceiverMsgTemplate(
+                                userId,
+                                formatTimestamp(new Date()),
+                                strhtml,
+                        user_pic));
+
+                        }
+                    }
+
+                    const chatWindow = document.getElementById('dvChatUserMessages');
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+                else {
+
+                    if ($("#dv_control_sidebar_dark").css("display") == "none") {
+                        // $("#liopenlineuser").trigger("click");
+                    }
+
+                }
+            }
+
+        });
+        
+        connection.on("RemoveCurrentUser", (curr_user) => {
+            var user = JSON.parse(curr_user);
+            if ($("#ulonlineusers li[userid='" + user.username + "']").length == 1) {
+                $("#ulonlineusers li[userid='" + user.username + "']").remove();
+
+            }
+        });
+
+        connection.on("LoadAllUserList", (userlistjson) => {
+
+            var users = JSON.parse(userlistjson);
+
+            var filtered_users = users.filter(p => p.username != $("#LoggedInUserName").val());
+
+            for (var i = 0; i < filtered_users.length; i++) {
+
+                var struserhtml = "<li onclick='LoadUserChat(this);' class='list-group-item user-item text-left' userid='" + filtered_users[i].username + "'>" +
+                    "<img class='img-circle chat_user img-user img-thumbnail ' src=' " + filtered_users[i].emp_pic + "'>" +
+                    "<h6 style='text-align:center;'> <a href='#'> " + filtered_users[i].username + "</a><br>" +
+                    "<span class='user_user_badge'></span></h6>" +
+                    "</li>";
+
+                if ($("#ulonlineusers li[userid='" + filtered_users[i].username + "']").length == 0) {
+                    $("#ulonlineusers").append(struserhtml);
+                }
+            }
+
+            });
+            
+        connection.start().catch(err => console.error(err.toString()));
+
+        connection.onclose(async () => {
+            // Try to re-establish the connection when it's closed
+            try {
+                connection.start().catch(err => console.error(err.toString()));
+                console.log("Connection re-established.");
+                // Once connection is re-established, you can invoke your method
+
+            } catch (err) {
+                console.error(err.toString());
+            }
+        });
+
+        function LoadSystemNotificationHistory(senderid, senderpic) {
+
+          
+            ajaxGetHandler("/Dashboard/GetAllSystemNotificationHistory?pageIndex=1", null, function (data) {
+
+                var html = "";
+
+                for (var i = 0; i < data.length; i++) {
+
+                    html += createSystemNotification(data[i].tran_notification_id, data[i].message, data[i].notifacation_link);
+                }
+
+                $("#dvsystemnotification").append(html);
+
+                $("#spnnotificationbadge").text(data.length);
+
+
+            });
+        }
+
+        function createSystemNotification(notification_id,title, link) {
+            var date = formatTimestamp(new Date());
+            return `  <a notification_id="${notification_id}" link="${link}" onclick="ExecuteNotification(this);return false;" style="font-size: 11px;" class="dropdown-item">
+                                    <i class="fas fa-file mr-2"></i>${title}
+                                                    <span class="float-right text-muted text-sm"  style="font-size: 8px!important;">${date}</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        `;
+        }
+
+        function ExecuteNotification(elem){
+            if ($(elem).attr("notification_id") != "") {
+                ajaxGetHandler("/Dashboard/UpdateNotification?notification_id=" + $(elem).attr("notification_id"), null, function (res) {
+                    document.location = $(elem).attr("link");
+                });
+            }
+
+        }
+
+        function createSenderMsgTemplate(name, timestamp, message, imgSrc) {
+            return `
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">${name}</span>
+                                <span class="direct-chat-timestamp float-right">${timestamp}</span>
+                            </div>
+                            <img class="direct-chat-img" src="${imgSrc}" alt="message user image">
+
+                            <div class="direct-chat-text">
+                                ${message}
+                            </div>
+                        </div>`;
+        }
+
+
+
+        function createReceiverMsgTemplate(name, timestamp, message, imgSrc) {
+            return `
+                    <div class="direct-chat-msg right">
+                        <div class="direct-chat-infos clearfix">
+                            <span class="direct-chat-name float-right">${name}</span>
+                            <span class="direct-chat-timestamp float-left">${timestamp}</span>
+                        </div>
+                        <img class="direct-chat-img" src="${imgSrc}" alt="message user image">
+                        <div class="direct-chat-text">
+                            ${message}
+                        </div>
+                    </div>`;
+        }
+
+        //
+        function LoadGroupChat(elem) {
+            $("#message_count_badge").text('');
+            $("#chat-window").css("display", "block");
+
+            var group_id = $(elem).attr("group_id");
+
+            var senderid = $(elem).attr("userid");
+
+            $("#dvChatUser").text(senderid);
+            $("#dvChatUser").attr("groupid", group_id);
+
+            $("#btnSendChat").attr("userid", "0");
+            $("#btnSendChat").attr("groupid", group_id);
+
+            $("#dvChatUserMessages").html('');
+
+            pageIndex = 1; // Starting from page 2 since page 1 is already loaded
+
+            isLoading = false;
+
+            LoadGroupChatHistory(senderid, group_id);
+
+        }
+
+        function LoadGroupChatHistory(senderid, group_id) {
+
+            isLoading = true;
+
+            ajaxGetHandler("/Dashboard/GetGroupChatHistory?pageIndex=" + pageIndex + "&group_id=" + group_id + "&tousername=" + $("#LoggedInUserName").val(), null, function (data) {
+
+                var user_messages = data;
+
+                var html = "";
+
+                for (var i = 0; i < data.length; i++) {
+
+                    if (data[i].from_user_name == $("#LoggedInUserName").val()) {
+
+                        if (data[i].message.length > 0) {
+                            html += createSenderMsgTemplate(
+                                data[i].from_user_name,
+                                formatTimestamp(data[i].date_added),
+                                data[i].message, data[i].emp_pic != null ? "/Images/emp_pic/" + data[i].emp_pic : "/Images/user.png");
+                        }
+                        else if (data[i].message_json != null) {
+
+                            var file = JSON.parse(data[i].message_json);
+
+                            var fileextension = getFileExtension(file.filename);
+
+                            //var base64string = 'data: ' + file.filetype + '; base64, ' + file.base64string;
+                            var filehtml = `<div  class="dvChatAttachment" >
+                                                                                                    <i class="fa-solid fa-file messagebox_file" onclick="DownloadChatFile('${file.server_filename}','${file.filename}');" style="color: brown;">
+                                                                                                     <span class="messagebox_filename" >${file.filename}</span></i>
+                                                                                            </div>`;
+                            html += createSenderMsgTemplate(
+                                data[i].from_user_name,
+                                formatTimestamp(new Date()),
+                                filehtml, data[i].emp_pic != null ? "/Images/emp_pic/" + data[i].emp_pic : "/Images/user.png");
+                        }
+                    }
+                    else {
+                        if (data[i].message.length > 0) {
+
+                            html += createSenderMsgTemplate(
+                                data[i].from_user_name,
+                                formatTimestamp(data[i].date_added),
+                                data[i].message, data[i].emp_pic != null ? "/Images/emp_pic/" + data[i].emp_pic : "/Images/user.png");
+                        }
+                        else if (data[i].message_json != null) {
+
+                            var file = JSON.parse(data[i].message_json);
+
+                            var fileextension = getFileExtension(file.filename);
+
+                            var filehtml = `<div  class="dvChatAttachment" >
+                                                                                            <i class="fa-solid fa-file messagebox_file" onclick="DownloadChatFile('${file.server_filename}','${file.filename}');" style="color: brown;"></i>
+                                                                                                             <span class="messagebox_filename" >${file.filename}</span>
+                                                                                                    </div>`;
+                            html += createSenderMsgTemplate(
+                                data[i].from_user_name,
+                                formatTimestamp(new Date()),
+                                filehtml, data[i].emp_pic != null ? "/Images/emp_pic/" + data[i].emp_pic : "/Images/user.png");
+
+                        }
+                    }
+                }
+
+                const scrollPosition = $('#dvChatUserMessages').scrollTop();
+                const firstItem = $('#dvChatUserMessages .direct-chat-msg').first();
+
+                $("#dvChatUserMessages").prepend(html);
+
+
+                if (pageIndex == 1) {
+                    const chatWindow = document.getElementById('dvChatUserMessages');
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+                else {
+                    $('#dvChatUserMessages').scrollTop(firstItem.offset().top - $('#dvChatUserMessages').offset().top + scrollPosition);
+                }
+
+
+                pageIndex++;
+                isLoading = false;
+
+            });
+        }
+
+        function LoadUserChat(elem) {
+
+            $("#message_count_badge").text('');
+            $("#chat-window").css("display", "block");
+
+            var senderid = $(elem).attr("userid");
+
+            var senderpic = $(elem).find(".chat_user").attr("src");
+
+            $("#dvChatUser").text(senderid);
+            $("#btnSendChat").attr("userid", senderid);
+            $("#btnSendChat").attr("groupid", "0");
+
+            $("#dvChatUserMessages").html('');
+
+            pageIndex = 1; // Starting from page 2 since page 1 is already loaded
+            isLoading = false;
+
+            LoadChatHistory(senderid, senderpic);
+
+        }
+
+        function ClearUserChat() {
+            $("#chat-window").css("display", "none");
+            $("#dvChatUser").text('');
+            $("#btnSendChat").removeAttr("userid");
+            $('#dvChatUserMessages').html('');
+
+        }
+
+        function DownloadChatFile(serverfilename, filename) {
+
+            ajaxGetHandler("/Dashboard/DownloadChatFile?server_file_name=" + btoa(serverfilename) + "&file_name=" + btoa(filename), null, function (res) {
+
+                var base64string = res.data;
+
+                var byteCharacters = atob(base64string);
+                var byteNumbers = new Array(byteCharacters.length);
+                for (var i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                var blob = new Blob([byteArray], { type: 'application/octet-stream' }); // Change the type accordingly
+
+                // Create a temporary anchor element and trigger the download
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+
+        }
+
+        function LoadChatHistory(senderid, senderpic) {
+
+            isLoading = true;
+
+            ajaxGetHandler("/Dashboard/GetUserChatHistory?pageIndex=" + pageIndex + "&fromusername=" + senderid + "&tousername=" + $("#LoggedInUserName").val(), null, function (data) {
+
+                var user_messages = data;
+
+                var html = "";
+
+                for (var i = 0; i < data.length; i++) {
+
+                    if (data[i].from_user_name == $("#LoggedInUserName").val()) {
+
+                        if (data[i].message.length > 0) {
+                            html += createSenderMsgTemplate(
+                                data[i].from_user_name,
+                                formatTimestamp(data[i].date_added),
+                                data[i].message, senderpic);
+                        }
+                        else if (data[i].message_json != null) {
+
+                            var file = JSON.parse(data[i].message_json);
+
+                            var fileextension = getFileExtension(file.filename);
+
+                            //var base64string = 'data: ' + file.filetype + '; base64, ' + file.base64string;
+                            var filehtml = `<div  class="dvChatAttachment" >
+                                                                                            <i class="fa-solid fa-file messagebox_file" onclick="DownloadChatFile('${file.server_filename}','${file.filename}');" style="color: brown;">
+                                                                                             <span class="messagebox_filename" >${file.filename}</span></i>
+                                                                                    </div>`;
+                            html += createSenderMsgTemplate(
+                                data[i].from_user_name,
+                                formatTimestamp(new Date()),
+                                filehtml, senderpic);
+                        }
+                    }
+                    else {
+                        if (data[i].message.length > 0) {
+
+                            html += createReceiverMsgTemplate(
+                                data[i].from_user_name,
+                                formatTimestamp(data[i].date_added),
+                                data[i].message,
+                                senderpic);
+                        }
+                        else if (data[i].message_json != null) {
+
+                            var file = JSON.parse(data[i].message_json);
+
+                            var fileextension = getFileExtension(file.filename);
+
+                            //var base64string = 'data: ' + file.filetype + '; base64, ' + file.base64string;
+
+
+                            var filehtml = `<div  class="dvChatAttachment" >
+                                                                                                            <i class="fa-solid fa-file messagebox_file" onclick="DownloadChatFile('${file.server_filename}','${file.filename}');" style="color: brown;"></i>
+                                                                                                     <span class="messagebox_filename" >${file.filename}</span>
+                                                                                            </div>`;
+                            html += createReceiverMsgTemplate(
+                                data[i].from_user_name,
+                                formatTimestamp(new Date()),
+                                filehtml, senderpic);
+
+                        }
+                    }
+                }
+
+                const scrollPosition = $('#dvChatUserMessages').scrollTop();
+                const firstItem = $('#dvChatUserMessages .direct-chat-msg').first();
+
+                $("#dvChatUserMessages").prepend(html);
+
+
+                if (pageIndex == 1) {
+                    const chatWindow = document.getElementById('dvChatUserMessages');
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+                else {
+                    $('#dvChatUserMessages').scrollTop(firstItem.offset().top - $('#dvChatUserMessages').offset().top + scrollPosition);
+                }
+
+
+                pageIndex++;
+                isLoading = false;
+
+            });
+        }
+
+        function LoadMessageBox() {
+
+            ajaxGetHandler("/Dashboard/GetMessageBox", null, function (data) {
+
+                var user_messages = data;
+
+                var filtered_users = user_messages.filter(p => p.from_user_name != $("#LoggedInUserName").val());
+
+                var html = "";
+
+                for (var i = 0; i < filtered_users.length; i++) {
+
+
+                    html += createMessageBoxTemplate(filtered_users[i].to_chat_group_id, filtered_users[i].from_user_name,
+                        (filtered_users[i].emp_pic != null ? "/Images/emp_pic/" + filtered_users[i].emp_pic : "/Images/user.png"),
+                        filtered_users[i].last_message,
+                        formatTimestamp(filtered_users[i].date_added));
+
+
+                }
+
+                html += `<a href="#" class="dropdown-item dropdown-footer" style="width:33%">See All Messages</a>
+                                                 <a href="#" onclick="OpenNewChat();" class="dropdown-item dropdown-footer" style="width:33%">New Group Chat</a>`;
+
+                $("#dvtopmessagebox").append(html);
+
+                $("#message_count_badge").text(filtered_users.length);
+                //
+            });
+        }
+
+        function createMessageBoxTemplate(to_chat_group_id, userid, imgSrc, last_message, date_Added) {
+
+            if (to_chat_group_id == 0)
+
+                return ` <a href="#" class="dropdown-item" to_chat_group_id="0"  userid="${userid}" onclick="LoadUserChat(this);">
+                                                     <div class="media">
+                                                           <img src="${imgSrc}" style="height: 50px;" alt="User Avatar" class="chat_user img-size-50 mr-3 img-circle">
+                                                           <span class="messagebox_profilename">${userid}</span>
+                                                          <div class="media-body">
+                                                          <h3 class="dropdown-item-title">
+                                                           <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                                                           </h3>
+                                                          <p class="text-sm">${last_message}</p>
+                                                         <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>${date_Added}</p>
+
+                                                      </div>
+                                                   </div>
+                                            </a>
+                                             <div class="dropdown-divider"></div>
+
+                                          `;
+            else
+                return ` <a href="#" class="dropdown-item" group_id="${to_chat_group_id}"  userid="${userid}" onclick="LoadGroupChat(this);">
+                                                             <div class="media">
+                                                                  <i class="fa-solid fa-user-group" style="font-size:35px;margin-right: 15px;"></i>
+                                                                          <span class="messagebox_profilename">${userid}</span>
+                                                                          <div class="media-body" style="    margin-left: 36px;">
+                                                                  <h3 class="dropdown-item-title">
+                                                                   <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                                                                   </h3>
+                                                                  <p class="text-sm">${last_message}</p>
+                                                                 <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>${date_Added}</p>
+                                                                           <span class="group_chat_badge"></span>
+                                                              </div>
+                                                           </div>
+                                                    </a>
+                                                     <div class="dropdown-divider"></div>
+
+                                                  `;
+        }
+
+
+        function sendMessageBySignalR(username, messageInput) {
+
+            const message = messageInput;
+
+            if (username.length > 0) {
+                connection.invoke("SendMessageToUser", username, message, "").catch(err =>
+                    console.error(err.toString())
+                );
+            }
+            else {
+                connection.invoke("SendMessage", message).catch(err =>
+                    console.error(err.toString())
+                );
+            }
+        }
+
+        function postSendMsg(elem) {
+
+            if ($(elem).attr("userid") != "0") {
+                sendChatMessageBySignalR($(elem).attr("userid"), $("#txtMessageText").val());
+            }
+            else if ($(elem).attr("groupid") != "0") {
+                SendGroupChatBySignalR($(elem).attr("groupid"), $("#txtMessageText").val());
+            }
+
+            $("#txtMessageText").val('');
+
+            // Scroll the chat window to the bottom
+            const chatWindow = document.getElementById('dvChatUserMessages');
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        //
+
+        function SendGroupChat(groupid, message) {
+
+            SendGroupChatBySignalR($("#ddl_Chat_Group").val(), $("#txtMessage").val());
+
+        }
+
+
+        function SendGroupChatBySignalR(groupid, message) {
+
+            connection.invoke("SendMessageToGroup", groupid, message, "").catch(err =>
+                console.error(err.toString())
+            );
+
+            $("#txtMessage").val('');
+            $('#modalcontent_chat').html('');
+            $('#modalcontainer_chat').modal("hide");
+
+            $("#dvChatUserMessages").append(createSenderMsgTemplate(
+                $("#LoggedInUserName").val(),
+                formatTimestamp(new Date()),
+                message,
+                $("#LoggedInUserPic").attr("src")));
+        }
+
+        function sendChatMessageBySignalR(username, messageInput) {
+
+            const message = messageInput;
+
+            if (connection.connectionState == "Disconnected") {
+                connection.start().catch(err => console.error(err.toString()));
+                console.log("Connection re-established.");
+            }
+
+            connection.invoke("SendMessageToUser", username, message, "").catch(err =>
+                console.error(err.toString())
+            );
+
+            $("#dvChatUserMessages").append(createSenderMsgTemplate(
+                $("#LoggedInUserName").val(),
+                formatTimestamp(new Date()),
+                message,
+                $("#LoggedInUserPic").attr("src")));
+
+        }
+
+        function openAttachment() {
+            $('#chat_attachments').trigger('click');
+        }
+
+        $(document).ready(function () {
+
+            $('#dvChatUserMessages').on('scroll', function () {
+
+                var userid = $("#dvChatUser").text();
+                var userpic = $("#ulonlineusers li[userid='" + userid + "']").find(".chat_user").attr("src");
+
+                if ($(this).scrollTop() === 0 && !isLoading) {
+                    LoadChatHistory(userid, userpic, pageIndex);;
+                }
+            });
+
+            $('#txtMessageText').on('keydown', function (event) {
+                // Check if the key pressed is Enter (key code 13)
+                if (event.which === 13) {
+                    // Prevent the default action, such as submitting a form
+                    event.preventDefault();
+
+                    sendChatMessageBySignalR($("#btnSendChat").attr("userid"), $("#txtMessageText").val());
+
+                    $("#txtMessageText").val('');
+
+                    // Scroll the chat window to the bottom
+                    const chatWindow = document.getElementById('dvChatUserMessages');
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+            });
+
+            $("#chat_attachments").change(function () {
+
+                var files = this.files;
+
+                var size = $(this)[0].files.length;
+
+                var imagetype = $(this).attr("imagetype");
+
+                formData = new FormData();
+
+                for (var i = 0; i < size; i++) {
+
+                    var reader = new FileReader();
+
+                    reader.onload = (function (singlefile) {
+
+                        var filename = singlefile.name;
+
+                        var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                        return function (e) {
+
+                            var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                            var attachfile = {
+                                filename: filename,
+                                filetype: filetype,
+                                extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                base64string: base64String,
+                                server_filename: "",
+                                current_state: 1,
+                                //fileindex: indx,
+                                imagetype: imagetype
+                            };
+
+                            // listAttachments.push(attachfile);
+
+                            UploadAndAddFileHtml(attachfile);
+
+                            base64String = "";
+
+                        }
+
+
+                    })($(this)[0].files[i]);
+
+                    reader.readAsDataURL($(this)[0].files[i]);
+
+
+                }
+
+            });
+
+            LoadMessageBox();
+
+            LoadSystemNotificationHistory();
+        });
+
+        function closeChatPopup() {
+            $('#modalcontent_chat').html("");
+            $('#modalcontainer_chat').modal("hide");
+        }
+
+        function OpenNewChat() {
+
+            showLoader("Loading..........");
+
+            try {
+                ajaxGetHandler("/Dashboard/CreateNewChat", null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent_chat').html(data);
+                    $('#modalcontainer_chat').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_chat').modal("show");
+
+                    //LoadChatGroupDropDownByClass("modalcontainer_chat", "ddl_Chat_Group");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+
+        function UploadAndAddFileHtml(file) {
+
+            showLoader("Uploading..........");
+
+            ajaxPostObjectHandler("/Dashboard/UploadChatAtachment", file, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    if (connection.connectionState == "Disconnected") {
+                        connection.start().catch(err => console.error(err.toString()));
+                        console.log("Connection re-established.");
+                    }
+
+                    var file = JSON.parse(response.data);
+
+                    file.base64string = "";
+
+                    var filehtml = `<div  class="dvChatAttachment" >
+                                                        <i class="fa-solid fa-file messagebox_file" onclick="DownloadChatFile('${file.server_filename}','${file.filename}');"" style="color: brown;"></i>
+                                                    <span class="messagebox_filename" >${file.filename}</span>
+                                            </div>`;
+
+
+                    $("#dvChatUserMessages").append(createSenderMsgTemplate(
+                        $("#LoggedInUserName").val(),
+                        formatTimestamp(new Date()),
+                        filehtml,
+                        $("#LoggedInUserPic").attr("src")));
+
+                    const chatWindow = document.getElementById('dvChatUserMessages');
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+
+                    if ($("#btnSendChat").attr("userid") != "0") {
+                        connection.invoke("SendMessageToUser", $("#btnSendChat").attr("userid"), "", JSON.stringify(file)).catch(err =>
+                            console.error(err.toString())
+                        );
+
+                    }
+                    else if ($("#btnSendChat").attr("groupid") != "0") {
+                        connection.invoke("SendMessageToGroup", $("#btnSendChat").attr("groupid"), "", JSON.stringify(file)).catch(err =>
+                            console.error(err.toString())
+                        );
+
+                    }
+                }
+
+
+            }, true,
+
+                function () {
+                    hideLoader();
+                }, true);
+
+        }
+
+
+        //$("#liopenlineuser").trigger("click")
+    </script>
+
+</head>
+<body class="hold-transition sidebar-mini">
+
+    <div class="wrapper">
+
+        <partial name="~/Views/Shared/layouts/_app-header.cshtml" />
+
+        <partial name="~/Views/Shared/layouts/_app-sidebar.cshtml" />
+
+        @RenderBody()
+
+        @await RenderSectionAsync("Scripts", required: false)
+
+        @{
+            var antiforgeryToken = antiforgery.GetAndStoreTokens(Context);
+    }
+<input type="hidden" id="RequestVerificationToken" name="__RequestVerificationToken" value="@antiforgeryToken.RequestToken" />
+
+        <input type="file" style="display:none" id="chat_attachments" multiple />
+
+        <aside id="dv_control_sidebar_dark" class="control-sidebar control-sidebar-dark" style="width:100px!important">
+            <h6 style="text-align:center;margin-top:10px;">Online Users</h6>
+            <ul class="list-group" id="ulonlineusers">
+                @* <li class="list-group-item user-item text-left">
+                <img class="img-circle img-user img-thumbnail " src="https://bootdey.com/img/Content/avatar/avatar7.png">
+                <h6 style="text-align:center;"> <a href="#">Bootdey </a><br></h6>
+                </li> *@
+
+            </ul>
+        </aside>
+        <div id="chat-window" class="card card-primary direct-chat direct-chat-primary chat-window" style="display:none;">
+            <div class="card-header">
+                <h3 class="card-title" id="dvChatUser"></h3>
+                <div class="card-tools">
+                    <span data-toggle="tooltip" title="3 New Messages" class="badge badge-light"></span>
+                    <button type="button" class="btn btn-tool" data-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    @*   <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle">
+                    <i class="fas fa-comments"></i>
+                    </button> *@
+                    <button type="button" class="btn btn-tool" data-widget="remove" onclick="ClearUserChat();">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="direct-chat-messages" id="dvChatUserMessages"></div>
+
+
+            </div>
+            <div class="card-footer">
+                <form action="#" method="post">
+                    <div class="input-group">
+                        <input id="txtMessageText" type="text" name="message" placeholder="Type Message ..." class="form-control">
+                        <i style="margin: 7px;" class="fa fa-paperclip" onclick="openAttachment();" aria-hidden="true"></i>
+                        <span class="input-group-append">
+                            <button type="button" id="btnSendChat" onclick="postSendMsg(this);" class="btn btn-primary">Send</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <partial name="~/Views/Shared/layouts/_footer.cshtml" />
+
+    </div>
+
+    <div id="modalcontainer_chat" class="modal fade hidden-print" role="dialog" tabindex="-1">
+        <div class="modal-dialog" style="width: 40% !important; max-width: 40% !important; ">
+            <div class="modal-content">
+
+                <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                    <div class="row" style="width:100%;">
+                        <div class="col-md-6">
+                            <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                                New Group Message
+                            </h3>
+                        </div>
+                        <div class="col-md-6" style="text-align:right;">
+
+                            <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closeChatPopup();">X</button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="display:block;">
+                    <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                        <div class="row">
+                            <div class="col-md-12" id="modalcontent_chat">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dvReport">
+
+    </div>
+    <script>
+
+        google.charts.load('current', { 'packages': ['line', 'corechart', 'timeline', 'bar'] });
+
+        function SetFilterDataFromLanding() {
+            var objData = {
+                fiscal_year_id: $("#ddldtop_fiscal_year").val(),
+                event_id: $("#ddltop_event").val(),
+            }
+
+            ajaxPostObjectHandler("/Dashboard/SetFilterData", objData, function (response) {
+
+                if (response.status_Code == "200") {
+                    
+
+                    showSuccessAlertAutoClose("Success", response.status_Result, "", function () {
+                        
+                            // if (document.location.pathname.indexOf('dashboard/index') == -1) {
+                            //document.location.reload();
+                            // }
+                            connection.invoke("RefreshClientPageOnFiscalYearChange").catch(err =>
+                                console.error(err.toString())
+                            );
+                      
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+        function LoadEventByFiscalYear() {
+
+            var fiscal_year_id = $("#ddldtop_fiscal_year").val();
+
+            ajaxGetHandler("/Dashboard/GetEventByFiscalYear?fiscal_year_id=" + fiscal_year_id, null, function (data) {
+
+                $('#ddltop_event').empty();
+                $('#ddltop_event').append($('<option>', {
+                    value: 0,
+                    text: "Select Event",
+                    selected: "selected"
+                }));
+
+                for (var i = 0; i < data.length; i++) {
+
+                    $('#ddltop_event').append($('<option>', {
+                        value: data[i].event_id,
+                        text: data[i].event_title
+                    }));
+                }
+
+                $('#ddltop_event').val(0);
+
+                if (typeof LoadDataOnReady != 'undefined') {
+                    LoadDataOnReady();
+                }
+
+            });
+
+        };
+
+        function LoadFilterDropDowns() {
+
+            try {
+                ajaxGetHandler("/Dashboard/GetFilterDropdowns", null, function (data) {
+                    //hideLoader();
+                    var d = data;
+
+                    $('#ddltop_event').empty();
+                    $('#ddltop_event').append($('<option>', {
+                        value: 0,
+                        text: "Select Event",
+                        selected: "selected"
+                    }));
+                    for (var i = 0; i < data.event_list.length; i++) {
+
+                        $('#ddltop_event').append($('<option>', {
+                            value: data.event_list[i].event_id,
+                            text: data.event_list[i].event_title
+                        }));
+                    }
+
+                    $('#ddldtop_fiscal_year').empty();
+                    $('#ddldtop_fiscal_year').append($('<option>', {
+                        value: 0,
+                        text: "Select Fiscal Year",
+                        selected: "selected"
+                    }));
+                    for (var i = 0; i < data.fiscal_year_list.length; i++) {
+
+                        $('#ddldtop_fiscal_year').append($('<option>', {
+                            value: data.fiscal_year_list[i].value,
+                            text: data.fiscal_year_list[i].text
+                        }));
+                    }
+
+                    if (
+                        document.location.pathname.indexOf("RangePlan/RangePlanCreateLanding")>0
+                        || document.location.pathname.indexOf("RangePlan/RangePlanApprovalLanding")>0
+                        || document.location.pathname.indexOf("RangePlan/RangePlanCreate")>0
+                        || document.location.pathname.indexOf("BusinessPlan/BusinessPlanApprove") > 0
+                        || document.location.pathname.indexOf("BusinessPlan/BusinessPlanNew") > 0
+                        || document.location.pathname.indexOf("BusinessPlan/BusinessPlanEdit") > 0
+                    ) {
+                        $('#ddldtop_fiscal_year').css("display", "none");
+                        $('#ddltop_event').css("display", "none");
+                    }
+                    else {
+                        $('#ddldtop_fiscal_year').css("display", "block");
+                        $('#ddltop_event').css("display", "block");
+                    }
+
+                    if (data.selected_fiscal_year_id != 0) {
+                        $('#ddldtop_fiscal_year').val(data.selected_fiscal_year_id);
+                        // LoadEventByFiscalYear();
+                    }
+                    else {
+                        $('#ddldtop_fiscal_year').val(0);
+                    }
+
+                    if (data.selected_event_id != 0 && data.selected_event_id != null) {
+                        $('#ddltop_event').val(data.selected_event_id);
+
+                         if (typeof LoadDataOnReady != 'undefined') {
+                            LoadDataOnReady();
+                        }
+                    }
+                    else {
+                        $('#ddltop_event').val(0);
+
+                        LoadEventByFiscalYear();
+                    }
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        $(document).ready(function () {
+            LoadFilterDropDowns();
+            //ConvertNumberToCurrency();
+        });
+    </script>
+</body>
+
+</html>

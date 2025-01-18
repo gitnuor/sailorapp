@@ -1,0 +1,239 @@
+
+using EPYSLSAILORAPP.Application.Interface;
+using EPYSLSAILORAPP.Domain.Entity;
+using EPYSLSAILORAPP.Application.DTO;
+using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Supabase;
+using EPYSLSAILORAPP.Domain.Statics;
+using static Dapper.SqlMapper;
+using Newtonsoft.Json;
+using EPYSLSAILORAPP.Domain.DTO;
+using static Postgrest.Constants;
+using EPYSLSAILORAPP.Domain.RPC;
+using Postgrest;
+
+namespace EPYSLSAILORAPP.Infrastructure.Services
+{
+
+    public class {TableName}Service : I{TableName}Service
+    {
+
+        private readonly IConfiguration _configuration;
+        private readonly Supabase.Client? _connectionSupabse;
+        private readonly IMapper _mapper;
+
+        public {TableName}Service(IConfiguration configuration, IMapper mapper)
+        {
+
+            _mapper = mapper;
+            _configuration = configuration;
+            HttpClient httpClient = new HttpClient();
+            var supabaseKey = _configuration.GetValue<string>("supabaseKey");
+            var supabaseUrl = _configuration.GetValue<string>("supabaseUrl");
+            httpClient.DefaultRequestHeaders.Add("apikey", supabaseKey);
+            _connectionSupabse = new Supabase.Client(supabaseUrl, supabaseKey, new SupabaseOptions { AutoConnectRealtime = false });
+}
+
+        public async Task<bool> SaveAsync( {EntityName}_entity entity)
+        {
+            try
+            {
+                await _connectionSupabse.InitializeAsync();
+                await _connectionSupabse.From<{EntityName}_entity>().Insert(entity);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }
+
+        public async Task<bool> UpdateAsync({EntityName}_entity entity)
+        {
+            try
+            {
+                await _connectionSupabse.InitializeAsync();
+                await _connectionSupabse.From<{EntityName}_entity>().Update(entity);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }
+
+        public async Task<List<{EntityName}_DTO>> GetAllAsync()
+        {
+            try
+            {
+                await _connectionSupabse.InitializeAsync();
+
+                var response =await _connectionSupabse.From<{EntityName}_entity>().Select("*").Get(); 
+
+                return  JsonConvert.DeserializeObject<List<{EntityName}_DTO>>(response.Content);
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }
+
+         public async Task<List<{EntityName}_DTO>> GetAllPagedDataAsync(DtParameters param)
+        {
+            try
+            {
+                await _connectionSupabse.InitializeAsync();
+
+                var sort_column = ""; var sort_order = "";
+
+                if (param.SortOrder.Contains(' '))
+                {
+                    sort_column = param.SortOrder.Split(' ')[0];
+                    sort_order = param.SortOrder.Split(' ')[1];
+                }
+                else
+                {
+                    sort_column = param.SortOrder;
+                    sort_order = param.Order.Count() > 0 ? param.Order[0].ToString() : "asc";
+                }
+
+                if (!string.IsNullOrEmpty(param.Search.Value))
+                {
+                    //replace primary column from filter by your required column
+                    var response = await _connectionSupabse.From<{EntityName}_entity>()
+                   .Select("*")
+                   .Filter(p => p.{PrimaryColumn}, Operator.ILike, "%" + param.Search.Value + "%")
+                   .Order("{PrimaryColumn}", Ordering.Descending)
+                   .Range(param.Start, param.Start + param.Length - 1)
+                   .Get();
+
+                    return JsonConvert.DeserializeObject<List<{EntityName}_DTO>>(response.Content);
+                }
+                else
+                {
+                    var response = await _connectionSupabse.From<{EntityName}_entity>()
+                   .Select("*")
+                   .Order("{PrimaryColumn}", Ordering.Descending)
+                   .Range(param.Start, param.Start + param.Length - 1)
+                   .Get();
+
+                    return JsonConvert.DeserializeObject<List<{EntityName}_DTO>>(response.Content);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }
+
+        public async Task<List<{EntityName}_DTO>> GetAllPagedDataForSelect2(DtParameters param)
+        {
+            try
+            {
+                await _connectionSupabse.InitializeAsync();
+
+                var sort_column = ""; var sort_order = "";
+
+                if (!string.IsNullOrEmpty(param.Search.Value))
+                {
+
+                    var TotalRecord = await _connectionSupabse
+                           .From<{EntityName}_entity>()
+                           .Select(x => new object[] { x.{PrimaryColumn} })
+                           .Filter(p => p.{PrimaryColumn}, Operator.ILike, "%" + param.Search.Value + "%")
+                           .Count(Constants.CountType.Exact);
+
+                    var response = await _connectionSupabse.From<{EntityName}_entity>()
+                   .Select("*")
+                   .Filter(p => p.{PrimaryColumn}, Operator.ILike, "%" + param.Search.Value + "%")
+                   .Order("{PrimaryColumn}", Ordering.Ascending)
+                   .Range(param.Start, param.Start + param.Length - 1)
+                   .Get();
+
+                    var list = JsonConvert.DeserializeObject<List<{EntityName}_DTO>>(response.Content);
+
+                    list.ForEach(p => p.TotalRecord = TotalRecord);
+
+                    return list;
+                }
+                else
+                {
+                    var TotalRecord = await _connectionSupabse
+                          .From<{EntityName}_entity>()
+                          .Select(x => new object[] { x.{PrimaryColumn} })
+                          .Count(Constants.CountType.Exact);
+
+                    var response = await _connectionSupabse.From<{EntityName}_entity>()
+                   .Select("*")
+                   .Order("{PrimaryColumn}", Ordering.Ascending)
+                   .Range(param.Start, param.Start + param.Length - 1)
+                   .Get();
+
+                    var list = JsonConvert.DeserializeObject<List<{EntityName}_DTO>>(response.Content);
+
+                    list.ForEach(p => p.TotalRecord = TotalRecord);
+
+                    return list;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }
+
+
+        public async Task<{EntityName}_DTO> GetSingleAsync(Int64 Id)
+        {
+            try
+            {
+                await _connectionSupabse.InitializeAsync();
+
+                var response =await _connectionSupabse.From<{EntityName}_entity>().Select("*").Where(p=>p.{PrimaryColumn}==Id).Get(); 
+
+                return  JsonConvert.DeserializeObject<List<{EntityName}_DTO>>(response.Content).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }
+
+         public async Task<bool> DeleteAsync(Int64 Id)
+         {
+            try
+            {
+                await _connectionSupabse.InitializeAsync();
+
+                var response = await _connectionSupabse.From<{EntityName}_entity>().Select("*").Where(p => p.{PrimaryColumn} == Id).Get();
+
+                var objDelete= JsonConvert.DeserializeObject<List<{EntityName}_entity>>(response.Content).FirstOrDefault();
+
+                await _connectionSupabse.From<{EntityName}_entity>().Delete(objDelete);
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+        }
+
+        {ExtendedFunctions}
+    }
+
+}

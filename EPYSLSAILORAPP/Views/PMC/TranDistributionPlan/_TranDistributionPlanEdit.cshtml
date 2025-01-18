@@ -1,0 +1,212 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_distribution_plan_DTO;
+@{
+    ViewBag.Title = "TranDistributionPlan Edit";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    
+    <input type="hidden" id="tran_distribution_plan_id" value="@Model.tran_distribution_plan_id">
+
+  
+
+     <div class="card">
+         <div class="card-header">
+               <h6 class="card-title">TranDistributionPlan Edit</h6> 
+         </div>
+         <!-- /.card-header -->
+         <div class="card-body">
+        
+
+                 		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Distribution No</label>
+					 <input style="width:100%"    asp-for="distribution_no" type="text" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="distribution_no" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Distribution Date</label>
+					<input style="width:100%"    asp-for="distribution_date" type="date" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="distribution_date" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Distributed By</label>
+					 <input style="width:100%"    asp-for="distributed_by" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="distributed_by" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note</label>
+					<input style="width:100%"    asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="note" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year Id</label>
+					 <input style="width:100%"    asp-for="fiscal_year_id" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="fiscal_year_id" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Event Id</label>
+					<input style="width:100%"    asp-for="event_id" type="number" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="event_id" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Is Submitted</label>
+					 <input style="width:100%"    asp-for="is_submitted" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="is_submitted" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Submitted By</label>
+					<input style="width:100%"    asp-for="submitted_by" type="number" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="submitted_by" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Submitted Date</label>
+					 <input style="width:100%"    asp-for="submitted_date" type="date" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="submitted_date" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Is Approved</label>
+					<input style="width:100%"    asp-for="is_approved" type="number" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="is_approved" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Approved By</label>
+					 <input style="width:100%"    asp-for="approved_by" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="approved_by" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Approved Date</label>
+					<input style="width:100%"    asp-for="approved_date" type="date" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="approved_date" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Tran Distribution Plan Details Json</label>
+					 <input style="width:100%"    asp-for="tran_distribution_plan_details_json" type="text" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="tran_distribution_plan_details_json" class="text-danger"></span>
+				</div>
+			</div>
+
+		</div>
+		</div>
+
+
+
+           
+             <div class="row">
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button style="width:300px;" type="button" class="btn btn-success " id="btnUpdateTranDistributionPlan" onclick="UpdateTranDistributionPlan(this);"><i class="fa fa-file-open"></i>&nbsp;Update</button>
+
+                </div>
+            </div>
+
+         </div>
+         <!-- /.card-body -->
+     </div>
+
+
+    
+</form>
+
+
+
+
+

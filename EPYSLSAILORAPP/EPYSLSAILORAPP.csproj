@@ -1,0 +1,354 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Scripts\**" />
+    <Compile Remove="Views\DesignMgt\DraftPRDesigner\**" />
+    <Compile Remove="Views\GenArif\**" />
+    <Compile Remove="Views\SCM\FabricPo\RDLC\**" />
+    <Compile Remove="wwwroot\lib\datatables-responsive\**" />
+    <Compile Remove="wwwroot\lib\datatables.net-bs4\**" />
+    <Compile Remove="wwwroot\lib\datatables.net-buttons-bs4\**" />
+    <Compile Remove="wwwroot\lib\datatables.net-buttons\**" />
+    <Compile Remove="wwwroot\lib\datatables.net-responsive-bs4\**" />
+    <Compile Remove="wwwroot\lib\datatables.net-rowgroup-bs4\**" />
+    <Compile Remove="wwwroot\lib\datatables.net-rowreorder-bs4\**" />
+    <Compile Remove="wwwroot\lib\datatables.net-scroller-bs4\**" />
+    <Compile Remove="wwwroot\lib\datatables.net-searchpanes-bs4\**" />
+    <Compile Remove="wwwroot\lib\datatables.net\**" />
+    <Compile Remove="wwwroot\Synto_Themes\**" />
+    <Content Remove="Scripts\**" />
+    <Content Remove="Views\DesignMgt\DraftPRDesigner\**" />
+    <Content Remove="Views\GenArif\**" />
+    <Content Remove="Views\SCM\FabricPo\RDLC\**" />
+    <Content Remove="wwwroot\lib\datatables-responsive\**" />
+    <Content Remove="wwwroot\lib\datatables.net-bs4\**" />
+    <Content Remove="wwwroot\lib\datatables.net-buttons-bs4\**" />
+    <Content Remove="wwwroot\lib\datatables.net-buttons\**" />
+    <Content Remove="wwwroot\lib\datatables.net-responsive-bs4\**" />
+    <Content Remove="wwwroot\lib\datatables.net-rowgroup-bs4\**" />
+    <Content Remove="wwwroot\lib\datatables.net-rowreorder-bs4\**" />
+    <Content Remove="wwwroot\lib\datatables.net-scroller-bs4\**" />
+    <Content Remove="wwwroot\lib\datatables.net-searchpanes-bs4\**" />
+    <Content Remove="wwwroot\lib\datatables.net\**" />
+    <Content Remove="wwwroot\Synto_Themes\**" />
+    <EmbeddedResource Remove="Scripts\**" />
+    <EmbeddedResource Remove="Views\DesignMgt\DraftPRDesigner\**" />
+    <EmbeddedResource Remove="Views\GenArif\**" />
+    <EmbeddedResource Remove="Views\SCM\FabricPo\RDLC\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables-responsive\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables.net-bs4\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables.net-buttons-bs4\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables.net-buttons\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables.net-responsive-bs4\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables.net-rowgroup-bs4\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables.net-rowreorder-bs4\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables.net-scroller-bs4\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables.net-searchpanes-bs4\**" />
+    <EmbeddedResource Remove="wwwroot\lib\datatables.net\**" />
+    <EmbeddedResource Remove="wwwroot\Synto_Themes\**" />
+    <None Remove="Scripts\**" />
+    <None Remove="Views\DesignMgt\DraftPRDesigner\**" />
+    <None Remove="Views\GenArif\**" />
+    <None Remove="Views\SCM\FabricPo\RDLC\**" />
+    <None Remove="wwwroot\lib\datatables-responsive\**" />
+    <None Remove="wwwroot\lib\datatables.net-bs4\**" />
+    <None Remove="wwwroot\lib\datatables.net-buttons-bs4\**" />
+    <None Remove="wwwroot\lib\datatables.net-buttons\**" />
+    <None Remove="wwwroot\lib\datatables.net-responsive-bs4\**" />
+    <None Remove="wwwroot\lib\datatables.net-rowgroup-bs4\**" />
+    <None Remove="wwwroot\lib\datatables.net-rowreorder-bs4\**" />
+    <None Remove="wwwroot\lib\datatables.net-scroller-bs4\**" />
+    <None Remove="wwwroot\lib\datatables.net-searchpanes-bs4\**" />
+    <None Remove="wwwroot\lib\datatables.net\**" />
+    <None Remove="wwwroot\Synto_Themes\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\DesignManagement\DraftPRDesignerController.cs" />
+    <Compile Remove="Controllers\Merchandising\DraftPRController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+ 
+
+    <Content Remove="wwwroot\dist\js\customMessageAndApiUrls.js" />
+ 
+
+    <Content Remove="wwwroot\Reports\SCM\FabricPo\RDLC\FabricPo.rdlc" />
+ 
+
+    <Content Remove="wwwroot\Scripts\common\app-report.js" />
+    <Content Remove="wwwroot\Scripts\common\app.js" />
+    <Content Remove="wwwroot\Scripts\common\common-helpers.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\Reports\SCM\FabricPo\RDLC\FabricPo.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Configuration\GenChatGroup\GenChatGroupLanding.cshtml" />
+    <None Include="Views\Configuration\GenChatGroup\_GenChatGroupEdit.cshtml" />
+    <None Include="Views\Configuration\GenChatGroup\_GenChatGroupNew.cshtml" />
+    <None Include="Views\Configuration\GenChatGroup\_GenChatGroupView.cshtml" />
+    <None Include="Views\Configuration\GenTeamDepartmentGroup\GenTeamDepartmentGroupLanding.cshtml" />
+    <None Include="Views\Configuration\GenTeamDepartmentGroup\_GenTeamDepartmentGroupEdit.cshtml" />
+    <None Include="Views\Configuration\GenTeamDepartmentGroup\_GenTeamDepartmentGroupNew.cshtml" />
+    <None Include="Views\Configuration\GenTeamDepartmentGroup\_GenTeamDepartmentGroupView.cshtml" />    
+    <None Include="Views\Setup\GenColor\GenColorLanding.cshtml" />
+    <None Include="Views\Setup\GenColor\_GenColorEdit.cshtml" />
+    <None Include="Views\Setup\GenColor\_GenColorNew.cshtml" />
+    <None Include="Views\Setup\GenColor\_GenColorView.cshtml" />
+    <None Include="Views\Setup\GenFiscalYear\GenFiscalYearLanding.cshtml" />
+    <None Include="Views\Setup\GenItemStockMaster\GenItemStockMasterLanding.cshtml" />
+    <None Include="Views\Setup\GenItemStockMaster\_GenItemStockMasterEdit.cshtml" />
+    <None Include="Views\Setup\GenItemStockMaster\_GenItemStockMasterNew.cshtml" />
+    <None Include="Views\Setup\GenItemStockMaster\_GenItemStockMasterView.cshtml" />
+    <None Include="Views\Setup\GenOutlet\GenOutletLanding.cshtml" />
+    <None Include="Views\Setup\GenOutlet\_GenOutletEdit.cshtml" />
+    <None Include="Views\Setup\GenOutlet\_GenOutletNew.cshtml" />
+    <None Include="Views\Setup\GenOutlet\_GenOutletView.cshtml" />
+    <None Include="Views\Shared\layouts\landingpage\_app-header.cshtml" />
+    <None Include="Views\Shared\layouts\landingpage\_app-header1.cshtml" />
+    <None Include="Views\Shared\layouts\landingpage\_app-sidebar.cshtml" />
+    <None Include="Views\Shared\layouts\landingpage\_app-sidebar1.cshtml" />
+    <None Include="Views\Shared\layouts\landingpage\_modal.cshtml" />
+    <None Include="Views\Shared\layouts\landingpage\_switcher.cshtml" />
+    <None Include="Views\Shared\layouts\_app-header.cshtml" />
+    <None Include="Views\Shared\layouts\_app-header1.cshtml" />
+    <None Include="Views\Shared\layouts\_app-sidebar.cshtml" />
+    <None Include="Views\Shared\layouts\_footer.cshtml" />
+    <None Include="Views\Shared\layouts\_modal.cshtml" />
+    <None Include="Views\Shared\layouts\_switcher.cshtml" />  
+    <None Include="wwwroot\Images\logo.png" />
+    <None Include="wwwroot\Images\user.png" />
+    <None Include="wwwroot\lib\flex_slider\fonts\webfonts\geo-medium\svg\1110FC_0.svg" />
+    <None Include="wwwroot\lib\flex_slider\fonts\webfonts\geo-regular\svg\11014B_0.svg" />
+    <None Include="wwwroot\lib\flex_slider\fonts\webfonts\geo-semibold\svg\style_169898.svg" />
+    <None Include="wwwroot\lib\flex_slider\js\demo.js" />
+    <None Include="wwwroot\lib\flex_slider\js\froogaloop.js" />
+    <None Include="wwwroot\lib\flex_slider\js\jquery.easing.js" />
+    <None Include="wwwroot\lib\flex_slider\js\jquery.fitvid.js" />
+    <None Include="wwwroot\lib\flex_slider\js\jquery.flexslider.js" />
+    <None Include="wwwroot\lib\flex_slider\js\jquery.mousewheel.js" />
+    <None Include="wwwroot\lib\flex_slider\js\modernizr.js" />
+    <None Include="wwwroot\lib\flex_slider\js\shBrushCss.js" />
+    <None Include="wwwroot\lib\flex_slider\js\shBrushJScript.js" />
+    <None Include="wwwroot\lib\flex_slider\js\shBrushXml.js" />
+    <None Include="wwwroot\lib\flex_slider\js\shCore.js" />
+    <None Include="wwwroot\lib\jquery-ajax-unobtrusive\jquery.unobtrusive-ajax.js" />
+    <None Include="wwwroot\lib\jquery-ajax-unobtrusive\jquery.unobtrusive-ajax.min.js" />
+    <None Include="wwwroot\lib\jquery.ui\jquery-ui.js" />
+    <None Include="wwwroot\lib\jquery.ui\jquery-ui.min.js" />
+    <None Include="wwwroot\lib\microsoft-signalr\signalr.js" />
+    <None Include="wwwroot\lib\microsoft-signalr\signalr.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\af.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\af.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ar.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ar.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\az.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\az.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\bg.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\bg.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\bn.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\bn.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\bs.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\bs.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ca.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ca.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\cs.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\cs.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\da.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\da.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\de.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\de.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\dsb.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\dsb.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\el.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\el.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\en.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\en.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\es.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\es.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\et.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\et.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\eu.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\eu.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\fa.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\fa.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\fi.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\fi.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\fr.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\fr.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\gl.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\gl.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\he.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\he.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hi.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hi.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hr.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hr.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hsb.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hsb.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hu.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hu.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hy.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\hy.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\id.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\id.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\is.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\is.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\it.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\it.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ja.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ja.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ka.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ka.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\km.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\km.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ko.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ko.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\lt.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\lt.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\lv.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\lv.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\mk.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\mk.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ms.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ms.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\nb.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\nb.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ne.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ne.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\nl.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\nl.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\pl.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\pl.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ps.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ps.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\pt-BR.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\pt-BR.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\pt.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\pt.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ro.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ro.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ru.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\ru.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sk.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sk.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sl.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sl.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sq.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sq.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sr-Cyrl.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sr-Cyrl.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sr.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sr.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sv.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\sv.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\th.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\th.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\tk.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\tk.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\tr.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\tr.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\uk.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\uk.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\vi.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\vi.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\zh-CN.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\zh-CN.min.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\zh-TW.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\zh-TW.min.js" />
+    <None Include="wwwroot\lib\select2\js\select2.full.js" />
+    <None Include="wwwroot\lib\select2\js\select2.full.min.js" />
+    <None Include="wwwroot\lib\select2\js\select2.js" />
+    <None Include="wwwroot\lib\select2\js\select2.min.js" />
+    <None Include="wwwroot\Scripts\common\app-report.js" />
+    <None Include="wwwroot\Scripts\common\app.js" />
+    <None Include="wwwroot\Scripts\common\common-helpers.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="7.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="7.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="7.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="7.0.0" />
+    <PackageReference Include="Autofac" Version="7.1.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="Dapper.Contrib.Extensions.Tablename" Version="1.1.1" />
+    <PackageReference Include="EPPlus" Version="7.1.2" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.24" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.10.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.10" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.21" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Serilog.Expressions" Version="3.4.1" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="7.0.0" />
+    <PackageReference Include="Serilog.Sinks.MongoDB" Version="5.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EPYSLSAILORAPP.Application\EPYSLSAILORAPP.Application.csproj" />
+    <ProjectReference Include="..\EPYSLSAILORAPP.Domain\EPYSLSAILORAPP.Domain.csproj" />
+    <ProjectReference Include="..\EPYSLSAILORAPP.Infrastructure.Identity\EPYSLSAILORAPP.Infrastructure.Identity.csproj" />
+    <ProjectReference Include="..\EPYSLSAILORAPP.Infrastructure\EPYSLSAILORAPP.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\App_Themes\adminlte\plugins\axios\" />
+    <Folder Include="wwwroot\lib\font-awesome\" />
+    <Folder Include="wwwroot\UploadFolder\mcd\" />
+    <Folder Include="wwwroot\UploadFolder\ppMeeting\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Configuration\GenTeamDepartmentGroup\_GenTeamDepartmentGroupEdit.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\Configuration\GenTeamDepartmentGroup\_GenTeamDepartmentGroupNew.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\Configuration\GenTeamDepartmentGroup\_GenTeamDepartmentGroupView.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\MerchandiserMgt\TranFabricAllocationReq\_TranFabricAllocationTransferReqEdit.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\ShopFloor\ProductionProcessDefine\ProductionProcessDefineLanding.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

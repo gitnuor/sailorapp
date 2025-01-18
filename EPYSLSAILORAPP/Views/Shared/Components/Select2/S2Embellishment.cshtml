@@ -1,0 +1,96 @@
+﻿@{
+    // Layout = "_LayoutViewComponent";
+    Layout = null;
+}
+@{
+    string selectid = ViewBag.selectid;
+    int delay = 2;
+    int minimumInputLength = 0;
+    bool isReadOnly = ViewBag.isReadOnly;
+
+    string strisReadOnly = isReadOnly.ToString().ToLower();
+    string strmultiple = ViewBag.isMultiple.ToString().ToLower();
+
+    bool isRequired = ViewBag.isRequired;
+
+    string css_class = ViewBag.ddlcss;
+
+    string placeholder = ViewBag.placeholder;
+
+    if (isRequired == true)
+    {
+        <select name="@selectid" id="@selectid" class="form-control @selectid @css_class" style="width:100%;display:block;box-sizing:border-box"
+                data-val="true" data-val-required="Please Select">
+            <option>@placeholder</option>
+        </select>
+        <span class="field-validation-valid text-danger" data-valmsg-for="@selectid" data-valmsg-replace="true"></span>
+    }
+    else
+    {
+        <select name="@selectid" id="@selectid" class="form-control @selectid @css_class" style="width:100%;display:block;box-sizing:border-box">
+            <option>@placeholder</option>
+        </select>
+
+    }
+}
+
+
+
+<script>
+
+    function LoadEmbellishmentDropDownById(model_parentid, ddlid) {
+
+        var select2Options = returnSelect2Options();
+        select2Options.placeholder = "Select Embellishments";
+        select2Options.minimumInputLength = 0;
+        select2Options.multiple = true;
+        select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid + ' .modal-content') : null;
+
+        select2Options.disabled = false;
+        select2Options.ajax.url = '/Select2/GetProcessMasterList', select2Options.ajax.type = 'GET';
+        select2Options.ajax.data = function (params) {
+            return { hasEmbellishment: 1, searchTerm: params.term || null };
+        };
+
+        $('#' + ddlid).select2(
+            select2Options
+        );
+
+
+    }
+    $(function () {
+
+        var model_parentid = '@ViewBag.model_parentid';
+
+        var select2Options = returnSelect2Options();
+        select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+        select2Options.minimumInputLength = @minimumInputLength;
+        select2Options.multiple = @strmultiple;
+        select2Options.dropdownParent = model_parentid.length > 0 ? $('#' + model_parentid + ' .modal-content') : null,
+            select2Options.disabled = @strisReadOnly.ToLower();
+        select2Options.ajax.url = '/Select2/GetProcessMasterList', select2Options.ajax.type = 'GET';
+        select2Options.ajax.data = function (params) {
+            return { hasEmbellishment: 1, searchTerm: params.term || null };
+        };
+        $('#@selectid').select2(select2Options);
+
+        $("#@selectid").val(null).trigger("change");
+
+        $('#@selectid').empty();
+
+        for (var i = 0; i < JSON.parse(@Html.Raw(ViewBag.data)).length; i++) {
+
+            var secondary_id = JSON.parse(@Html.Raw(ViewBag.data))[i].secondary_id != null ?
+                JSON.parse(@Html.Raw(ViewBag.data))[i].secondary_id : 0;
+
+            $('#@selectid').append('<option secondary_id="' + secondary_id + '" value="' + JSON.parse(@Html.Raw(ViewBag.data))[i].id + '" selected="selected"">' + JSON.parse(@Html.Raw(ViewBag.data))[i].text + '</option>');
+        }
+
+        $('#@selectid').select2(select2Options);
+        $('#@selectid').trigger('change');
+
+    });
+</script>
+
+
+

@@ -1,0 +1,395 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@using System.Text.RegularExpressions
+@model EPYSLSAILORAPP.Domain.DTO.tran_cutting_DTO;
+@{
+    ViewBag.Title = "TranCutting Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+     <div class="card">
+         <div class="card-header">
+               <h6 class="card-title">Cutting Add</h6> 
+         </div>
+         <!-- /.card-header -->
+         <div class="card-body">
+                <div class="row" >
+			        <div class="col-md-3">
+				        <div class="form-group">
+					        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techpack</label>
+					         <input style="width:100%"  readonly  asp-for="techpack_number" type="text" class="border-#d1cccc-200 form-control " />
+					
+						        <input type="hidden" id="tran_pp_meeting_id" value="@Model.tran_pp_meeting_id">
+						        <input type="hidden" id="techpack_id" value="@Model.techpack_id">
+				        </div>
+			        </div>
+			        <div class="col-md-3">
+				        <div class="form-group">
+					        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Processes</label>
+						        <input style="width:100%" readonly asp-for="all_processes" type="text" class="border-#d1cccc-200 form-control " />
+				
+			        </div>
+		        </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Code</label>
+                        <input style="width:100%" readonly asp-for="style_code" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="style_code" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Remarks</label>
+                        <input style="width:100%" asp-for="remarks" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="remarks" class="text-danger"></span>
+                    </div>
+                </div>
+		        </div>
+
+
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <table class="table  table-striped table-bordered table-hover table-sm" id="DTColor" style="padding:0 !important">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="text-align:center">#</th>
+                                <th style="text-align:center">Color</th>
+                                <th style="text-align:center">Color Code</th>
+                                <th style="text-align:center">Allocated Unit</th>
+                                <th style="text-align:center">Quantity</th>
+                                <th style="text-align:center">Delivery Date</th>
+                                <th style="text-align:center">Total Cutting</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int count = 1;
+                            }
+                            @foreach (var obj in Model.color_quantity)
+                            {
+                                string pattern = @"#\w+";
+
+                                Match match = Regex.Match(@obj.color_code, pattern);
+                                <tr>
+                                    <th style="text-align:center">@count</th>
+                                    <td style="background:@match.Value;cursor: pointer;" onmouseover="this.style.textDecoration = 'underline';"
+                                    onmouseout="this.style.textDecoration = 'none';" onclick="create('@obj.color_code')"></td>
+                                    <td style="cursor: pointer;" onmouseover="this.style.textDecoration = 'underline';" class="color"
+                                        onmouseout="this.style.textDecoration = 'none';" onclick="create('@obj.color_code')">
+                                        @obj.color_code
+                                    </td>
+                                    <td class="alloc_unit_name">Sailor</td>
+                                    <td class="quantity">@obj.quantity</td>
+                                    <td class="d_date"> </td>
+                                    <td class="cutting_total">0</td>
+                                   
+                                </tr>
+
+                                count++;
+                            }
+
+
+                        </tbody>
+                    </table>
+                 
+
+                </div>
+            </div>
+
+            <div class="row" id="BatchAdd" style="display:none">
+                <div class="col-md-12">
+               
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                            <div class="box">
+                                <div class="row" style="">
+
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <button type="button" class="btn btn-primary" onclick="AddBatch();"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Batch</button>
+                                        </div>
+                                        <div class="row">
+                                            <table id="DTBatchDetail"  class="table table-striped table-bordered table-hover table-sm" style="padding:0 !important">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th style="text-align:center;width:5%">Batch No</th>
+                                                        <th style="text-align:center;">Start Date</th>
+                                                        <th style="text-align:center;">End Date</th>
+                                                        <th style="text-align:center;">UOM</th>
+                                                        <th style="text-align:center">Fabric Booking<br> Qty</th>
+                                                        <th style="text-align:center">Fabric Receive<br> Qty</th>
+                                                        <th style="text-align:center">Cutting Input<br> Qty</th>
+                                                        <th style="text-align:center;width:5%">No of<br> Layer</th>
+                                                        <th style="text-align:center">Contrast</th>
+                                                        <th style="text-align:center">Hand Cut</th>
+                                                        <th style="text-align:center">Patten Type</th>
+                                                        <th style="text-align:center">Marker Type</th>
+                                                        <th style="text-align:center;width:8%">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                              
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                           
+                            </div>
+                            </div>
+                       
+
+                        
+
+                    </div>
+          
+
+
+                
+         </div>
+    
+        </div>
+         
+        </div>
+    </div>
+  
+ 
+</form>
+
+
+<div id="modalcontainer_detl" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 50% !important; max-width: 50% !important; font-size: 14px; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #c9b426;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Batch
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose_detl" class="btn btn-danger btn-md cancel" onclick="closePopup_detl();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent_detl">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+  
+    var batch_List = [];
+    var batch_no = 0;
+
+    function create(color) {
+        color_code = color;
+        $("#BatchAdd").show();
+    }
+    function AddBatch() {
+        
+        $('#modalcontainer_detl').modal("show");
+        var techpack_id = $("#techpack_id").val();
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/Cutting/GetFabricDetaiils?techpack_id=" + techpack_id, null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 0);
+
+            $('#modalcontent_detl').html(data);
+            $('#modalcontainer_detl').modal({ backdrop: 'static', keyboard: false });
+            $('#modalcontainer_detl').modal("show");
+
+        });
+    }
+  
+    function AddFabric() {
+
+        var batch = {};        var book_q = 0.0;        var issue_q = 0.0;        var cut_q = 0.0;        var lay_q = 0.0;
+        var obj_fabric_List = [];
+
+        $.each($("#DTTranFabricDetailsList tbody tr"), function (key, val) {
+
+            if ($(this).find(".is_select")[0].checked) {
+                var obj = {
+                    item_id: check_textbox_value($(this).find(".item_id")),
+                    item_name: check_textbox_value($(this).find(".item_name")),
+                    measurement_unit_detail_id: check_textbox_value($(this).find(".measurement_unit_detail_id")),
+                    measurement_unit: check_textbox_value($(this).find(".measurement_unit")),
+                    booking_quantity: check_textbox_value($(this).find(".booking_quantity")),
+                    issue_quantity: check_textbox_value($(this).find(".issue_quantity")),
+                    input_quantity: check_textbox_value($(this).find(".input_quantity")),
+                    no_of_lay: check_textbox_value($(this).find(".no_of_lay"))
+
+                };
+                book_q = obj.booking_quantity + book_q;
+                issue_q = obj.issue_quantity + issue_q;
+                cut_q = parseFloat(obj.input_quantity) + cut_q;
+                lay_q = parseFloat(obj.no_of_lay) + lay_q;
+                obj_fabric_List.push(obj);
+            
+            }
+           
+        });
+        
+
+        closePopup_detl();
+
+        if (obj_fabric_List.length > 0) {
+            batch_no++;
+
+            var table = document.getElementById("DTBatchDetail").getElementsByTagName('tbody')[0];
+
+            var newRow = table.insertRow(table.rows.length);
+            newRow.setAttribute("id", "row_" + batch_no);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+            var cell5 = newRow.insertCell(4);
+            var cell6 = newRow.insertCell(5);
+            var cell7 = newRow.insertCell(6);
+            var cell8 = newRow.insertCell(7);
+            var cell9 = newRow.insertCell(8);
+            var cell10 = newRow.insertCell(9);
+            var cell11 = newRow.insertCell(10);
+            var cell12 = newRow.insertCell(11);
+            var cell13 = newRow.insertCell(12);
+       
+
+          
+
+            batch = {
+                batch_no: batch_no,
+                measurement_unit_detail_id: obj_fabric_List[0].measurement_unit_detail_id,
+                measurement_unit: obj_fabric_List[0].measurement_unit,
+                cutting_date_start: '',
+                cutting_date_end: '',
+                total_booking_quantity: book_q,
+                total_receive_quantity: issue_q,
+                total_input_quantity: cut_q,
+                total_no_of_lay: lay_q,
+                is_contrast: 0,
+                is_hand_cut: 0,
+                pattern_type: '',
+                marker_type: '',
+                details: obj_fabric_List
+
+            };
+            no_of_lay = batch.total_no_of_lay;
+            cell1.innerHTML = `<input disabled type='number' class='form-control batch_no'            
+                               value=` + batch.batch_no + ` >`;
+            cell2.innerHTML = "<input  type='date' class='form-control' value=" + batch.cutting_date_start + " >";
+            cell3.innerHTML = "<input  type='date' class='form-control' value=" + batch.cutting_date_end + " >";
+            cell4.innerHTML =  "<input disabled type='text' class='form-control' value=" + batch.measurement_unit + " >";
+            cell5.innerHTML = "<input disabled type='text'class='form-control' value=" + batch.total_booking_quantity + " >";
+            cell6.innerHTML = "<input disabled type='text'class='form-control' value=" + batch.total_receive_quantity + " >";
+            cell7.innerHTML = "<input disabled type='text'class='form-control' value=" + batch.total_input_quantity + " >";
+            cell8.innerHTML = "<input disabled type='text'class='form-control' value=" + batch.total_no_of_lay + " >";
+            cell9.innerHTML = "<input type='checkbox' class='form-control is_contrast' style='height: 15px; width: 15px;' >";
+            cell10.innerHTML = "<input type='checkbox' class='form-control is_hand_cut' style='height: 15px; width: 15px;' >";
+            cell11.innerHTML = `<select class='form-control pattern_type'> <option value = "CAD"> CAD </option>
+                        <option value = "Manual"> Manual </option>
+                        </select>`;
+            cell12.innerHTML = `<select class='form-control marker_type'>
+                    <option value = "CAD" > CAD </option>
+                        <option value = "Manual" > Manual </option>
+                        </select>`;
+            cell13.innerHTML = 
+                "<button type='button' onclick='EditCutting(this,"+batch_no+")' class='btn btn-warning btnEdit' ><i class='fa fa-edit' aria-hidden='true'></i></button>&nbsp;<button type='button' onclick='DeleteBatch(this)'  class='btn btn-danger btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></button>";
+               
+
+            batch_List.push(batch);
+        
+        }
+        
+    }
+   
+    function closePopup_detl() {
+        $('#modalcontent_detl').html("");
+        $('#modalcontainer_detl').modal("hide");
+        $('#modalcontainer_detl').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+    function DeleteBatch(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>

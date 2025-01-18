@@ -1,0 +1,437 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_pp_meeting_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "TranPpMeeting List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">PP Meeting</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddTranPpMeeting(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="DTTranPpMeeting" class="table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Techpack</th>
+                                                <th>Meeting Conducted by</th>
+                                                <th>Meeting Conducted date</th>
+                                                <th>Event</th>
+
+
+
+
+
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 40% !important; max-width: 40% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Pp Meeting
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        let base64Image = '';
+
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddTranPpMeeting() {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/PpMeeting/PpMeetingNew", null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+                LoadTechPackDropDownByClass("modalcontainer #modalcontent", "S2TechPack");
+                document.querySelector('input[type="file"]').addEventListener('change', function (event) {
+                    const fileInput = event.target;
+                    const file = fileInput.files[0];
+                    const imgPreview = document.querySelector('#imagePreview');
+
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            imgPreview.src = e.target.result;
+                            base64Image = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        imgPreview.src = '~/images/no_image_available.jpg';
+                    }
+                });
+            });
+
+
+        }
+
+        function EditTranPpMeeting(btn) {
+
+
+            var tran_pp_meeting_id = $(btn).attr("tran_pp_meeting_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PpMeeting/TranPpMeetingEdit?tran_pp_meeting_id=" + tran_pp_meeting_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function ViewTranPpMeeting(btn) {
+
+            var tran_pp_meeting_id = $(btn).attr("tran_pp_meeting_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PpMeeting/PpMeetingView?tran_pp_meeting_id=" + tran_pp_meeting_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function SaveTranPpMeeting(btn) {
+
+            
+
+
+
+            $("#modalcontainer #frmAdd").validate({
+
+                rules: {
+                    techpack_id: "required",
+                    meeting_conducted_date: "required"
+
+
+                },
+
+                messages: {
+
+                    techpack_id: "Please Select Techpack!!!",
+                    meeting_conducted_date: "Please Enter Date"
+
+                },
+                submitHandler: function (event) {
+
+                    var obj_TranPpMeeting = {
+
+                        techpack_id: check_value($('#modalcontent #techpack_id').val()),
+                        remarks: $('#modalcontent #remarks').val(),
+
+                        meeting_conducted_date: $('#modalcontent #meeting_conducted_date').val(),
+                        imageBase64: base64Image
+
+
+                    }
+
+
+
+                    setTimeout(function () {
+                        showLoader("Saving..........");
+                    }, 0);
+
+                    ajaxPostObjectHandler("/PpMeeting/SavePpMeeting", obj_TranPpMeeting, function (response) {
+
+                        setTimeout(function () {
+                            hideLoader();
+                        }, 0);
+
+                        if (response.status_Code == "200") {
+
+                            LoadTranPpMeetingData();
+
+
+
+                            showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                                closePopup();
+
+                            });
+                        }
+                        else {
+                            showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                            });
+                        }
+                    }, true, function () { hideLoader(); }, true);
+
+
+                }
+
+
+            });
+
+
+
+
+
+        }
+
+
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+
+
+        function UpdateTranPpMeeting(btn) {
+
+
+
+
+
+            var obj_TranPpMeeting = {
+                tran_pp_meeting_id: check_value($('#modalcontent #tran_pp_meeting_id').val()),
+                techpack_id: check_value($('#modalcontent #techpack_id').val()),
+                remarks: $('#modalcontent #remarks').val(),
+                meeting_conducted_by: check_value($('#modalcontent #meeting_conducted_by').val()),
+                meeting_conducted_date: $('#modalcontent #meeting_conducted_date').val(),
+                event_id: check_value($('#modalcontent #event_id').val()),
+                fiscal_year_id: check_value($('#modalcontent #fiscal_year_id').val()),
+
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+
+                ajaxPostObjectHandler("/TranPpMeeting/UpdateTranPpMeeting", obj_TranPpMeeting, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranPpMeetingData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteTranPpMeeting(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_TranPpMeeting = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/PpMeeting/DeletePpMeeting", obj_TranPpMeeting, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranPpMeetingData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                }, true);
+
+            });
+        }
+
+        $(function () {
+
+            LoadTranPpMeetingData();
+
+        });
+
+        function LoadTranPpMeetingData() {
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val()
+
+            };
+
+            var dt = $("#DTTranPpMeeting").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/PpMeeting/GetJoinedPpMeetingData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_pp_meeting_id", data.tran_pp_meeting_id);
+
+                },
+                "columns": [
+
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "conducted_by", "name": "conducted_by", "autoWidth": true },
+                    { "data": "meeting_conducted_date", "name": "meeting_conducted_date", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

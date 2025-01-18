@@ -1,0 +1,149 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_return_challan_received_DTO;
+@{
+    ViewBag.Title = "Return Challan Received Edit";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    
+    <input type="hidden" id="tran_return_challan_received_id" value="@Model.tran_return_challan_received_id">
+
+  
+
+     <div class="card">
+         <div class="card-header">
+               <h6 class="card-title">TranReturnChallanReceived Edit</h6> 
+         </div>
+         <!-- /.card-header -->
+         <div class="card-body">
+        
+
+                 		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Tran Return Challan Id</label>
+					 <input style="width:100%"    asp-for="tran_return_challan_id" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="tran_return_challan_id" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Return Receive No</label>
+					<input style="width:100%"    asp-for="return_receive_no" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="return_receive_no" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Return Receive Date</label>
+					 <input style="width:100%"    asp-for="return_receive_date" type="date" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="return_receive_date" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Added By</label>
+					<input style="width:100%"    asp-for="added_by" type="number" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="added_by" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Event Id</label>
+					 <input style="width:100%"    asp-for="event_id" type="number" class="border-#d1cccc-200 form-control " />
+					<span asp-validation-for="event_id" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Tran Return Challan Receive Details Json</label>
+					<input style="width:100%"    asp-for="tran_return_challan_receive_details_json" type="text" class="border-#d1cccc-200 form-control " />
+				<span asp-validation-for="tran_return_challan_receive_details_json" class="text-danger"></span>
+			</div>
+		</div>
+		</div>
+
+
+
+           
+             <div class="row">
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button style="width:300px;" type="button" class="btn btn-success " id="btnUpdateTranReturnChallanReceived" onclick="UpdateTranReturnChallanReceived(this);"><i class="fa fa-file-open"></i>&nbsp;Update</button>
+
+                </div>
+            </div>
+
+         </div>
+         <!-- /.card-body -->
+     </div>
+
+
+    
+</form>
+
+
+
+
+

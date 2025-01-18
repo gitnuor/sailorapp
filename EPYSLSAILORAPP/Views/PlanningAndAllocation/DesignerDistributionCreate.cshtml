@@ -1,0 +1,638 @@
+﻿@model EPYSLSAILORAPP.Domain.DTO.tran_va_plan_DTO;
+@{
+    ViewBag.Title = "Designer Distribution";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+</style>
+
+<div class="content-wrapper">
+    <input id="hd_range_plan_id" type="hidden" value="@Model.tran_range_plan_id" />
+    <input id="hd_va_plan_id" type="hidden" value="@Model.tran_va_plan_id" />
+    <input id="hd_encoded_fiscal_year" type="hidden" value="@ViewBag.encoded_fiscal_year" />
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                           
+                            <div class="row" style="width:100%;">
+                                <div class="col-md-6">
+                                    <h6 class="card-title">Designer Distribution</h6>
+                                </div>
+                                <div class="col-md-6" style="text-align:right;">
+
+                                    <button class="btn btn-primary" type="button" style="width: 174px; font-size: 13px; line-height: 0.75rem;background-color: #2b9156; font-weight: bold;" onclick="ViewDesignerAssignDetailsPopup();">
+                                        View Designer Load
+                                    </button>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <!-- /.card-header -->
+                        @await Component.InvokeAsync("DataFilter")
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card" style="display:none;">
+                       
+                        <div class="card-body">
+                            <div class="row" style="background-color: antiquewhite;padding-top: 5px;">
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Total Business Plan</label>
+                                        <input id="txtTotalBusinessPlan" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Total Event Plan</label>
+                                        <input id="txtTotalEventPlan" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Total Range Quantity</label>
+                                        <input id="txtTotalRangeQuantity" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Product Added</label>
+                                        <input id="txtTotalAddedQntity" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%!important;">
+                                    <div class="form-group" style="    text-align: right;">
+                                        <label class="labelNormal " style="margin-bottom: 2px!important;font-weight:bold;">Product Remaining</label>
+                                        <input id="txtTotalNotAddedQntity" style="width: 80%;height: 30px;margin-bottom: 7px!important;" disabled type="number" class="border-gray-200 rounded-sm gridhdr">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <div class="card">
+                       
+                        <div class="card-body">
+                            <table style="font-size:12px;" id="DTTranVADesignerDistribution" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead style="text-align:center">
+                                    <tr>
+                                        @*      <th></th> *@
+                                        <th><label class="labelNormal">SL</label></th>
+                                        <th style="width:300px;"><label class="labelNormal">Product Details</label></th>
+                                        <th style="width:200px;"><label class="labelNormal  ">Product</label></th>
+                                        <th><label class="labelNormal ">Range Plan QTY</label></th>
+
+                                        <th><label class="labelNormal ">Approved Style</label></th>
+
+                                        <th><label class="labelNormal ">Assigned</label></th>
+                                        <th><label class="labelNormal ">UnAssigned</label></th>
+
+                                        <th style="width:120px;"><label class="labelNormal ">Style Setup</label></th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+                       
+                        <!-- /.card-header -->
+                     @*    <div class="card-body">
+                            <div class="row">
+                                <label class="labelNormal" style="margin-bottom: 10px!important">Remarks</label>
+                                <div class="col-md-12">
+                                    <input style="width:100%;" type="text" asp-for="@Model.remarks" class="border-gray-200 rounded-sm text-sm">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" style="margin-bottom: 50px;">
+
+                                    <button style="width:150px;" type="button" class="btn btn-secondary  " id="btnBack"><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;&nbsp;Back</button>
+
+
+                                    <button style="width:200px;float:right" type="button" class="btn btn-primary " id="btnFinalizeValueAdditionPlan" onclick="FinalizeValueAdditionPlan(this);"><i class="fa-light fa-file-pen"></i>&nbsp;Finalize</button>
+
+                                </div>
+                            </div>
+                        </div> *@
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer_common" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 90% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                           Designer Load Details
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+                      @*   <button class="btn btn-primary" type="button" style="width: 174px; font-size: 13px; line-height: 0.75rem;background-color: #2b9156; font-weight: bold;" onclick="ViewDesignerAssignDetailsPopup();">
+                            View Designer Load
+                        </button> *@
+
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    @* <script src="~/scripts/businessplanning/ValueAdditionPlan.js" asp-append-version="true"></script> *@
+    <script>
+        var dt_source;
+        var obj_detailList = [];
+        var total_ValueAdditionPlan_mrp_value = 0;
+        var total_ValueAdditionPlan_cpu_value = 0;
+        var total_ValueAdditionPlan_quantity = 0;
+        var bp_yearly_gross_sales = 0;
+        var bp_event_gross_sales = 0;
+        var tran_va_plan_id = 0;
+        var tran_va_plan_event_id = 0;
+
+        function jsdatatableloaded() {
+
+            if (dt_source.rows().data().length > 0) {
+                $("#txtTotalBusinessPlan").val(dt_source.rows().data()[0].bp_yearly_gross_sales);
+                $("#txtTotalEventPlan").val(dt_source.rows().data()[0].event_gross_sales);
+                $("#txtTotalRangeQuantity").val(dt_source.rows().data()[0].total_rangeplan_quantity);
+
+                $("#txtTotalAddedQntity").val(dt_source.rows().data()[0].totaladded);
+                $("#txtTotalNotAddedQntity").val(dt_source.rows().data()[0].totalnotadded);
+            }
+        }
+
+
+        function BtnAssignDesignerAddUpdate(btn) {
+
+            var style_product = $(btn).parent().parent().find("td:eq(2)").text();
+            var range_plan_qnty = $(btn).parent().parent().find("td:eq(3)").text();
+
+            var objStyle = {
+                row_index: $(btn).parent().parent().attr("row_index"),
+
+                no_of_style: $(btn).parent().parent().find(".ddlNoOfStyle").val(),
+                style_code_gen: $(btn).parent().parent().find(".txt_style_code_gen").val(),
+                style_item_product_id: $(btn).attr("style_item_product_id"),
+                range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                style_product: $(btn).parent().parent().find("td:eq(2)").text(),
+
+                range_plan_detail_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_detail_id,
+                range_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].range_plan_id,
+                tran_range_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_range_plan_event_id,
+
+                tran_va_plan_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].tran_va_plan_event_id,
+
+                str_style_size: dt_source.rows().data()[parseInt($(btn).parent().parent().attr("row_index"))].strjsonSizeList
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PlanningAndAllocation/AssignDesignerAddUpdate?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    if ($("#modalcontent-common .chkSelect").length==0) { 
+                        $("#btnFinalizeDesignerAssign").remove();
+                    }
+
+                    $("#modalcontent-common ul.keyed_item_list").sortable({
+
+                        connectWith: "ul.keyed_item_list",
+                        cancel: ".undraggable", // Prevent dragging elements with this class
+                        update: function (event, ui) {
+                            calculateallteammemberload();
+                         // console.log($(ui.item).parent().attr("class"));
+                           // console.log($(ui.item).parent().attr("id"));
+                            if ($(ui.item).parent().attr("class").indexOf("chosen_list") > -1) {
+                                $(ui.item).find("input[type=checkbox]").prop("checked", false);
+                            }
+                            else {
+                                $(ui.item).find("input[type=checkbox]").prop("checked", true);
+                            }
+                        },
+                    });
+                    $("#modalcontent-common ul.dropfalse").sortable({
+                        connectWith: "ul",
+                        cancel: ".undraggable",
+                        dropOnEmpty: false,
+                        update: function (event, ui) {
+                            calculateallteammemberload();
+                            if ($(ui.item).parent().attr("class").indexOf("chosen_list") > -1) {
+                                $(ui.item).find("input[type=checkbox]").prop("checked", false);
+                            }
+                            else {
+                                $(ui.item).find("input[type=checkbox]").prop("checked", true);
+                            }
+                        },
+                    });
+
+                    $("#modalcontent-common #chosen_list, .sortable").disableSelection();
+
+                    $("#modalcontent-common #chosen_list").on("sortremove", function (event, ui) {
+                        //console.log(ui.item);
+                        //console.log(ui.item.parent().attr("userid")); closest(".each_team_member_section")
+                        $(ui.item).find("input[type=checkbox]").prop("checked", true);
+                        $(ui.item).find("input[type=checkbox]").attr("onchange", "DesignerUnAssign(this);");
+
+                        calculateallteammemberload();
+                    });
+
+                    calculateallteammemberload();
+
+                }, true);
+
+
+            } catch (e) {
+                 hideLoader();
+            }
+
+        }
+        function DesignerUnAssign(chk) {
+            if ($(chk).prop("checked") == false) {
+
+                var wholediv = $(chk).closest(".item_style").clone();
+
+                $(wholediv).find("input[type=checkbox]").removeAttr("onchange");
+
+                $("#chosen_list").append(wholediv);
+
+                $(chk).closest(".item_style").remove();
+
+                calculateallteammemberload();
+            }
+        }
+
+        function calculateallteammemberload() {
+            //
+
+            $.each($("#dvTeamMembers ul"), function (key, val) {
+                var total = 0; var total_style = 0;
+                $.each($(val).find(".lblqnty"), function (index, item) {
+                    total += parseInt($(item).text());
+                    total_style += 1;
+                });
+
+                var lblhead_member = $(val)
+                    .closest(".each_team_member_section").find(".lblmemberinfo");
+
+                $(lblhead_member).text($(lblhead_member).attr("name") + "(" + total_style+"-"+ total + ")");
+
+          
+
+            });
+
+
+        }
+
+        function AssignDesigner() {
+            var member_id = $("#ddlDesignerMember").val();
+
+            if ($("#ddlDesignerMember").val() != "") {
+
+                $.each($("#chosen_list .chkSelect"), function (key, val) {
+
+                    if ($(val).prop("checked") == true) {
+
+                        var wholediv = $(val).closest(".item_style").clone();
+
+                        $(wholediv).find("input[type=checkbox]").attr("onchange", "DesignerUnAssign(this);");
+                        //$(wholediv).find("input[type=checkbox]").remove();
+
+                        $("#dvTeamMembers ul[userid=" + member_id + "]").append(wholediv);
+
+                        $(val).closest(".item_style").remove();
+
+
+                        calculateallteammemberload();
+                    }
+                });
+                $("#ddlDesignerMember").val("");
+            }
+        }
+
+        function LoadDesignerDistributionData() {
+
+            var dt_search = {
+
+                filterId: '#DTTranVADesignerDistribution_filter input[type=search]',
+                tableId: "#DTTranVADesignerDistribution"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+
+                filter_option: $("#ddlFilterOption").val()
+            };
+
+            dt_source = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product Details',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/PlanningAndAllocation/GetTranVADesignerDistributionData", data: input }),      
+                scrollCollapse: true,  
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [        
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+                    $(row).attr('row_index', dataIndex);
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+                    if (data.total_unassigned == 0) {
+                        $(row).find("td").css("background-color", "rgb(213 233 213)");
+                    }
+                    else if (data.total_assigned == 0) {
+                        $(row).find("td").css("background-color", "rgb(237 159 155)");
+                    }
+                    else if (data.total_unassigned != data.approved_style) {
+                        $(row).find("td").css("background-color", "palegoldenrod");
+                    }
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "14px");
+                    $(row).find("td:eq(2)").css("font-size", "12px");
+
+                },
+                "columns": [ 
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "range_plan_quantity", "name": "total_rangeplan_quantity", "autoWidth": true },         
+                    { "data": "approved_style", "name": "approved_style", "autoWidth": true },
+                    { "data": "total_assigned", "name": "total_assigned", "autoWidth": true },
+                    { "data": "total_unassigned", "name": "total_unassigned", "autoWidth": true },
+                    { "data": "strBtnStyleSetup", "name": "strBtnStyleSetup", "autoWidth": true },
+
+
+
+                ],
+               
+            });
+        }
+
+        function ViewDesignerAssignDetailsPopup() {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+           // $("#modalcontainer_common").addClass("custom-class");
+
+            try {
+                ajaxGetHandler("/PlanningAndAllocation/DesignerAssignDetailsView?fiscal_year_id=" + $("#fiscal_year_id").val() + "&event_id=" + $("#event_id").val(), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontent-common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                }, true);
+
+            } catch (e) {
+                 hideLoader();
+            }
+        }
+
+        function ViewDesignerAssignDetails()
+        {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/PlanningAndAllocation/DesignerAssignDetailsView?fiscal_year_id=" + $("#fiscal_year_id").val() + "&event_id=" + $("#event_id").val(), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+
+                }, true);
+
+
+            } catch (e) {
+                 hideLoader();
+            }
+        }
+
+        //.closest(".dtcolorcodestyle").find(".txtColorSizeQuantity")
+
+        function closePopup_popup() {
+            $('#modalcontent-common_popup').html("");
+
+            $('#modalcontainer_common_popup').modal("hide");
+
+            $('#modalcontainer_common_popup').on('hidden.bs.modal', function () {
+                $('body').addClass('modal-open');
+            });
+        }
+        function closePopup() {
+            $('#modalcontent-common').html("");
+
+            $('#modalcontainer_common').modal("hide");
+
+            $(".modal-backdrop").remove();
+        }
+        $(function () {
+
+            LoadDesignerDistributionData();
+
+            $("#btnLoadData").click(function () {
+                if ($("#fiscal_year_id").val() == '') {
+                    $("#fiscal_year_id").focus();
+                    $("#fiscal_year_id").css("border", "1px solid red");
+                }
+                else if ($("#event_id").val() == '') {
+                    $("#event_id").focus();
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+                }
+                else {
+
+                    $("#fiscal_year_id").css("border", "");
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                    LoadDesignerDistributionData();
+
+                }
+
+            });
+
+            $(".filterOption").hide();
+
+            $("#btnBack").click(function () {
+                document.location = "/PlanningAndAllocation/ValueAdditionPlanCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+            });
+
+          
+
+        });
+
+
+        function FinalizeDesignerAssignAdd(btn) {
+
+            var list_style = [];
+
+            $.each($("#dvTeamMembers li"), function (key, singlestyle) {
+
+                var objStyle = {
+                    tran_va_plan_detl_style_id: $(singlestyle).attr("tran_va_plan_detl_style_id"),
+                    designer_member_id: $(singlestyle).parent().attr("userid"),
+                }
+                list_style.push(objStyle);
+            });
+
+
+            $.each($("#chosen_list li"), function (key, singlestyle) {
+
+                var objStyle = {
+                    tran_va_plan_detl_style_id: $(singlestyle).attr("tran_va_plan_detl_style_id"),
+                    designer_member_id: null,
+                }
+                list_style.push(objStyle);
+            });
+
+
+            var objplan_detail = {
+                tran_va_plan_detl_id: $("#modalcontent-common #hd_tran_va_plan_detl_id").val() == "" ? null : $("#modalcontent-common #hd_tran_va_plan_detl_id").val(),
+                List_style: list_style
+            }
+
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/PlanningAndAllocation/SaveDesignerAssign", objplan_detail, function (response) {
+                hideLoader();
+
+                if (response.status_Code == "200") {
+                    LoadDesignerDistributionData();
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+                        //document.location = "/PlanningAndAllocation/ValueAdditionPlanCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+                        closePopup();
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+    </script>
+
+ }

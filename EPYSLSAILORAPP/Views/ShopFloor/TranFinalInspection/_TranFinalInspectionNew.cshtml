@@ -1,0 +1,286 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_final_inspection_DTO;
+@{
+    ViewBag.Title = "Final Inspection Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Final Inspection Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techpack</label>
+
+                        @await Component.InvokeAsync("S2TechPack", new
+                            {
+                                ddlId = "techpack_id",
+                                selectedvalue = "",
+                                cssclass = "form-control S2TechPack",
+                                isRequired = false,
+                                isReadOnly = false,
+                                placeholder = "Select Techpack",
+                                preloaded = "",
+                                model_parentid = "modalcontainer"
+                            })
+
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Final Inspection No</label>
+                        <input style="width:100%" readonly asp-for="final_inspection_no" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="final_inspection_no" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Final Inspection Date</label>
+                        <input style="width:100%" asp-for="final_inspection_date" type="date" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="final_inspection_date" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Techapack Date</label>
+                        <input style="width:100%" readonly asp-for="techpack_date" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Season</label>
+                        <input style="width:100%" readonly asp-for="event_title" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Product Category</label>
+                        <input style="width:100%" readonly asp-for="style_item_product_name" type="text" class="border-#d1cccc-200 form-control " />
+                        <input type="hidden" id="style_item_product_id" value="@Model.style_item_product_id">
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Code</label>
+                        <input style="width:100%" readonly asp-for="teckpack_style_code" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Merchandiser</label>
+                        <input style="width:100%" readonly asp-for="merchandiser_name" type="text" class="border-#d1cccc-200 form-control" />
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Designer</label>
+                        <input style="width:100%" readonly asp-for="designer_name" type="text" class="border-#d1cccc-200 form-control " />
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note</label>
+                        <input style="width:100%" asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="note" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+
+
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Colors</label>
+
+                        <select id="ddl_color" class="form-control">
+                            <option value="" selected>--Select Color---</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-top:2.3%;">
+                    <button type="button" class="btn btn-primary "  onclick="GetProdQnty(this);"><i class="fa fa-file-open"></i>&nbsp;Add</button>
+                </div>
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+        <div class="row">
+
+             <div class="col-md-12">
+
+                <table style="font-size:9px;" id="DTinspectionDetails" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th><label class="labelNormal">Color</label></th>
+                            <th><label class="labelNormal">Finishing Quantity</label></th>
+                            <th><label class="labelNormal">Already Inspected Quantity</label></th>
+                             <th><label class="labelNormal">Inspection Quantity</label></th>
+                            <th><label class="labelNormal">Balance Quantity</label></th>
+                            <th><label class="labelNormal">Proposed MRP</label></th>
+                            <th><label class="labelNormal">Final MRP</label></th>
+                            <th><label class="labelNormal">Note</label></th>
+                           
+                           
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+          <div class="row">
+
+             <div class="col-md-10"> </div>
+                    <div class="col-md-2" style="text-align:right">
+                        <button type="button" class="btn btn-success "  onclick="SaveTranFinalInspection(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+                
+                </div>
+            </div>
+    </div>
+    <!-- /.card-body -->
+
+
+</form>
+
+<script>
+
+    function GetProdQnty() {
+        var color_code = $("#ddl_color").val();
+
+        var techpack_id = $("#techpack_id").val();
+      
+      
+        ajaxGetHandler("/TranFinalInspection/GetProductionQuantityForFinalInspection?techpack_id=" + techpack_id + "&color_code=" + encodeURIComponent(color_code), null, function (data) {
+  
+            var table = document.getElementById("DTinspectionDetails").getElementsByTagName('tbody')[0];
+            
+            data.data.forEach(function (item) {
+            var newRow = table.insertRow(table.rows.length);
+
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+            var cell5 = newRow.insertCell(4);
+            var cell6 = newRow.insertCell(5);
+            var cell7 = newRow.insertCell(6);
+            var cell8 = newRow.insertCell(7);
+            var cell9 = newRow.insertCell(8);
+           
+
+                cell1.innerHTML = `<input type='text' disabled class= 'form-control color_code' value=` + item.color_code + `>`;
+                cell1.style.display = "none";
+      
+                cell2.style.background = item.color_code;
+                          cell2.style.width = "15%";
+                cell3.innerHTML = `<input type='number' disabled class= 'form-control production_quantity' value=` + item.production_quantity + `>`;              
+                cell4.innerHTML = `<input type='number' disabled class= 'form-control already_inspected_quantity' value='0'>`;
+                cell5.innerHTML = `<input type='number' class= 'form-control inspection_quantity' onfocusout="CalculateRemaining(this)">`;
+                cell6.innerHTML = `<input type='number' disabled class= 'form-control balance_quantity'>`;
+                cell7.innerHTML = `<input type='number'  class= 'form-control proposed_mrp' onfocusout="CalculateFinalMRP(this)">`;
+                cell8.innerHTML = `<input type='number' disabled class= 'form-control final_mrp'>`;
+                cell9.innerHTML = `<input type='text'  class= 'form-control note'>`;
+                cell9.style.width = "20%";
+            });
+        });
+        
+        
+
+    }
+    function CalculateRemaining(e)
+    {
+         var inspection_quantity = parseInt($(e).closest("tr").find(".inspection_quantity").val());
+         var production_quantity = parseInt($(e).closest("tr").find(".production_quantity").val());
+         var already_inspected_quantity = parseInt($(e).closest("tr").find(".already_inspected_quantity").val());         
+        $(e).closest("tr").find(".balance_quantity").val(parseInt(production_quantity-inspection_quantity-already_inspected_quantity));
+    }
+    function CalculateFinalMRP(e)
+    {
+              
+        $(e).closest("tr").find(".final_mrp").val(parseInt(e.value));
+    }
+</script>
+
+
+

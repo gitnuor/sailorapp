@@ -1,0 +1,1654 @@
+﻿@model EPYSLSAILORAPP.Application.DTO.TranTables.tran_bp_year_dto
+@{
+    ViewBag.Title = "Business Plan Approval ";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<script type="text/javascript">
+    localStorage.setItem("pageName", "ViewBag.PageName");
+    localStorage.setItem("menuId", "ViewBag.MenuId");
+</script>
+
+<style>
+    .mb-3 {
+        margin-bottom: -10px !important;
+    }
+
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 1px 10px !important;
+    }
+</style>
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="box-title">Business Plan Approval</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="">
+                            <div class="row" style="padding-top:10px">
+                                <input type="hidden" asp-for="tran_bp_year_id" class="border-gray-200 form-control">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="labelNormal" style="margin-bottom: 10px!important">Fiscal Year</label>
+
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                        {
+                                        ddlId = "fiscal_year_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.fiscal_year_list)),
+                                        selectedvalue = Model.fiscal_year_id.ToString(),
+                                        cssclass = "form-control",
+                                        enable = false,
+                                        isRequired = true,
+                                        placeholder = "Select Fiscal Year"
+                                        })
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="display:none">
+
+                                    <label class="labelNormal" style="margin-bottom: 10px!important">Gross Sales (Tk)</label>
+
+                                    <input type="currency" style="text-align:right;width:100%;font-size: 21px; font-weight: bold; color: blue;" value="@Model.gross_sales" id="yearly_gross_sales" name="yearly_gross_sales" class="border-gray-200 form-control">
+
+                                </div>
+                                <div class="col-md-4" style="display:none">
+
+                                    <label style="text-align:left;width:100%;margin-top:40px;font-weight:bold;" id="txt_inword_business_plan"></label>
+
+                                </div>
+                                <div class="col-md-2">
+
+                                    <button style="width:100%;margin-top:20px;margin-left: 816px;" onclick="ViewDataAnalysis();return false;" type="button" class="btn btn-success" id=""><i class="fa fa-bar-chart"></i>&nbsp;&nbsp;Data Analysis</button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <label class="labelNormal" style="margin-bottom: 10px!important" id="lblQty">Season Wise Plan</label>
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                          
+                            <table id="DTTranBPSeasonEvents"  class="table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead>
+
+                                    <tr>
+                                        <th style="width:132px!important;"><label class="labelNormal  ">Gross Sales Target(Tk)</label></th>
+                                        <th style='width:210px!important'>
+                                            <input type="currency" disabled id="txt_total_yearly_gross_sales" name="txt_total_yearly_gross_sales" style="padding-top: 5px !important;padding-bottom: 5px !important;text-align:right;" class="border-gray-200 form-control">
+                                        </th>
+                                        <th colspan="2">
+                                            <table>
+                                                <tr>
+                                                    <td style="text-align: center;">
+                                                        <label class="labelNormal" style="float:left;margin-top: 4px;margin-right:6px;">Discount Limit (Tk)</label>
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        <input style="width:140px;margin-right:6px;" disabled type="currency" min="0.00" id="yearly_gross_discount" class="border-gray-200 form-control" value="0">
+                                                       @*  <label class="labelNormal" id="lbl_yearly_gross_discount_percent"></label> *@
+                                                        <label id="lblyearly_gross_discount_inword" class="labelNormal" style="margin-top: 4px;margin-right:6px;"></label>
+
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        <label class="labelNormal" style="margin-top: 4px;">Sales Target (Tk)</label>
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        <input disabled type="currency" min="0.00" style="width:140px;margin-right:6px;" id="yearly_gross_net" class="border-gray-200 form-control" value="0">
+                                                       @*  <label class="labelNormal" id="lbl_yearly_gross_net_percent"></label> *@
+                                                        <label class="labelNormal" id="lbl_yearly_gross_net_inword"></label>
+                                                    </td>
+                                                   @*  <td style="text-align: center;">
+                                                        <label class="labelNormal " style="margin-top: 4px;"> Remaining (Tk)</label>
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        <input type="currency" style="width:140px;" disabled id="txt_total_yearly_gross_sales_remaining" name="txt_total_yearly_gross_sales_remaining" style="padding-top: 5px !important;padding-bottom: 5px !important;text-align:right;color:black;" class="border-gray-200 form-control">
+                                                        <label class="labelNormal" id="lbl_total_yearly_gross_sales_remaining"></label> *@
+
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <th style="width:75px!important;"><label class="labelNormal  ">Event</label></th>
+                                        <th style='width:210px!important'> <label class="labelNormal ">Gross Info (Tk)</label></th>
+
+                                        <th style='width:60px!important'>
+                                            <label class="labelNormal ">New Preparation</label><br />
+                                            <label id="lblTotalReadyGoodsValue" class="labelNormal "></label><br />
+                                            <label id="lblTotalReadyGoodsCpu" class="labelNormal "></label><br />
+                                            <label id="lblTotalReadyGoodsQty" class="labelNormal "></label><br />
+
+                                        </th>
+                                        <th style="width:350px!important">
+
+                                            <table class="table dataTable table-striped">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:76px;">
+                                                            <label class="labelNormal ">Monthly Info</label>
+                                                        </td>
+                                                        <td style="width:93px;">
+                                                            <label class="labelNormal ">Gross Sales</label>
+                                                        </td>
+                                                        <td style="width:83px;">
+                                                            <label class="labelNormal ">Discount </label>
+                                                        </td>
+                                                        <td style="width:100px;">
+                                                            <label class="labelNormal " style="margin-left: 25px;">Net Amount</label>
+                                                        </td>
+                                                        <td style="width:80px">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <div class="card">
+                     
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <label class="labelNormal" style="margin-bottom: 10px!important">Remarks</label>
+                                <div class="col-md-12">
+                                    <input disabled style="width:100%;" type="text" asp-for="remarks" class="border-gray-200 form-control">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" style="margin-bottom: 30px;">
+                                    <button style="width:150px;" type="button" class="btn btn-danger" id="btnCancel" onclick="document.location='/BusinessPlan/BusinessPlanApprovalLanding';"><i class="fa fa-angle-double-left"></i>&nbsp;Back to List</button>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer_common" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 85% !important; max-width:85% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h6 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Yearly Business Plan Data
+                        </h6>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+   
+    <script src="~/scripts/businessplanning/businessplan.js"></script>
+
+
+    <script>
+
+        var data_list = [];
+        var outlets = [];
+
+        function calc_gross_sales() {
+
+            if (parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())) > parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) {
+                $("#txt_total_yearly_gross_sales").css("color", "red");
+            }
+            else {
+                $("#txt_total_yearly_gross_sales").css("color", "black");
+            }
+
+            var tmp_remaining = parseFloat(localStringToNumber($("#yearly_gross_sales").val())) - parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val()));
+
+            $("#txt_total_yearly_gross_sales_remaining").val(ConvertNumbertoCurrency(tmp_remaining));
+            $("#lbl_total_yearly_gross_sales_remaining").text(convertNumberToCrore(tmp_remaining));
+        }
+
+        function calc_total_sales_discount_net(txt) {
+
+            if (check_value(localStringToNumber($(txt).parent().parent().find(".outlet_gross_sales").val())) == null) {
+                $(txt).parent().parent().find(".outlet_gross_sales").val("0");
+                $(txt).parent().parent().find(".outlet_discount_amount").val("0");
+                // $(txt).parent().parent().find(".outlet_net_amount").val("0");
+            }
+            var gross_amount = parseFloat(localStringToNumber($(txt).parent().parent().find(".outlet_gross_sales").val()));
+
+            var net_amount = 0;
+
+            if (check_value(localStringToNumber($(txt).parent().parent().find(".outlet_discount_amount").val())) != null) {
+                net_amount = parseFloat(localStringToNumber($(txt).parent().parent().find(".outlet_discount_amount").val()));
+            }
+
+            var net_amount = gross_amount - parseFloat(net_amount);
+
+            $(txt).parent().parent().find(".outlet_net_amount").val(net_amount);
+
+            var sum_discount = new Decimal(0);
+            var sum_net = new Decimal(0);
+
+            $('#modalcontent-common .outlet_discount_amount').each(function (index, element) {
+
+                var number = new Decimal(0);
+
+                if (check_value(localStringToNumber($(element).val())) != null) {
+                    number = parseFloat(localStringToNumber($(element).val()));
+                }
+
+                sum_discount = sum_discount.plus(number);
+
+                number = new Decimal(0);
+
+                if (check_value(localStringToNumber($(element).parent().parent().find(".outlet_net_amount").val())) != null) {
+                    number = parseFloat(localStringToNumber($(element).parent().parent().find(".outlet_net_amount").val()));
+                }
+
+                sum_net = sum_net.plus(number);
+
+            });
+
+            $("#txtTotalOutletDiscount").val(ConvertNumbertoCurrency(sum_discount));
+            $("#txtTotalOutletNetAmount").val(ConvertNumbertoCurrency(sum_net));
+
+            var sum = new Decimal(0);
+            var sum_discount = new Decimal(0);
+            var sum_net = new Decimal(0);
+
+            var eventid = $('#modalcontent-common #btnSaveOutletSales').attr("event_id");
+            var monthid = $('#modalcontent-common #btnSaveOutletSales').attr("month_id");
+
+            $('#modalcontent-common .outlet_gross_sales').each(function (index, element) {
+
+                var sales_number = new Decimal(0);
+
+                if (check_value(localStringToNumber($(element).val())) != null) {
+                    sales_number = parseFloat(localStringToNumber($(element).val()));
+                }
+
+                sum = sum.plus(sales_number);
+
+                var discount_number = new Decimal(0);
+
+                if (check_value(localStringToNumber($(element).parent().parent().find(".outlet_discount_amount").val())) != null) {
+                    discount_number = parseFloat(localStringToNumber($(element).parent().parent().find(".outlet_discount_amount").val()));
+                }
+
+                sum_discount = sum_discount.plus(discount_number);
+
+                net_number = sales_number - discount_number;
+
+                sum_net = sum_net.plus(net_number);
+            });
+
+            $("#txtTotalOutletGrossSales").val(ConvertNumbertoCurrency(sum));
+            $("#lblTotalOutletGrossSalesInWord").text(convertNumberToWords(sum));
+
+            $("#txtTotalOutletDiscount").val(ConvertNumbertoCurrency(sum_discount));
+            $("#txtTotalOutletNetAmount").val(ConvertNumbertoCurrency(sum_net));
+
+            $("#txtmonthlysales" + eventid + monthid).val(ConvertNumbertoCurrency(sum.toFixed(2)));
+            $("#txtmonthlydiscount" + eventid + monthid).val(ConvertNumbertoCurrency(sum_discount.toFixed(2)));
+            $("#txtmonthlynet" + eventid + monthid).val(ConvertNumbertoCurrency(sum_net.toFixed(2)));
+
+            var yearly_gross_sales = new Decimal(0);
+            var yearly_gross_discount = new Decimal(0);
+            var yearly_gross_net = new Decimal(0);
+
+            $('#DTTranBPSeasonEvents .txtgross_sales').each(function (index, element) {
+
+                var event_gross_sales = new Decimal(0);
+                var event_gross_discount = new Decimal(0);
+                var event_gross_net = new Decimal(0);
+
+                $(element).closest(".table_row_master").find('.txtmonthlysales').each(function (index, inner_element) {
+
+                    var gross_sales = new Decimal(0);
+
+                    if (check_value(localStringToNumber($(inner_element).val())) != null) {
+                        gross_sales = parseFloat(localStringToNumber($(inner_element).val()));
+                        event_gross_sales = event_gross_sales.plus(gross_sales);
+                    }
+
+                    var sum_discount = new Decimal(0);
+
+                    if (check_value(localStringToNumber($(inner_element).parent().parent().find(".txtmonthlydiscount").val())) != null) {
+                        sum_discount = parseFloat(localStringToNumber($(inner_element).parent().parent().find(".txtmonthlydiscount").val()));
+                        event_gross_discount = event_gross_discount.plus(sum_discount);
+                    }
+
+                    var sum_net = new Decimal(0);
+
+                    // if (check_value(localStringToNumber($(inner_element).parent().parent().find(".txtmonthlynet").val())) != null) {
+                    //     sum_net = parseFloat(localStringToNumber($(inner_element).parent().parent().find(".txtmonthlynet").val()));
+                    //     event_gross_net = event_gross_net.plus(sum_net);
+                    // }
+                });
+
+                event_gross_net = event_gross_sales - event_gross_discount;
+
+                yearly_gross_sales = yearly_gross_sales.plus(parseFloat(event_gross_sales));
+                yearly_gross_discount = yearly_gross_discount.plus(parseFloat(event_gross_discount));
+                yearly_gross_net = yearly_gross_sales - yearly_gross_discount;
+
+                $(element).val(ConvertNumbertoCurrency(event_gross_sales));
+                $(element).closest(".table_row_master").find(".txtgross_discount").val(ConvertNumbertoCurrency(event_gross_discount));
+                $(element).closest(".table_row_master").find(".txtgross_net").val(ConvertNumbertoCurrency(event_gross_net));
+
+                data_list.filter(p => p.event_id == eventid).forEach(function (item) {
+                    item.event_gross_sales = event_gross_sales;
+                    item.event_gross_discount = event_gross_discount;
+                    item.event_gross_net = (event_gross_sales - event_gross_discount);
+                });
+
+            });
+
+            $("#txt_total_yearly_gross_sales").val(ConvertNumbertoCurrency(yearly_gross_sales));
+            $("#lbl_txt_total_yearly_gross_sales").text(convertNumberToCrore(yearly_gross_sales));
+
+            var tmp_remaining = parseFloat(localStringToNumber($("#yearly_gross_sales").val())) - yearly_gross_sales;
+
+            $("#txt_total_yearly_gross_sales_remaining").val(ConvertNumbertoCurrency(tmp_remaining));
+            $("#lbl_total_yearly_gross_sales_remaining").text(convertNumberToCrore(tmp_remaining));
+
+            //
+            if (yearly_gross_sales > parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) {
+                $("#txt_total_yearly_gross_sales").css("color", "red");
+            }
+            else {
+                $("#txt_total_yearly_gross_sales").css("color", "black");
+            }
+
+            $("#yearly_gross_discount").val(ConvertNumbertoCurrency(yearly_gross_discount));
+
+            $("#lblyearly_gross_discount_inword").text(convertNumberToCrore(yearly_gross_discount));
+
+            if (parseFloat(localStringToNumber($("#yearly_gross_discount").val())) != 0) {
+
+                var discount = parseFloat(localStringToNumber($("#yearly_gross_discount").val())) / parseFloat(yearly_gross_sales);
+
+                $("#lbl_yearly_gross_discount_percent").text("(" + (discount * 100).toFixed(2) + "%)");
+            }
+
+            var yearly_net = yearly_gross_sales - yearly_gross_discount;
+
+            $("#yearly_gross_net").val(ConvertNumbertoCurrency(yearly_net));
+
+            if (parseFloat(localStringToNumber($("#yearly_gross_net").val())) != 0) {
+
+                var discount = parseFloat(localStringToNumber($("#yearly_gross_net").val())) / parseFloat(yearly_gross_sales);
+
+                $("#lbl_yearly_gross_net_percent").text("(" + (discount * 100).toFixed(2) + "%)");
+            }
+
+            $("#lbl_yearly_gross_net_inword").text(convertNumberToCrore(yearly_net));
+        }
+
+
+        function LoadSeasonEventData(fiscal_year_id) {
+
+            var input = {
+                MasterID: fiscal_year_id
+            };
+
+            var dt = $("#DTTranBPSeasonEvents").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/BusinessPlan/GetAllSavedEventListData", data: input }),
+                searching: false,
+                "bLengthChange": false,
+                "bPaginate": false,
+                "bInfo": false,
+                columnDefs: [
+                    // { targets: 0, "visible": false, "sortable": false },
+                    { targets: 0, "visible": true, "sortable": false },
+                    { targets: 1, "visible": true, "sortable": false },
+                    { targets: 2, "visible": true, "sortable": false },
+                    { targets: 3, "visible": true, "sortable": false },
+
+                ],
+                createdRow: function (row, data, dataIndex) {
+
+                    $(row).addClass("table_row_master");
+
+                },
+                "columns": [
+                    // { "data": "tran_bp_season_id", "name": "tran_bp_season_id", "autoWidth": true },
+                    { "data": "season_event", "name": "season_event", "autoWidth": true, "sortable": false },
+
+                    {
+                        "data": "txteventgross_sales", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    },
+                    {
+                        "data": "txtreadygoods_qnty", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    },
+                    // {
+                    //     "data": "txtreadygoods_value", render: function (data, type, full, row) {
+                    //         return data;
+                    //     }
+                    // },
+                    {
+                        "data": "txtmonthlyhtml", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    }
+
+                ]
+            });
+        }
+
+        function BtnLoadOutlet(btn) {
+            //e.preventDefault();
+
+            if (check_value(localStringToNumber($("#yearly_gross_sales").val())) == null) {
+
+                showErrorAlert("Alert", "Please Provide Yearly Gross Sales Amount", "Close", function () {
+
+                    setTimeout(function () {
+                        $("#yearly_gross_sales").focus();
+                    }, 0);
+                });
+                return;
+            }
+            else {
+
+                LoadOutlet($(btn));
+
+            }
+        }
+
+        function jsdatatableloaded() {
+
+
+            $("#DTTranBPSeasonEvents .txtreadygoods_qnty").change(function (e) {
+                var rgqty = localStringToNumber($(this).val());
+                data_list.filter(p => p.event_id == $(this).attr("event_id")).forEach(function (item) {
+                    item.readygoods_qnty = rgqty;
+                });
+
+                var total_rgq = getTotalByClassInsideTableObject($("#DTTranBPSeasonEvents"), "txtreadygoods_qnty");
+
+                $("#lblTotalReadyGoodsQty").text("Total Qty:  " + ConvertNumbertoCommaSeparated(total_rgq));
+
+            });
+
+            $("#DTTranBPSeasonEvents .txtreadygoods_value").change(function (e) {
+                var rgval = localStringToNumber($(this).val());
+                data_list.filter(p => p.event_id == $(this).attr("event_id")).forEach(function (item) {
+                    item.readygoods_value = rgval;
+                });
+
+
+                var total_rgv = getTotalByClassInsideTableObject($("#DTTranBPSeasonEvents"), "txtreadygoods_value");
+
+                $("#lblTotalReadyGoodsValue").text("Total MRP:  " + ConvertNumbertoCurrency(total_rgv));
+
+            });
+
+            $("#DTTranBPSeasonEvents .txtreadygoods_cpu").change(function (e) {
+
+                var rgval = localStringToNumber($(this).val());
+
+                data_list.filter(p => p.event_id == $(this).attr("event_id")).forEach(function (item) {
+                    item.readygoods_cpu = rgval;
+                });
+
+                var total_rgv = getTotalByClassInsideTableObject($("#DTTranBPSeasonEvents"), "txtreadygoods_cpu");
+
+                $("#lblTotalReadyGoodsCpu").text("Total CPU:  " + ConvertNumbertoCurrency(total_rgv));
+
+            });
+
+            claculate_yearly_gross_onload();
+
+            ConvertNumberToCurrency();
+
+            var total_rgq = getTotalByClassInsideTableObject($("#DTTranBPSeasonEvents"), "txtreadygoods_qnty");
+
+            $("#lblTotalReadyGoodsQty").text("Total Qty:  " + ConvertNumbertoCommaSeparated(total_rgq));
+
+            var total_rgv = getTotalByClassInsideTableObject($("#DTTranBPSeasonEvents"), "txtreadygoods_value");
+
+            $("#lblTotalReadyGoodsValue").text("Total MRP:  " + ConvertNumbertoCurrency(total_rgv));
+
+            var total_rgv = getTotalByClassInsideTableObject($("#DTTranBPSeasonEvents"), "txtreadygoods_cpu");
+
+            $("#lblTotalReadyGoodsCpu").text("Total CPU:  " + ConvertNumbertoCurrency(total_rgv));
+
+
+            try {
+
+                ajaxGetHandler("/BusinessPlan/GetAllOutletData", null, function (data) {
+
+                    outlets = JSON.parse(data);
+
+                    GenerateData();
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function GenerateData() {
+
+            data_list = [];
+
+            try {
+
+                var request = {
+                    MasterID: parseInt($("#fiscal_year_id").val())
+                }
+
+                ajaxPostObjectHandler("/BusinessPlan/GetAll_TranEventMonthlyOutletData", request, function (response) {
+
+                    var data = response;
+
+                    for (var index = 0; index < data.length; index++) {
+
+                        var objsinle = {
+                            event_id: data[index].event_id,
+                            month_id: data[index].month_id,
+                            outlet_id: data[index].outlet_id,
+                            outlet_gross_sales: data[index].outlet_gross_sales,
+                            outlet_gross_discount: data[index].outlet_discount_amount,
+                            outlet_gross_net: data[index].outlet_net_amount,
+                            readygoods_qnty: data[index].readygoods_qnty,
+                            readygoods_value: data[index].readygoods_value,
+                            readygoods_cpu: data[index].readygoods_cpu,
+                            event_gross_sales: data[index].event_gross_sales,
+                            event_gross_discount: data[index].event_discount_amount,
+                            event_gross_net: data[index].event_net_amount,
+
+                            monthly_gross_sales: data[index].monthly_gross_sales,
+                            monthly_discount_amount: data[index].monthly_discount_amount,
+                            monthly_net_amount: data[index].monthly_net_amount,
+                            tran_bp_event_id: data[index].tran_bp_event_id,
+                            tran_bp_event_month_id: data[index].tran_bp_event_month_id,
+                            tran_bp_event_month_outlet_id: data[index].tran_bp_event_month_outlet_id,
+                            tran_bp_year_id: data[index].tran_bp_year_id,
+                            yearly_gross_sales: data[index].yearly_gross_sales,
+                            yearly_gross_discount: data[index].yearly_gross_discount,
+                            yearly_gross_net: data[index].yearly_gross_net,
+
+                            added_by: data[index].added_by,
+                            date_added: data[index].date_added
+
+                        };
+
+                        data_list.push(objsinle);
+                    }
+
+                }, true);
+
+            } catch (e) {
+                hideLoader();
+            }
+
+
+        }
+
+        function calculate_yearly_gross_forOutlet(eventid) {
+
+            var yearly_gross_sales = new Decimal(0);
+
+            $('#DTTranBPSeasonEvents .txtgross_sales').each(function (index, element) {
+
+                var event_gross_sales = new Decimal(0);
+
+
+                $(element).closest(".table_row_master").find('.txtmonthlysales').each(function (index, inner_element) {
+
+                    var number = new Decimal(0);
+
+                    if (check_value(localStringToNumber($(inner_element).val())) != null) {
+
+                        number = localStringToNumber($(inner_element).val());
+
+                        event_gross_sales = event_gross_sales.plus(parseFloat(number));
+
+                    }
+                });
+
+                yearly_gross_sales = yearly_gross_sales.plus(parseFloat(event_gross_sales));
+
+                $(element).val(parseFloat(event_gross_sales).toFixed(2));
+
+                data_list.filter(p => p.event_id == eventid).forEach(function (item) {
+                    item.event_gross_sales = event_gross_sales;
+                });
+
+            });
+
+            $("#txt_total_yearly_gross_sales").val(parseFloat(yearly_gross_sales).toFixed());
+
+            $("#txt_total_yearly_gross_sales_remaining").val(parseFloat(localStringToNumber($("#yearly_gross_sales").val())) - parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())));
+
+            if (parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())) > parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) {
+                $("#txt_total_yearly_gross_sales").css("color", "red");
+            }
+            else {
+                $("#txt_total_yearly_gross_sales").css("color", "black");
+            }
+
+            ConvertNumberToCurrency();
+        }
+
+        function claculate_yearly_gross_onload() {
+
+            var yearly_gross_sales = new Decimal(0);
+
+            var gross_discount = new Decimal(0);
+
+            $('#DTTranBPSeasonEvents .txtgross_sales').each(function (index, element) {
+
+                yearly_gross_sales = yearly_gross_sales.plus(parseFloat(localStringToNumber($(element).val())));
+
+                gross_discount = gross_discount.plus(parseFloat(localStringToNumber($(element).parent().parent().parent().find('.txtgross_discount').val())))
+
+            });
+
+            $("#txt_total_yearly_gross_sales").val(parseFloat(yearly_gross_sales).toFixed());
+
+            $("#lblyearly_gross_discount_inword").text(convertNumberToCrore(yearly_gross_discount));
+
+            $("#txt_total_yearly_gross_sales_remaining").val(parseFloat(localStringToNumber($("#yearly_gross_sales").val())) - yearly_gross_sales);
+            $("#lbl_total_yearly_gross_sales_remaining").text(convertNumberToCrore((parseFloat(localStringToNumber($("#yearly_gross_sales").val())) - yearly_gross_sales).toFixed(2)));
+
+            if (gross_discount != 0) {
+
+                var discount = gross_discount / parseFloat(yearly_gross_sales);
+
+                $("#yearly_gross_discount").val(ConvertNumbertoCurrency(gross_discount.toFixed(2)));
+
+                $("#lbl_yearly_gross_discount_percent").text("(" + (discount * 100).toFixed(2) + "%)");
+
+                $("#lblyearly_gross_discount_inword").text(convertNumberToCrore(gross_discount));
+            }
+
+            var yearly_net = yearly_gross_sales - gross_discount;
+
+            $("#yearly_gross_net").val(ConvertNumbertoCurrency(yearly_net));
+
+            if (yearly_net != 0) {
+
+                var discount = yearly_net / parseFloat(yearly_gross_sales);
+
+                $("#lbl_yearly_gross_net_percent").text("(" + (discount * 100).toFixed(2) + "%)");
+            }
+
+            $("#lbl_yearly_gross_net_inword").text(convertNumberToCrore(yearly_net));
+
+            if (parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())) > parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) {
+                $("#txt_total_yearly_gross_sales").css("color", "red");
+            }
+            else {
+                $("#txt_total_yearly_gross_sales").css("color", "black");
+            }
+
+            ConvertNumberToCurrency();
+        }
+
+        function RegisterOutletEventsAndLoadSavedData(btn) {
+
+            var eventid = $(btn).attr("event_id");
+            var monthid = $(btn).attr("month_id");
+
+            var readygoods_qty = $(btn).parent().parent().parent().parent().parent().parent().find(".txtreadygoods_qnty").val();
+            var readygoods_value = $(btn).parent().parent().parent().parent().parent().parent().find(".txtreadygoods_value").val();
+            var eventgross_sales = $(btn).parent().parent().parent().parent().parent().parent().find(".txtgross_sales").val();
+            var eventgross_discount = $(btn).parent().parent().parent().parent().parent().parent().find(".txtgross_discount").val();
+            var eventgross_net = $(btn).parent().parent().parent().parent().parent().parent().find(".txtgross_net").val();
+
+            var filterdata = data_list.filter(x => x.event_id == eventid && x.month_id == monthid);
+
+            if (filterdata.length > 0) {
+
+                $('#modalcontent-common .outlet_gross_sales').each(function (index, element) {
+
+                    var filteroutletdata = data_list.filter(x => x.event_id == eventid && x.month_id == monthid
+                        && x.outlet_id == $(element).attr("outletid"));
+
+                    if (filteroutletdata.length > 0) {
+
+                        filteroutletdata[0].outlet_gross_sales = filteroutletdata[0].outlet_gross_sales != null ?
+                            filteroutletdata[0].outlet_gross_sales : 0;
+
+                        filteroutletdata[0].outlet_gross_discount = filteroutletdata[0].outlet_gross_discount != null ?
+                            filteroutletdata[0].outlet_gross_discount : 0;
+
+                        filteroutletdata[0].outlet_gross_net = filteroutletdata[0].outlet_gross_net != null ?
+                            filteroutletdata[0].outlet_gross_net : 0;
+
+                        $(element).val(filteroutletdata[0].outlet_gross_sales.toFixed(2));
+                        $(element).parent().parent().find(".outlet_discount_amount").val(filteroutletdata[0].outlet_gross_discount.toFixed(2));
+                        $(element).parent().parent().find(".outlet_net_amount").val(filteroutletdata[0].outlet_gross_net.toFixed(2));
+
+                        $(element).attr("tran_bp_event_month_outlet_id", filteroutletdata[0].tran_bp_event_month_outlet_id);
+                        $(element).parent().parent().find(".outlet_discount_amount").attr("tran_bp_event_month_outlet_id", filteroutletdata[0].tran_bp_event_month_outlet_id);
+                        $(element).parent().parent().find(".outlet_net_amount").attr("tran_bp_event_month_outlet_id", filteroutletdata[0].tran_bp_event_month_outlet_id);
+                    }
+
+                });
+
+                var load_total = new Decimal(0);
+                var load_total_discount = new Decimal(0);
+                var load_total_net = new Decimal(0);
+
+                filterdata.forEach(function (item) {
+                    load_total = load_total.plus(parseFloat(item.outlet_gross_sales.toFixed(2)));
+                    load_total_discount = load_total_discount.plus(parseFloat(item.outlet_gross_discount.toFixed(2)));
+                    load_total_net = load_total_net.plus(parseFloat(item.outlet_gross_net.toFixed(2)));
+                });
+
+                $("#txtTotalOutletGrossSales").val(ConvertNumbertoCurrency(load_total.toFixed(2)));
+                $("#lblTotalOutletGrossSalesInWord").text(convertNumberToWords(load_total.toFixed(2)));
+
+                $("#txtTotalOutletDiscount").val(ConvertNumbertoCurrency(load_total_discount.toFixed(2)));
+                $("#txtTotalOutletNetAmount").val(ConvertNumbertoCurrency(load_total_net.toFixed(2)));
+            }
+
+
+            $('#modalcontent-common #btnCancel').click(function () {
+
+                $('#modalcontent-common').html("");
+
+                $('#modalcontainer_common').modal("hide");
+            });
+
+
+
+            calculate_yearly_gross_forOutlet(eventid);
+        }
+
+        function SaveOutletSales(btn) {
+
+            var eventid = $(btn).attr("event_id");
+            var monthid = $(btn).attr("month_id");
+
+            var readygoods_qty = $("#DTTranBPSeasonEvents .btnoutlet[month_id=" + monthid + "][event_id=" + eventid + "]").closest(".table_row_master").find(".txtreadygoods_qnty").val();
+            var readygoods_value = $("#DTTranBPSeasonEvents .btnoutlet[month_id=" + monthid + "][event_id=" + eventid + "]").closest(".table_row_master").find(".txtreadygoods_value").val();
+            var eventgross_sales = $("#DTTranBPSeasonEvents .btnoutlet[month_id=" + monthid + "][event_id=" + eventid + "]").closest(".table_row_master").find(".txtgross_sales").val();
+            var eventgross_discount = $("#DTTranBPSeasonEvents .btnoutlet[month_id=" + monthid + "][event_id=" + eventid + "]").closest(".table_row_master").find(".txtgross_discount").val();
+            var eventgross_net = $("#DTTranBPSeasonEvents .btnoutlet[month_id=" + monthid + "][event_id=" + eventid + "]").closest(".table_row_master").find(".txtgross_net").val();
+
+
+            if (parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())) > parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) {
+
+                showConfirmationAlert("Alert", "Sales Amount Exceeds the Yearly Planned Amount. Do You Want to Proceed??", "Yes", function () {
+
+                    ExecuteSaveButton(eventid, monthid, readygoods_qty, readygoods_value, eventgross_sales);
+
+                });
+            }
+            else {
+                ExecuteSaveButton(eventid, monthid, readygoods_qty, readygoods_value, eventgross_sales);
+            }
+
+        }
+
+        function ExecuteSaveButton(eventid, monthid, readygoods_qty, readygoods_value, eventgross_sales) {
+
+            var event_gross_sales = new Decimal(0);
+            var event_gross_discount = new Decimal(0);
+            var event_gross_net = new Decimal(0);
+
+
+            data_list.filter(x => x.event_id == eventid && x.month_id != monthid).forEach(item => {
+
+                item.outlet_gross_sales = item.outlet_gross_sales != null ? item.outlet_gross_sales : 0;
+                item.outlet_gross_discount = item.outlet_gross_discount != null ? item.outlet_gross_discount : 0;
+
+                event_gross_sales = event_gross_sales.plus(item.outlet_gross_sales);
+                event_gross_discount = event_gross_discount.plus(item.outlet_gross_discount);
+
+            });
+
+            $('#modalcontent-common .outlet_gross_sales').each(function (index, element) {
+
+                var outlet_gross_sales = new Decimal(0);
+
+                if (check_value(localStringToNumber($(element).val())) != null) {
+                    outlet_gross_sales = parseFloat(localStringToNumber($(element).val()));
+                    event_gross_sales = event_gross_sales.plus(outlet_gross_sales);
+                }
+
+                var outlet_discount = new Decimal(0);
+
+                if (check_value(localStringToNumber($(element).parent().parent().find(".outlet_discount_amount").val())) != null) {
+                    outlet_discount = parseFloat(localStringToNumber($(element).parent().parent().find(".outlet_discount_amount").val()));
+                    event_gross_discount = event_gross_discount.plus(outlet_discount);
+                }
+
+                var outlet_net = new Decimal(0);
+
+                if (check_value(localStringToNumber($(element).parent().parent().find(".outlet_net_amount").val())) != null) {
+                    outlet_net = parseFloat(localStringToNumber($(element).parent().parent().find(".outlet_net_amount").val()));
+                    event_gross_net = event_gross_net.plus(outlet_net);
+                }
+
+                if (data_list.filter(x => x.event_id == eventid && x.month_id == monthid && x.outlet_id == parseInt($(element).attr("outletid"))).length > 0) {
+
+                    data_list.filter(x => x.event_id == eventid && x.month_id == monthid && x.outlet_id == parseInt($(element).attr("outletid")))[0].outlet_gross_sales = outlet_gross_sales;
+                    data_list.filter(x => x.event_id == eventid && x.month_id == monthid && x.outlet_id == parseInt($(element).attr("outletid")))[0].outlet_gross_discount = outlet_discount;
+                    data_list.filter(x => x.event_id == eventid && x.month_id == monthid && x.outlet_id == parseInt($(element).attr("outletid")))[0].outlet_gross_net = (outlet_gross_sales - outlet_discount);
+                    data_list.filter(x => x.event_id == eventid && x.month_id == monthid && x.outlet_id == parseInt($(element).attr("outletid")))[0].readygoods_qnty = check_value(readygoods_qty) == null ? 0 : check_value(readygoods_qty);
+                    data_list.filter(x => x.event_id == eventid && x.month_id == monthid && x.outlet_id == parseInt($(element).attr("outletid")))[0].readygoods_value = check_value(readygoods_value) == null ? 0 : check_value(readygoods_value);
+                    data_list.filter(x => x.event_id == eventid && x.month_id == monthid && x.outlet_id == parseInt($(element).attr("outletid")))[0].event_gross_sales = 0;
+                    data_list.filter(x => x.event_id == eventid && x.month_id == monthid && x.outlet_id == parseInt($(element).attr("outletid")))[0].event_gross_discount = 0;
+                    data_list.filter(x => x.event_id == eventid && x.month_id == monthid && x.outlet_id == parseInt($(element).attr("outletid")))[0].event_gross_net = 0;
+
+                }
+                else {
+
+                    $.each([...new Set(data_list.map(item => item.tran_bp_event_month_id))], function (key, val) {
+
+                        var objNew = {
+                            event_gross_discount: 0,
+                            event_gross_net: 0,
+                            event_gross_sales: 0,
+                            event_id: parseInt(data_list.filter(x => x.tran_bp_event_month_id == val)[0].event_id),
+                            month_id: parseInt(data_list.filter(x => x.tran_bp_event_month_id == val)[0].month_id),
+                            monthly_discount_amount: 0,
+                            monthly_gross_sales: 0,
+                            monthly_net_amount: 0,
+                            outlet_gross_discount: outlet_discount,
+                            outlet_gross_net: (outlet_gross_sales - outlet_discount),
+                            outlet_gross_sales: outlet_gross_sales,
+                            outlet_id: $(element).attr("outletid"),
+                            readygoods_qnty: check_value(readygoods_qty) == null ? 0 : check_value(readygoods_qty),
+                            readygoods_value: check_value(readygoods_value) == null ? 0 : check_value(readygoods_value),
+                            tran_bp_event_id: data_list.filter(x => x.event_id == eventid && x.month_id == monthid)[0].tran_bp_event_id,
+                            tran_bp_event_month_id: data_list.filter(x => x.event_id == eventid && x.month_id == monthid)[0].tran_bp_event_month_id,
+                            tran_bp_event_month_outlet_id: 0,
+                            tran_bp_year_id: data_list.filter(x => x.event_id == eventid && x.month_id == monthid)[0].tran_bp_year_id,
+                            yearly_gross_discount: 0,
+                            yearly_gross_net: 0,
+                            yearly_gross_sales: data_list.filter(x => x.event_id == eventid && x.month_id == monthid)[0].yearly_gross_sales
+                        }
+
+                        data_list.push(objNew);
+
+                    });
+
+
+                }
+            });
+
+            data_list.filter(x => x.event_id == eventid).forEach(item => {
+                item.event_gross_sales = event_gross_sales;
+                item.event_gross_discount = event_gross_discount;
+                item.event_gross_net = event_gross_net;
+            });
+
+
+            $('#modalcontent-common').html("");
+
+            $('#modalcontainer_common').modal("hide");
+        }
+
+        function LoadOutlet(btn) {
+            try {
+                //setTimeout(function () {
+                showLoader("Loading..........");
+                //}, 0);
+                ajaxGetHandler("/BusinessPlan/GetOutletList", null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    $('#modalcontent-common #btnSaveOutletSales').attr("month_id", $(btn).attr("month_id"));
+                    $('#modalcontent-common #btnSaveOutletSales').attr("event_id", $(btn).attr("event_id"));
+
+                    RegisterOutletEventsAndLoadSavedData(btn);
+
+                    BindCurrentEventForTextBox();
+
+                    ConvertNumberToCurrency();
+
+
+                    $('#modalcontent-common #fileInput').change(function () {
+
+                        var fileInput = $(this)[0].files[0];
+
+                        if (fileInput) {
+                            var formData = new FormData();
+                            formData.append('fileInput', fileInput);
+
+                            $.ajax({
+                                url: '/BusinessPlan/UploadFile', // Controller action method URL
+                                type: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function (response) {
+
+                                    if (response.statusCode == "1") {
+
+                                        var uploadedList = response.result;
+
+                                        $.each(uploadedList, function (key, val) {
+
+                                            $("#modalcontent-common #DTOutlet tr[outletid=" + val.outlet_id + "]").
+                                                find(".outlet_gross_sales").val(ConvertNumbertoCurrency(val.outlet_gross_sales));
+
+                                            $("#modalcontent-common #DTOutlet tr[outletid=" + val.outlet_id + "]").
+                                                find(".outlet_gross_sales").trigger("change");
+
+                                            $("#modalcontent-common #DTOutlet tr[outletid=" + val.outlet_id + "]").
+                                                find(".outlet_discount_amount").val(ConvertNumbertoCurrency(val.outlet_discount_amount));
+
+                                            $("#modalcontent-common #DTOutlet tr[outletid=" + val.outlet_id + "]").
+                                                find(".outlet_discount_amount").trigger("change");
+
+                                            $("#modalcontent-common #DTOutlet tr[outletid=" + val.outlet_id + "]").
+                                                find(".outlet_net_amount").val(ConvertNumbertoCurrency(val.outlet_net_amount));
+                                        });
+
+                                    }
+                                    else {
+
+                                        showSuccessAlert("Error", "Excel Upload Failed", "OK", function () {
+
+                                        });
+
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error(xhr.responseText);
+                                }
+                            });
+                        }
+                    });
+
+
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function LoadOutletData() {
+            try {
+
+                ajaxGetHandler("/BusinessPlan/GetAllOutletData", null, function (data) {
+
+                    outlets = JSON.parse(data);
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function SubmitBusinessPlanDataForApproval() {
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            var request = {
+                tran_bp_year_id: check_value($("#tran_bp_year_id").val()) == null ? 0 : parseInt($("#tran_bp_year_id").val()),
+                fiscal_year_id: check_value($("#fiscal_year_id").val()) == null ? 0 : parseInt($("#fiscal_year_id").val()),
+                gross_sales: parseFloat(localStringToNumber($("#yearly_gross_sales").val())),
+                yearly_gross_discount: parseFloat(localStringToNumber($("#yearly_gross_discount").val())),
+                yearly_gross_net: parseFloat(localStringToNumber($("#yearly_gross_net").val())),
+                remarks: $("#remarks").val(),
+
+                event_monthly_outlet_list: data_list
+            };
+
+            ajaxPostObjectHandler("/BusinessPlan/SubmitBusinessPlanForApproval", request, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    connection.invoke("SendNoticationToUser", "Business Plan Approval", "BusinessPlan/SubmitBusinessPlanForApproval", response.link).catch(err =>
+                        console.error(err.toString())
+                    );
+
+
+                    showSuccessAlertAutoClose("Success", response.status_Result, "OK", function () {
+                        document.location = "/BusinessPlan/BusinessPlanLanding";
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+            // }
+        }
+
+        function UpdateBusinessPlanData() {
+
+            $("#btnUpdateBusinessPlan").find(".fa-save").attr("class", "fa fa fa-refresh fa-spin");
+            $("#btnUpdateBusinessPlan").prop("enabled", false);
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+            var request = {
+                tran_bp_year_id: check_value($("#tran_bp_year_id").val()) == null ? 0 : parseInt($("#tran_bp_year_id").val()),
+                fiscal_year_id: check_value($("#fiscal_year_id").val()) == null ? 0 : parseInt($("#fiscal_year_id").val()),
+                gross_sales: parseFloat(localStringToNumber($("#yearly_gross_sales").val())),
+                yearly_gross_discount: parseFloat(localStringToNumber($("#yearly_gross_discount").val())),
+                yearly_gross_net: parseFloat(localStringToNumber($("#yearly_gross_net").val())),
+                remarks: $("#remarks").val(),
+                event_monthly_outlet_list: data_list
+            };
+
+            ajaxPostObjectHandler("/BusinessPlan/UpdateBusinessPlan", request, function (response) {
+                hideLoader();
+                if (response.status_Code == "200") {
+
+                    showSuccessAlertAutoClose("Success", response.status_Result, "OK", function () {
+                        document.location = "/BusinessPlan/BusinessPlanLanding";
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+                        $("#btnUpdateBusinessPlan").prop("enabled", true);
+                        $("#btnUpdateBusinessPlan").find(".fa-save").attr("class", "fa fa fa-save");
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+        }
+
+        $(function () {
+
+            //LoadOutletData();
+
+            LoadSeasonEventData($("#fiscal_year_id").val());
+
+            $("#btnSubmitBusinessPlan").click(function () {
+
+                SubmitBusinessPlanDataForApproval();
+
+            });
+
+            $("#btnUpdateBusinessPlan").click(function () {
+
+                UpdateBusinessPlanData();
+            });
+
+            $("#yearly_gross_sales").change(function () {
+
+                $("#txt_inword_business_plan").text(" (" + convertNumberToWords(parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) + " )");
+            });
+
+            $("#yearly_gross_sales").trigger("change");
+        });
+    </script>
+
+
+   @*  <script>
+
+        var data_list = [];
+        var outlets = [];
+        //var input_list = [];
+
+        function LoadSeasonEventData(fiscal_year_id) {
+
+            var input = {
+                MasterID: fiscal_year_id,
+                isView: true
+
+            };
+
+            var dt = $("#DTTranBPSeasonEvents").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/BusinessPlan/GetAllSavedEventListData", data: input }),
+                searching: false,
+                "bLengthChange": false,
+                "bPaginate": false,
+                "bInfo": false,
+                columnDefs: [
+                    // { targets: 0, "visible": false, "sortable": false },
+                    { targets: 0, "visible": true, "sortable": false },
+                    { targets: 1, "visible": true, "sortable": false },
+                    { targets: 2, "visible": true, "sortable": false },
+                    { targets: 3, "visible": true, "sortable": false },
+
+                ],
+                "columns": [
+                    // { "data": "tran_bp_season_id", "name": "tran_bp_season_id", "autoWidth": true },
+                    { "data": "season_event", "name": "season_event", "autoWidth": true, "sortable": false },
+
+                    {
+                        "data": "txteventgross_sales", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    },
+                    {
+                        "data": "txtreadygoods_qnty", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    },
+                    // {
+                    //     "data": "txtreadygoods_value", render: function (data, type, full, row) {
+                    //         return data;
+                    //     }
+                    // },
+                    {
+                        "data": "txtmonthlyhtml", render: function (data, type, full, row) {
+                            return data;
+                        }
+                    }
+
+                ]
+            });
+        }
+
+        function jsdatatableloaded() {
+
+            $("#DTTranBPSeasonEvents .btnoutlet").click(function (e) {
+
+                e.preventDefault();
+
+                if ($("#yearly_gross_sales").val().length == 0) {
+
+                    showErrorAlert("Alert", "Please Provide Yearly Gross Sales Amount", "Close", function () {
+
+                        setTimeout(function () {
+                            $("#yearly_gross_sales").focus();
+                        }, 0);
+                    });
+                    return;
+                }
+                else {
+                    LoadOutlet($(this));
+                }
+
+            });
+
+            $("#DTTranBPSeasonEvents .txtreadygoods_qnty").change(function (e) {
+                var rgqty = $(this).val();
+                data_list.filter(p => p.event_id == $(this).attr("event_id")).forEach(function (item) {
+                    item.readygoods_qnty = rgqty;
+                });
+            });
+
+            $("#DTTranBPSeasonEvents .txtreadygoods_value").change(function (e) {
+                var rgval = $(this).val();
+                data_list.filter(p => p.event_id == $(this).attr("event_id")).forEach(function (item) {
+                    item.readygoods_value = rgval;
+                });
+            });
+
+            claculate_yearly_gross_onload();
+
+            GenerateData();
+
+            var total_rgq = getTotalByClassInsideTableObject($("#DTTranBPSeasonEvents"), "txtreadygoods_qnty");
+
+            $("#lblTotalReadyGoodsQty").text("Total Qty:  " + ConvertNumbertoCommaSeparated(total_rgq));
+
+            var total_rgv = getTotalByClassInsideTableObject($("#DTTranBPSeasonEvents"), "txtreadygoods_value");
+
+            $("#lblTotalReadyGoodsValue").text("Total Value:  " + ConvertNumbertoCurrency(total_rgv));
+
+            var total_rgv = getTotalByClassInsideTableObject($("#DTTranBPSeasonEvents"), "txtreadygoods_cpu");
+
+            $("#lblTotalReadyGoodsCpu").text("Total CPU:  " + ConvertNumbertoCurrency(total_rgv));
+
+
+            $('#DTTranBPSeasonEvents input[type=number]').attr("disabled", "disabled");
+        }
+
+        function GenerateData() {
+
+            data_list = [];
+
+            try {
+
+                var request = {
+                    MasterID: parseInt($("#fiscal_year_id").val())
+                }
+
+                ajaxPostObjectHandler("/BusinessPlan/GetAll_TranEventMonthlyOutletData", request, function (response) {
+
+                    var data = response;
+
+                    for (var index = 0; index < data.length; index++) {
+
+                        var objsinle = {
+                            event_id: data[index].event_id,
+                            month_id: data[index].month_id,
+                            outlet_id: data[index].outlet_id,
+                            outlet_gross_sales: data[index].outlet_gross_sales,
+                            readygoods_qnty: data[index].readygoods_qnty,
+                            readygoods_value: data[index].readygoods_value,
+                            event_gross_sales: data[index].event_gross_sales,
+
+                            monthly_gross_sales: data[index].monthly_gross_sales,
+                            tran_bp_event_id: data[index].tran_bp_event_id,
+                            tran_bp_event_month_id: data[index].tran_bp_event_month_id,
+                            tran_bp_event_month_outlet_id: data[index].tran_bp_event_month_outlet_id,
+                            tran_bp_year_id: data[index].tran_bp_year_id,
+                            yearly_gross_sales: data[index].yearly_gross_sales,
+
+                            added_by: data[index].added_by,
+                            date_added: data[index].date_added
+
+                        };
+
+                        data_list.push(objsinle);
+                    }
+
+                }, true);
+
+            } catch (e) {
+                hideLoader();
+            }
+
+
+        }
+
+
+        function calculate_yearly_gross_forOutlet(eventid) {
+
+            var yearly_gross_sales = new Decimal(0);
+
+            $('#DTTranBPSeasonEvents .txtgross_sales').each(function (index, element) {
+
+                var event_gross_sales = new Decimal(0);
+
+
+                $(element).parent().parent().find('.txtmonthlysales').each(function (index, inner_element) {
+
+                    var number = new Decimal(0);
+
+                    if (check_value(localStringToNumber($(inner_element).val())) != null) {
+
+                        number = localStringToNumber($(inner_element).val());
+
+                        event_gross_sales = event_gross_sales.plus(parseFloat(number));
+
+                    }
+                });
+
+                yearly_gross_sales = yearly_gross_sales.plus(parseFloat(event_gross_sales));
+
+                $(element).val(event_gross_sales);
+
+
+                //var rgval = $(this).val();
+                data_list.filter(p => p.event_id == eventid).forEach(function (item) {
+                    item.event_gross_sales = event_gross_sales;
+                });
+
+
+            });
+
+            $("#txt_total_yearly_gross_sales").val(yearly_gross_sales);
+
+            var discount = (parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())) / parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())) * 100);
+
+            $("#lblyearly_gross_discount").text(discount.toFixed(2));
+
+
+            $("#txt_total_yearly_gross_sales_remaining").val(parseFloat(localStringToNumber($("#yearly_gross_sales").val())) - yearly_gross_sales);
+
+            if (parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())) > parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) {
+                $("#txt_total_yearly_gross_sales").css("color", "red");
+            }
+            else {
+                $("#txt_total_yearly_gross_sales").css("color", "black");
+            }
+
+            ConvertNumberToCurrency();
+        }
+
+        function claculate_yearly_gross_onload() {
+
+            var yearly_gross_sales = new Decimal(0);
+
+            var gross_discount = new Decimal(0);
+
+            $('#DTTranBPSeasonEvents .txtgross_sales').each(function (index, element) {
+
+                yearly_gross_sales = yearly_gross_sales.plus(parseFloat(localStringToNumber($(element).val())));
+
+                gross_discount = gross_discount.plus(parseFloat(localStringToNumber($(element).parent().parent().parent().find('.txtgross_discount').val())))
+
+            });
+
+            $("#txt_total_yearly_gross_sales").val(parseFloat(yearly_gross_sales).toFixed());
+
+            $("#lblyearly_gross_discount_inword").text(convertNumberToCrore(yearly_gross_discount));
+
+            $("#txt_total_yearly_gross_sales_remaining").val(parseFloat(localStringToNumber($("#yearly_gross_sales").val())) - yearly_gross_sales);
+            $("#lbl_total_yearly_gross_sales_remaining").text(convertNumberToCrore((parseFloat(localStringToNumber($("#yearly_gross_sales").val())) - yearly_gross_sales).toFixed(2)));
+
+            if (gross_discount != 0) {
+
+                var discount = gross_discount / parseFloat(yearly_gross_sales);
+
+                $("#yearly_gross_discount").val(ConvertNumbertoCurrency(gross_discount.toFixed(2)));
+
+                $("#lbl_yearly_gross_discount_percent").text("(" + (discount * 100).toFixed(2) + "%)");
+
+                $("#lblyearly_gross_discount_inword").text(convertNumberToCrore(gross_discount));
+            }
+
+            var yearly_net = yearly_gross_sales - gross_discount;
+
+            $("#yearly_gross_net").val(ConvertNumbertoCurrency(yearly_net));
+
+            if (yearly_net != 0) {
+
+                var discount = yearly_net / parseFloat(yearly_gross_sales);
+
+                $("#lbl_yearly_gross_net_percent").text("(" + (discount * 100).toFixed(2) + "%)");
+            }
+
+            $("#lbl_yearly_gross_net_inword").text(convertNumberToCrore(yearly_net));
+
+            if (parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())) > parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) {
+                $("#txt_total_yearly_gross_sales").css("color", "red");
+            }
+            else {
+                $("#txt_total_yearly_gross_sales").css("color", "black");
+            }
+
+            ConvertNumberToCurrency();
+        }
+
+        function RegisterOutletEventsAndLoadSavedData(btn) {
+
+            var eventid = $(btn).attr("event_id");
+            var monthid = $(btn).attr("month_id");
+
+            var readygoods_qty = $(btn).parent().parent().parent().parent().parent().parent().find(".txtreadygoods_qnty").val();
+            var readygoods_value = $(btn).parent().parent().parent().parent().parent().parent().find(".txtreadygoods_value").val();
+            var eventgross_sales = $(btn).parent().parent().parent().parent().parent().parent().find(".txtgross_sales").val();
+            var eventgross_discount = $(btn).parent().parent().parent().parent().parent().parent().find(".txtgross_discount").val();
+            var eventgross_net = $(btn).parent().parent().parent().parent().parent().parent().find(".txtgross_net").val();
+
+            var filterdata = data_list.filter(x => x.event_id == eventid && x.month_id == monthid);
+
+            if (filterdata.length > 0) {
+
+                $('#modalcontent-common .outlet_gross_sales').each(function (index, element) {
+
+                    var filteroutletdata = data_list.filter(x => x.event_id == eventid && x.month_id == monthid
+                        && x.outlet_id == $(element).attr("outletid"));
+
+                    if (filteroutletdata.length > 0) {
+                        $(element).val(filteroutletdata[0].outlet_gross_sales.toFixed(2));
+                        $(element).parent().parent().find(".outlet_discount_amount").val(filteroutletdata[0].outlet_gross_discount.toFixed(2));
+                        $(element).parent().parent().find(".outlet_net_amount").val(filteroutletdata[0].outlet_gross_net.toFixed(2));
+
+                        $(element).attr("tran_bp_event_month_outlet_id", filteroutletdata[0].tran_bp_event_month_outlet_id);
+                        $(element).parent().parent().find(".outlet_discount_amount").attr("tran_bp_event_month_outlet_id", filteroutletdata[0].tran_bp_event_month_outlet_id);
+                        $(element).parent().parent().find(".outlet_net_amount").attr("tran_bp_event_month_outlet_id", filteroutletdata[0].tran_bp_event_month_outlet_id);
+                    }
+
+                });
+
+                var load_total = new Decimal(0);
+                var load_total_discount = new Decimal(0);
+                var load_total_net = new Decimal(0);
+
+                filterdata.forEach(function (item) {
+                    load_total = load_total.plus(parseFloat(item.outlet_gross_sales.toFixed(2)));
+                    load_total_discount = load_total_discount.plus(parseFloat(item.outlet_gross_discount.toFixed(2)));
+                    load_total_net = load_total_net.plus(parseFloat(item.outlet_gross_net.toFixed(2)));
+                });
+
+                $("#txtTotalOutletGrossSales").val(ConvertNumbertoCurrency(load_total.toFixed(2)));
+                $("#lblTotalOutletGrossSalesInWord").text(convertNumberToWords(load_total.toFixed(2)));
+
+                $("#txtTotalOutletDiscount").val(ConvertNumbertoCurrency(load_total_discount.toFixed(2)));
+                $("#txtTotalOutletNetAmount").val(ConvertNumbertoCurrency(load_total_net.toFixed(2)));
+            }
+
+
+            $('#modalcontent-common #btnCancel').click(function () {
+
+                $('#modalcontent-common').html("");
+
+                $('#modalcontainer_common').modal("hide");
+            });
+
+
+
+            calculate_yearly_gross_forOutlet(eventid);
+        }
+
+        function SaveOutletSales() {
+
+            if (parseFloat(localStringToNumber($("#txt_total_yearly_gross_sales").val())) > parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) {
+
+                showConfirmationAlert("Alert", "Sales Amount Exceeds the Yearly Planned Amount. Do You Want to Proceed??", "Yes", function () {
+
+                    ExecuteSaveButton(eventid, monthid, readygoods_qty, readygoods_value, eventgross_sales);
+
+                });
+            }
+            else {
+                ExecuteSaveButton(eventid, monthid, readygoods_qty, readygoods_value, eventgross_sales);
+            }
+
+        }
+
+
+        function ExecuteSaveButton(eventid, monthid, readygoods_qty, readygoods_value, eventgross_sales) {
+
+            var event_gross_sales = 0;
+            var monthly_gross_sales = 0;
+
+            $('#modalcontent-common .outlet_gross_sales').each(function (index, element) {
+
+                data_list.filter(p => p.tran_bp_event_month_outlet_id == $(element).attr("tran_bp_event_month_outlet_id"))
+                [0].outlet_gross_sales = parseFloat($(element).val());
+
+                monthly_gross_sales += parseFloat($(element).val());
+            });
+
+
+            data_list.filter(x => x.event_id == eventid && x.month_id == monthid).forEach(item => {
+                item.monthly_gross_sales = parseFloat(monthly_gross_sales);
+            });
+
+            data_list.filter(x => x.event_id == eventid).forEach(item => {
+                event_gross_sales += parseFloat(item.outlet_gross_sales);
+            });
+
+            data_list.filter(x => x.event_id == eventid).forEach(item => {
+                item.event_gross_sales = parseFloat(event_gross_sales);
+            });
+
+
+            $('#modalcontent-common').html("");
+
+            $('#modalcontainer_common').modal("hide");
+        }
+
+        function LoadOutlet(btn) {
+            try {
+                //setTimeout(function () {
+                showLoader("Loading..........");
+                // 100);
+
+                ajaxGetHandler("/BusinessPlan/GetOutletList", null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    if ($(btn).attr("isview") == "true") {
+                        $('#modalcontent-common #btnSaveOutletSales').remove();
+                    }
+
+                    RegisterOutletEventsAndLoadSavedData(btn);
+
+                    ConvertNumberToCurrency();
+
+                    $('#modalcontainer_common input[type=number]').attr("disabled", "disabled");
+                    $("#btnSaveOutletSales").remove();
+                    $("#modalcontainer_common #dvheaderuploadexcel").css("display", "none");
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+                hideLoader();
+            }
+        }
+
+        //GetAll_TranEventMonthlyOutletData
+
+        function LoadOutletData() {
+            try {
+
+                ajaxGetHandler("/BusinessPlan/GetAllOutletData", null, function (data) {
+
+                    outlets = JSON.parse(data);
+
+                }, true);
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        //
+        function SubmitBusinessPlanDataForApproval() {
+
+            var request = {
+                tran_bp_year_id: parseInt($("#tran_bp_year_id").val()),
+                fiscal_year_id: parseInt($("#fiscal_year_id").val()),
+                gross_sales: parseFloat($("#yearly_gross_sales").val()),
+                remarks: $("#remarks").val(),
+
+                event_monthly_outlet_list: data_list
+            };
+
+            ajaxPostObjectHandler("/BusinessPlan/SubmitBusinessPlanForApproval", request, function (response) {
+
+                if (response.status_Code == "200") {
+
+                    showSuccessAlertAutoClose("Success", response.status_Result, "OK", function () {
+                        document.location = "/BusinessPlan/BusinessPlanLanding";
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true);
+        }
+        function UpdateBusinessPlanData() {
+            //btn btn-primary  has-spinner
+            $("#btnUpdateBusinessPlan").find(".fa-save").attr("class", "fa fa fa-refresh fa-spin");
+            $("#btnUpdateBusinessPlan").prop("enabled", false);
+
+            var request = {
+                tran_bp_year_id: parseInt($("#tran_bp_year_id").val()),
+                fiscal_year_id: parseInt($("#fiscal_year_id").val()),
+                gross_sales: parseFloat($("#yearly_gross_sales").val()),
+                remarks: $("#remarks").val(),
+
+                event_monthly_outlet_list: data_list
+            };
+
+            ajaxPostObjectHandler("/BusinessPlan/UpdateBusinessPlan", request, function (response) {
+
+                if (response.status_Code == "200") {
+
+                    showSuccessAlertAutoClose("Success", response.status_Result, "OK", function () {
+                        document.location = "/BusinessPlan/BusinessPlanLanding";
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+                        $("#btnUpdateBusinessPlan").prop("enabled", true);
+                        $("#btnUpdateBusinessPlan").find(".fa-save").attr("class", "fa fa fa-save");
+                    });
+                }
+            }, true);
+        }
+
+        $(function () {
+
+            LoadOutletData();
+
+            LoadSeasonEventData($("#fiscal_year_id").val());
+
+            $("#yearly_gross_sales").change(function () {
+
+                $("#txt_inword_business_plan").text(" (" + convertNumberToWords(parseFloat(localStringToNumber($("#yearly_gross_sales").val()))) + " )");
+
+            });
+
+            $("#yearly_gross_sales").trigger("change");
+
+
+        });
+    </script> *@
+
+ }

@@ -1,0 +1,346 @@
+﻿@model EPYSLSAILORAPP.Domain.DTO.{EntityName}_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "{TableName} List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+   
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                              <h6 class="card-title">{TableName}</h6> 
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="Add{TableName}(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+                       
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="DT{TableName}" class="table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                {AllDataTableHeaders}
+
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 60% !important; max-width: 60% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            {TableName}
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function Add{TableName}() {
+
+           setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            ajaxGetHandler("/{TableName}/{TableName}New", null, function (data) {
+
+                 setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+            });
+
+        
+        }
+        
+        function Edit{TableName}(btn){
+
+
+            var {PrimaryColumn} = $(btn).attr("{PrimaryColumn}");
+
+               setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/{TableName}/{TableName}Edit?{PrimaryColumn}=" + {PrimaryColumn}, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                 setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+            }
+        }
+
+        function View{TableName}(btn) {
+
+            var {PrimaryColumn} = $(btn).attr("{PrimaryColumn}");
+
+               setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/{TableName}/{TableName}View?{PrimaryColumn}=" + {PrimaryColumn}, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                 setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+            }
+        }
+        
+        function Save{TableName}(btn) {
+
+            {DetailTableColumns}
+
+            var obj_{TableName} = {
+                {AllInsertUpdateColumns}
+               
+            }
+
+            if (_cusFormValidate("frmAdd")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+                ajaxPostObjectHandler("/{TableName}/Save{TableName}", obj_{TableName}, function (response) {
+
+                     setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        Load{TableName}Data();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function Update{TableName}(btn) {
+            
+             {DetailTableColumns}
+
+            var obj_{TableName} = {
+                {AllInsertUpdateColumns}
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+
+                ajaxPostObjectHandler("/{TableName}/Update{TableName}", obj_{TableName}, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        Load{TableName}Data();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+		
+		function Delete{TableName}(id) {
+
+			showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+				var obj_{TableName} = {
+					strMasterID: id
+				}
+
+				setTimeout(function () {
+					showLoader("Saving..........");
+				}, 100);
+
+				ajaxPostObjectHandler("/{TableName}/Delete{TableName}", obj_{TableName}, function (response) {
+
+					 setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+					if (response.status_Code == "200") {
+
+						Load{TableName}Data();
+
+						showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+							closePopup();
+
+						});
+					}
+					else {
+						showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+						});
+					}
+				}, true, function () { 
+
+                setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                }, true);
+
+			});
+		}
+
+        $(function () {
+
+            Load{TableName}Data();
+
+        });
+
+        function Load{TableName}Data() {
+            var dt = $("#DT{TableName}").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/{TableName}/Get{TableName}Data" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("{PrimaryColumn}", data.{PrimaryColumn});
+
+                },
+                "columns": [
+
+                    {AllDataTableColumns}
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+

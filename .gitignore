@@ -1,0 +1,59 @@
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Visual Studio
+.vs/
+
+# Fleet
+.fleet/
+
+# Code Rush
+.cr/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+/RND/PostgreCRUD/PostgreCRUD/PostgreCRUD.csproj
+/EPYSLSAILORAPP/appsettings.json
+/EPYSLSAILORAPP/appsettings.json
+/EPYSLSAILORAPP/appsettings.json
+/EPYSLSAILORAPP/wwwroot/UploadFolder/purchase_requisition
+/EPYSLSAILORAPP/wwwroot/UploadFolder/purchase_order
+/EPYSLSAILORAPP/Properties/PublishProfiles/FolderProfile.pubxml
+/EPYSLSAILORAPP/Properties/PublishProfiles/FolderProfile.pubxml
+/EPYSLSAILORAPP/Properties/PublishProfiles/FolderProfile1.pubxml
+/EPYSLSAILORAPP/Properties/PublishProfiles/FolderProfile.pubxml
+/EPYSLSAILORAPP/Properties/PublishProfiles/FolderProfile1.pubxml
+/EPYSLSAILORAPP/Properties/PublishProfiles/FolderProfile.pubxml
+/EPYSLSAILORAPP/Properties/PublishProfiles/FolderProfile1.pubxml
+/EPYSLSAILORAPP/wwwroot/UploadFolder/mcd
+/EPYSLSAILORAPP/Properties/PublishProfiles/Arif.pubxml
+/EPYSLSAILORAPP/appsettings.json

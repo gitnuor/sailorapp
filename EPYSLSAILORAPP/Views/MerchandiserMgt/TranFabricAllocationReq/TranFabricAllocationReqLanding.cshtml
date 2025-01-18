@@ -1,0 +1,1027 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_fabric_allocation_req_DTO
+
+@using EPYSLSAILORAPP.Domain;
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "TranFabricAllocationReq List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    #dt-search-0, #dt-search-1{
+        width:180px;
+    }
+</style>
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Fabric Allocation Requisition</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddTranFabricAllocationReq(this);" style="margin-left: 0px;width:235px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Fabric Allocation Request</button>
+                                <button type="button" class="btn btn-primary" onclick="AddTranFabricTransferAllocationReq(this);" style="margin-left: 15px;width:235px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Fabric Allocation Transfer Request</button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precosting" class="nav nav-tabs">
+                                        <li class="active" tab_index="1">
+                                            <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">Allocation</a>
+                                        </li>
+                                        <li class="" tab_index="2">
+                                            <a href="#det2" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Transfer</a>
+                                        </li>
+
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                                            <table id="DTTranFabricAllocationReq" class="table table-striped table-bordered" cellspacing="0">
+                                                <thead style="text-align:center">
+                                                    <tr>
+                                                        <th>Allocation number</th>
+                                                        <th>Allocation date</th>
+
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane " id="det2" tabpane_index="2">
+                                            <table id="DTTranFabricTransferReq" class="table table-striped table-bordered" cellspacing="0">
+                                                <thead style="text-align:center">
+                                                    <tr>
+                                                        <th>Transfer number</th>
+                                                        <th>Allocation Date</th>
+
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" id="modal-dialog" style="width: 90% !important;max-width: 90% !important;">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Fabric Allocation Requisition
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var FabricAllocationDet_List = [];
+        var FabricAllocationDet_List_Deleted = [];
+
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+        function AddTranFabricTransferAllocationReq() {
+            showLoader("Loading..........");
+
+            ajaxGetHandler("/TranFabricAllocationReq/TranFabricAllocationTrasnferReqNew", null, function (data) {
+
+                hideLoader();
+
+                $("#modal-dialog").css("width", "60% !important;").css("max-width", "60% !important;");
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+                bind_events_transfer(1);
+
+            });
+        }
+        function AddTranFabricAllocationReq() {
+
+            showLoader("Loading..........");
+
+            ajaxGetHandler("/TranFabricAllocationReq/TranFabricAllocationReqNew", null, function (data) {
+
+
+                hideLoader();
+
+                $("#modal-dialog").css("width", "90% !important;").css("max-width", "90% !important;");
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+                
+
+            });
+
+        }
+
+        function bind_events_transfer(isEdit = 0) {
+
+            LoadTechPackDropDownByElement("modalcontainer", $("#techpackid"), isEdit == 1 ? false : true);
+
+            $("#techpackid").change(function () {
+                $("#itemmaster").val(null).trigger('change.select2');
+                LoadGenItemMasterDropDownByElement("modalcontainer", $("#itemmaster"), $(this).val(), @Convert.ToInt64(Enum_gen_item_structure_group_sub.Fabric));
+            });
+
+            $("#itemmaster").change(function () {
+
+                LoadTechPackDropDownWithAvlFabric("modalcontainer", $("#techpackid_from"), $(this).val(), isEdit == 1 ? false : true);
+
+                $("#techpackid_from").change(function () {
+
+                    $("#frm_item_master_id").val($("#itemmaster option:selected").text());
+
+                    $("#frm_measutement_unit").val($("#ddl_measurement_unit_detail option:selected").text());
+
+                    try {
+                        ajaxGetHandler("/Select2/GenItemMasterStockDetByItemMasterID?ItemMasterID=" + $("#itemmaster").val() + "&TechPackID=" + $("#techpackid_from").val(), null, function (res) {
+
+                            $("#txt_total_stock_quantity_from").val(res.data.available_stock_quantity);
+
+                            $("#txt_transfer_quantity").attr("max", res.data.available_stock_quantity);
+
+                            BindCurrentEventForTextBox();
+
+                        });
+
+
+                    } catch (e) {
+                        hideLoader();
+                    }
+                });
+
+                var cur_elem = $(this);
+
+                if ($(cur_elem).select2("data") != null && $(cur_elem).select2("data").length > 0) {
+
+                    if ($(cur_elem).select2("data")[0].otherdata != null && $(cur_elem).select2("data")[0].otherdata.length > 0) {
+                        $("#ddl_measurement_unit_detail").val(JSON.parse($(cur_elem).select2("data")[0].otherdata).measurement_unit_detail_id);
+                    }
+
+                }
+                if ($(cur_elem).val() != null) {
+                    try {
+                        ajaxGetHandler("/Select2/GenItemMasterStockDetByItemMasterID?ItemMasterID=" + $(cur_elem).val() + "&TechPackID=" + $("#techpackid").val(), null, function (res) {
+
+                            $("#txt_total_stock_quantity").val(res.data.available_stock_quantity);
+
+
+                        });
+
+
+                    } catch (e) {
+                        hideLoader();
+                    }
+                }
+            });
+
+            //BookingCalc();
+        }
+
+        function bind_events(isEdit=false) {
+
+            $(".S2TechPack_Init").change(function () {
+                $(this).parent().parent().find(".S2GenItemMaster_Init").val(null).trigger('change.select2');
+                LoadGenItemMasterDropDownByElement("modalcontainer", $(this).parent().parent().find(".S2GenItemMaster_Init"), $(this).val(), @Convert.ToInt64(Enum_gen_item_structure_group_sub.Fabric));
+            });
+
+            $(".S2GenItemMaster_Init").change(function () {
+
+                var cur_elem = $(this);
+
+                if ($(cur_elem).select2("data") != null && $(cur_elem).select2("data").length > 0) {
+                    if ($(cur_elem).select2("data")[0].otherdata != null && $(cur_elem).select2("data")[0].otherdata.length > 0) {
+                        $(cur_elem).parent().parent().find(".ddl_measurement_unit_detail").val(JSON.parse($(cur_elem).select2("data")[0].otherdata).measurement_unit_detail_id);
+                    }
+                }
+                if ($(cur_elem).val() != null) {
+                    try {
+                        ajaxGetHandler("/Select2/GenItemMasterStockDetByItemMasterID?ItemMasterID=" + $(cur_elem).val(), null, function (res) {
+
+                            if (isEdit) {
+                                var qty = parseInt($(cur_elem).parent().parent().find(".txt_booking_quantity").val()) + res.data.available_stock_quantity;
+                                $(cur_elem).parent().parent().find(".txt_total_stock_quantity").val(qty);
+
+                            }
+                            else {
+                                $(cur_elem).parent().parent().find(".txt_total_stock_quantity").val(res.data.available_stock_quantity);
+                            }
+
+                            if (check_value($(cur_elem).parent().parent().find(".txt_booking_quantity").val()) != null)
+                                $(cur_elem).parent().parent().find(".txt_booking_quantity").trigger("change");
+                        });
+
+
+                    } catch (e) {
+                        hideLoader();
+                    }
+                }
+            });
+
+            //BookingCalc();
+        }
+
+        function BookingCalc(elem) {
+
+            var bal = (check_value($(elem).parent().parent().find(".txt_total_stock_quantity").val()) != null ?
+                parseInt($(elem).parent().parent().find(".txt_total_stock_quantity").val()) : 0)
+
+                - (check_value($(elem).parent().parent().find(".txt_total_issued_quantity").val()) != null ?
+                    parseInt($(elem).parent().parent().find(".txt_total_issued_quantity").val()) : 0) -
+
+                (check_value($(elem).val()) != null ? parseInt($(elem).val()) : 0);
+
+            $(elem).parent().parent().find(".txt_available_quantity").val(bal);
+
+        }
+
+        function AddFabricAllocationRow() {
+
+            var wholediv = $("#modalcontent #DTTranFabricDetails tbody tr:nth-child(1)").clone();
+
+            $(wholediv).removeAttr("style");
+            $(wholediv).find(".S2TechPack_Init").empty();
+            $(wholediv).find(".S2TechPack_Init").attr("id", "S2TechPack" + parseInt($("#DTTranFabricDetails tbody tr").length) + 1);
+            $(wholediv).find(".S2TechPack_Init").attr("name", "S2TechPack" + parseInt($("#DTTranFabricDetails tbody tr").length) + 1);
+            $(wholediv).find(".S2TechPack_Init").attr("class", "form-control form-control S2TechPack_Init");
+
+            LoadTechPackDropDownByElement("modalcontainer", $(wholediv).find(".S2TechPack_Init"));
+
+            $(wholediv).find(".S2GenItemMaster_Init").empty()
+            $(wholediv).find(".S2GenItemMaster_Init").attr("id", "GenItemMaster" + parseInt($("#DTTranFabricDetails tbody tr").length) + 1);
+            $(wholediv).find(".S2GenItemMaster_Init").attr("name", "GenItemMaster" + parseInt($("#DTTranFabricDetails tbody tr").length) + 1);
+            $(wholediv).find(".S2GenItemMaster_Init").attr("class", "form-control form-control S2GenItemMaster_Init");
+
+            LoadGenItemMasterDropDownByElement("modalcontainer", $(wholediv).find(".S2GenItemMaster_Init"), null, @Convert.ToInt64(Enum_gen_item_structure_group_sub.Fabric));
+
+            $("#modalcontent #DTTranFabricDetails").append(wholediv);
+
+            bind_events();
+
+            BookingCalc();
+        }
+
+        function removefabric(btn) {
+
+            if ($(btn).attr("tran_fabric_allocation_req_det_id") != 0) {
+                var obj = {
+                    tran_fabric_allocation_req_det_id: $(btn).attr("tran_fabric_allocation_req_det_id"),
+                    current_state: 3
+                }
+                FabricAllocationDet_List_Deleted.push(obj);
+            }
+
+            $(btn).parent().parent().remove();
+        }
+
+        function EditTranFabricAllocationReq(btn) {
+
+
+            var tran_fabric_allocation_req_id = $(btn).attr("tran_fabric_allocation_req_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranFabricAllocationReq/TranFabricAllocationReqEdit?tran_fabric_allocation_req_id=" + tran_fabric_allocation_req_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    bind_events(true);
+
+                    $(".S2TechPack_Init").empty();
+                    $(".S2GenItemMaster_Init").empty();
+
+                    $.each($("#DTTranFabricDetails tbody tr:not(:first-child)"), function (key, val) {
+
+                        LoadTechPackDropDownByElement("modalcontainer", $(val).find(".S2TechPack_Init"));
+
+                        LoadGenItemMasterDropDownByElement("modalcontainer", $(val).find(".S2GenItemMaster_Init"), null, @Convert.ToInt64(Enum_gen_item_structure_group_sub.Fabric));
+
+                    });
+
+                    $(".S2GenItemMaster_Init").trigger("change");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function EditTranFabricTransferReq(btn) {
+
+
+            var tran_fabric_allocation_req_id = $(btn).attr("tran_fabric_allocation_req_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranFabricAllocationReq/TranFabricTransferReqEdit?tran_fabric_allocation_req_id=" + tran_fabric_allocation_req_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    bind_events_transfer(1);
+
+
+                    //LoadTechPackDropDownByElement("modalcontainer", $(val).find(".S2TechPack_Init"));
+
+                    // LoadGenItemMasterDropDownByElement("modalcontainer", $(val).find(".S2GenItemMaster_Init"), null, @Convert.ToInt64(Enum_gen_item_structure_group_sub.Fabric));
+
+                    //  $("#itemmaster").trigger("change");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function ViewTranFabricTransferReq(btn) {
+
+            var tran_fabric_allocation_req_id = $(btn).attr("tran_fabric_allocation_req_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranFabricAllocationReq/TranFabricTransferReqView?tran_fabric_allocation_req_id=" + tran_fabric_allocation_req_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    bind_events_transfer(2);
+
+
+                    //LoadTechPackDropDownByElement("modalcontainer", $(val).find(".S2TechPack_Init"));
+
+                    // LoadGenItemMasterDropDownByElement("modalcontainer", $(val).find(".S2GenItemMaster_Init"), null, @Convert.ToInt64(Enum_gen_item_structure_group_sub.Fabric));
+
+                    //  $("#itemmaster").trigger("change");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function ViewTranFabricAllocationReq(btn) {
+
+            var tran_fabric_allocation_req_id = $(btn).attr("tran_fabric_allocation_req_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranFabricAllocationReq/TranFabricAllocationReqView?tran_fabric_allocation_req_id=" + tran_fabric_allocation_req_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    bind_events();
+
+                    $(".S2TechPack_Init").empty();
+                    $(".S2GenItemMaster_Init").empty();
+
+                    $.each($("#DTTranFabricDetails tbody tr:not(:first-child)"), function (key, val) {
+
+                        LoadTechPackDropDownByElement("modalcontainer", $(val).find(".S2TechPack_Init"), true);
+
+                        LoadGenItemMasterDropDownByElement("modalcontainer", $(val).find(".S2GenItemMaster_Init"), null, @Convert.ToInt64(Enum_gen_item_structure_group_sub.Fabric));
+
+                    });
+
+                    $(".S2GenItemMaster_Init").trigger("change");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function SaveTranFabricTransferReq(btn) {
+
+            if (_cusFormValidate("frmAdd")) {
+
+                FabricAllocationDet_List = [];
+
+                var obj_GenItemStockMasterDet = {
+                    tran_fabric_allocation_req_det_id: null,
+                    tran_fabric_allocation_req_id: null,
+
+                    item_master_id: check_value($("#itemmaster").val()),
+                    item_master: $("#itemmaster option:selected").text(),
+
+                    prev_tech_pack_id: check_value($("#techpackid_from").val()),
+                    prev_tech_pack: check_value($("#techpackid_from").val()) != null ?
+                        $("#techpackid_from  option:selected").text() : null,
+
+                    measurement_unit_detail_id: check_value($("#ddl_measurement_unit_detail").val()),
+                    measurement_unit_detail: $("#ddl_measurement_unit_detail  option:selected").text(),
+
+                    tech_pack_id: check_value($("#techpackid").val()),
+                    tech_pack: check_value($("#techpackid").val()) != null ?
+                        $("#techpackid  option:selected").text() : null,
+
+                    booking_quantity: check_value($("#txt_transfer_quantity").val())
+
+                }
+
+                FabricAllocationDet_List.push(obj_GenItemStockMasterDet);
+
+                var obj_TranFabricAllocationReq = {
+                    fiscal_year_id: $("#ddldtop_fiscal_year").val(),
+                    event_id: $("#ddltop_event").val(),
+                    allocation_number: null,
+                    // allocation_date: $('#modalcontent #allocation_date').val(),
+                    List_Det: FabricAllocationDet_List,
+                    is_transfer:1,
+
+                    is_submitted: $(btn).attr("is_submit")
+                }
+
+                if (FabricAllocationDet_List.length == 0) {
+
+                    showErrorAlert("Alert", "Input Valid Quantity for adding Items.", "OK", function () {
+
+                    });
+                    return;
+                }
+
+                showLoader("Saving..........");
+
+                ajaxPostObjectHandler("/TranFabricAllocationReq/SaveTranFabricAllocationReq", obj_TranFabricAllocationReq, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranFabricTransferReqData();
+
+                        FabricAllocationDet_List = [];
+                        FabricAllocationDet_List_Deleted = [];
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+        function SaveTranFabricAllocationReq(btn) {
+
+            if (_cusFormValidate("frmAdd")) {
+
+                FabricAllocationDet_List = [];
+
+                $.each($("#DTTranFabricDetails tbody tr:not(:first-child)"), function (key, val) {
+
+                    var obj_GenItemStockMasterDet = {
+                        tran_fabric_allocation_req_det_id: null,
+                        tran_fabric_allocation_req_id: null,
+
+                        item_master_id: check_value($(val).find(".S2GenItemMaster_Init").val()),
+                        item_master: $(val).find(".S2GenItemMaster_Init  option:selected").text(),
+
+                        prev_tech_pack_id: null,
+                        obj_prev_tech_pack: null,
+
+                        measurement_unit_detail_id: check_value($(val).find(".ddl_measurement_unit_detail").val()),
+                        measurement_unit_detail: $(val).find(".ddl_measurement_unit_detail  option:selected").text(),
+
+                        tech_pack_id: check_value($(val).find(".S2TechPack_Init").val()),
+                        tech_pack: check_value($(val).find(".S2TechPack_Init").val()) != null ?
+                            $(val).find(".S2TechPack_Init  option:selected").text() : null,
+
+                        booking_quantity: check_value($(val).find(".txt_booking_quantity").val())
+
+                    }
+
+                    if (check_value($(val).find(".txt_booking_quantity").val()) != null) {
+                        FabricAllocationDet_List.push(obj_GenItemStockMasterDet);
+                    }
+
+                });
+
+                var obj_TranFabricAllocationReq = {
+                    fiscal_year_id: $("#ddldtop_fiscal_year").val(),
+                    event_id: $("#ddltop_event").val(),
+                    allocation_number: null,
+                    // allocation_date: $('#modalcontent #allocation_date').val(),
+                    List_Det: FabricAllocationDet_List,
+
+                    is_submitted: $(btn).attr("is_submit")
+                }
+
+                if (FabricAllocationDet_List.length == 0) {
+
+                    showErrorAlert("Alert", "Input Valid Quantity for adding Items.", "OK", function () {
+
+                    });
+                    return;
+                }
+
+                showLoader("Saving..........");
+
+                ajaxPostObjectHandler("/TranFabricAllocationReq/SaveTranFabricAllocationReq", obj_TranFabricAllocationReq, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranFabricAllocationReqData();
+
+                        FabricAllocationDet_List = [];
+                        FabricAllocationDet_List_Deleted = [];
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function UpdateTranFabricAllocationReq(btn) {
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                FabricAllocationDet_List = [];
+
+                $.each($("#DTTranFabricDetails tbody tr:not(:first-child)"), function (key, val) {
+
+
+                    var obj_GenItemStockMasterDet = {
+                        tran_fabric_allocation_req_det_id: $(val).find(".btninnerClose").attr("tran_fabric_allocation_req_det_id") != "0" ?
+                            $(val).find(".btninnerClose").attr("tran_fabric_allocation_req_det_id") : null,
+                        tran_fabric_allocation_req_id: check_value($("#tran_fabric_allocation_req_id").val()),
+
+                        item_master_id: check_value($(val).find(".S2GenItemMaster_Init").val()),
+                        item_master: $(val).find(".S2GenItemMaster_Init  option:selected").text(),
+
+                        prev_tech_pack_id: null,
+                        obj_prev_tech_pack: null,
+
+                        measurement_unit_detail_id: check_value($(val).find(".ddl_measurement_unit_detail").val()),
+                        measurement_unit_detail: $(val).find(".ddl_measurement_unit_detail  option:selected").text(),
+
+                        tech_pack_id: check_value($(val).find(".S2TechPack_Init").val()),
+                        tech_pack: check_value($(val).find(".S2TechPack_Init").val()) != null ?
+                            $(val).find(".S2TechPack_Init  option:selected").text() : null,
+
+                        booking_quantity: check_value($(val).find(".txt_booking_quantity").val()),
+                        current_state: $(val).find(".btninnerClose").attr("tran_fabric_allocation_req_det_id") == "0" ?
+                            1 : 2
+                    }
+
+
+                    if (check_value($(val).find(".txt_booking_quantity").val()) != null) {
+                        FabricAllocationDet_List.push(obj_GenItemStockMasterDet);
+                    }
+
+                });
+
+                if (FabricAllocationDet_List.length == 0) {
+
+                    showErrorAlert("Alert", "Input Valid Quantity for adding Items.", "OK", function () {
+
+                    });
+                    return;
+                }
+
+                var obj_TranFabricAllocationReq = {
+                    tran_fabric_allocation_req_id: $("#tran_fabric_allocation_req_id").val(),
+                    allocation_number: $("#allocation_number").val(),
+                    //allocation_date: $('#modalcontent #allocation_date').val(),
+                    List_Det: FabricAllocationDet_List.concat(FabricAllocationDet_List_Deleted),
+
+                    is_submitted: $(btn).attr("is_submit")
+                }
+
+                ajaxPostObjectHandler("/TranFabricAllocationReq/UpdateTranFabricAllocationReq", obj_TranFabricAllocationReq, function (response) {
+
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranFabricAllocationReqData();
+
+                        FabricAllocationDet_List = [];
+
+                        FabricAllocationDet_List_Deleted = [];
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function UpdateTranFabricTransferReq(btn) {
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                FabricAllocationDet_List = [];
+
+                var obj_GenItemStockMasterDet = {
+
+                    tran_fabric_allocation_req_det_id: $("#tran_fabric_allocation_req_det_id").val(),
+                    tran_fabric_allocation_req_id: $("#tran_fabric_allocation_req_id").val(),
+
+                    item_master_id: check_value($("#itemmaster").val()),
+                    item_master: $("#itemmaster option:selected").text(),
+
+                    prev_tech_pack_id: check_value($("#techpackid_from").val()),
+                    prev_tech_pack: check_value($("#techpackid_from").val()) != null ?
+                        $("#techpackid_from  option:selected").text() : null,
+
+                    measurement_unit_detail_id: check_value($("#ddl_measurement_unit_detail").val()),
+                    measurement_unit_detail: $("#ddl_measurement_unit_detail  option:selected").text(),
+
+                    tech_pack_id: check_value($("#techpackid").val()),
+                    tech_pack: check_value($("#techpackid").val()) != null ?
+                        $("#techpackid  option:selected").text() : null,
+
+                    booking_quantity: check_value($("#txt_transfer_quantity").val()),
+                    current_state: 2
+
+                }
+
+                FabricAllocationDet_List.push(obj_GenItemStockMasterDet);
+
+                var obj_TranFabricAllocationReq = {
+                    tran_fabric_allocation_req_id: $("#tran_fabric_allocation_req_id").val(),
+                    fiscal_year_id: $("#ddldtop_fiscal_year").val(),
+                    event_id: $("#ddltop_event").val(),
+                    allocation_number: null,
+                    // allocation_date: $('#modalcontent #allocation_date').val(),
+                    List_Det: FabricAllocationDet_List,
+
+                    is_submitted: $(btn).attr("is_submit")
+                }
+
+                if (FabricAllocationDet_List.length == 0) {
+
+                    showErrorAlert("Alert", "Input Valid Quantity for adding Items.", "OK", function () {
+
+                    });
+                    return;
+                }
+
+                ajaxPostObjectHandler("/TranFabricAllocationReq/UpdateTranFabricAllocationReq", obj_TranFabricAllocationReq, function (response) {
+
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranFabricAllocationReqData();
+
+                        FabricAllocationDet_List = [];
+
+                        FabricAllocationDet_List_Deleted = [];
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteTranFabricAllocationReq(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_TranFabricAllocationReq = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/TranFabricAllocationReq/DeleteTranFabricAllocationReq", obj_TranFabricAllocationReq, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranFabricAllocationReqData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            });
+        }
+
+        $(function () {
+
+            LoadData();
+
+        });
+
+        function LoadData() {
+
+            LoadTranFabricAllocationReqData();
+            LoadTranFabricTransferReqData();
+            BindTabEvents("tab_precosting");
+        }
+
+        function LoadTranFabricAllocationReqData() {
+            var dt_search = {
+
+                filterId: '#DTTranFabricAllocationReq_filter input[type=search]',
+                tableId: "#DTTranFabricAllocationReq"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#hd_fiscal_year_id").val(),
+                event_id: $("#hd_event_id").val(),
+                FirstFilterID: 0
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Allocation Number',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+               
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/TranFabricAllocationReq/GetTranFabricAllocationReqData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_fabric_allocation_req_id", data.tran_fabric_allocation_req_id);
+
+                },
+                "columns": [
+
+                    { "data": "allocation_number", "name": "allocation_number", "autoWidth": true },
+                    { "data": "str_allocation_date", "name": "allocation_date", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ],
+                
+            });
+        }
+
+        function LoadTranFabricTransferReqData() {
+            var dt_search = {
+
+                filterId: '#DTTranFabricTransferReq_filter input[type=search]',
+                tableId: "#DTTranFabricTransferReq"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#hd_fiscal_year_id").val(),
+                event_id: $("#hd_event_id").val(),
+                FirstFilterID: 1
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Allocation Number',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/TranFabricAllocationReq/GetTranFabricAllocationReqData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_fabric_allocation_req_id", data.tran_fabric_allocation_req_id);
+
+                },
+                "columns": [
+
+                    { "data": "allocation_number", "name": "allocation_number", "autoWidth": true },
+                    { "data": "str_allocation_date", "name": "allocation_date", "autoWidth": true },
+
+                    { "data": "datatable_transfer_buttonscode", "name": "datatable_transfer_buttonscode", "autoWidth": true },
+
+                ],
+                
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

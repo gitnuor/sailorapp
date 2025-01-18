@@ -1,0 +1,280 @@
+﻿@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_plan_allocate_DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+</style>
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<input type="hidden" id="hd_no_of_style" value="@Model.no_of_style" />
+<input type="hidden" id="hd_style_code_gen" value="@Model.style_code_gen" />
+
+<input type="hidden" id="hd_style_item_product_id" value="@Model.style_item_product_id" />
+
+<input type="hidden" id="hd_range_plan_id" value="@Model.range_plan_id" />
+<input type="hidden" id="hd_range_plan_detail_id" value="@Model.range_plan_detail_id" />
+<input type="hidden" id="hd_tran_range_plan_event_id" value="@Model.tran_range_plan_event_id" />
+
+
+<input type="hidden" id="hd_tran_va_plan_id" value="@Model.tran_va_plan_id" />
+
+<input type="hidden" id="hd_tran_va_plan_detl_id" value="@Model.tran_va_plan_detl_id" />
+
+<div class="row" style=" margin-left:-1px!important; border: 1px solid #efe7e7; margin-bottom: 16px!important;">
+    <div class="col-md-4" style="margin-left: 2px; margin-bottom: 12px;">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Item Category :</label>
+
+            <input style="width:100%" value="@ViewBag.style_product" type="text" id="txtProductName" disabled class="form-control border-gray-200 rounded-sm text-sm " />
+
+        </div>
+    </div>
+    <div class="col-md-2" style="margin-bottom: 12px;">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Range Plan Qty</label>
+
+            <input style="width:100%" value="@ViewBag.range_plan_qnty" type="number" id="txtRangePlanQnty" disabled a class="form-control border-gray-200 rounded-sm text-sm " />
+
+        </div>
+    </div>
+    <div class="col-md-2" style="margin-bottom: 12px;">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Added Qty</label>
+
+            <input style="width:100%" value="@ViewBag.added_style" type="number" id="txtAddedStyleQnty" disabled a class="form-control border-gray-200 rounded-sm text-sm " />
+
+        </div>
+    </div>
+    <div class="col-md-3" style="margin-bottom: 12px;">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Remaining Qty</label>
+
+            <input style="width:100%" value="@ViewBag.remaining_style" type="number" id="txtRemainingStyleQnty" disabled a class="form-control border-gray-200 rounded-sm text-sm " />
+
+        </div>
+    </div>
+</div>
+<div id="tab_bar_style">
+
+    <div class="box" style="border-width:0px;" id="dvbox">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Code</label>
+
+                    <input id="txtstyle_code" style="width:100%;" value="@Model.List_style.FirstOrDefault().style_code-@ViewBag.no_of_style" type="text" class="form-control border-gray-200 rounded-sm text-sm" disabled/>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Sub-Category</label>
+
+                    @await Component.InvokeAsync("GenericDropdownList", new
+                        {
+                            ddlId = "ddl_item_product_sub_category",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.List_style.FirstOrDefault().List_ProductSubCategory)),
+                            selectedvalue = "",
+                            cssclass = "form-control ddl_item_product_sub_category",
+                            enable = true,
+                            isRequired = false,
+                            placeholder = "Select Sub Category"
+                        })
+
+                </div>
+            </div>
+           
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Trading Type</label>
+
+                    @await Component.InvokeAsync("GenericDropdownList", new
+                        {
+                            ddlId = "trading_type",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.tradingList)),
+                            selectedvalue = "0",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = false,
+                           
+                            model_parentid = "modalcontainer_common_popup_term"
+                        })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <input type="hidden" asp-for="style_item_product_id" />
+            <div class="col-md-9">
+                <div class="form-group">
+                    <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Embellishment</label>
+
+
+                    @await Component.InvokeAsync("S2Embellishment", new
+                        {
+                            ddlId = "ddl_s2embellishment",
+                            selectedvalue = "",
+                            cssclass = "form-control ddl_s2embellishment",
+                            isRequired = false,
+                            isReadOnly = false,
+                            placeholder = "Select Embellishment",
+                            preloaded = "",
+                            model_parentid = "modalcontainer_common",
+                            isMultiple = true
+                        })
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Qty</label>
+
+                    <input style="width:100%;text-align:right;" onchange="txtStyleQuantityChange(this);" type="number" min="0" class="form-control border-gray-200 rounded-sm text-sm txtStyleQuantity" />
+
+                </div>
+            </div>
+            @*  <div class="col-md-2">
+            <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Style Color Code</label>
+
+            <input style="width:100%" type="text" class="form-control border-gray-200 rounded-sm text-sm txtStyleColorCode" />
+
+            </div>
+            </div> *@
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">No of Colors</label>
+                    @*
+                    <select id="ddlColorQuantity" style="width:100%;height:30px!important;" class="form-control ddlColorQuantity" onchange="ddlColorQuantityChange(this);">
+
+                    <option value="0">Select</option>
+
+                    @for (int i = 1; i <= 10; i++)
+                    {
+                    <option value="@i.ToString()">@i.ToString()</option>
+                    }
+                    </select> *@
+
+                    <button id="btnAddColor" type="button" class="btn btn-primary btnAddColor" onclick="btnAddColorClick(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add Color</button>
+
+                </div>
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-3">
+
+                <div class="form-group">
+
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Total Given Qty</label>
+
+                    <input id="txtTotalGivenSizeQuantity" style="width:100%" disabled type="number" class="form-control border-gray-200 rounded-sm text-sm txtTotalGivenSizeQuantity" />
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="dtdtcolorcodestyle" class="dtcolorcodestyle table dataTable table-striped table-bordered no-footer" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label class="  labelNormal">SL</label>
+                            </th>
+                            <th style="width:160px;">
+                                <label class="labelNormal  ">Color Code</label>
+                            </th>
+
+                            @foreach (var objSize in Model.List_product_size)
+                            {
+                                <th style="text-align:right">
+                                    <label class="labelNormal ">@objSize.style_product_size</label>
+                                </th>
+                            }
+                            <th style="text-align:right">
+                                <label class="labelNormal  ">Total</label>
+                            </th>
+                            <th style="text-align:center;">
+                                <label class="labelNormal  ">Remove</label>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="tr_first " style="display:none;">
+                            <td class="row_sl" style="text-align: center;">1</td>
+                            <td style="text-align: left;">
+
+                                @*   <input type="color" class="border-gray-200 rounded-sm txtColorPicker" onchange="LoadColorFromBox(this)" style="width:30%;float:left;" />
+                                <input type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" class="border-gray-200 rounded-sm txtColorCode" style="width:65%;float:right;" />
+                                *@
+
+                                @await Component.InvokeAsync("S2GenColor", new
+                                    {
+                                        ddlId = "ddl_color1",
+                                        cssclass = "form-control ddl_color txtColorCode",
+                                        isRequired = false,
+                                        isReadOnly = false,
+                                        placeholder = "Select Color",
+                                        preloaded = "",
+                                        model_parentid = "modalcontainer_common",
+                                        isMultiple = true,
+                                        isOnLoad = false
+                                    })
+                            </td>
+
+                            @foreach (var objSize in Model.List_product_size)
+                            {
+                                <td>
+                                    <input style="text-align: right;width:100%" type="number" min="0" style_product_size_group_detid="@objSize.style_product_size_group_detid" onchange="ColorSizeQuantityChanged(this)" class="border-gray-200 rounded-sm txtColorSizeQuantity" style="width:100%;" value="0" />
+                                </td>
+                            }
+                            <td>
+                                <input style="text-align: right;width:100%" type="number" min="0" disabled class="border-gray-200 rounded-sm txtTotalColorSizeQuantity" value="0" />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-md btnremove" onclick="RemoveTableRow(this);">Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-2" style="text-align:left;">
+                <button type="button" class="btn btn-primary btnSaveStyleInfo" is_submit="1" onclick="SaveData(this);" style="margin-left: 0px;width:100%;"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+            </div>
+            <div class="col-md-3" style="text-align:left;float:right">
+
+                <button type="button" id="btnSendForApproval" is_submit="2" class="btn btn-primary btnUpdateDeleteStyleInfo" onclick="SaveData(this);" style="width:100%;"><i class="fa fa-save"></i>&nbsp;&nbsp;Submit For Approval</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+  
+</script>
+
+
+
+

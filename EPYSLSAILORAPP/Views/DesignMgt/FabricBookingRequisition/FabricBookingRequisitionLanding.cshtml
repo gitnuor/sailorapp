@@ -1,0 +1,905 @@
+@model EPYSLSAILORAPP.Application.DTO.Tran_MerchandisingMgt.tran_purchase_requisition_DTO
+@using EPYSLSAILORAPP.Application.DTO.Tran_DesignMgt
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "FabricBookingRequisition List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Fabric Booking Requisition</h6>
+                        </div>
+                        @await Component.InvokeAsync("DataFilterSCM")
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-primary" onclick="AddFabricBookingRequisition(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                                </div>
+                                <br />
+                                <br />
+
+                                <!--tabbar-->
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active" tab_index="1">
+                                            <a style="text-decoration:unset;" class="tab_link active" aria-current="page" href="#pending" data-toggle="tab">Pending List</a>
+                                        </li>
+
+                                        <li class="" tab_index="2">
+                                            <a style="text-decoration:unset;" class="tab_link" href="#submitted" data-toggle="tab">Submitted List</a>
+                                        </li>
+
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="pending" tabpane_index="1">
+                                            <div class="box">
+                                                <table id="DTFabricBookingRequisition" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead style="text-align:center">
+                                                        <tr>
+
+                                                            <th>PR No</th>
+                                                            <th>PR Date</th>
+                                                            <th>Delivery date</th>
+                                                            <th>Season</th>
+
+                                                            <th>Designer</th>
+
+
+                                                            <th>Delivery Unit</th>
+                                                            <th>Supplier</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="submitted" tabpane_index="2">
+                                            <div class="box">
+                                                <table id="DTFabricBookingRequisitionSubmitted" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead style="text-align:center">
+                                                        <tr>
+
+                                                            <th>PR No</th>
+                                                            <th>PR Date</th>
+                                                            <th>Delivery date</th>
+                                                            <th>Season</th>
+
+                                                            <th>Designer</th>
+
+
+                                                            <th>Delivery Unit</th>
+                                                            <th>Supplier</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 100% !important; ">
+        <div class="modal-content" id="modal_main">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Fabric Booking Requisition
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var listAttachments = [];
+        var DeleteList = [];
+        var added_list = [];
+        var details = []
+
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+            added_list = [];
+
+        }
+
+
+        function deleteFile(guid, row) {
+
+            DeleteList.push(guid);
+            //listAttachments.push(guid)
+            row.closest('tr').remove();
+        }
+
+        let index = listAttachments.indexOf(DeleteList);
+
+        if (index > -1) {
+            listAttachments.splice(index, 1);
+        }
+
+
+        function deleteRowEdit(button, id) {
+            added_list = added_list.filter(function (item) {
+                return item !== id;
+            });
+            var pr_detail_id = $(button).attr("pr_detail_id");
+            var item_id = $(button).attr("item_id");
+            var obj = {
+                pr_detail_id: pr_detail_id,
+                pr_id: $('#pr_id').val(),
+                item_id: item_id,
+
+
+
+                current_state: 3
+            }
+            details.push(obj);
+
+            $(button).parent().parent().remove();
+
+
+        }
+
+
+        $('#modalcontainer_common_popup').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+
+
+        function AddFabricBookingRequisition() {
+            listAttachments = []; added_list = [];
+            $("#fileNamesContainer").html('');
+
+            ajaxGetHandler("/FabricBookingRequisition/FabricBookingRequisitionNew", null, function (data) {
+
+                hideLoader();
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+
+
+                //LoadGenSupplierDropDownByClassForTechpackID(33,"modalcontainer #modal_main", "S2GenSupplier");
+
+                $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+
+                $('#supplier_id').on('change', function () {
+                    var selectedSupplier = $(this).select2("data");
+                    $('#supplier_concern_person').val((selectedSupplier[0].contact_person));
+                    $('#supplier_address').val((selectedSupplier[0].office_address));
+
+                });
+
+
+                $("#modalcontainer #attachments").change(function () {
+                    var files = this.files;
+                    var size = $(this)[0].files.length;
+                    var allowedExtensions = ['.pdf'];
+                    formData = new FormData();
+
+                    for (var i = 0; i < size; i++) {
+                        var file = $(this)[0].files[i];
+                        var extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+
+                        if (allowedExtensions.indexOf(extension) === -1) {
+                            showErrorAlert("Alert", "Only  .pdf files are allowed.", "OK", function () { });
+                            continue;
+                        }
+
+                        var reader = new FileReader();
+
+                        reader.onload = (function (singlefile) {
+                            var filename = singlefile.name;
+                            var filetype = singlefile.type;
+
+                            return function (e) {
+                                var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+                                var indx = listAttachments.length;
+
+                                var attachfile = {
+                                    filename: filename,
+                                    filetype: filetype,
+                                    extension: extension.substring(extension.lastIndexOf('.') + 1),
+                                    base64string: base64String,
+                                    server_filename: "",
+                                    current_state: 1,
+                                    fileindex: indx
+                                };
+
+                                listAttachments.push(attachfile);
+                                $("#fileNamesContainer").append('<p>' + filename + '</p>');
+                                base64String = "";
+                            }
+                        })(file);
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+            });
+
+
+        }
+        function uploadFile() {
+
+            $("#modalcontainer #attachments").trigger("click");
+        };
+
+
+        function EditFabricBookingRequisition(btn) {
+            added_list = [];
+            listAttachments = [];
+            var pr_id = $(btn).attr("pr_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricBookingRequisition/FabricBookingRequisitionEdit?pr_id=" + pr_id, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+
+
+                    $('#supplier_id').on('change', function () {
+                        var selectedSupplier = $(this).select2("data");
+                        if (selectedSupplier[0].contact_person) $('#supplier_concern_person').val((selectedSupplier[0].contact_person));
+                        if (selectedSupplier[0].office_address) $('#supplier_address').val((selectedSupplier[0].office_address));
+
+                    });
+
+                    $('tr#FileList').each(function () {
+                        var obj = $(this).data('obj');
+
+                        listAttachments.push(obj);
+
+                    });
+                    $.each($("#DTTranFabricDetails tbody tr"), function (key, val) {
+
+                        added_list.push(parseInt(check_textbox_value($(this).find(".item_id"))));
+
+
+                    });
+                    $("#modalcontainer #attachments").change(function () {
+                        var files = this.files;
+                        var size = $(this)[0].files.length;
+                        var allowedExtensions = ['.pdf'];
+                        formData = new FormData();
+
+                        for (var i = 0; i < size; i++) {
+                            var file = $(this)[0].files[i];
+                            var extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+
+                            if (allowedExtensions.indexOf(extension) === -1) {
+                                showErrorAlert("Alert", "Only .pdf files are allowed.", "OK", function () { });
+
+                                continue;
+                            }
+
+                            var reader = new FileReader();
+
+                            reader.onload = (function (singlefile) {
+                                var filename = singlefile.name;
+                                var filetype = singlefile.type;
+
+                                return function (e) {
+                                    var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+                                    var indx = listAttachments.length;
+
+                                    var attachfile = {
+                                        filename: filename,
+                                        filetype: filetype,
+                                        extension: extension.substring(extension.lastIndexOf('.') + 1),
+                                        base64string: base64String,
+                                        server_filename: "",
+                                        current_state: 1,
+                                        fileindex: indx
+                                    };
+
+                                    listAttachments.push(attachfile);
+                                    $("#fileNamesContainer").append('<p>' + filename + '</p>');
+                                };
+                            })(file);
+
+                            reader.readAsDataURL(file);
+                        }
+                    });
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function ViewFabricBookingRequisition(btn) {
+
+            var pr_id = $(btn).attr("pr_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricBookingRequisition/FabricBookingRequisitionView?pr_id=" + pr_id, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function ViewFabricBookingRequisitionSubmitted(btn) {
+
+            var pr_id = $(btn).attr("pr_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricBookingRequisition/FabricBookingRequisitionSubmittedView?pr_id=" + pr_id, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+
+
+        function SaveFabricBookingRequisition(btn, IsSubmit) {
+            details = [];
+
+
+            $.each($("#DTTranFabricDetails tbody tr"), function (key, val) {
+
+                var obj = {
+                    item_id: check_textbox_value($(this).find(".item_id")),
+                    item_quantity: check_textbox_value($(this).find(".quantity")),
+                    uom: check_textbox_value($(this).find(".uom")),
+                    suggested_unit_price: check_textbox_value($(this).find(".suggested_unit_price"))
+
+                };
+
+                if (check_textbox_value($(this).find(".quantity")) != null) {
+                    details.push(obj);
+                }
+
+
+            });
+
+            var obj_FabricBookingRequisition = {
+                pr_no: $('#modalcontent #pr_no').val(),
+                pr_date: $('#modalcontent #pr_date').val(),
+                delivery_date: $('#modalcontent #delivery_date').val(),
+                designer_id: check_value($('#modalcontent #designer_id').val()),
+                event_id: check_value($('#modalcontent #event_id').val()),
+                delivery_unit_id: check_value($('#modalcontent #delivery_unit_id').val()),
+                delivery_unit_address: $('#modalcontent #delivery_unit_address').val(),
+                remarks: $('#modalcontent #remarks').val(),
+                supplier_id: check_value($('#modalcontent #supplier_id').val()),
+                supplier_address: $('#modalcontent #supplier_address').val(),
+                supplier_concern_person: $('#modalcontent #supplier_concern_person').val(),
+                terms_condition_list: $('#modalcontent #terms_condition_list').val(),
+                test_requirements_list: $('#modalcontent #test_requirements_list').val(),
+                List_Files: listAttachments,
+                is_submitted: IsSubmit,
+                is_approved: null,
+                details: details
+
+            }
+
+            if (details.length == 0) {
+                showErrorAlert("Alert", "Input Valid Quantity for adding Items.", "OK", function () {
+
+                });
+                return;
+            }
+
+            if (_cusFormValidate("frmAdd")) {
+
+                showLoader("Saving..........");
+
+                ajaxPostObjectHandler("/FabricBookingRequisition/SaveFabricBookingRequisition", obj_FabricBookingRequisition, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadFabricBookingRequisitionData();
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+                            added_list = [];
+                            details = [];
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+                            details = [];
+                            LoadFabricBookingRequisitionData();
+                            LoadFabricBookingRequisitionSubmittedData();
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+            }
+
+
+        }
+
+        function UpdateFabricBookingRequisition(btn, isSubmit) {
+
+
+
+            $.each($("#DTTranFabricDetails tbody tr"), function (key, val) {
+
+                var obj = {
+                    pr_detail_id: $(val).find(".btn-danger").attr("pr_detail_id"),
+                    pr_id: $('#pr_id').val(),
+                    item_id: check_textbox_value($(this).find(".item_id")),
+                    item_quantity: check_textbox_value($(this).find(".quantity")),
+                    uom: check_textbox_value($(this).find(".uom")),
+                    suggested_unit_price: check_textbox_value($(this).find(".suggested_unit_price")),
+                    current_state: $(val).find(".btn-danger").attr("pr_detail_id") == "0" ? 1 : 2
+                };
+
+                if (check_textbox_value($(this).find(".quantity")) != null) {
+                    details.push(obj);
+                }
+
+            });
+
+            var obj_FabricBookingRequisition = {
+                pr_id: $('#modalcontent #pr_id').val(),
+                pr_no: $('#modalcontent #pr_no').val(),
+                pr_date: $('#modalcontent #pr_date').val(),
+                delivery_date: $('#modalcontent #delivery_date').val(),
+                designer_id: check_value($('#modalcontent #designer_id').val()),
+                event_id: check_value($('#modalcontent #event_id').val()),
+                delivery_unit_id: check_value($('#modalcontent #delivery_unit_id').val()),
+                delivery_unit_address: $('#modalcontent #delivery_unit_address').val(),
+                remarks: $('#modalcontent #remarks').val(),
+                supplier_id: check_value($('#modalcontent #supplier_id').val()),
+                supplier_address: $('#modalcontent #supplier_address').val(),
+                supplier_concern_person: $('#modalcontent #supplier_concern_person').val(),
+                //terms_condition_list: $('#modalcontent #terms_condition_list').val(),
+                //test_requirements_list: $('#modalcontent #test_requirements_list').val(),
+                List_Files: listAttachments,
+                is_submitted: isSubmit,
+                // is_approved: null,
+                details: details,
+                DeleteList: DeleteList
+            }
+
+            if (details.length == 0) {
+                showErrorAlert("Alert", "Input Valid Quantity for adding Items.", "OK", function () { });
+                return;
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                showLoader("Saving..........");
+
+                ajaxPostObjectHandler("/FabricBookingRequisition/UpdateFabricBookingRequisition", obj_FabricBookingRequisition, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadFabricBookingRequisitionData();
+                        LoadFabricBookingRequisitionSubmittedData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+                            listAttachments = []; DeleteList = [];
+                            added_list = [];
+                            details = [];
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+                            details = [];
+
+                            LoadFabricBookingRequisitionData();
+                            LoadFabricBookingRequisitionSubmittedData();
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+            }
+
+
+        }
+
+        function DeleteFabricBookingRequisition(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_FabricBookingRequisition = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/FabricBookingRequisition/DeleteFabricBookingRequisition", obj_FabricBookingRequisition, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadFabricBookingRequisitionData();
+                        LoadFabricBookingRequisitionSubmittedData()
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+                            LoadFabricBookingRequisitionData();
+                            LoadFabricBookingRequisitionSubmittedData();
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            });
+        }
+
+        $("#btnLoadData").click(function () {
+            if ($("#fiscal_year_id").val() == '') {
+                $("#fiscal_year_id").focus();
+                $("#fiscal_year_id").css("border", "1px solid red");
+            }
+            else if ($("#event_id").val() == '') {
+                $("#event_id").focus();
+                $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+            }
+            else {
+
+                $("#fiscal_year_id").css("border", "");
+                $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                LoadFabricBookingRequisitionData();
+                LoadFabricBookingRequisitionSubmittedData();
+
+
+            }
+
+        });
+
+
+        $(function () {
+            BindTabEvents("tab_bar_style");
+            LoadFabricBookingRequisitionData();
+            LoadFabricBookingRequisitionSubmittedData();
+
+        });
+
+        function LoadFabricBookingRequisitionData() {
+            var dt_search = {
+
+                filterId: '#DTFabricBookingRequisition_filter input[type=search]',
+                tableId: "#DTFabricBookingRequisition"
+
+            };
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#sup_fil").val(),
+                delivery_unit_id: $("#delivery_unit_id").val()
+
+            };
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By PR No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/FabricBookingRequisition/GetFabricBookingRequisitionData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("pr_id", data.pr_id);
+
+                },
+                "columns": [
+
+                    { "data": "pr_no", "name": "pr_no", "autoWidth": true },
+                    { "data": "pr_date", "name": "pr_date", "autoWidth": true },
+                    { "data": "delivery_date", "name": "delivery_date", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "designer_name", "name": "designer_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ],
+                
+            });
+        }
+
+
+        function LoadFabricBookingRequisitionSubmittedData() {
+            var dt_search = {
+
+                filterId: '#DTFabricBookingRequisitionSubmitted_filter input[type=search]',
+                tableId: "#DTFabricBookingRequisitionSubmitted"
+
+            };
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#sup_fil").val(),
+                delivery_unit_id: $("#delivery_unit_id").val()
+
+            };
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By PR No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/FabricBookingRequisition/GetFabricBookingRequisitionSubmittedData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 6, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("pr_id", data.pr_id);
+
+                },
+                "columns": [
+
+                    { "data": "pr_no", "name": "pr_no", "autoWidth": true },
+                    { "data": "pr_date", "name": "pr_date", "autoWidth": true },
+                    { "data": "delivery_date", "name": "delivery_date", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "designer_name", "name": "designer_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ],
+                
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+        function SendForApproval(btn) {
+
+            details = []
+
+            $.each($("#DTTranFabricDetails tbody tr"), function (key, val) {
+
+                var obj = {
+                    item_id: check_textbox_value($(this).find(".item_id")),
+                    item_quantity: check_textbox_value($(this).find(".quantity")),
+                    uom: check_textbox_value($(this).find(".uom"))
+
+                };
+                details.push(obj);
+
+
+            });
+
+            var obj_FabricBookingRequisition = {
+                pr_id: $('#modalcontent #pr_id').val(),
+                pr_no: $('#modalcontent #pr_no').val(),
+                pr_date: $('#modalcontent #pr_date').val(),
+                delivery_date: $('#modalcontent #delivery_date').val(),
+                designer_id: check_value($('#modalcontent #designer_id').val()),
+                event_id: check_value($('#modalcontent #event_id').val()),
+                delivery_unit_id: check_value($('#modalcontent #delivery_unit_id').val()),
+                delivery_unit_address: $('#modalcontent #delivery_unit_address').val(),
+                remarks: $('#modalcontent #remarks').val(),
+                supplier_id: check_value($('#modalcontent #supplier_id').val()),
+                supplier_address: $('#modalcontent #supplier_address').val(),
+                supplier_concern_person: $('#modalcontent #supplier_concern_person').val(),
+                terms_condition_list: $('#modalcontent #terms_condition_list').val(),
+                test_requirements_list: $('#modalcontent #test_requirements_list').val(),
+                List_Files: listAttachments,
+                is_submitted: 2,
+                is_approved: null,
+                details: details,
+                DeleteList: DeleteList
+
+
+            }
+
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+
+            ajaxPostObjectHandler("/FabricBookingRequisition/UpdateFabricBookingRequisition", obj_FabricBookingRequisition, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    LoadFabricBookingRequisitionData();
+
+
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+    </script>
+}
+
+
+
+
+

@@ -1,0 +1,1419 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_mcd_receive_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Purchase Return  List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+<style>
+
+    #tab_precostinglanding.nav-tabs > li.active > a,
+    #tab_precostinglanding.nav-tabs > li.active > a:hover,
+    #tab_precostinglanding.nav-tabs > li.active > a:focus,
+    #tab_precostinglanding.nav-tabs > li > a.active,
+    #tab_precostinglanding.nav-tabs > li > a:hover,
+    #tab_precostinglanding.nav-tabs > li > a:focus {
+        color: #555;
+        cursor: default;
+        background-color: khaki;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+
+</style>
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Purchase Return List</h6>
+                        </div>
+                        @await Component.InvokeAsync("DataFilterSCMwd")
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display:none">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddItem();" style="margin-left: 0px;width:150px;display:none;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+
+                            <div class="form-group row" style="margin-bottom:0.3rem">
+                                <label class="col-sm-2 col-form-label-sm text-right" style="font-size:14px">PO No <span class="text-danger ml-005">*</span></label>
+                                <div class="col-sm-4">
+                                    @await Component.InvokeAsync("S2TranScmPo", new
+                                        {
+                                            ddlId = "po_id",
+                                            selectedvalue = "",
+                                            cssclass = "form-control S2TranScmPo",
+                                            isRequired = true,
+                                            isReadOnly = false,
+                                            placeholder = "Select PO",
+                                            preloaded = "",
+
+                                        })
+                                    <span asp-validation-for="po_id" class="text-danger"></span>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                       
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precostinglanding" class="nav nav-tabs">
+                                        <li class="active" tab_index="1">
+                                            <a href="#det1" style="text-decoration: unset;width: 170px;" class="active tab_link  " data-toggle="tab">PENDING LIST</a>
+                                        </li>
+                                        <li class="" tab_index="2">
+                                            <a href="#det2" style="text-decoration: unset;width: 170px;" class=" tab_link  " data-toggle="tab">DRAFT LIST</a>
+                                        </li>
+                                        <li class="" tab_index="3">
+                                            <a href="#det3" style="text-decoration: unset;width: 200px;" class=" tab_link  " data-toggle="tab">PROPOSED FOR APPROVAL</a>
+                                        </li>
+                                        <li class="" tab_index="4">
+                                            <a href="#det4" style="text-decoration: unset;width: 170px;" class=" tab_link  " data-toggle="tab">APPROVED LIST</a>
+                                        </li>
+                                        
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                                            <div class="card">
+
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <table id="DTFurchaseReturnPendingList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead style="text-align:center">
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Received No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Received Date</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal  ">PO No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">PO Date </label></th>
+
+                                                                <th style="width:200px;"><label class="labelNormal "> Supplier</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Action</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det2" tabpane_index="2">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTFurchaseReturnDraftList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead style="text-align:center">
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Return No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Received No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Return Date </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Return By</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Supplier</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Status</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det3" tabpane_index="3">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTFurchaseReturnProposedList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th style="width:200px;"><label class="labelNormal">Return No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Received No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Return Date </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Return By</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Supplier</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Status</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="det4" tabpane_index="4">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTFurchaseReturnApprovedList" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width:200px;"><label class="labelNormal">Return No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Received No</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal">Return Date </label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Return By</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Supplier</label></th>
+                                                                <th style="width:200px;"><label class="labelNormal "> Status</label></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* <div class="card">                
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="DTFabricRequisitionProposedSlip" class="table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th><label class="labelNormal">Requisition Slip No</label></th>
+                                                <th style="width:300px;"><label class="labelNormal">Requisition Date</label></th>
+                                                <th style="width:200px;"><label class="labelNormal  ">Techpach No</label></th>
+                                                <th><label class="labelNormal">Requisition By</label></th>
+                                                <th><label class="labelNormal "> Action</label></th>
+
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div> *@
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 80% !important; ">
+        <div class="modal-content" id="modalcontent_1" style="overflow-y: scroll;">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Purchase Return Detail
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="~/Views/MCD/TranMcdReceive/_TranReckAdd.cshtml" />
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section Scripts {
+    <script>
+        var listAttachments = [];
+        var DeleteList = [];
+        function closePopup() {
+            event.preventDefault();
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+            //location.reload();
+        }
+        function AddItem() {
+            //$('#po_id').on('change', function () {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/FabricRequisitionSlip/AddFabricRequsitionSlipNew", null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+                LoadTechPackDropDownByClass("modalcontainer #modalcontent_1", "S2TechPack");
+
+            });
+        }
+        function updateDefectpercentage(input) {
+            var failQty = parseInt(input.parentElement.parentElement.cells[11].querySelector('.failQty').value);
+            var recQty = input.parentElement.parentElement.cells[7].querySelector('.recQty').value;
+            var defect = (failQty / recQty) * 100;
+            input.parentElement.parentElement.cells[12].querySelector('.defect').value = defect;
+        }
+        function uploadFile() {
+
+            $("#modalcontainer #attachments").trigger("click");
+        };
+        function EditFabricPo(btn) {
+
+            listAttachments = [];
+            var po_id = $(btn).attr("po_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricPo/FabricPoEdit?po_id=" + po_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+                   
+                    $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+
+                    $("#modalcontainer #attachments").change(function () {
+                        var files = this.files;
+                        var size = $(this)[0].files.length;
+                        formData = new FormData();
+
+                        for (var i = 0; i < size; i++) {
+                            var reader = new FileReader();
+
+                            reader.onload = (function (singlefile) {
+
+                                var filename = singlefile.name;
+                                var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                                return function (e) {
+
+                                    var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                                    var indx = listAttachments.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+
+                                    var attachfile = {
+                                        filename: filename,
+                                        filetype: filetype,
+                                        extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                        base64string: base64String,
+                                        server_filename: "",
+                                        CurrentState: 1,
+                                        fileindex: indx
+                                    };
+
+                                    listAttachments.push(attachfile);
+
+                                    $("#fileNamesContainer").append('<p>' + filename + '</p>');
+
+
+                                    base64String = "";
+
+                                }
+
+
+                            })($(this)[0].files[i]);
+
+                            reader.readAsDataURL($(this)[0].files[i]);
+
+
+                        }
+                    });
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+        function EditFabricRequisitionSlip(btn) {
+            
+            var requisition_slip_id = $(btn).attr("requisition_slip_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricRequisitionSlipApprove/FabricRequisitionSlipEdit?requisition_slip_id=" + requisition_slip_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+        function ViewFabricRequisitionSlip(btn) {
+            
+            var requisition_slip_id = $(btn).attr("requisition_slip_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/FabricRequisitionSlipApprove/FabricRequisitionSlipEdit?requisition_slip_id=" + requisition_slip_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+
+
+        function TranMcdReturnAdd(btn) {
+            
+            var received_id = $(btn).attr("received_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranMcdPurchaseReturn/TranMcdReturnAdd?received_id=" + received_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+        function EditMcdReturn(btn) {
+
+            var purchase_return_id = $(btn).attr("purchase_return_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranMcdPurchaseReturn/TranMcdReturnEdit?purchase_return_id=" + purchase_return_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+
+        }
+
+
+        function ViewTranMcdReturn(btn) {
+            
+            var purchase_return_id = $(btn).attr("purchase_return_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/TranMcdPurchaseReturn/TranMcdReturnView?purchase_return_id=" + purchase_return_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function SaveMcdPurchaseReturn(btn, isSubmit) {
+            
+           
+
+            details = []
+
+           
+            var challanNo = $('#del_chalan').val();
+            var driverName = $('#driverName').val();
+            var vehicalNo = $('#vehicalNo').val();
+            var contactNo = $('#contactNo').val();
+            var note = $('#note').val();
+            var del_chalan_date = $('#del_chalan_date').val();
+            var transport_type = $('#modalcontent #ddlTransport1').find('option:selected').val();
+            var recivedid = $('#received_id').val();
+            var receive_date = $('#receive_date').val();
+            var po_id = $('#poid').val();
+            var supplier_id = $('#supplier_id').val();
+            var po_date = $('#podate').val();
+
+            $.each($("#DTTranFabricDetails tbody tr"), function (key, val) {
+
+                var obj = {
+
+
+                    gen_item_master_id: $(val).find(".item_id").val(), //$(this).find("td").eq(0).find("input").val(),
+                    measurement_unit_detail_id: $(val).find(".muid").val(),
+                    measurement_unit: $(val).find(".uom").val(),
+                    receive_quantity: $(val).find(".recQty").val(),
+                    reject_quantity: $(val).find(".failQy").val(),
+                    return_quantity: $(val).find(".returnQty").val(),
+                    remarks: $(val).find(".remarks").val(),
+                   // gen_item_structure_group_sub_id: $(this).find("td").eq(10).text()
+
+                };
+                details.push(obj);
+
+            });
+
+            var obj_FabricRequisitionSlip = {
+                po_date: po_date,
+                po_id: po_id,
+                received_id: recivedid, //check_value($('#modalcontent #received_id').val()),
+                receive_date: receive_date,//$('#modalcontent #arrival_date').val(),
+                supplier_id: supplier_id,//check_value($('#modalcontent #supplierId').val()),
+                del_chalan_no: challanNo,
+                del_chalan_date: del_chalan_date,//$('#modalcontent #del_chalan_date').val(),
+                transport_type: transport_type,
+                vehical_no: vehicalNo,
+                driver_name: driverName,
+                driver_contact_no: contactNo,
+                is_submitted: isSubmit,
+               // gen_item_structure_group_id: check_value($('#modalcontent #gen_item_structure_group_id').val()),
+
+                details: details
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/TranMcdPurchaseReturn/SaveTranMCDReturn", obj_FabricRequisitionSlip, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+               
+                if (response.status_Code === "200") {
+                    console.log(response.data);
+
+                    
+                    LoadFurchaseReturnPendingData();
+                    LoadFurchaseReturnDraftData();
+                    LoadFurchaseReturnProposedData();
+                    LoadFurchaseReturnApprovedData();
+
+
+                    
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Data Saved Successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        //showCancelButton: true,
+                        //cancelButtonText: 'Propose for Approval',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            closePopup();
+                        } else {
+                            alert('success');
+                           //var purchase_return_id = $("#purchaseReturnId").val();//response.data;
+                          // proposeForApproval(purchase_return_id);
+                        }
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+
+        function UpdateMcdReturn(btn) {
+            
+            details = []
+
+            var purchase_return_id = $("#purchaseReturnId").val();
+            var purchase_return_no = $("#purchase_return_no1").val();
+            var challanNo = $('#del_chalan1').val();
+            var driverName = $('#driverName1').val();
+            var vehicalNo = $('#vehicalNo1').val();
+            var contactNo = $('#contactNo1').val();
+
+            var receive_no = $('#receive_no1').val();
+            var po_date = $('#podate1').val();
+
+            var del_chalan_date = $('#del_chalan_date1').val();
+            var transport_type = $('#modalcontent .transportTypeEdit').find('option:selected').val();
+            var recivedid = $('#received_id1').val();
+            var receive_date = $('#receive_date1').val();
+            var po_id = $('#poid1').val();
+            var supplier_id = $('#supplierId1').val();
+
+
+            $.each($("#DTTranFabricDetailsEdit tbody tr"), function (key, val) {
+
+                var objEdit = {
+
+                   
+                    purchase_return_detail_id: $(val).find(".purchase_return_detail_id").val(),
+                    gen_item_master_id: $(val).find(".item_id").val(), //$(this).find("td").eq(0).find("input").val(),
+                    measurement_unit_detail_id: $(val).find(".measurement_unit_det_id2").val(),
+                    measurement_unit: $(val).find(".uom").val(),
+                    receive_quantity: $(val).find(".receive_quantity").val(),
+                    reject_quantity: $(val).find(".reject_quantity").val(),
+                    return_quantity: $(val).find(".return_quantityEdit").val(),
+                    remarks: $(val).find(".remarksEdit").val(),
+
+                   
+                    current_state:2
+                    
+
+                };
+                details.push(objEdit);
+
+            });
+
+            var obj_FabricRequisitionSlip = {
+
+                purchase_return_id: purchase_return_id,
+                purchase_return_no: purchase_return_no,
+                po_date: po_date,
+                receive_no: receive_no,
+                po_id: po_id,
+                received_id: recivedid, 
+                receive_date: receive_date,
+                supplier_id: supplier_id,
+                del_chalan_no: challanNo,
+                del_chalan_date: del_chalan_date,
+                transport_type: transport_type,
+                vehical_no: vehicalNo,
+                driver_name: driverName,
+                driver_contact_no: contactNo,
+                is_submitted: 1,
+               
+
+                details: details
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/TranMcdPurchaseReturn/UpdateTranMCDReturn", obj_FabricRequisitionSlip, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+
+                if (response.status_Code === "200") {
+                    console.log(response.data);
+
+
+                    LoadFurchaseReturnPendingData();
+                    LoadFurchaseReturnDraftData();
+                    LoadFurchaseReturnProposedData();
+                    LoadFurchaseReturnApprovedData();
+
+
+
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Data Updated Successfullly.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        //showCancelButton: true,
+                        //cancelButtonText: 'Propose for Approval',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            closePopup();
+                        } else {
+                            var purchase_return_id = $("#purchaseReturnId").val();//response.data;
+                            proposeForApproval(purchase_return_id);
+                        }
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+           
+
+        }
+
+
+
+        function SaveAndSendForProposal(btn) {
+
+            // if (!_cusFormValidate("frmAddReceive")) {
+            //    return;
+            // }
+
+            details = []
+
+            //var selectedPr = $('#po_id').select2("data");
+            var challanNo = $('#del_chalan').val();
+            var driverName = $('#driverName').val();
+            var vehicalNo = $('#vehicalNo').val();
+            var contactNo = $('#contactNo').val();
+            var note = $('#note').val();
+            var del_chalan_date = $('#del_chalan_date').val();
+            var transport_type = $('#modalcontent #ddlTransport1').find('option:selected').text();
+            var recivedid = $('#received_id').val();
+            var receive_date = $('#receive_date').val();
+            var po_id = $('#poid').val();
+            var supplier_id = $('#supplier_id').val();
+            var po_date = $('#podate').val();
+
+            $.each($("#DTTranFabricDetails tbody tr"), function (key, val) {
+
+                var obj = {
+                    gen_item_master_id: $(val).find(".item_id").val(), //$(this).find("td").eq(0).find("input").val(),
+                    measurement_unit_detail_id: $(val).find(".muid").val(),
+                    measurement_unit: $(val).find(".uom").val(),
+                    receive_quantity: $(val).find(".recQty").val(),
+                    reject_quantity: $(val).find(".failQy").val(),
+                    return_quantity: $(val).find(".returnQty").val(),
+                    remarks: $(val).find(".remarks").val(),
+
+                    
+                    
+
+                   // receive_quantity: $(this).find("td").eq(5).find("input").val(),
+                   // reject_quantity: $(this).find("td").eq(6).find("input").val(),
+                    //return_quantity: $(this).find("td").eq(9).find("input").val(),
+                   // remarks: $(this).find("td").eq(10).find("input").val(),
+                    // gen_item_structure_group_sub_id: $(this).find("td").eq(10).text()
+
+                };
+                details.push(obj);
+
+            });
+
+            var obj_FabricRequisitionSlip = {
+                po_date: po_date,
+                po_id: po_id,
+                received_id: recivedid, //check_value($('#modalcontent #received_id').val()),
+                receive_date: receive_date,//$('#modalcontent #arrival_date').val(),
+                supplier_id: supplier_id,//check_value($('#modalcontent #supplierId').val()),
+                del_chalan_no: challanNo,
+                del_chalan_date: del_chalan_date,//$('#modalcontent #del_chalan_date').val(),
+                transport_type: transport_type,
+                vehical_no: vehicalNo,
+                driver_name: driverName,
+                driver_contact_no: contactNo,
+                is_submitted: 2,
+                // gen_item_structure_group_id: check_value($('#modalcontent #gen_item_structure_group_id').val()),
+
+                details: details
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/TranMcdPurchaseReturn/SaveTranMCDReturn", obj_FabricRequisitionSlip, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                // var purchase_return_id;
+
+                // if (response.status_Code == "200") {
+                //     LoadFabricRequisitionSlipData();
+                //     showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                //         closePopup();
+
+                //     });
+                if (response.status_Code === "200") {
+                    console.log(response.data);
+
+
+                    LoadFurchaseReturnPendingData();
+                    LoadFurchaseReturnDraftData();
+                    LoadFurchaseReturnProposedData();
+                    LoadFurchaseReturnApprovedData();
+
+
+                    // Show success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Data Saved and Send for Proposoal Successful.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        //showCancelButton: true,
+                        //cancelButtonText: 'Propose for Approval',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            closePopup();
+                        } else {
+                            var purchase_return_id = $("#purchaseReturnId").val();//response.data;
+                            proposeForApproval(purchase_return_id);
+                        }
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+      
+
+        function proposeForApproval(btn) {
+
+            var purchase_return_id = $("#purchaseReturnId").val();
+            var is_submitted = 1;
+
+            $.ajax({
+                url: '/TranMcdPurchaseReturn/ProposeForApprovalAndApprove',
+                type: 'POST',
+                // dataType: 'json',
+                data: { Id: purchase_return_id },
+
+                //contentType: 'application/json',
+
+                success: function (response) {
+                    if (response.status_Code === "200") {
+
+                        LoadFurchaseReturnPendingData();
+                        LoadFurchaseReturnDraftData();
+                        LoadFurchaseReturnProposedData();
+                        LoadFurchaseReturnApprovedData();
+
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Proposed for Approval',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                closePopup();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        function ApprovePurchaseReturn(btn) {
+
+            var purchase_return_id = $("#purchaseReturnId").val();
+            var is_submitted = 2;
+
+            $.ajax({
+                url: '/TranMcdPurchaseReturn/ProposeForApprovalAndApprove',
+                type: 'POST',
+                // dataType: 'json',
+                data: { Id: purchase_return_id },
+
+                //contentType: 'application/json',
+
+                success: function (response) {
+                    if (response.status_Code === "200") {
+
+                        LoadFurchaseReturnPendingData();
+                        LoadFurchaseReturnDraftData();
+                        LoadFurchaseReturnProposedData();
+                        LoadFurchaseReturnApprovedData();
+
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Approved',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                closePopup();
+                            }
+                        });
+                    }
+                }
+            });
+
+        }
+
+        function DeleteFabricPo(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_FabricPo = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/FabricPo/DeleteFabricPo", obj_FabricPo, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadReceiveData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                }, true);
+
+            });
+        }
+
+        $(function () {
+          
+
+            LoadFurchaseReturnPendingData();
+            LoadFurchaseReturnDraftData();
+            LoadFurchaseReturnProposedData();
+            LoadFurchaseReturnApprovedData();
+     
+            activeChange();
+
+        });
+
+        function activeChange() {
+            $('#tab_precostinglanding.nav-tabs > li').click(function () {
+                // Remove active class from all tabs
+                $('#tab_precostinglanding.nav-tabs > li').removeClass('active');
+                // Add active class to the clicked tab
+                $(this).addClass('active');
+                // Remove active class from all tab links
+                $('#tab_precostinglanding.nav-tabs > li > a').removeClass('active');
+                // Add active class to the clicked tab link
+                $(this).find('a').addClass('active');
+                // Remove active class from all tab contents
+                $('.tab-content > .tab-pane').removeClass('active');
+                // Add active class to the corresponding tab content
+                var tabContentId = $(this).find('a').attr('href');
+                $(tabContentId).addClass('active');
+            });
+        }
+
+
+        $("#btnLoadData").click(function () {
+            if ($("#fiscal_year_id").val() == '') {
+                $("#fiscal_year_id").focus();
+                $("#fiscal_year_id").css("border", "1px solid red");
+            }
+            else if ($("#event_id").val() == '') {
+                $("#event_id").focus();
+                $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+            }
+            else {
+
+                $("#fiscal_year_id").css("border", "");
+                $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                LoadFurchaseReturnPendingData();
+                LoadFurchaseReturnDraftData();
+                LoadFurchaseReturnProposedData();
+                LoadFurchaseReturnApprovedData()
+
+            }
+
+
+
+        });
+
+
+        function LoadFurchaseReturnPendingData() {
+            var dt_search = {
+
+                filterId: '#DTFurchaseReturnPendingList_filter input[type=search]',
+                tableId: "#DTFurchaseReturnPendingList"
+
+            };
+            
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                //supplier_id: $("#supplier_id").val()
+                supplier_id: $("#sup_fil").val()
+
+
+            };
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search Receive No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+               
+                search: {
+                    return: true
+                },
+                "searching": true,
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/TranMcdPurchaseReturn/GetFurchaseReturnPendingData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("receive_no", data.receive_no);
+
+                },
+                "columns": [
+
+                    { "data": "receive_no", "name": "receive_no", "autoWidth": true },
+                    {
+                        "data": "arrival_date",
+                        "name": "arrival_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "po_no", "name": "po_no", "autoWidth": true },
+                    {
+                        "data": "arrival_date",
+                        "name": "arrival_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+        function LoadFurchaseReturnDraftData() {
+            var dt_search = {
+
+                filterId: '#DTFurchaseReturnDraftList_filter input[type=search]',
+                tableId: "#DTFurchaseReturnDraftList"
+
+            };
+            
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#sup_fil").val()
+
+
+            };
+            var dt = $(dt_search.tableId).DataTable({
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search PurchaseReturn No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+               
+                search: {
+                    return: true
+                },
+                "searching": true,
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/TranMcdPurchaseReturn/GetFurchaseReturnDraftData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("purchase_return_no", data.purchase_return_no);
+
+                },
+                "columns": [
+
+                    { "data": "purchase_return_no", "name": "purchase_return_no", "autoWidth": true },
+                    { "data": "receive_no", "name": "receive_no", "autoWidth": true },
+                    {
+                        "data": "return_date",
+                        "name": "return_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+        function LoadFurchaseReturnProposedData() {
+            var dt_search = {
+
+                filterId: '#DTFurchaseReturnProposedList_filter input[type=search]',
+                tableId: "#DTFurchaseReturnProposedList"
+
+            };
+           
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#sup_fil").val()
+
+
+            };
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search PurchaseReturn No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "searching": true,
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/TranMcdPurchaseReturn/GetFurchaseReturnProposedData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("purchase_return_no", data.purchase_return_no);
+
+                },
+                "columns": [
+
+                    { "data": "purchase_return_no", "name": "purchase_return_no", "autoWidth": true },
+                    { "data": "receive_no", "name": "receive_no", "autoWidth": true },
+                    {
+                        "data": "return_date",
+                        "name": "return_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+
+        function LoadFurchaseReturnApprovedData() {
+            var dt_search = {
+
+                filterId: '#DTFurchaseReturnApprovedList_filter input[type=search]',
+                tableId: "#DTFurchaseReturnApprovedList"
+
+            };
+           
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#sup_fil").val()
+
+
+            };
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search PurchaseReturn No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+              
+                search: {
+                    return: true
+                },
+                "searching": true,
+                "bFilter": false,
+                "ajax": $.fn.dataTable.json({ url: "/TranMcdPurchaseReturn/GetFurchaseReturnApprovedData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("purchase_return_no", data.purchase_return_no);
+
+                },
+                "columns": [
+
+                    { "data": "purchase_return_no", "name": "purchase_return_no", "autoWidth": true },
+                    { "data": "receive_no", "name": "receive_no", "autoWidth": true },
+                    {
+                        "data": "return_date",
+                        "name": "return_date",
+                        "autoWidth": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var monthName = monthNames[date.getMonth()];
+                            var formattedDate = date.getFullYear() + "-" + monthName + "-" + ('0' + date.getDate()).slice(-2);
+                            return formattedDate;
+                        }
+                    },
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true }
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

@@ -1,0 +1,654 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_scm_po_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "PO List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+   
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                              <h6 class="card-title">PO Approval</h6> 
+                        </div>
+                        @await Component.InvokeAsync("DataFilterSCM")
+                        <!-- /.card-header -->
+           
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+                       
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precostinglanding" class="nav nav-tabs landingtab">
+                                        <li class="active" tab_index="1">
+                                            <a style="text-decoration:unset;" class="tab_link active" aria-current="page" href="#pending" data-toggle="tab">Pending List</a>
+                                        </li>
+
+                                        <li class="" tab_index="2">
+                                            <a style="text-decoration:unset;" class="tab_link" href="#submitted" data-toggle="tab">Approved List</a>
+                                        </li>
+
+                                        <li class="" tab_index="3">
+                                            <a style="text-decoration:unset;" class="tab_link" href="#rejected" data-toggle="tab">Reject List</a>
+                                        </li>
+
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="pending" tabpane_index="1">
+                                            <div class="box">
+                                                <table id="DTPendingPOApproval" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead style="text-align:center">
+                                                        <tr>
+                                                            <th>PO no</th>
+                                                            <th>PR No</th>
+                                                            <th>PO date</th>
+                                                            <th>Season</th>
+
+                                                            <th>Supplier</th>
+                                                            <th>Delivery unit</th>
+
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="submitted" tabpane_index="2">
+                                            <div class="box">
+                                                <table id="DTPOApproval" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead style="text-align:center">
+                                                        <tr>
+                                                            <th>PO no</th>
+                                                            <th>PR No</th>
+                                                            <th>PO date</th>
+                                                            <th>Season</th>
+
+                                                            <th>Supplier</th>
+                                                            <th>Delivery unit</th>
+
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="rejected" tabpane_index="3">
+                                            <div class="box">
+                                                <table id="DTPOReject" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead style="text-align:center">
+                                                        <tr>
+                                                            <th>PO no</th>
+                                                            <th>PR No</th>
+                                                            <th>PO date</th>
+                                                            <th>Season</th>
+
+                                                            <th>Supplier</th>
+                                                            <th>Delivery unit</th>
+
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Fabric PO
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function ViewPOReject(btn) {
+
+            var po_id = $(btn).attr("po_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/POApproval/PORejectView?po_id=" + po_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+        function ViewPOApproval(btn) {
+
+            var po_id = $(btn).attr("po_id");
+
+               setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/POApproval/POApprovalView?po_id=" + po_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                 setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+            }
+        }
+
+
+        function ViewPOPendingApproval(btn) {
+
+            var po_id = $(btn).attr("po_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/POApproval/PendingPOApprovalView?po_id=" + po_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+       
+
+        
+
+
+
+        function ApprovePOApproval(btn) {
+
+
+            var obj_OpenPOApproval = {
+                po_id: $('#modalcontent #po_id').val(),
+                po_no: $('#modalcontent #po_id').val(),
+                status_remarks: $('#status_remarks').val(),
+                is_approved: 1
+
+
+            }
+
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+
+            ajaxPostObjectHandler("/POApproval/ApprovedPOApproval", obj_OpenPOApproval, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    LoadPOApprovalData();
+                    LoadPendingPOApprovalData();
+                    LoadPORejectData();
+
+
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+                        listAttachments = []; DeleteList = [];
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+
+        function RejectPOApproval(btn) {
+
+
+            var obj_OpenPOApproval = {
+                po_id: $('#modalcontent #po_id').val(),
+                po_no: $('#modalcontent #po_id').val(),
+                status_remarks: $('#status_remarks').val(),
+                is_approved: 2
+
+
+
+            }
+
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+
+            ajaxPostObjectHandler("/POApproval/ApprovedPOApproval", obj_OpenPOApproval, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    LoadPOApprovalData();
+                    LoadPendingPOApprovalData();
+                    LoadPORejectData();
+
+
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+                        listAttachments = []; DeleteList = [];
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+
+
+
+
+
+
+
+        $("#btnLoadData").click(function () {
+            if ($("#fiscal_year_id").val() == '') {
+                $("#fiscal_year_id").focus();
+                $("#fiscal_year_id").css("border", "1px solid red");
+            }
+            else if ($("#event_id").val() == '') {
+                $("#event_id").focus();
+                $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+            }
+            else {
+
+                $("#fiscal_year_id").css("border", "");
+                $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                LoadPOApprovalData();
+                LoadPendingPOApprovalData();
+                LoadPORejectData();
+
+
+            }
+
+        });
+		
+
+        $(function () {
+
+            LoadPOApprovalData();
+            LoadPendingPOApprovalData();
+            LoadPORejectData();
+            BindTabEvents("tab_precostinglanding");
+        });
+
+        function LoadPORejectData() {
+            var dt_search = {
+
+                filterId: '#DTPOReject_filter input[type=search]',
+                tableId: "#DTPOReject"
+
+            };
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#supplier_id").val(),
+                delivery_unit_id: $("#delivery_unit_id").val()
+
+            };
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By PO No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+               
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/POApproval/GetPORejectData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("po_id", data.po_id);
+
+                },
+                "columns": [
+
+
+                    { "data": "po_no", "name": "po_no", "autoWidth": true },
+                    { "data": "pr_no", "name": "pr_no", "autoWidth": true },
+                    { "data": "po_date", "name": "po_date", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+
+                    // { "data": "is_submitted", "name": "is_submitted", "autoWidth": true },
+                    //  { "data": "status", "name": "status", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ],
+                
+            });
+        }
+
+
+
+
+        function LoadPOApprovalData() {
+            var dt_search = {
+
+                filterId: '#DTPOApproval_filter input[type=search]',
+                tableId: "#DTPOApproval"
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#supplier_id").val(),
+                delivery_unit_id: $("#delivery_unit_id").val()
+
+            };
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By PO No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/POApproval/GetPOApprovalData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("po_id", data.po_id);
+
+                },
+                "columns": [
+
+
+                    { "data": "po_no", "name": "po_no", "autoWidth": true },
+                    { "data": "pr_no", "name": "pr_no", "autoWidth": true },
+                    { "data": "po_date", "name": "po_date", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+
+                    // { "data": "is_submitted", "name": "is_submitted", "autoWidth": true },
+                    //  { "data": "status", "name": "status", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ],
+               
+            });
+        }
+
+
+        function LoadPendingPOApprovalData() {
+            var dt_search = {
+
+                filterId: '#DTPendingPOApproval_filter input[type=search]',
+                tableId: "#DTPendingPOApproval"
+
+            };
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#supplier_id").val(),
+                delivery_unit_id: $("#delivery_unit_id").val()
+
+            };
+            var dt = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By PO No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/POApproval/GetPOPendingApprovalData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("po_id", data.po_id);
+
+                },
+                "columns": [
+
+
+                    { "data": "po_no", "name": "po_no", "autoWidth": true },
+                    { "data": "pr_no", "name": "pr_no", "autoWidth": true },
+                    { "data": "po_date", "name": "po_date", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+
+                    // { "data": "is_submitted", "name": "is_submitted", "autoWidth": true },
+                    //  { "data": "status", "name": "status", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ],
+                
+            });
+        }
+
+
+
+        
+
+    </script>
+}
+
+
+
+
+

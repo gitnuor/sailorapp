@@ -1,0 +1,76 @@
+﻿@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+
+@* @model List<rpc_proc_sp_get_data_tran_scm_po_DTO>; *@
+ @model EPYSLSAILORAPP.Domain.DTO.tran_scm_bill_submission_DTO;
+    
+@*  @model EPYSLSAILORAPP.Domain.RPC.rpc_proc_sp_get_data_tran_scm_po_DTO *@
+
+@{
+    ViewBag.Title = "";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<form method="POST" id="frmAddTermDetails" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;width:600px" id="DTTermDetailsList" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th style="text-align:center"><label class="labelNormal">Challan No</label></th>
+                            <th style="text-align:center"><label class="labelNormal">Challan Date</label></th>
+                            <th style="text-align:center"><label class="labelNormal">ID</label></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        @{
+                            int count = 1;
+                        }
+                        @foreach (var obj in Model.detChallan)
+                        {
+                            <tr>
+                                <td style="text-align:center;width:10%"><input type='checkbox' class='form-control is_select' style="height:15px;width:15px;"></td>
+                                <td style="width:20%"><input type='text' disabled class='form-control del_chalan_no' value="@obj.del_chalan_no"></td>
+                                <td style="width:70%"><input type='text' disabled class='form-control del_chalan_date' value="@obj.del_chalan_date"></td>
+                               @*  <td style="display:none"><input type='hidden' class='form-control received_id' value="@obj.received_id" /></td> *@
+                                <td><input type='number' style="width:30px" class='form-control received_id' value="@obj.received_id" /></td>
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-12" style="margin-top: 20px;;text-align:right;">
+
+            <button style="width:100px;" type="button" class="btn btn-success " id="btnSaveBillSubmission" onclick="AddChallanItemDetail();"><i class="fa fa-file-open"></i>&nbsp;Add</button>
+
+        </div>
+    </div>
+
+</form>
+
+
+
+
+
+
+
+

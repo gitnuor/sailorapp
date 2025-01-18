@@ -1,0 +1,477 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_scm_bill_submission_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Bill Approval List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Bill Approval</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precostinglanding" class="nav nav-tabs">
+                                        <li class="active" tab_index="1">
+                                            <a style="text-decoration:unset;" class="tab_link active" aria-current="page" href="#pending" data-toggle="tab">Pending List</a>
+                                        </li>
+
+                                        <li class="" tab_index="2">
+                                            <a style="text-decoration:unset;" class="tab_link" href="#approval" data-toggle="tab">Approval List</a>
+                                        </li>
+
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="pending" tabpane_index="1">
+                                            <div class="box">
+                                                <table id="DTBillPending" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead style="text-align:center">
+                                                        <tr>
+
+                                                            <th>Challan no</th>
+                                                            <th>Po no</th>
+                                                            <th>Challan date</th>
+                                                            <th>Supplier</th>
+                                                            <th>Delivery unit</th>
+                                                            <th>Action</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane " id="approval" tabpane_index="2">
+                                            <div class="box">
+                                                <table id="DTBillApproval" class="table table-striped table-bordered" cellspacing="0">
+                                                    <thead style="text-align:center">
+                                                        <tr>
+
+
+                                                            <th>Challan no</th>
+                                                            <th>Po no</th>
+                                                            <th>Challan date</th>
+                                                            <th>Supplier</th>
+                                                            <th>Delivery unit</th>
+                                                            <th>Action</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            BillApproval
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddBillApproval(btn) {
+            var po_id = $(btn).attr("po_id");
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/BillApproval/BillApprovalNew?po_id=" + po_id, null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+            });
+
+
+        }
+
+
+
+        function ViewBillApproval(btn) {
+
+            var bill_submission_id = $(btn).attr("bill_submission_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/BillApproval/BillApprovalView?bill_submission_id=" + bill_submission_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+                    var loading_cost = $('#modalcontent #loading_cost').val();
+                    var transport_cost = $('#modalcontent #transport_cost').val();
+                    var discount_amount = $('#modalcontent #discount_amount').val();
+                    var vat_amount = $('#modalcontent #vat_amount').val();
+                    var addition = parseFloat(loading_cost) + parseFloat(transport_cost);
+                    $('#modalcontent #total_with_addition').val(addition);
+                    var deduction = parseFloat(discount_amount);
+                    $('#modalcontent #total_with_deduction').val(deduction);
+                    $('#modalcontent #total_without_vat').val(parseFloat(vat_amount));
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function SaveBillApproval(btn) {
+
+            var obj_BillApproval = {
+
+                po_id: check_value($('#modalcontent #po_id').val()),
+                supplier_id: check_value($('#modalcontent #supplier_id').val()),
+                bill_no: $('#modalcontent #bill_no').val(),
+                challan_no: $('#modalcontent #challan_no').val(),
+                challan_date: $('#modalcontent #challan_date').val(),
+                bill_date: $('#modalcontent #bill_date').val(),
+                total_po_amount: $('#modalcontent #total_po_amount').val(),
+                loading_cost_in_percentage: $('#modalcontent #loading_cost_in_percentage').val(),
+                loading_cost: $('#modalcontent #loading_cost').val(),
+                transport_cost_in_percentage: $('#modalcontent #transport_cost_in_percentage').val(),
+                transport_cost: $('#modalcontent #transport_cost').val(),
+                discount_in_percentage: $('#modalcontent #discount_in_percentage').val(),
+                discount_amount: $('#modalcontent #discount_amount').val(),
+                vat_in_percentage: $('#modalcontent #vat_in_percentage').val(),
+                vat_amount: $('#modalcontent #vat_amount').val(),
+                total_value: $('#modalcontent #total_value').val(),
+                is_submitted: true,
+                is_send_for_approval: false,
+                remarks: $('#modalcontent #remarks').val(),
+
+
+            }
+
+
+
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/BillApproval/SaveBillApproval", obj_BillApproval, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                if (response.status_Code == "200") {
+
+                    LoadPendingBillData();
+                    LoadBillSubmittedData();
+
+
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+
+        function UpdateBillApproval(btn) {
+
+            var obj_BillApproval = {
+                bill_submission_id: check_value($('#modalcontent #bill_submission_id').val()),
+                po_id: check_value($('#modalcontent #po_id').val()),
+
+                is_approved: 1,
+
+
+
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+
+            ajaxPostObjectHandler("/BillApproval/UpdateBillApproval", obj_BillApproval, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                if (response.status_Code == "200") {
+
+                    LoadPendingApprovalData();
+
+
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+
+       
+
+        $(function () {
+
+            LoadPendingApprovalData();
+            BindTabEvents("tab_precostinglanding");
+
+
+        });
+
+
+
+        function LoadPendingApprovalData() {
+            var dt_search = {
+
+                dt_search_pending:{
+                    filterId: '#DTBillPending_filter input[type=search]',
+                    tableId: "#DTBillPending"
+                },
+                dt_search_approval: {
+                    filterId: '#DTBillApproval_filter input[type=search]',
+                    tableId: "#DTBillApproval"
+                }
+
+               
+
+            };
+
+            var dt = $(dt_search.dt_search_pending.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Challan No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.dt_search_pending.filterId).val('');
+                                    $(dt_search.dt_search_pending.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+              
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/BillApproval/GetPendingBillData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("bill_submission_id", data.bill_submission_id);
+
+                },
+                "columns": [
+
+                    { "data": "challan_no", "name": "challan_no", "autoWidth": true },
+                    { "data": "po_no", "name": "po_no", "autoWidth": true },
+
+
+                    { "data": "challan_date", "name": "challan_date", "autoWidth": true },
+
+
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "delivery_unit_name", "name": "delivery_unit_name", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+
+                  
+
+                ],
+                
+            });
+
+
+            var dtApproval = $(dt_search.dt_search_approval.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Challan No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.dt_search_approval.filterId).val('');
+                                    $(dt_search.dt_search_approval.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+             
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/BillApproval/GetApprovalBillData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("bill_submission_id", data.bill_submission_id);
+
+                },
+                "columns": [
+
+                    { "data": "challan_no", "name": "challan_no", "autoWidth": true },
+                    { "data": "po_no", "name": "po_no", "autoWidth": true },
+
+
+                    { "data": "challan_date", "name": "challan_date", "autoWidth": true },
+
+
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "delivery_unit_name", "name": "delivery_unit_name", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+
+
+
+                ],
+                
+            });
+
+
+        }
+    </script>
+}
+
+
+
+
+

@@ -1,0 +1,41 @@
+﻿@model EPYSLSAILORAPP.Application.DTO.TranTables.tran_bp_year_dto
+
+
+<div class="card">
+
+    <!-- /.card-header -->
+    <div class="card-body">
+        @if (Model.is_approved == false && !string.IsNullOrEmpty(Model.approve_remarks))
+        {
+            <div class="row">
+                <label class="labelNormal" style="margin-bottom: 10px!important">Approver Remarks</label>
+                <div class="col-md-12">
+                    <input style="width:100%;" disabled type="text" asp-for="approve_remarks" class="border-gray-200 form-control">
+
+                </div>
+            </div>
+        }
+        <div class="row">
+            <label class="labelNormal" style="margin-bottom: 10px!important">Remarks</label>
+            <div class="col-md-12">
+                <input style="width:100%;" type="text" asp-for="remarks" class="border-gray-200 rounded-sm form-control">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12" style="margin-bottom: 30px;">
+                <button style="width:150px;" type="button" class="btn btn-danger" id="btnCancel" onclick="document.location='/BusinessPlan/BusinessPlanLanding';"><i class="fa fa-angle-double-left"></i>&nbsp;Back to List</button>
+
+                @if (ViewBag.IsEditMode)
+                {
+                    <button style="width:150px;" type="button" class="btn btn-success" id="btnUpdateBusinessPlan"><i class="fa fa-save btnsave_innericon"></i>&nbsp;&nbsp;Save</button>
+
+                    <button style="width:200px;float:right;" type="button" class="btn btn-secondary" id="btnSubmitBusinessPlan"><i class="fa fa-edit"></i>&nbsp;&nbsp;Submit For Approval</button>
+                }
+
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+</div>

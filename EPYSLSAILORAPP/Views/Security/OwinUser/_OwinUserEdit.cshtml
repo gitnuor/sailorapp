@@ -1,0 +1,221 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.owin_user_DTO;
+@{
+    ViewBag.Title = "OwinUser Edit";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <input type="hidden" value="@Model.userid" id="userid" />
+  
+    <div class="box" style="margin-top:7px;">
+        <div class="row">
+            <div class="col-md-3">
+                <button onclick="$('#prof_pic').trigger('click');return false;"><img id="imgPhoto" style="width:240px;height:275px;" src="/Images/emp_pic/@Model.emp_pic" /></button>
+                <input type="hidden" asp-for="emp_pic" />
+                <input type="file" id="prof_pic"/>
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Role</label>
+
+                            @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                            ddlId = "role_id",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.roles)),
+                            selectedvalue = "",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = true,
+                            placeholder = "Select Role"
+
+                            })
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Department</label>
+
+                            @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                            ddlId = "gen_team_group_id",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.team_group)),
+                            selectedvalue = "",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = true,
+                            placeholder = "Select Department"
+                            })
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Designation</label>
+
+                            @await Component.InvokeAsync("GenericDropdownList", new
+                            {
+                            ddlId = "designation_id",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.designation)),
+                            selectedvalue = "",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = true,
+                            placeholder = "Select Designation"
+                            })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Employee Code</label>
+                            <input disabled style="width:100%" asp-for="employee_code" type="number" class="border-#d1cccc-200 form-control" />
+                            <span asp-validation-for="employee_code" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Name</label>
+                            <input style="width:100%" asp-for="name" type="text" class="border-#d1cccc-200 form-control" />
+                            <span asp-validation-for="name" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                   @*  <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">User Name</label>
+                            <input disabled style="width:100%" asp-for="user_name" type="text" class="border-#d1cccc-200 form-control" />
+                            <span asp-validation-for="user_name" class="text-danger"></span>
+                        </div>
+                    </div> *@
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Email</label>
+                            <input style="width:100%" asp-for="email" type="text" class="border-#d1cccc-200 form-control" />
+                            <span asp-validation-for="email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Is Active</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.RadioButtonFor(m => m.is_active,"true")  <label for="html">Yes</label>
+                            <span asp-validation-for="is_active" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.RadioButtonFor(m => m.is_active,"false") <label for="html">No</label>
+                            <span asp-validation-for="is_active" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1">
+                        <div class="form-group">
+                        <input type="checkbox" id="chkSetPWD" /> 
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Set Password</label>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input disabled style="width:100%" id="password" type="text" class="border-#d1cccc-200 form-control" value="" />
+                        </div>
+                    </div>
+                 
+                  
+                </div>
+
+            </div>
+        </div>
+        
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+            <button style="width:300px;" type="button" class="btn btn-primary" id="btnUpdateOwinUser" onclick="UpdateOwinUser(this);"><i class="fa fa-file-open"></i>&nbsp;Update</button>
+
+        </div>
+    </div>
+</form>
+
+
+
+
+

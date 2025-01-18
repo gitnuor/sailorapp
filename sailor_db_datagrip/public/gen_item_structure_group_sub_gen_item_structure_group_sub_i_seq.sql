@@ -1,0 +1,12 @@
+create sequence gen_item_structure_group_sub_gen_item_structure_group_sub_i_seq;
+
+alter sequence gen_item_structure_group_sub_gen_item_structure_group_sub_i_seq owner to postgres;
+
+alter sequence gen_item_structure_group_sub_gen_item_structure_group_sub_i_seq owned by gen_item_structure_group_sub.gen_item_structure_group_sub_id;
+
+grant select, update, usage on sequence gen_item_structure_group_sub_gen_item_structure_group_sub_i_seq to anon;
+
+grant select, update, usage on sequence gen_item_structure_group_sub_gen_item_structure_group_sub_i_seq to authenticated;
+
+grant select, update, usage on sequence gen_item_structure_group_sub_gen_item_structure_group_sub_i_seq to service_role;
+

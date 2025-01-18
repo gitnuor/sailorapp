@@ -1,0 +1,298 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_packing_list_DTO;
+@{
+    ViewBag.Title = "PackingList Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Packing List Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Packing List No</label>
+                        <input style="width:100%" readonly asp-for="packing_list_no" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="packing_list_no" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Packing List Date</label>
+                        <input style="width:100%" asp-for="packing_list_date" type="date" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="packing_list_date" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note</label>
+                        <input style="width:100%" asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="note" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="col-md-12" style="margin-bottom:5px;text-align:left;">
+                    <button type="button" class="btn btn-primary " onclick="AddPackingListtoTable(this);"><i class="fa fa-file-open"></i>&nbsp;&nbsp;ADD Packing List&nbsp;&nbsp;</button>
+                </div>
+            </div>
+            <div class="row" id="divTablePacking" style="display:none">
+                <div class="col-md-12">
+                    <table style="font-size:9px;" id="DTPListOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th><label class="labelNormal">SL No</label></th>
+                                <th><label class="labelNormal">Techpack</label></th>
+                                <th><label class="labelNormal">Style Code</label></th>
+                                <th><label class="labelNormal">Color</label></th>
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">Order M.Unit</label></th>
+                                <th><label class="labelNormal">Total Order Quantity</label></th>
+                                <th><label class="labelNormal">Packing Quantity</label></th>
+                                <th><label class="labelNormal">Note</label></th>
+                            </tr>
+                        </thead>
+                         <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+                    <button type="button" class="btn btn-success " id="btnSaveTranPackingList" onclick="SaveTranPackingList(this);"><i class="fa fa-file-open"></i>&nbsp;Save</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+
+</form>
+
+<div id="modalcontainer_packing" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 40% !important; max-width: 40% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #abcdef;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Packing List
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_detl();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent_packing">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var sl_no = 0;
+    function AddPackingListtoTable() {
+
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/TranPackingList/AddStyle", null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 0);
+
+            $('#modalcontent_packing').html(data);
+            $('#modalcontainer_packing').modal({ backdrop: 'static', keyboard: false });
+            $('#modalcontainer_packing').modal("show");
+            LoadTechPackDropDownByClass("modalcontainer", "S2TechPack");
+
+            $("#modalcontent .S2TechPack").val(null).trigger('change.select2');
+
+            $('#techpack_id').on('change', function () {
+                var techpack_id = $(this).select2("data");
+
+                ajaxGetHandler("/TranBarcode/GetTechpackDet?techpack_id=" + techpack_id[0].id, null, function (data) {
+
+                    var t_data = data.data;
+
+
+
+                    $('#ddl_color').empty();
+                    $('#ddl_color').append($('<option>', {
+                        value: 0,
+                        text: "Select Color",
+                        selected: "selected"
+                    }));
+
+                    for (var i = 0; i < t_data.length; i++) {
+
+                        $('#ddl_color').append($('<option>', {
+                            value: t_data[i].value,
+                            text: t_data[i].text
+
+                        }));
+                    }
+
+
+                });
+                ajaxGetHandler("/TranPackingList/GetTechpackDet?techpack_id=" + techpack_id[0].id, null, function (data) {
+
+                  
+
+                    $("#style_product_unit_name").val(data.data.result.style_product_unit_name);
+                    $("#teckpack_style_code").val(data.data.result.teckpack_style_code);
+                    $("#style_product_unit_id").val(data.data.result.style_product_unit_id);
+
+
+                });
+            });
+        });
+    }
+    function closePopup_detl() {
+        $('#modalcontent_packing').html("");
+        $('#modalcontainer_packing').modal("hide");
+        $('#modalcontainer_packing').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+    function AddList() {
+        var techpack_id = $("#techpack_id").select2("data");
+        $.each($("#DTSizeList tbody tr"), function (key, val) {
+
+            if ($(this).find(".is_select")[0].checked) {
+                sl_no++;
+                var s_unit=$("#style_product_unit_name").val();
+                var style_c = $("#teckpack_style_code").val();
+               
+                var style_product_unit_id = $("#style_product_unit_id").val();
+                var table = document.getElementById("DTPListOutput").getElementsByTagName('tbody')[0];
+
+                var newRow = table.insertRow(table.rows.length);
+               
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+                var cell6 = newRow.insertCell(5);
+                var cell7 = newRow.insertCell(6);
+                var cell8 = newRow.insertCell(7);
+                var cell9 = newRow.insertCell(8);
+                var cell10 = newRow.insertCell(9);
+                var cell11 = newRow.insertCell(10);
+                var cell12 = newRow.insertCell(11);
+                var cell13 = newRow.insertCell(12);
+                console.log($(this).find(".techpack_number").val());
+                cell1.innerHTML = `<input disabled type='number' class='form-control sl_no'
+                                       value=` + sl_no + ` >`;
+                cell1.style.width = "5%";
+                cell2.innerHTML = "<input  type='number' class='form-control techpack_id' value=" + techpack_id[0].id + " >";
+                cell2.style.display = "none";
+                cell3.innerHTML = "<input disabled type='text' class='form-control' value='" + $(this).find(".techpack_number").val() + "' >";
+                cell3.style.width = "15%";
+                cell4.innerHTML = "<input disabled type='text' class='form-control teckpack_style_code' value=" + style_c + " >";
+                cell4.style.width = "15%";
+                cell5.innerHTML = "<input disabled type='text'class='form-control color_code' value=" + $(this).find(".color_code").val() + " >";
+                cell5.style.display = "none";              
+                cell6.style.background = $(this).find(".color_code").val();
+                cell7.innerHTML = "<input disabled type='number'class='form-control style_product_size_group_detid' value=" + $(this).find(".style_product_size_group_detid").val() + " >";
+                cell7.style.display = "none";
+                cell8.innerHTML = "<input disabled type='text'class='form-control size' value=" + $(this).find(".size").val() + " >";
+                cell8.style.width = "8%";
+                cell9.innerHTML = "<input disabled type='number'class='form-control style_product_unit_id' value=" + style_product_unit_id + " >";
+                cell9.style.display = "none";
+                cell10.innerHTML = "<input disabled type='text'class='form-control style_product_unit_name' value=" + s_unit + " >";
+                cell10.style.width = "8%";
+                cell11.innerHTML = "<input disabled type='number'class='form-control order_quantity' value=" + $(this).find(".order_quantity").val() + " >";              
+                cell11.style.width = "8%";
+                cell12.innerHTML = "<input type='number'class='form-control packing_quantity'>";
+                cell12.style.width = "12%";
+                cell13.innerHTML = "<input  type='text'class='form-control note'>";
+            }
+
+        });
+
+
+        closePopup_detl();
+        $("#divTablePacking").show();
+    }
+</script>
+

@@ -1,0 +1,12 @@
+create sequence tran_va_plan_detl_style_color_tran_va_plan_detl_style_colo_seq1;
+
+alter sequence tran_va_plan_detl_style_color_tran_va_plan_detl_style_colo_seq1 owner to postgres;
+
+alter sequence tran_va_plan_detl_style_color_tran_va_plan_detl_style_colo_seq1 owned by tran_va_plan_detl_style_color_size.tran_va_plan_detl_style_color_size_id;
+
+grant select, update, usage on sequence tran_va_plan_detl_style_color_tran_va_plan_detl_style_colo_seq1 to anon;
+
+grant select, update, usage on sequence tran_va_plan_detl_style_color_tran_va_plan_detl_style_colo_seq1 to authenticated;
+
+grant select, update, usage on sequence tran_va_plan_detl_style_color_tran_va_plan_detl_style_colo_seq1 to service_role;
+

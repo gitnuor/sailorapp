@@ -1,0 +1,471 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_distribution_plan_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Distribution Plan List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Distribution Plan</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddTranDistributionPlan(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="DTTranDistributionPlan" class="table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Distribution No</th>
+                                                <th>Distribution Date</th>
+                                                <th>Distributed By</th>
+                                                <th>Event</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 70% !important; max-width: 70% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Distribution Plan
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddTranDistributionPlan() {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            ajaxGetHandler("/TranDistributionPlan/TranDistributionPlanNew", null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+                $('#techpack_id').select2();
+
+            });
+
+
+        }
+
+        function EditTranDistributionPlan(btn) {
+
+
+            var tran_distribution_plan_id = $(btn).attr("tran_distribution_plan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/TranDistributionPlan/TranDistributionPlanEdit?tran_distribution_plan_id=" + tran_distribution_plan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+            }
+        }
+
+        function ViewTranDistributionPlan(btn) {
+
+            var tran_distribution_plan_id = $(btn).attr("tran_distribution_plan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/TranDistributionPlan/TranDistributionPlanView?tran_distribution_plan_id=" + tran_distribution_plan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+            }
+        }
+
+        function SaveTranDistributionPlan(btn) {
+            var details = [];
+            $.each($("#DTPListOutput tbody tr"), function (key, val) {
+                var obj_TranDistributionPlanDetails = {};
+                if ($(this).find(".is_select")[0].checked) {
+                    obj_TranDistributionPlanDetails = {
+                        techpack_id: $(this).find(".techpack_id").val(),
+                        style_code: $(this).find(".style_code").val(),
+                        color_code: $(this).find(".color_code").val(),
+                        style_product_size_group_detid: $(this).find(".style_product_size_group_detid").val(),
+                        style_product_size: $(this).find(".style_product_size").val(),
+                        style_product_unit: $(this).find(".style_product_unit").val(),
+                        // style_product_unit_id: $(this).find(".style_product_unit_id").val(),
+                        mrp: $(this).find(".mrp").val(),
+                        distributed_quantity: $(this).find(".distributed_quantity").val(),
+                        style_item_product_id: $(this).find(".style_item_product_id").val(),
+                        TranDistributionPlanOutletDetails_List: JSON.parse($(this).find(".outlet_param").val())
+
+                    }
+                    details.push(obj_TranDistributionPlanDetails);
+                }
+                 
+
+            });           
+            var obj_TranDistributionPlan = {
+       
+                distribution_date: $('#modalcontent #distribution_date').val(),
+                
+                note: $('#modalcontent #note').val(),                
+                TranDistributionPlanDetails_List: details
+
+
+            };
+          
+            if (_cusFormValidate("frmAdd")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+                ajaxPostObjectHandler("/TranDistributionPlan/SaveTranDistributionPlan", obj_TranDistributionPlan, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranDistributionPlanData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function UpdateTranDistributionPlan(btn) {
+
+            var obj_TranDistributionPlanDetails = {
+                tran_distribution_plan_details_id: check_value($('#tran_distribution_plan_details_id').val()),
+                tran_distribution_plan_id: check_value($('#tran_distribution_plan_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                style_code: $('#style_code').val(),
+                color_code: $('#color_code').val(),
+                style_product_size_group_detid: check_value($('#style_product_size_group_detid').val()),
+                style_product_size: $('#style_product_size').val(),
+                mrp: $('#mrp').val(),
+                distributed_quantity: check_value($('#distributed_quantity').val()),
+                style_product_unit: $('#style_product_unit').val(),
+                style_item_product_id: check_value($('#style_item_product_id').val()),
+                style_product_unit_id: check_value($('#style_product_unit_id').val()),
+
+            }
+
+            var obj_TranDistributionPlanOutletDetails = {
+                tran_distribution_plan_outlet_details_id: check_value($('#tran_distribution_plan_outlet_details_id').val()),
+                tran_distribution_plan_details_id: check_value($('#tran_distribution_plan_details_id').val()),
+                tran_distribution_plan_id: check_value($('#tran_distribution_plan_id').val()),
+                outlet_id: check_value($('#outlet_id').val()),
+                received_quantity: check_value($('#received_quantity').val()),
+                style_item_product_id: check_value($('#style_item_product_id').val()),
+                mrp: $('#mrp').val(),
+                style_product_size_group_detid: check_value($('#style_product_size_group_detid').val()),
+                style_code: $('#style_code').val(),
+                color_code: $('#color_code').val(),
+                style_product_size: $('#style_product_size').val(),
+                style_product_unit: $('#style_product_unit').val(),
+                style_product_unit_id: check_value($('#style_product_unit_id').val()),
+
+            }
+
+
+
+            var obj_TranDistributionPlan = {
+                tran_distribution_plan_id: check_value($('#modalcontent #tran_distribution_plan_id').val()),
+                distribution_no: $('#modalcontent #distribution_no').val(),
+                distribution_date: $('#modalcontent #distribution_date').val(),
+                distributed_by: check_value($('#modalcontent #distributed_by').val()),
+                note: $('#modalcontent #note').val(),
+                fiscal_year_id: check_value($('#modalcontent #fiscal_year_id').val()),
+                event_id: check_value($('#modalcontent #event_id').val()),
+                is_submitted: check_value($('#modalcontent #is_submitted').val()),
+                submitted_by: check_value($('#modalcontent #submitted_by').val()),
+                submitted_date: $('#modalcontent #submitted_date').val(),
+                is_approved: check_value($('#modalcontent #is_approved').val()),
+                approved_by: check_value($('#modalcontent #approved_by').val()),
+                approved_date: $('#modalcontent #approved_date').val(),
+                tran_distribution_plan_details_json: $('#modalcontent #tran_distribution_plan_details_json').val(),
+
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+
+                ajaxPostObjectHandler("/TranDistributionPlan/UpdateTranDistributionPlan", obj_TranDistributionPlan, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranDistributionPlanData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteTranDistributionPlan(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_TranDistributionPlan = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+                ajaxPostObjectHandler("/TranDistributionPlan/DeleteTranDistributionPlan", obj_TranDistributionPlan, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranDistributionPlanData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                }, true);
+
+            });
+        }
+
+        $(function () {
+
+            LoadTranDistributionPlanData();
+
+        });
+
+        function LoadTranDistributionPlanData() {
+
+            var dt_search = {
+
+                filterId: '#DTTranDistributionPlan_filter input[type=search]',
+                tableId: "#DTTranDistributionPlan"
+
+            };
+
+
+            var dt = $(dt_search.tableId).DataTable({
+
+               
+
+                    layout: {
+
+                        top2End: {
+                            search: {
+                                placeholder: 'Search Distribution No',
+
+                            },
+
+                            buttons: [
+                                {
+                                    text: 'Clear Search',
+                                    className: 'btn btn-custom',
+                                    action: function (e, dt, node, config) {
+
+                                        $(dt_search.filterId).val('');
+                                        $(dt_search.tableId).DataTable().search('').draw();
+                                    }
+                                }
+                            ]
+                        },
+
+
+                        topEnd: null,
+
+                    },
+
+                    search: {
+                        return: true
+                    },
+
+
+                "ajax": $.fn.dataTable.json({ url: "/TranDistributionPlan/GetTranDistributionPlanData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_distribution_plan_id", data.tran_distribution_plan_id);
+
+                },
+                "columns": [
+
+                    { "data": "distribution_no", "name": "distribution_no", "autoWidth": true },
+                    { "data": "distribution_date", "name": "distribution_date", "autoWidth": true },
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

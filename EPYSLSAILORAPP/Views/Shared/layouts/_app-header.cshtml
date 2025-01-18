@@ -1,0 +1,452 @@
+﻿@using BDO.Core.Base;
+@using System.Security.Claims;
+@using EPYSLSAILORAPP.Domain.Security;
+@using Newtonsoft.Json;
+@using Microsoft.AspNetCore.Http
+@using Web.Core.Frame.Helpers
+@inject EPYSLSAILORAPP.Application.Interface.IMenuService _menuService
+@inject EPYSLSAILORAPP.Application.Interface.IOwinRolePermissionService _OwinRolePermissionService
+@inject IHttpContextAccessor Accessor
+
+
+@{
+    List<Menu> list = new List<Menu>();
+    SecurityCapsule sec_object = new SecurityCapsule();
+
+    var claim = Accessor.HttpContext.User.Identity as ClaimsIdentity;
+
+    List<Claim> listClaims = (List<Claim>)claim.Claims;
+    var emp_pic = ""; var str_user = ""; long? str_id = 0;
+
+    if (listClaims.Exists(c => c.Type == "secobject"))
+    {
+        var strsecobject = listClaims.Find(c => c.Type == "secobject").Value;//emp_pic
+
+        if (!string.IsNullOrEmpty(listClaims.Find(c => c.Type == "emp_pic").Value))
+        {
+            emp_pic = listClaims.Find(c => c.Type == "emp_pic").Value;//emp_pic
+        }
+
+
+        sec_object = JsonConvert.DeserializeObject<SecurityCapsule>(strsecobject);
+
+    }
+    else
+    {
+        Accessor.HttpContext.Response.Redirect("/account/LogOff", true);
+    }
+
+}
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item" style="float:right;">
+            <select id="ddldtop_fiscal_year" class="form-control " onchange="LoadEventByFiscalYear(this);" style="font-size: 17px !important; font-weight: bold; line-height: 48px; height: 41px; background: floralwhite;display:none; width: 238px; margin-top: 5px; margin-right: 14px;">
+            </select>
+        </li>
+        <li class="nav-item" style="float:right;">
+            <select id="ddltop_event" onchange="SetFilterDataFromLanding(this);" class="form-control " style="font-size: 17px !important; font-weight: bold; line-height: 48px; height: 41px; background: floralwhite;display:none;width: 238px; margin-top: 5px;">
+            </select>
+        </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+
+        @*   <li class="nav-item">
+        <button class="nav-link" aria-label="button" style="border: none;" onclick="switchFiscalYear()" type="button">
+        <i class="fa fa-thin fa-bolt"></i>
+        </button>
+        </li> *@
+        <!-- Navbar Search -->
+        <li class="nav-item">
+            <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                <i class="fas fa-search"></i>
+            </a>
+            <div class="navbar-search-block">
+                <form class="form-inline">
+                    <div class="input-group input-group-sm">
+                        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+
+        <!-- Messages Dropdown Menu -->
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="far fa-comments"></i>
+                <span class="badge badge-danger navbar-badge" id="message_count_badge">3</span>
+            </a>
+            <div id="dvtopmessagebox" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                @*  <a href="#" class="dropdown-item">
+                <!-- Message Start -->
+                <div class="media">
+
+                <img src="~/app_themes/adminlte/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                <div class="media-body">
+                <h3 class="dropdown-item-title">
+                Brad Diesel
+                <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                </h3>
+                <p class="text-sm">Call me whenever you can...</p>
+                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                </div>
+                </div>
+                <!-- Message End -->
+                </a>
+                <div class="dropdown-divider"></div>
+
+                <a href="#" class="dropdown-item dropdown-footer">See All Messages</a> *@
+            </div>
+        </li>
+        <!-- Notifications Dropdown Menu -->
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="far fa-bell"></i>
+                <span class="badge badge-warning navbar-badge" id="spnnotificationbadge"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="max-height: 250px;overflow-y: scroll;" id="dvsystemnotification">
+
+                @*   <a href="#" class="dropdown-item">
+                <i class="fas fa-file mr-2"></i> 4 new messages
+                <span class="float-right text-muted text-sm">3 mins</span>
+                </a>
+                <div class="dropdown-divider"></div>*@
+                @* <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>  *@
+
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a id="liopenlineuser" class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                <i class="fas fa-th-large"></i>
+            </a>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+
+                <img id="LoggedInUserPic" src="@emp_pic" style="width: 39px; border-radius: 9999px; margin-top: -8px;" alt="Profile Pic" class="inline-block rounded-full ring-2 ring-white dark:ring-white/10">
+                <span class="badge badge-warning navbar-badge"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <span class="dropdown-item dropdown-header"></span>
+
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item" onclick="ProfileView(this)" userid="@clsUtil.EncodeString(sec_object.userid.ToString())">
+                    <i class="fa fa-user-circle mr-2">
+                       
+                    </i>
+
+                    <b>Profile</b>
+
+
+                    <span class="float-right text-muted text-sm"></span>
+                </a>
+
+
+
+
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fa fa-user-circle mr-2"></i>
+                    @{
+                        str_user = sec_object != null ? sec_object.username : "";
+                        @str_user
+                    }
+
+                    <span class="float-right text-muted text-sm"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fa fa-id-card mr-2"></i>
+                    @{
+                        var str_role = sec_object != null ? sec_object.rolename : "";
+                        @str_role
+                    }
+
+                    <span class="float-right text-muted text-sm"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fa fa-users mr-2"></i>  @{
+                        var str_group = sec_object != null ? sec_object.groupname : "";
+                        @str_group
+                    }
+
+                    <span class="float-right text-muted text-sm"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/account/LogOff" class="dropdown-item">
+                    <i class="fa fa-ban"></i> Log Out
+                    <span class="float-right text-muted text-sm"></span>
+                </a>
+                <div class="dropdown-divider"></div>
+
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<input type="hidden" id="LoggedInUserName" value="@str_user" />
+
+<div id="modalFilterFiscalYear" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 25% !important; max-width: 25% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #9fa590;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Filter Selection
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closeFiscalYearPopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalContentFilterFiscalYear">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalcontainerOwinUser" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 70% !important; max-width: 70% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            User
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopupx();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontentapp">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function LoadImage(img) {
+
+        ajaxGetHandler("/Common/SampleOrderFrontImageHandler?sample_order_id=" + $(img).attr("tran_sample_order_id"), null, function (data) {
+            $(img).attr("src", data);
+        });
+    }
+
+    function closePopupx() {
+        event.preventDefault();
+        $('#modalcontentapp').html("");
+        $('#modalcontainerOwinUser').modal("hide");
+        //location.reload();
+    }
+
+
+    function ProfileView(btn) {
+
+        var userid = $(btn).attr("userid");
+
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+
+        try {
+            ajaxGetHandler("/OwinUser/OwinUserProfileView?userid=" + userid, null, function (data) {
+
+                hideLoader();
+
+                $('#modalcontentapp').html(data);
+                $('#modalcontainerOwinUser').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainerOwinUser').modal("show");
+
+                $("#prof_picture").change(function () {
+
+                    var file_type = $(this)[0].files[0].type;
+
+                    var reader = new FileReader();
+
+                    reader.onload = (function (singlefile) {
+
+                        return function (e) {
+
+                            var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                            $("#imgPix").attr("src", "data:" + file_type + ";base64," + base64String);
+                            $("#imgPix").attr("filetype", file_type);
+
+
+
+                        }
+
+
+                    })($(this)[0].files[0]);
+
+                    reader.readAsDataURL($(this)[0].files[0]);
+
+
+                });
+
+            });
+
+
+        } catch (e) {
+            hideLoader();
+        }
+    }
+
+
+
+
+
+
+
+
+    function switchFiscalYear() {
+
+        try {
+            ajaxGetHandler("/Dashboard/SetFilterDataLoadPopup", null, function (data) {
+                hideLoader();
+                $('#modalContentFilterFiscalYear').html(data);
+                $('#modalFilterFiscalYear').modal({ backdrop: 'static', keyboard: false });
+                $('#modalFilterFiscalYear').modal("show");
+
+                $("#modalContentFilterFiscalYear #ddl_fiscal_year_id").change(function () {
+
+                    $('#ddl_event_id').empty();
+                    $('#ddl_event_id').append($('<option>', {
+                        value: "",
+                        text: "Select Event"
+                    }));
+
+                    var fiscal_year_id = $("#modalContentFilterFiscalYear #ddl_fiscal_year_id").val();
+
+                    ajaxGetHandler("/Dashboard/GetEventByFiscalYear?fiscal_year_id=" + fiscal_year_id, null, function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+
+                            $('#ddl_event_id').append($('<option>', {
+                                value: data[i].event_id,
+                                text: data[i].event_title
+                            }));
+                        }
+
+                    });
+
+                });
+
+                if ($("#modalContentFilterFiscalYear #ddl_fiscal_year_id").val() != '') {
+                    $("#modalContentFilterFiscalYear #ddl_fiscal_year_id").trigger("change");
+                }
+            }, true);
+
+
+        } catch (e) {
+            hideLoader();
+        }
+    }
+
+    function SetFilterData() {
+
+        var objData = {
+            fiscal_year_id: check_value($("#modalContentFilterFiscalYear #ddl_fiscal_year_id").val()),
+            event_id: check_value($("#modalContentFilterFiscalYear #ddl_event_id").val()),
+        }
+
+        ajaxPostObjectHandler("/Dashboard/SetFilterData", objData, function (response) {
+
+            if (response.status_Code == "200") {
+
+                localStorage.setItem('is_filter', '1');
+                localStorage.setItem('filter_fiscal_year_id', $("#modalContentFilterFiscalYear #ddl_fiscal_year_id").val());
+                localStorage.setItem('filter_event_id', $("#modalContentFilterFiscalYear #ddl_event_id").val());
+
+                showSuccessAlertAutoClose("Success", response.status_Result, "OK", function () {
+                    closeFiscalYearPopup();
+                    document.location = "/Dashboard/Index";
+                });
+
+            }
+            else {
+                showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                });
+            }
+        }, true, function () { hideLoader(); }, true);
+
+    }
+
+    function closeFiscalYearPopup() {
+        $('#modalContentFilterFiscalYear').html("");
+
+        $('#modalFilterFiscalYear').modal("hide");
+    }
+
+    $(document).ready(function () {
+
+        var is_filter = localStorage.getItem('is_filter');
+
+        if ((is_filter == "" || is_filter == null) &&
+            (document.location.pathname.indexOf("BusinessPlan/BusinessPlanNew") == 0
+                || document.location.pathname.indexOf("BusinessPlan/BusinessPlanEdit") == 0)
+        ) {
+            $("#swCard").hide();
+            $("#owCard").hide();
+
+            switchFiscalYear();
+
+            $('#ddldtop_fiscal_year').css("display", "block");
+            $('#ddltop_event').css("display", "block");
+
+        }
+
+
+
+
+
+    });
+</script>

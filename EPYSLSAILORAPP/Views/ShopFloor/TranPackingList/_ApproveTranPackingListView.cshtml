@@ -1,0 +1,188 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_packing_list_DTO;
+@{
+    ViewBag.Title = "Packing List View";
+    Layout = null;
+}
+
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmView" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    <input type="hidden" id="tran_packing_list_id" value="@Model.tran_packing_list_id">
+
+    <div class="card">
+       
+
+
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Packing List No</label>
+                        <input style="width:100%" readonly asp-for="packing_list_no" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="packing_list_no" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Packing List Date</label>
+                        <input style="width:100%" readonly asp-for="packing_list_date" type="date" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="packing_list_date" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Note</label>
+                        <input style="width:100%" readonly asp-for="note" type="text" class="border-#d1cccc-200 form-control " />
+                        <span asp-validation-for="note" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row" id="divTablePacking">
+                <div class="col-md-12">
+                    <table style="font-size:9px;" id="DTPListOutput" class=" table dataTable table-striped table-bordered table-sm" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th><label class="labelNormal">SL No</label></th>
+                                <th><label class="labelNormal">Techpack</label></th>
+                                <th><label class="labelNormal">Style Code</label></th>
+                                <th><label class="labelNormal">Color</label></th>
+                                <th><label class="labelNormal">Size</label></th>
+                                <th><label class="labelNormal">Order M.Unit</label></th>
+                                <th><label class="labelNormal">Total Order Quantity</label></th>
+                                <th><label class="labelNormal">Packing Quantity</label></th>
+                                <th><label class="labelNormal">Note</label></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sl_no = 0;
+                                foreach (tran_packing_list_details_DTO detail in Model.tran_packing_list_details)
+                                {
+                                    sl_no++;
+                                    <tr>
+                                        <td style="width: 5%;">
+                                            <input disabled type="number" class="form-control sl_no" value="@sl_no" />
+                                        </td>
+
+                                        <td style="width: 15%;">
+                                            <input disabled type="text" class="form-control" value="@detail.techpack_number" />
+                                        </td>
+                                        <td style="width: 15%;">
+                                            <input disabled type="text" class="form-control teckpack_style_code" value="@detail.style_code" />
+                                        </td>
+
+                                        <td style="background: @detail.color_code;">
+                                        </td>
+
+                                        <td style="width: 8%;">
+                                            <input disabled type="text" class="form-control size" value="@detail.style_product_size" />
+                                        </td>
+
+                                        <td style="width: 8%;">
+                                            <input disabled type="text" class="form-control style_product_unit_name" value="@detail.style_product_unit" />
+                                        </td>
+                                        <td style="width: 8%;">
+                                            <input disabled type="number" class="form-control order_quantity" value="@detail.order_quantity" />
+                                        </td>
+                                        <td style="width: 12%;">
+                                            <input disabled type="number" class="form-control packing_quantity" value="@detail.packing_quantity" />
+                                        </td>
+                                        <td>
+                                            <input type="text" disabled class="form-control note" value="@detail.note" />
+                                        </td>
+                                    </tr>
+
+
+
+                                }
+
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @if (Model.is_submitted == 2 && Model.is_draft == 2 && Model.is_approved is null)
+            {
+
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+                        <button type="button" class="btn btn-danger " onclick="Reject(this);"><i class="fa fa-file-open"></i>&nbsp;Reject</button>
+                        <button type="button" class="btn btn-success " onclick="Approve(this);"><i class="fa fa-file-open"></i>&nbsp;Approve</button>
+                    </div>
+                </div>
+            
+            }
+    
+        </div>
+    </div>
+
+
+
+
+</form>
+
+
+
+
+

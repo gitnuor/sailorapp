@@ -1,0 +1,523 @@
+ select *
+                           from (
+							   (select (select jsonb_agg(
+                                                  jsonb_build_object(
+                                                          'range_plan_detail_size_id', rpds.range_plan_detail_size_id,
+                                                          'range_plan_detail_id', rpds.range_plan_detail_id,
+                                                          'is_separate_price', sg.is_separate_price,
+                                                          'style_product_size_group_id', sg.style_product_size_group_id,
+                                                          'style_product_size_group_detid',
+                                                          sgd.style_product_size_group_detid,
+                                                          'style_product_size', sgd.style_product_size,
+                                                          'size_per_pc_mrp_value', rpds.size_per_pc_mrp_value,
+                                                          'style_item_product_id', rpd.style_item_product_id,
+                                                          'size_per_pc_cpu_value', rpds.size_per_pc_cpu_value
+                                                      )
+                                              )
+                                   From public.style_product_size_group sg
+                                            inner join public.style_product_size_group_details sgd
+                                                       on sg.style_product_size_group_id = sgd.style_product_size_group_id
+                                            left outer join public.tran_range_plan_details_size rpds
+                                                            on rpds.style_product_size_group_detid =
+                                                               sgd.style_product_size_group_detid
+                                   where sg.style_product_size_group_id = vp.style_product_size_group_id)::text as stylesize_list_json,
+
+                                  (select jsonb_agg(
+                                                  jsonb_build_object(
+                                                          'priority_id', sg.priority_id,
+                                                          'priority_name', sg.priority_name
+                                                      )
+                                              )
+                                   From public.gen_priority sg)::text                                           as priority_list_json,
+
+                                  spsg.is_separate_price,
+                                  tbe.event_id,
+                                  trpe.tran_range_plan_event_id,
+                                  trpe.is_finalized,
+                                  trpe.tran_bp_event_id,
+                                  tby.tran_bp_year_id,
+                                  trpe.total_mrp_value                                                          as total_rangeplan_mrp_value,
+                                  trpe.total_range_plan_quantity                                                as total_rangeplan_quantity,
+                                  trpe.total_cpu_value                                                          as total_rangeplan_cpu_value,
+                                  vp.style_product_size_group_id,
+                                  rp.is_submitted,
+                                  rp.is_approved,
+                                  rp.approved_by,
+                                  rp.approve_date,
+                                  rp.approve_remarks,
+                                  rp.remarks,
+
+                                  tby.gross_sales                                                               as bp_yearly_gross_sales,
+                                  tbe.event_gross_sales,
+
+                                  rpd.range_plan_id,
+                                  rpd.range_plan_detail_id,
+
+                                  rpd.range_plan_quantity,
+                                  rpd.mrp_per_pc_value,
+                                  rpd.mrp_value,
+                                  rpd.cpu_per_pc_value,
+                                  rpd.cpu_value,
+                                  rpd.priority_id,
+                                  rpd.prev_year_quantity,
+                                  rpd.prev_year_efficiency,
+
+                                  vp.style_item_product_name,
+                                  vp.style_item_type_name,
+                                  vp.style_product_type_name,
+                                  vp.style_item_origin_name,
+                                  vp.style_gender_name,
+
+                                  vp.master_category_name,
+                                  rpd.added_by,
+                                  rpd.date_added,
+                                  rpd.updated_by,
+                                  rpd.date_updated,
+                                  vp.style_item_product_id,
+                                  vp.style_item_type_id,
+                                  vp.style_product_type_id,
+                                  vp.style_item_origin_id,
+                                  vp.style_gender_id,
+                                  vp.style_master_category_id
+
+                           from vw_style_item_product vp
+                                    inner join public.style_product_size_group spsg
+                                               on spsg.style_product_size_group_id = vp.style_product_size_group_id
+                                    left outer join tran_range_plan_details rpd
+                                                    on rpd.style_item_product_id = vp.style_item_product_id
+
+                                    left outer join tran_range_plan rp on rp.range_plan_id = rpd.range_plan_id
+                                    left outer join tran_bp_year tby on tby.fiscal_year_id = vp.fiscal_year_id
+                                    left outer join tran_bp_event tbe on tbe.tran_bp_year_id = tby.tran_bp_year_id
+                               and rpd.tran_bp_event_id = tbe.tran_bp_event_id
+                                    left outer join public.tran_range_plan_events trpe
+                                                    on trpe.tran_bp_event_id = tbe.tran_bp_event_id
+
+                           where vp.fiscal_year_id = 1
+						    and (tbe.event_id = 15)
+							 and case
+                                     when null is null then true
+                                     when null is not null and (
+                                                vp.style_item_product_name   ilike  '%' || null || '%' or
+                                                 vp.style_item_type_name   ilike  '%' || null || '%' or
+                                                 vp.style_product_type_name   ilike  '%' || null || '%' or
+                                                 vp.style_item_origin_name   ilike  '%' || null || '%' or
+                                                 vp.style_gender_name   ilike  '%' || null || '%' or
+                                                 vp.master_category_name   ilike  '%' || null || '%'
+                                         ) then true
+                                     else false end
+									 and case
+                                     when null is null then true
+                                     when vp.style_item_type_id = null then true
+                                     else false end
+									  and case
+                                     when null is null then true
+                                     when vp.style_item_product_id = null then true
+                                     else false end
+									  and case
+                                     when null is null then true
+                                     when vp.style_gender_id = null then true
+                                     else false end
+                             and case
+                                     when null is null then true
+                                     when vp.style_item_origin_id = null then true
+                                     else false end
+									 and case
+                                     when null is null then true
+                                     when vp.style_master_category_id = null then true
+                                     else false end
+									 )
+                          )AS query1
+						  
+						  union
+								 
+			  select * from (
+                         (select (select jsonb_agg(
+                                                  jsonb_build_object(
+                                                          'range_plan_detail_size_id', 0,
+                                                          'range_plan_detail_id', 0,
+                                                          'is_separate_price', sg.is_separate_price,
+                                                          'style_product_size_group_id', sg.style_product_size_group_id,
+                                                          'style_product_size_group_detid',
+                                                          sgd.style_product_size_group_detid,
+                                                          'style_product_size', sgd.style_product_size,
+                                                          'size_per_pc_mrp_value', 0,
+                                                          'style_item_product_id', vp.style_item_product_id,
+                                                          'size_per_pc_cpu_value', 0
+                                                      )
+                                              )
+                                   From public.style_product_size_group sg
+                                            inner join public.style_product_size_group_details sgd
+                                                       on sg.style_product_size_group_id = sgd.style_product_size_group_id
+
+                                   where sg.style_product_size_group_id = vp.style_product_size_group_id)::text as stylesize_list_json,
+
+                                  (select jsonb_agg(
+                                                  jsonb_build_object(
+                                                          'priority_id', sg.priority_id,
+                                                          'priority_name', sg.priority_name
+                                                      )
+                                              )
+                                   From public.gen_priority sg)::text                                           as priority_list_json,
+
+                                  spsg.is_separate_price,
+                                  tbe.event_id,
+                                  (select inr.tran_range_plan_event_id
+                                   from public.tran_range_plan_events inr
+                                   where inr.tran_bp_event_id = tbe.tran_bp_event_id)                              tran_range_plan_event_id,
+                                  NULL                                                                          as is_finalized,
+                                  tbe.tran_bp_event_id,
+                                  tby.tran_bp_year_id,
+                                  0                                                                             as total_rangeplan_mrp_value,
+                                  0                                                                             as total_rangeplan_quantity,
+                                  0                                                                             as total_rangeplan_cpu_value,
+                                  vp.style_product_size_group_id,
+                                  NULL                                                                          as is_submitted,
+                                  NULL                                                                          as is_approved,
+                                  NULL                                                                          as approved_by,
+                                  NULL                                                                          as approve_date,
+                                  ''                                                                            as approve_remarks,
+                                  ''                                                                            as remarks,
+
+                                  tby.gross_sales                                                               as bp_yearly_gross_sales,
+                                  tbe.event_gross_sales,
+
+                                  NULL                                                                          as range_plan_id,
+                                  NULL                                                                          as range_plan_detail_id,
+
+                                  NULL                                                                          as range_plan_quantity,
+                                  NULL                                                                          as mrp_per_pc_value,
+                                  NULL                                                                          as mrp_value,
+                                  NULL                                                                          as cpu_per_pc_value,
+                                  NULL                                                                          as cpu_value,
+                                  NULL                                                                          as priority_id,
+                                  NULL                                                                          as prev_year_quantity,
+                                  NULL                                                                          as prev_year_efficiency,
+
+                                  vp.style_item_product_name,
+                                  vp.style_item_type_name,
+                                  vp.style_product_type_name,
+                                  vp.style_item_origin_name,
+                                  vp.style_gender_name,
+
+                                  vp.master_category_name,
+                                  NULL                                                                          as added_by,
+                                  NULL                                                                          as date_added,
+                                  NULL                                                                          as updated_by,
+                                  NULL                                                                          as date_updated,
+                                  vp.style_item_product_id,
+                                  vp.style_item_type_id,
+                                  vp.style_product_type_id,
+                                  vp.style_item_origin_id,
+                                  vp.style_gender_id,
+                                  vp.style_master_category_id
+
+                           from vw_style_item_product vp
+                                    inner join public.style_product_size_group spsg
+                                               on spsg.style_product_size_group_id = vp.style_product_size_group_id
+
+                                    left outer join tran_bp_year tby on tby.fiscal_year_id = vp.fiscal_year_id
+                                    left outer join tran_bp_event tbe on tbe.tran_bp_year_id = tby.tran_bp_year_id
+
+                           where vp.fiscal_year_id = 1
+                             and tbe.event_id = 15
+                               and case
+                                     when null is null then true
+                                     when null is not null and (
+                                                  vp.style_item_product_name   ilike  '%' || null || '%' or
+                                                 vp.style_item_type_name   ilike  '%' || null || '%' or
+                                                 vp.style_product_type_name   ilike  '%' || null || '%' or
+                                                 vp.style_item_origin_name   ilike  '%' || null || '%' or
+                                                 vp.style_gender_name   ilike  '%' || null || '%' or
+                                                 vp.master_category_name   ilike  '%' || null || '%'
+                                         ) then true
+                                     else false end
+                             and case
+                                     when null is null then true
+                                     when vp.style_item_type_id = null then true
+                                     else false end
+                             and case
+                                     when null is null then true
+                                     when vp.style_item_product_id = null then true
+                                     else false end
+                             and case
+                                     when null is null then true
+                                     when vp.style_gender_id = null then true
+                                     else false end
+                             and case
+                                     when null is null then true
+                                     when vp.style_item_origin_id = null then true
+                                     else false end
+                             and case
+                                     when null is null then true
+                                     when vp.style_master_category_id = null then true
+                                     else false end
+                             and case
+                                     when (2 is null or 2 = 1)
+                                         and vp.style_item_product_id not in
+                                             (select t.style_item_product_id from (
+			select (select jsonb_agg(
+                                                  jsonb_build_object(
+                                                          'range_plan_detail_size_id', rpds.range_plan_detail_size_id,
+                                                          'range_plan_detail_id', rpds.range_plan_detail_id,
+                                                          'is_separate_price', sg.is_separate_price,
+                                                          'style_product_size_group_id', sg.style_product_size_group_id,
+                                                          'style_product_size_group_detid',
+                                                          sgd.style_product_size_group_detid,
+                                                          'style_product_size', sgd.style_product_size,
+                                                          'size_per_pc_mrp_value', rpds.size_per_pc_mrp_value,
+                                                          'style_item_product_id', rpd.style_item_product_id,
+                                                          'size_per_pc_cpu_value', rpds.size_per_pc_cpu_value
+                                                      )
+                                              )
+                                   From public.style_product_size_group sg
+                                            inner join public.style_product_size_group_details sgd
+                                                       on sg.style_product_size_group_id = sgd.style_product_size_group_id
+                                            left outer join public.tran_range_plan_details_size rpds
+                                                            on rpds.style_product_size_group_detid =
+                                                               sgd.style_product_size_group_detid
+                                   where sg.style_product_size_group_id = vp.style_product_size_group_id)::text as stylesize_list_json,
+
+                                  (select jsonb_agg(
+                                                  jsonb_build_object(
+                                                          'priority_id', sg.priority_id,
+                                                          'priority_name', sg.priority_name
+                                                      )
+                                              )
+                                   From public.gen_priority sg)::text                                           as priority_list_json,
+
+                                  spsg.is_separate_price,
+                                  tbe.event_id,
+                                  trpe.tran_range_plan_event_id,
+                                  trpe.is_finalized,
+                                  trpe.tran_bp_event_id,
+                                  tby.tran_bp_year_id,
+                                  trpe.total_mrp_value                                                          as total_rangeplan_mrp_value,
+                                  trpe.total_range_plan_quantity                                                as total_rangeplan_quantity,
+                                  trpe.total_cpu_value                                                          as total_rangeplan_cpu_value,
+                                  vp.style_product_size_group_id,
+                                  rp.is_submitted,
+                                  rp.is_approved,
+                                  rp.approved_by,
+                                  rp.approve_date,
+                                  rp.approve_remarks,
+                                  rp.remarks,
+
+                                  tby.gross_sales                                                               as bp_yearly_gross_sales,
+                                  tbe.event_gross_sales,
+
+                                  rpd.range_plan_id,
+                                  rpd.range_plan_detail_id,
+
+                                  rpd.range_plan_quantity,
+                                  rpd.mrp_per_pc_value,
+                                  rpd.mrp_value,
+                                  rpd.cpu_per_pc_value,
+                                  rpd.cpu_value,
+                                  rpd.priority_id,
+                                  rpd.prev_year_quantity,
+                                  rpd.prev_year_efficiency,
+
+                                  vp.style_item_product_name,
+                                  vp.style_item_type_name,
+                                  vp.style_product_type_name,
+                                  vp.style_item_origin_name,
+                                  vp.style_gender_name,
+
+                                  vp.master_category_name,
+                                  rpd.added_by,
+                                  rpd.date_added,
+                                  rpd.updated_by,
+                                  rpd.date_updated,
+                                  vp.style_item_product_id,
+                                  vp.style_item_type_id,
+                                  vp.style_product_type_id,
+                                  vp.style_item_origin_id,
+                                  vp.style_gender_id,
+                                  vp.style_master_category_id
+
+                           from vw_style_item_product vp
+                                    inner join public.style_product_size_group spsg
+                                               on spsg.style_product_size_group_id = vp.style_product_size_group_id
+                                    left outer join tran_range_plan_details rpd
+                                                    on rpd.style_item_product_id = vp.style_item_product_id
+
+                                    left outer join tran_range_plan rp on rp.range_plan_id = rpd.range_plan_id
+                                    left outer join tran_bp_year tby on tby.fiscal_year_id = vp.fiscal_year_id
+                                    left outer join tran_bp_event tbe on tbe.tran_bp_year_id = tby.tran_bp_year_id
+                               and rpd.tran_bp_event_id = tbe.tran_bp_event_id
+                                    left outer join public.tran_range_plan_events trpe
+                                                    on trpe.tran_bp_event_id = tbe.tran_bp_event_id
+
+                           where vp.fiscal_year_id = 1
+						    and (tbe.event_id = 15)
+							 and case
+                                     when null is null then true
+                                     when null is not null and (
+                                                vp.style_item_product_name   ilike  '%' || null || '%' or
+                                                 vp.style_item_type_name   ilike  '%' || null || '%' or
+                                                 vp.style_product_type_name   ilike  '%' || null || '%' or
+                                                 vp.style_item_origin_name   ilike  '%' || null || '%' or
+                                                 vp.style_gender_name   ilike  '%' || null || '%' or
+                                                 vp.master_category_name   ilike  '%' || null || '%'
+                                         ) then true
+                                     else false end
+									 and case
+                                     when null is null then true
+                                     when vp.style_item_type_id = null then true
+                                     else false end
+									  and case
+                                     when null is null then true
+                                     when vp.style_item_product_id = null then true
+                                     else false end
+									  and case
+                                     when null is null then true
+                                     when vp.style_gender_id = null then true
+                                     else false end
+                             and case
+                                     when null is null then true
+                                     when vp.style_item_origin_id = null then true
+                                     else false end
+									 and case
+                                     when null is null then true
+                                     when vp.style_master_category_id = null then true
+                                     else false end
+									 ) t) then true
+                                     when 2 = 2 and
+                                          vp.style_item_product_id in (select t.style_item_product_id from (
+			select (select jsonb_agg(
+                                                  jsonb_build_object(
+                                                          'range_plan_detail_size_id', rpds.range_plan_detail_size_id,
+                                                          'range_plan_detail_id', rpds.range_plan_detail_id,
+                                                          'is_separate_price', sg.is_separate_price,
+                                                          'style_product_size_group_id', sg.style_product_size_group_id,
+                                                          'style_product_size_group_detid',
+                                                          sgd.style_product_size_group_detid,
+                                                          'style_product_size', sgd.style_product_size,
+                                                          'size_per_pc_mrp_value', rpds.size_per_pc_mrp_value,
+                                                          'style_item_product_id', rpd.style_item_product_id,
+                                                          'size_per_pc_cpu_value', rpds.size_per_pc_cpu_value
+                                                      )
+                                              )
+                                   From public.style_product_size_group sg
+                                            inner join public.style_product_size_group_details sgd
+                                                       on sg.style_product_size_group_id = sgd.style_product_size_group_id
+                                            left outer join public.tran_range_plan_details_size rpds
+                                                            on rpds.style_product_size_group_detid =
+                                                               sgd.style_product_size_group_detid
+                                   where sg.style_product_size_group_id = vp.style_product_size_group_id)::text as stylesize_list_json,
+
+                                  (select jsonb_agg(
+                                                  jsonb_build_object(
+                                                          'priority_id', sg.priority_id,
+                                                          'priority_name', sg.priority_name
+                                                      )
+                                              )
+                                   From public.gen_priority sg)::text                                           as priority_list_json,
+
+                                  spsg.is_separate_price,
+                                  tbe.event_id,
+                                  trpe.tran_range_plan_event_id,
+                                  trpe.is_finalized,
+                                  trpe.tran_bp_event_id,
+                                  tby.tran_bp_year_id,
+                                  trpe.total_mrp_value                                                          as total_rangeplan_mrp_value,
+                                  trpe.total_range_plan_quantity                                                as total_rangeplan_quantity,
+                                  trpe.total_cpu_value                                                          as total_rangeplan_cpu_value,
+                                  vp.style_product_size_group_id,
+                                  rp.is_submitted,
+                                  rp.is_approved,
+                                  rp.approved_by,
+                                  rp.approve_date,
+                                  rp.approve_remarks,
+                                  rp.remarks,
+
+                                  tby.gross_sales                                                               as bp_yearly_gross_sales,
+                                  tbe.event_gross_sales,
+
+                                  rpd.range_plan_id,
+                                  rpd.range_plan_detail_id,
+
+                                  rpd.range_plan_quantity,
+                                  rpd.mrp_per_pc_value,
+                                  rpd.mrp_value,
+                                  rpd.cpu_per_pc_value,
+                                  rpd.cpu_value,
+                                  rpd.priority_id,
+                                  rpd.prev_year_quantity,
+                                  rpd.prev_year_efficiency,
+
+                                  vp.style_item_product_name,
+                                  vp.style_item_type_name,
+                                  vp.style_product_type_name,
+                                  vp.style_item_origin_name,
+                                  vp.style_gender_name,
+
+                                  vp.master_category_name,
+                                  rpd.added_by,
+                                  rpd.date_added,
+                                  rpd.updated_by,
+                                  rpd.date_updated,
+                                  vp.style_item_product_id,
+                                  vp.style_item_type_id,
+                                  vp.style_product_type_id,
+                                  vp.style_item_origin_id,
+                                  vp.style_gender_id,
+                                  vp.style_master_category_id
+
+                           from vw_style_item_product vp
+                                    inner join public.style_product_size_group spsg
+                                               on spsg.style_product_size_group_id = vp.style_product_size_group_id
+                                    left outer join tran_range_plan_details rpd
+                                                    on rpd.style_item_product_id = vp.style_item_product_id
+
+                                    left outer join tran_range_plan rp on rp.range_plan_id = rpd.range_plan_id
+                                    left outer join tran_bp_year tby on tby.fiscal_year_id = vp.fiscal_year_id
+                                    left outer join tran_bp_event tbe on tbe.tran_bp_year_id = tby.tran_bp_year_id
+                               and rpd.tran_bp_event_id = tbe.tran_bp_event_id
+                                    left outer join public.tran_range_plan_events trpe
+                                                    on trpe.tran_bp_event_id = tbe.tran_bp_event_id
+
+                           where vp.fiscal_year_id = 1
+						    and (tbe.event_id = 15)
+							 and case
+                                     when null is null then true
+                                     when null is not null and (
+                                                vp.style_item_product_name   ilike  '%' || null || '%' or
+                                                 vp.style_item_type_name   ilike  '%' || null || '%' or
+                                                 vp.style_product_type_name   ilike  '%' || null || '%' or
+                                                 vp.style_item_origin_name   ilike  '%' || null || '%' or
+                                                 vp.style_gender_name   ilike  '%' || null || '%' or
+                                                 vp.master_category_name   ilike  '%' || null || '%'
+                                         ) then true
+                                     else false end
+									 and case
+                                     when null is null then true
+                                     when vp.style_item_type_id = null then true
+                                     else false end
+									  and case
+                                     when null is null then true
+                                     when vp.style_item_product_id = null then true
+                                     else false end
+									  and case
+                                     when null is null then true
+                                     when vp.style_gender_id = null then true
+                                     else false end
+                             and case
+                                     when null is null then true
+                                     when vp.style_item_origin_id = null then true
+                                     else false end
+									 and case
+                                     when null is null then true
+                                     when vp.style_master_category_id = null then true
+                                     else false end
+									 ) t)
+                                         then true
+                                     else false end)
+				  
+				)AS query2;
+									 
+									 
+				
+        				 
+									 

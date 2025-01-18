@@ -1,0 +1,1173 @@
+﻿@model EPYSLSAILORAPP.Domain.DTO.tran_va_plan_DTO;
+@{
+    ViewBag.Title = "Design Review";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .required-field {
+        color: red; /* Change the color as needed */
+        margin-left: 5px; /* Adjust spacing as needed */
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+</style>
+
+<div class="content-wrapper">
+    <input id="hd_range_plan_id" type="hidden" value="@Model.tran_range_plan_id" />
+    <input id="hd_va_plan_id" type="hidden" value="@Model.tran_va_plan_id" />
+    <input id="hd_encoded_fiscal_year" type="hidden" value="@ViewBag.encoded_fiscal_year" />
+    <input id="hd_tran_va_plan_event_id" type="hidden" value="@ViewBag.tran_va_plan_event_id" />
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                             <h6 class="card-title">Design Review</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        @await Component.InvokeAsync("DataFilter")
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12" id="tab_bar_style">
+                            <ul id="tab_precostinglanding" class="nav nav-tabs">
+                                <li class="active" tab_index="1">
+                                    <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">Pending List</a>
+                                </li>
+
+                                <li class="" tab_index="2">
+                                    <a href="#det2" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Draft List</a>
+                                </li>
+                                <li class="" tab_index="3">
+                                    <a href="#det3" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Proposed List</a>
+                                </li>
+                                <li class="" tab_index="4">
+                                    <a href="#det4" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Approved List</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="det1" tabpane_index="1">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <table style="font-size:14px;" id="DTTranDesignReview" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align:center"><label class="labelNormal">SL</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Sample Order No.</label></th>
+                                                        <th style="width:300px;text-align:center"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;text-align:center"><label class="labelNormal">Product</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Delivery Unit</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Style Qty</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Style Info</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane" id="det2" tabpane_index="2">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <table style="font-size:14px;" id="DTTranDesignReviewDraft" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align:center;"><label class="labelNormal">SL</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Sample Order No.</label></th>
+                                                        <th style="width:300px;text-align:center;"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;text-align:center"><label class="labelNormal">Product</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Delivery Unit</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Style Qty</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Style Info</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="det3" tabpane_index="3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <table style="font-size:14px;" id="DTTranDesignReviewProposed" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align:center;"><label class="labelNormal">SL</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Sample Order No.</label></th>
+                                                        <th style="width:300px;text-align:center;"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;text-align:center;"><label class="labelNormal">Product</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Delivery Unit</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Style Qty</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Style Info</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="det4" tabpane_index="4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <table style="font-size:14px;" id="DTTranDesignReviewApproved" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align:center"><label class="labelNormal">SL</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Sample Order No.</label></th>
+                                                        <th style="width:300px;text-align:center"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:200px;text-align:center;"><label class="labelNormal">Product</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Delivery Unit</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Style Qty</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Style Info</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+  
+                    @* <div class="card">
+                      
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                            <table style="font-size:14px;" id="DTTranDesignReview" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><label class="labelNormal">SL</label></th>
+                                        <th><label class="labelNormal">Sample Order No.</label></th>
+                                        <th style="width:300px;"><label class="labelNormal">Product Details</label></th>
+                                        <th style="width:200px;"><label class="labelNormal">Product</label></th>
+                                        <th><label class="labelNormal">Delivery Unit</label></th>
+                                        <th><label class="labelNormal">Style Qnty</label></th>
+                                        <th><label class="labelNormal">Style Info</label></th>
+                                        <th><label class="labelNormal "> Action</label></th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div> *@
+
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer_common" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 90% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                             Design Review
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+        var dt_source;
+        var dt_source_draft;
+        var dt_source_proposed;
+        var dt_source_Approve;
+        var obj_fabric_List = [];
+        var obj_subcontract_List = [];
+        var obj_embellish_List = [];
+        var tran_va_plan_id = 0;
+        var tran_va_plan_event_id = 0;
+        var listAttachments = [];
+        var DeleteList = [];
+        var IsNotDesigner = '@ViewBag.IsNotDesigner';
+
+        function EditDesignReview(btn) {
+
+            var dt_tmp;
+
+            var tableid = $(btn).closest(".dataTable").attr("id");
+
+            if (tableid == "DTTranDesignReviewDraft") {
+                dt_tmp = dt_source_draft;
+            }
+            
+
+            var rowindex = parseInt($(btn).closest(".master_table_row").attr("row_index")) - 1;
+            var objStyle = {
+                row_index: rowindex,
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                tran_designer_review_id: $(btn).attr("tran_designer_review_id"),
+               
+                style_code: dt_tmp.rows().data()[rowindex].style_code,
+                style_item_product_id: dt_tmp.rows().data()[rowindex].style_item_product_id,        
+                style_product: dt_tmp.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_tmp.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_tmp.rows().data()[rowindex].style_product_size_group_id,
+
+                range_plan_detail_id: dt_tmp.rows().data()[rowindex].range_plan_detail_id,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                range_plan_id: dt_tmp.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_tmp.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_tmp.rows().data()[rowindex].style_master_category_id,
+
+                tran_va_plan_id: dt_tmp.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_tmp.rows().data()[rowindex].tran_va_plan_event_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/DesignReview/DesignReviewEdit?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+                     $('#modalcontent-common').html("");
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+                    
+                    $("#modalcontainer_common #attachments").change(function () {                        
+                        var files = this.files;
+                        var size = $(this)[0].files.length;
+                        formData = new FormData();
+
+                        for (var i = 0; i < size; i++) {
+                            var reader = new FileReader();
+
+                            reader.onload = (function (singlefile) {
+
+                                var filename = singlefile.name;
+                                var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                                return function (e) {
+
+                                    var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                                    var indx = listAttachments.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+                                    var attachfile = {
+                                        filename: filename,
+                                        filetype: filetype,
+                                        extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                        base64string: base64String,
+                                        server_filename: "",
+                                        current_state: 1,
+                                        fileindex: indx
+                                    };
+
+                                    listAttachments.push(attachfile);
+
+                                    $("#fileNamesContainer").append('<p>' + filename + '</p>');
+
+
+                                    base64String = "";
+
+                                }
+
+
+                            })($(this)[0].files[i]);
+
+                            reader.readAsDataURL($(this)[0].files[i]);
+
+
+                        }
+                    });
+
+                });
+
+
+            } catch (e) {
+                 hideLoader();
+            }
+
+        }
+        function ViewDesignReview(btn) {
+
+
+            var dt_tmp;
+
+            var tableid = $(btn).closest(".dataTable").attr("id");
+
+            if (tableid == "DTTranDesignReviewDraft") {
+                dt_tmp = dt_source_draft;
+            }
+            else if (tableid == "DTTranDesignReviewProposed") {
+                dt_tmp = dt_source_proposed;
+            }
+            else if (tableid == "DTTranDesignReviewApproved") {
+                dt_tmp = dt_source_Approve
+            }
+
+            var rowindex = parseInt($(btn).closest(".master_table_row").attr("row_index")) - 1;
+            var objStyle = {
+                row_index: rowindex,
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                tran_designer_review_id: $(btn).attr("tran_designer_review_id"),
+                //tran_designer_review_id: dt_source.rows().data()[rowindex].tran_designer_review_id,
+                style_code: dt_tmp.rows().data()[rowindex].style_code,
+                style_item_product_id: dt_tmp.rows().data()[rowindex].style_item_product_id,
+                style_product: dt_tmp.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_tmp.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_tmp.rows().data()[rowindex].style_product_size_group_id,
+
+                range_plan_detail_id: dt_tmp.rows().data()[rowindex].range_plan_detail_id,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                range_plan_id: dt_tmp.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_tmp.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_tmp.rows().data()[rowindex].style_master_category_id,
+
+                tran_va_plan_id: dt_tmp.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_tmp.rows().data()[rowindex].tran_va_plan_event_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/DesignReview/ViewDesignReview?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html("");
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    $("#modalcontainer_common #attachments").change(function () {
+                        var files = this.files;
+                        var size = $(this)[0].files.length;
+                        formData = new FormData();
+
+                        for (var i = 0; i < size; i++) {
+                            var reader = new FileReader();
+
+                            reader.onload = (function (singlefile) {
+
+                                var filename = singlefile.name;
+                                var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                                return function (e) {
+
+                                    var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                                    var indx = listAttachments.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+                                    var attachfile = {
+                                        filename: filename,
+                                        filetype: filetype,
+                                        extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                        base64string: base64String,
+                                        server_filename: "",
+                                        current_state: 1,
+                                        fileindex: indx
+                                    };
+
+                                    listAttachments.push(attachfile);
+
+                                    $("#fileNamesContainer").append('<p>' + filename + '</p>');
+
+
+                                    base64String = "";
+
+                                }
+
+
+                            })($(this)[0].files[i]);
+
+                            reader.readAsDataURL($(this)[0].files[i]);
+
+
+                        }
+                    });
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function AddDesignReview(btn) {
+            listAttachments = []; $("#fileNamesContainer").html('');
+            var rowindex = parseInt($(btn).closest(".master_table_row").attr("row_index")) - 1;
+
+            var objStyle = {
+                row_index: rowindex,
+
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+           
+                style_code: dt_source.rows().data()[rowindex].style_code,
+                style_item_product_id: dt_source.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                style_product: dt_source.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_source.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_source.rows().data()[rowindex].style_product_size_group_id,
+
+                range_plan_detail_id: dt_source.rows().data()[rowindex].range_plan_detail_id,
+                tran_pre_costing_id: dt_source.rows().data()[rowindex].tran_pre_costing_id,
+                range_plan_id: dt_source.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_source.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_source.rows().data()[rowindex].style_master_category_id,
+
+                tran_va_plan_id: dt_source.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_source.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_source.rows().data()[rowindex].tran_va_plan_event_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+           
+            try {
+                ajaxGetHandler("/DesignReview/DesignReviewAdd?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+                    $('#modalcontent-common').html(data);
+                    $('#modalcontainer_common').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer_common').modal("show");
+
+                    $("#modalcontainer_common #attachments").change(function () {                        
+                        var files = this.files;
+                        var size = $(this)[0].files.length;
+                        formData = new FormData();
+
+                        for (var i = 0; i < size; i++) {
+                            var reader = new FileReader();
+
+                            reader.onload = (function (singlefile) {
+
+                                var filename = singlefile.name;
+                                var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                                return function (e) {
+
+                                    var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                                    var indx = listAttachments.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+                                    var attachfile = {
+                                        filename: filename,
+                                        filetype: filetype,
+                                        extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                        base64string: base64String,
+                                        server_filename: "",
+                                        current_state: 1,
+                                        fileindex: indx
+                                    };
+
+                                    listAttachments.push(attachfile);
+
+                                    $("#fileNamesContainer").append('<p>' + filename + '</p>');
+
+
+                                    base64String = "";
+
+                                }
+
+
+                            })($(this)[0].files[i]);
+
+                            reader.readAsDataURL($(this)[0].files[i]);
+
+
+                        }
+                    });
+
+
+                });
+
+
+            } catch (e) {
+                 hideLoader();
+            }
+
+        }
+
+
+        function SaveReview() {
+            if (!_cusFormValidate("frmAdd")) { 
+               // return;
+            }
+            var no_confirmation = check_value($('#no_confirmation').val());
+            var no_review = check_value($('#no_review').val());
+            var no_confirmation_with_modification = check_value($('#no_confirmation_with_modification').val());
+            var no_of_not_confirmed = check_value($('#no_of_not_confirmed').val());
+
+            if (!no_confirmation) { showErrorAlert("Alert", "Number of Confirmation has to be more than 0", "OK", function () { }); return; }
+            if (!no_review) { showErrorAlert("Alert", "Number of Review has to be more than 0", "OK", function () { }); return; }
+            if (!no_confirmation_with_modification) no_confirmation_with_modification = 0;
+            if (!no_of_not_confirmed) no_of_not_confirmed = 0;
+
+            if (parseFloat(no_review) != (parseFloat(no_confirmation) + parseFloat(no_confirmation_with_modification) + parseFloat(no_of_not_confirmed))) {
+                showErrorAlert("Alert", "Number of Review has to be equal to number of confirmation,modification and not confirmed criteria", "OK", function () { }); return;
+            }
+
+            var objData = {
+                tran_designer_review_id: check_value($('#modalcontainer_common #tran_designer_review_id').val()),
+                tran_pre_costing_id: check_value($('#modalcontainer_common #tran_pre_costing_id').val()),             
+                no_review: check_value($('#no_review').val()),
+                no_confirmation: check_value($('#no_confirmation').val()),
+                no_confirmation_with_modification: check_value($('#no_confirmation_with_modification').val()),
+                no_of_not_confirmed: check_value($('#no_of_not_confirmed').val()),
+                status: check_value($('#status').val()),
+                remarks: $('#remarks').val(),
+                is_submitted: false,
+                is_approved:false,
+                approved_by: null,
+                approve_date:  null,
+                approve_remarks: null,
+                List_Files: listAttachments,
+                DeleteList: DeleteList,
+
+            }
+
+           
+           showLoader("Saving..........");
+          
+            ajaxPostObjectHandler("/DesignReview/SaveDesignReview", objData, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    LoadDesignReviewData();
+                  
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+                        
+                        closePopup();
+                        DeleteList = []; listAttachments = [];// empty all list
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+        function SendApproval() {
+            if (!_cusFormValidate("frmAdd")) {
+                return;
+            }
+            var no_confirmation = check_value($('#no_confirmation').val());
+            var no_review = check_value($('#no_review').val());
+            var no_confirmation_with_modification = check_value($('#no_confirmation_with_modification').val());
+            var no_of_not_confirmed = check_value($('#no_of_not_confirmed').val());
+
+            if (!no_confirmation) { showErrorAlert("Alert", "Number of Confirmation has to be more than 0", "OK", function () { }); return; }
+            if (!no_review) { showErrorAlert("Alert", "Number of Review has to be more than 0", "OK", function () { }); return; }
+            if (!no_confirmation_with_modification) no_confirmation_with_modification = 0;
+            if (!no_of_not_confirmed) no_of_not_confirmed = 0;
+
+            if (parseFloat(no_review) != (parseFloat(no_confirmation) + parseFloat(no_confirmation_with_modification) + parseFloat(no_of_not_confirmed))) {
+                showErrorAlert("Alert", "Number of Review has to be equal to number of confirmation,modification and not confirmed criteria", "OK", function () { }); return;
+            }
+
+            if (check_value($('#no_confirmation').val()) / check_value($('#no_review').val()) < .6) {
+
+                showErrorAlert("Alert", "Number of confirmation should be more than 60%", "OK", function () { }); return;
+            }
+
+        
+
+            var objData = {
+                tran_designer_review_id: check_value($('#modalcontainer_common #tran_designer_review_id').val()),
+                tran_pre_costing_id: check_value($('#modalcontainer_common #tran_pre_costing_id').val()),
+                no_review: check_value($('#no_review').val()),
+                no_confirmation: check_value($('#no_confirmation').val()),
+                no_confirmation_with_modification: check_value($('#no_confirmation_with_modification').val()),
+                no_of_not_confirmed: check_value($('#no_of_not_confirmed').val()),
+                status: check_value($('#status').val()),
+                remarks: $('#modalcontainer_common #remarks').val(),
+                is_submitted: true,
+                is_approved: false,
+                approved_by: null,
+                approve_date: null,
+                approve_remarks: null,
+                List_Files: listAttachments,
+                DeleteList: DeleteList,
+
+
+
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+
+
+            ajaxPostObjectHandler("/DesignReview/SaveDesignReview", objData, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    LoadDesignReviewData();
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup(); DeleteList = []; listAttachments = [];// empty all list
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+        function LoadDesignReviewData() {
+            var dt_search = {
+
+
+                dt_search_pending: {
+                    filterId: '#DTTranDesignReview_filter input[type=search]',
+                    tableId: "#DTTranDesignReview"
+                },
+                dt_search_draft: {
+                    filterId: '#DTTranDesignReviewDraft_filter input[type=search]',
+                    tableId: "#DTTranDesignReviewDraft"
+                },
+                dt_search_proposed: {
+                    filterId: '#DTTranDesignReviewProposed_filter input[type=search]',
+                    tableId: "#DTTranDesignReviewProposed"
+                },
+                dt_search_approved: {
+                    filterId: '#DTTranDesignReviewApproved_filter input[type=search]',
+                    tableId: "#DTTranDesignReviewApproved"
+                }
+
+                
+
+            };
+
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+            
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+
+                style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+
+            };
+
+            dt_source = $(dt_search.dt_search_pending.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.dt_search_pending.filterId).val('');
+                                    $(dt_search.dt_search_pending.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/DesignReview/GetDesignReviewData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                scrollCollapse: true,
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('tran_designer_review_id', data.tran_designer_review_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+              
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "14px");
+                    $(row).find("td:eq(2)").css("font-size", "14px");
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    })
+
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                   { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+                    { "data": "sample_photos_html", "name": "style_code", "autoWidth": true },
+
+                    { "data": "btnAddEditPreCosting", "name": "btnAddEditPreCosting", "autoWidth": true },
+
+                ],
+               
+            });
+
+
+
+
+            dt_source_draft = $(dt_search.dt_search_draft.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.dt_search_draft.filterId).val('');
+                                    $(dt_search.dt_search_draft.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+               
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/DesignReview/GetDesignReviewDraftData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                scrollCollapse: true,
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('tran_designer_review_id', data.tran_designer_review_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "14px");
+                    $(row).find("td:eq(2)").css("font-size", "14px");
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    })
+
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+                    { "data": "sample_photos_html", "name": "style_code", "autoWidth": true },
+
+                    { "data": "btnAddEditPreCosting", "name": "btnAddEditPreCosting", "autoWidth": true },
+
+                ],
+                
+            });
+
+            dt_source_proposed = $(dt_search.dt_search_proposed.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.dt_search_proposed.filterId).val('');
+                                    $(dt_search.dt_search_proposed.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+               
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/DesignReview/GetDesignReviewProposedData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                scrollCollapse: true,
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('tran_designer_review_id', data.tran_designer_review_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "14px");
+                    $(row).find("td:eq(2)").css("font-size", "14px");
+
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    })
+
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+                    { "data": "sample_photos_html", "name": "style_code", "autoWidth": true },
+
+                    { "data": "btnAddEditPreCosting", "name": "btnAddEditPreCosting", "autoWidth": true },
+
+                ],
+              
+            });
+
+
+            dt_source_Approve = $(dt_search.dt_search_approved.tableId).DataTable({
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Product',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.dt_search_approved.filterId).val('');
+                                    $(dt_search.dt_search_approved.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/DesignReview/GetDesignReviewApprovedData", data: input }),
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                scrollCollapse: true,
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    if (data.tran_va_plan_event_id != null)
+                        tran_va_plan_event_id = data.tran_va_plan_event_id;
+
+                    if (data.tran_va_plan_id != null && data.tran_va_plan_id != "0")
+                        tran_va_plan_id = data.tran_va_plan_id;
+
+                    $(row).attr('row_index', data.row_index);
+
+                    $(row).addClass('master_table_row');
+
+                    $(row).attr('range_plan_id', data.range_plan_id);
+                    $(row).attr('tran_designer_review_id', data.tran_designer_review_id);
+                    $(row).attr('range_plan_quantity', data.range_plan_quantity);
+                    $(row).attr('tran_va_plan_detl_id', data.tran_va_plan_detl_id);
+                    $(row).attr('tran_va_plan_id', data.tran_va_plan_id);
+                    $(row).attr('tran_va_plan_event_id', data.tran_va_plan_event_id);
+
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "14px");
+                    $(row).find("td:eq(2)").css("font-size", "14px");
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+                },
+                "columns": [ //,strBtnSizev
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+                    { "data": "sample_photos_html", "name": "sample_photos_html", "autoWidth": true },
+                    { "data": "btnViewDesignerPreview", "name": "btnViewDesignerPreview", "autoWidth": true },
+                ],
+                
+            });
+
+
+
+
+
+
+
+        }
+
+      
+     
+        function deleteFile(guid, row) {
+
+            DeleteList.push(guid);
+            row.closest('tr').remove();
+        }
+     
+        function closePopup() {
+            $('#modalcontent-common').html("");
+            $('#modalcontainer_common').modal("hide");
+        }
+        $(function () {
+
+            LoadDesignReviewData();
+            BindTabEvents("tab_bar_style");
+
+            if (IsNotDesigner.length > 0) {
+                showErrorAlert("Alert", IsNotDesigner, "OK", function () {
+                    document.location = "/Dashboard/Index";
+
+                });
+            }
+
+            $("#btnLoadData").click(function () {
+                if ($("#fiscal_year_id").val() == '') {
+                    $("#fiscal_year_id").focus();
+                    $("#fiscal_year_id").css("border", "1px solid red");
+                }
+                else if ($("#event_id").val() == '') {
+                    $("#event_id").focus();
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+                }
+                else {
+
+                    $("#fiscal_year_id").css("border", "");
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                    LoadDesignReviewData();
+
+                }
+
+            });
+
+            $(".filterOption").hide();
+            $("#btnBack").click(function () {
+                document.location = "/DesignReview/DesignReviewCreate?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+            });
+
+            // LoadMasterCategoryDropDown();
+
+        });
+        function uploadFile(){
+
+            $("#modalcontainer_common #attachments").trigger("click");
+        };
+
+
+
+    </script>
+
+ }

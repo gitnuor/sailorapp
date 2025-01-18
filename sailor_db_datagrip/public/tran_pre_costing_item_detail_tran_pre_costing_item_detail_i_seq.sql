@@ -1,0 +1,12 @@
+create sequence tran_pre_costing_item_detail_tran_pre_costing_item_detail_i_seq;
+
+alter sequence tran_pre_costing_item_detail_tran_pre_costing_item_detail_i_seq owner to postgres;
+
+alter sequence tran_pre_costing_item_detail_tran_pre_costing_item_detail_i_seq owned by tran_pre_costing_item_detail.tran_pre_costing_item_detail_id;
+
+grant select, update, usage on sequence tran_pre_costing_item_detail_tran_pre_costing_item_detail_i_seq to anon;
+
+grant select, update, usage on sequence tran_pre_costing_item_detail_tran_pre_costing_item_detail_i_seq to authenticated;
+
+grant select, update, usage on sequence tran_pre_costing_item_detail_tran_pre_costing_item_detail_i_seq to service_role;
+

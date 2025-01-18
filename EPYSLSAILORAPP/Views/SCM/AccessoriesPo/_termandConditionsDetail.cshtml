@@ -1,0 +1,80 @@
+﻿@using EPYSLSAILORAPP.Domain.DTO;
+@using Newtonsoft.Json;
+
+@model List<gen_term_and_conditions_details_DTO>;
+@{
+    ViewBag.Title = "";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+
+</style>
+
+<form method="POST" id="frmAddTermDetails" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;" id="DTTermDetailsList" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th><label class="labelNormal">Term and Condition Name</label></th>
+                            <th><label class="labelNormal">Terms and Condition Description</label></th>
+                            
+
+
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                        }
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td style="text-align:center;width:10%"><input type='checkbox' class='form-control is_select' style="height:15px;width:15px;"></td>
+                                <td style="width:20%"><input type='text' disabled class='form-control tremName' value="@obj.term_condition_name"></td>
+                                <td style="width:70%"><input type='text' disabled class='form-control description' value="@obj.description"></td>
+
+                                <td style="display:none"><input type='hidden' class='form-control gen_term_and_conditions_id' value="@obj.gen_term_and_conditions_id"/></td>
+                                <td style="display:none"><input type='hidden' class='form-control gen_term_and_conditions_details_id' value="@obj.gen_term_and_conditions_details_id"/></td>
+                                
+
+
+
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2" style="text-align:right">
+            <button type="button" class="btn btn-success" onclick="AddtermAndCon();"><i class="fa fa-save"></i>&nbsp;&nbsp;Add</button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+
+
+
+
+
+

@@ -1,0 +1,499 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_return_challan_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "TranReturnChallan List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Return Challan</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                         
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12" id="tab_bar_style">
+                                    <ul id="tab_precostinglanding" class="nav nav-tabs">
+
+                                        <li class="active" tab_index="1">
+                                            <a href="#det2" style="text-decoration: unset;width: 170px;" class="active tab_link  " data-toggle="tab">PENDING LIST</a>
+                                        </li>
+                                        <li class="" tab_index="2">
+                                            <a href="#det3" style="text-decoration: unset;width: 200px;" class=" tab_link  " data-toggle="tab">RETURN LIST</a>
+                                        </li>
+
+
+                                    </ul>
+                                    <div class="tab-content">
+
+                                        <div class="tab-pane active" id="det2" tabpane_index="1">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTTranReturnPending" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Receive No</th>
+                                                                <th>Receive Date</th>
+                                                                <th>Transport</th>
+                                                                <th>Driver Name</th>
+                                                                <th>Driver Contact No</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="det3" tabpane_index="2">
+                                            <div class="card">
+
+                                                <div class="card-body">
+                                                    <table id="DTTranReturnChallan" class="table table-striped table-bordered" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Return No</th>
+                                                                <th>Return Date</th>
+                                                                <th>Transport</th>
+                                                                <th>Driver Name</th>
+                                                                <th>Driver Contact No</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                             
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 60% !important; max-width: 60% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Return Challan
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddTranReturnChallan(btn) {
+            var tran_outlet_receive_note_id = $(btn).attr("tran_outlet_receive_note_id");
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            ajaxGetHandler("/TranReturnChallan/TranReturnChallanNew?tran_outlet_receive_note_id=" + tran_outlet_receive_note_id, null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+            });
+
+
+        }
+
+        function EditTranReturnChallan(btn) {
+
+
+            var tran_return_challan_id = $(btn).attr("tran_return_challan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/TranReturnChallan/TranReturnChallanEdit?tran_return_challan_id=" + tran_return_challan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+            }
+        }
+
+        function ViewTranReturnChallan(btn) {
+
+            var tran_return_challan_id = $(btn).attr("tran_return_challan_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 100);
+
+            try {
+                ajaxGetHandler("/TranReturnChallan/TranReturnChallanView?tran_return_challan_id=" + tran_return_challan_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 200);
+            }
+        }
+
+        function SaveTranReturnChallan(btn) {
+         var   details = [];
+
+            $.each($("#DTPListOutput tbody tr"), function (key, val) {
+
+           
+                var obj_TranReturnChallanDetails = {
+
+                    techpack_id: $(this).find(".techpack_id").val(),
+                    style_code: $(this).find(".teckpack_style_code").val(),
+                    color_code: $(this).find(".color_code").val(),
+                    style_product_size_group_detid: $(this).find(".style_product_size_group_detid").val(),
+                    style_product_size: $(this).find(".style_product_size").val(),
+                    style_product_unit: $(this).find(".style_product_unit").val(),
+                    barcode: $(this).find(".barcode").val(),
+                    mrp: $(this).find(".mrp").val(),
+                    reject_quantity: $(this).find(".reject_quantity").val(),
+                    return_quantity: $(this).find(".return_quantity").val(),
+                    note: $(this).find(".notes").val()
+                }
+
+
+
+                details.push(obj_TranReturnChallanDetails);
+
+
+
+            });
+
+
+            var obj_TranReturnChallan = {
+                
+                tran_outlet_challan_id: check_value($('#modalcontent #tran_outlet_challan_id').val()),
+                tran_outlet_challan_receive_id: check_value($('#modalcontent #tran_outlet_challan_receive_id').val()),
+                return_no: $('#modalcontent #return_no').val(),
+                return_to: $('#modalcontent #return_to').val(),
+                return_from: $('#modalcontent #return_from').val(),
+                return_date: $('#modalcontent #return_date').val(),
+                transport_id: check_value($('#modalcontent #transport_id').val()),
+                vehicle_number: $('#modalcontent #vehicle_number').val(),
+                driver_name: $('#modalcontent #driver_name').val(),
+                driver_contact_no: $('#modalcontent #driver_contact_no').val(),
+                note: $('#modalcontent #note').val(),
+   
+                TranReturnChallanDetails_List: details
+
+
+            }
+       
+         
+
+
+          
+          
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+                ajaxPostObjectHandler("/TranReturnChallan/SaveTranReturnChallan", obj_TranReturnChallan, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranReturnChallanData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            
+        }
+
+        function UpdateTranReturnChallan(btn) {
+
+            var obj_TranReturnChallanDetails = {
+                tran_return_challan_details_id: check_value($('#tran_return_challan_details_id').val()),
+                tran_return_challan_id: check_value($('#tran_return_challan_id').val()),
+                techpack_id: check_value($('#techpack_id').val()),
+                style_code: $('#style_code').val(),
+                color_code: $('#color_code').val(),
+                style_product_size_group_detid: check_value($('#style_product_size_group_detid').val()),
+                style_product_size: $('#style_product_size').val(),
+                barcode: $('#barcode').val(),
+                style_product_unit_id: check_value($('#style_product_unit_id').val()),
+                style_product_unit: $('#style_product_unit').val(),
+                mrp: $('#mrp').val(),
+                return_quantity: check_value($('#return_quantity').val()),
+                reject_quantity: check_value($('#reject_quantity').val()),
+                note: $('#note').val(),
+
+            }
+
+
+
+            var obj_TranReturnChallan = {
+                tran_return_challan_id: check_value($('#modalcontent #tran_return_challan_id').val()),
+                tran_outlet_challan_id: check_value($('#modalcontent #tran_outlet_challan_id').val()),
+                tran_outlet_challan_receive_id: check_value($('#modalcontent #tran_outlet_challan_receive_id').val()),
+                return_no: $('#modalcontent #return_no').val(),
+                return_date: $('#modalcontent #return_date').val(),
+                transport_id: check_value($('#modalcontent #transport_id').val()),
+                vehicle_number: $('#modalcontent #vehicle_number').val(),
+                driver_name: $('#modalcontent #driver_name').val(),
+                driver_contact_no: $('#modalcontent #driver_contact_no').val(),
+                note: $('#modalcontent #note').val(),
+                fiscal_year_id: check_value($('#modalcontent #fiscal_year_id').val()),
+                event_id: check_value($('#modalcontent #event_id').val()),
+                tran_return_challan_details_json: $('#modalcontent #tran_return_challan_details_json').val(),
+
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+
+                ajaxPostObjectHandler("/TranReturnChallan/UpdateTranReturnChallan", obj_TranReturnChallan, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranReturnChallanData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteTranReturnChallan(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_TranReturnChallan = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 100);
+
+                ajaxPostObjectHandler("/TranReturnChallan/DeleteTranReturnChallan", obj_TranReturnChallan, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                    if (response.status_Code == "200") {
+
+                        LoadTranReturnChallanData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 200);
+
+                }, true);
+
+            });
+        }
+
+        $(function () {
+            BindTabEvents("tab_bar_style");
+            LoadTranReturnChallanData();
+         
+        });
+
+        function LoadTranReturnChallanData() {
+            var dt = $("#DTTranReturnPending").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/TranReturnChallan/GetPrendingReturnData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_return_challan_id", data.tran_return_challan_id);
+
+                },
+                "columns": [
+
+                    { "data": "outlet_receive_no", "name": "outlet_receive_no", "autoWidth": true },
+                    { "data": "outlet_receive_date", "name": "outlet_receive_date", "autoWidth": true },
+                    { "data": "transport_type_name", "name": "transport_type_name", "autoWidth": true },
+                    { "data": "driver_name", "name": "driver_name", "autoWidth": true },
+                    { "data": "driver_contact", "name": "driver_contact_no", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+
+            var dt = $("#DTTranReturnChallan").DataTable({
+                "ajax": $.fn.dataTable.json({ url: "/TranReturnChallan/GetTranReturnChallanData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("tran_return_challan_id", data.tran_return_challan_id);
+
+                },
+                "columns": [
+
+                    { "data": "return_no", "name": "return_no", "autoWidth": true },
+                    { "data": "return_date", "name": "return_date", "autoWidth": true },
+                    { "data": "transport_type_name", "name": "transport_type_name", "autoWidth": true },
+                    { "data": "driver_name", "name": "driver_name", "autoWidth": true },
+                    { "data": "driver_contact_no", "name": "driver_contact_no", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

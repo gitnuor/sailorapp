@@ -1,0 +1,1157 @@
+@model EPYSLSAILORAPP.Domain.DTO.tran_scm_po_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Accessories Po List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="card-title">Accessories Po</h6>
+                            </div>
+                            <!-- /.card-header -->
+                            @await Component.InvokeAsync("DataFilterSCM")
+                            <!-- /.card-body -->
+                        </div>
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddAccessoriesPo();" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" id="tab_bar_style">
+                            <ul id="tab_precostinglanding" class="nav nav-tabs">
+                                <li class="active" tab_index="1">
+                                    <a style="text-decoration:unset;" class="tab_link active" aria-current="page" href="#pending" data-toggle="tab">Pending List</a>
+                                </li>
+
+                                <li class="" tab_index="2">
+                                    <a style="text-decoration:unset;" class="tab_link" href="#submitted" data-toggle="tab">Submitted List</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="pending" tabpane_index="1">
+                                    <div class="box">
+                                        <table id="DTAccessoriesPo" class="table table-striped table-bordered" cellspacing="0">
+                                            <thead style="text-align:center">
+                                                <tr>
+                                                    <th>PO no</th>
+                                                    <th>PR No</th>
+                                                    <th>PO date</th>
+                                                    <th>Season</th>
+
+                                                    <th>Supplier</th>
+                                                    <th>Delivery unit</th>
+
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane " id="submitted" tabpane_index="2">
+                                    <div class="box">
+                                        <table id="DTAccessoriesPoSubmitted" class="table table-striped table-bordered" cellspacing="0">
+                                            <thead style="text-align:center">
+                                                <tr>
+                                                    <th>PO no</th>
+                                                    <th>PR No</th>
+                                                    <th>PO date</th>
+                                                    <th>Season</th>
+
+                                                    <th>Supplier</th>
+                                                    <th>Delivery unit</th>
+
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- /.card-body -->
+                    </div>
+
+
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 80% !important; max-width: 80% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Accessories PO
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var listAttachments = [];
+        var DeleteList = [];
+        var added_listAccPo = [];
+
+       
+
+
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+            added_listAccPo = [];
+        }
+
+        function AddAccessoriesPo() {
+
+            setTimeout(function () {
+                showLoader("Loading..........")
+            }, 0);
+
+            ajaxGetHandler("/AccessoriesPo/AccessoriesPoNew", null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+
+                //  LoadTranPurchaseRequisitionDropDownByClass("modalcontainer", "S2TranPurchaseRequisition",2);
+
+                $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+                $("#modalcontent .S2TranPurchaseRequisition").val(null).trigger('change.select2');
+
+
+                // $('#supplier_id').on('change', function () {
+                //     var selectedSupplier = $(this).select2("data");
+                //     ajaxGetHandler("/AccessoriesPo/GetPRDetails?pr_id=" + $(this).val(), null, function (data) {
+
+
+                //     });
+
+
+                // });
+
+                $('#supplier_id').on('change', function () {
+                    var supplierId = $(this).val();
+                    var selectedSupplier = $(this).select2("data");
+                    $('#supplier_address').val((selectedSupplier[0].office_address));
+                    if (supplierId) {
+                        BindSupplierConcernPerson(supplierId);
+                    } else {
+
+                        $('#supplier_concern_person').empty().append('<option value="">Select Concern Person</option>');
+                    }
+
+                   
+                });
+
+
+                
+
+
+
+                $('#pr_id').on('change', function () {
+
+                    showLoader("Loading..........");
+
+                    ajaxGetHandler("/AccessoriesPo/GetPRDetails?pr_id=" + $(this).val(), null, function (data) {
+
+                        $("#techpack_number").val(data.pr.techpack_number);
+                        $("#suggested_supplier_name").val(data.pr.supplier_name);
+                        $("#delivery_unit_name").val(data.pr.delivery_unit_name);
+                        $("#delivery_unit_id1").val(data.pr.delivery_unit_id);
+                        $("#item_structure_group_id").val(data.pr.gen_item_structure_group_id);
+
+
+                        var table = document.getElementById("DTTranAccessoriesDetails").getElementsByTagName('tbody')[0];
+
+                        while (table.firstChild) {
+                            table.removeChild(table.firstChild);
+                        }
+                        data.data.forEach(function (obj) {
+
+
+                            var newRow = table.insertRow(table.rows.length);
+
+                            var cell1 = newRow.insertCell(0);
+                            var cell2 = newRow.insertCell(1);
+                            var cell3 = newRow.insertCell(2);
+                            var cell4 = newRow.insertCell(3);
+                            var cell5 = newRow.insertCell(4);
+                            var cell6 = newRow.insertCell(5);
+                            var cell7 = newRow.insertCell(6);
+                            var cell8 = newRow.insertCell(7);
+                            var cell9 = newRow.insertCell(8);
+
+
+                            cell1.innerHTML = "<input disabled type='number'class='form-control item_id' value=" + obj.item_id + " >";
+                            cell2.innerHTML = "<input disabled type='text'class='form-control item_id' value=" + obj.sub_group_name + " >";
+                            cell3.innerHTML = "<input disabled type='text'class='form-control' value='" + obj.item_name + "' >";
+                            cell4.innerHTML = obj.item_spec; cell4.style.display = "none";
+                            cell5.innerHTML = "<input type='text' disabled class='form-control quantity' name='quantity' value=" + obj.item_quantity + ">";
+                            cell6.innerHTML = "<input disabled type='text'class='form-control uom' value='" + obj.uomText + "' >";
+
+                            cell7.innerHTML = "<input type='number'class='form-control unitPrice'>";
+                            cell8.innerHTML = "<input disabled type='number'class='form-control totalPrice'>";
+                            cell9.innerHTML = "<input type='text'class='form-control remarks'>";
+                        });
+
+
+
+
+
+                        hideLoader();
+
+                        $("#purchaseDetrails").show();
+
+                        obj_Accessories_List = [];
+                    });
+
+                });
+                $("#modalcontainer #attachments").change(function () {
+                    var files = this.files;
+                    var size = $(this)[0].files.length;
+                    var allowedExtensions = ['.pdf'];
+                    formData = new FormData();
+
+                    for (var i = 0; i < size; i++) {
+                        var file = $(this)[0].files[i];
+                        var extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+
+                        if (allowedExtensions.indexOf(extension) === -1) {
+                            showErrorAlert("Alert", "Only  .pdf files are allowed.", "OK", function () { });
+                            continue;
+                        }
+
+                        var reader = new FileReader();
+
+                        reader.onload = (function (singlefile) {
+                            var filename = singlefile.name;
+                            var filetype = singlefile.type;
+
+                            return function (e) {
+                                var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+                                var indx = listAttachments.length;
+
+                                var attachfile = {
+                                    filename: filename,
+                                    filetype: filetype,
+                                    extension: extension.substring(extension.lastIndexOf('.') + 1),
+                                    base64string: base64String,
+                                    server_filename: "",
+                                    current_state: 1,
+                                    fileindex: indx
+                                };
+
+                                listAttachments.push(attachfile);
+                                $("#fileNamesContainer").append('<p>' + filename + '</p>');
+                                base64String = "";
+                            }
+                        })(file);
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+
+
+        }
+
+
+
+
+
+
+        $("#btnLoadData").click(function () {
+            if ($("#fiscal_year_id").val() == '') {
+                $("#fiscal_year_id").focus();
+                $("#fiscal_year_id").css("border", "1px solid red");
+            }
+            else if ($("#event_id").val() == '') {
+                $("#event_id").focus();
+                $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+            }
+            else {
+
+                $("#fiscal_year_id").css("border", "");
+                $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                LoadAccessoriesPoData();
+
+            }
+
+        });
+        function uploadFile() {
+
+            $("#modalcontainer #attachments").trigger("click");
+        };
+        function EditAccessoriesPo(btn) {
+
+            listAttachments = [];
+            var po_id = $(btn).attr("po_id");
+
+            setTimeout(function () {
+               // showLoader(customMessage.Loader);
+                showLoader("Loading...............");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/AccessoriesPo/AccessoriesPoEdit?po_id=" + po_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+                    $.each($("#DTTermANdConditionDetailsEdit tbody tr"), function (key, val) {
+
+                        added_listAccPo.push(parseInt($(this).find(".gen_term_and_conditions_details_id").text().trim()));
+
+
+                    });
+                    $("#modalcontainer #attachments").change(function () {
+                        var files = this.files;
+                        var size = $(this)[0].files.length;
+                        var allowedExtensions = ['.pdf'];
+                        formData = new FormData();
+
+                        for (var i = 0; i < size; i++) {
+                            var file = $(this)[0].files[i];
+                            var extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+
+                            if (allowedExtensions.indexOf(extension) === -1) {
+                                showErrorAlert("Alert", "Only  .pdf files are allowed.", "OK", function () { });
+                                continue;
+                            }
+
+                            var reader = new FileReader();
+
+                            reader.onload = (function (singlefile) {
+                                var filename = singlefile.name;
+                                var filetype = singlefile.type;
+
+                                return function (e) {
+                                    var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+                                    var indx = listAttachments.length;
+
+                                    var attachfile = {
+                                        filename: filename,
+                                        filetype: filetype,
+                                        extension: extension.substring(extension.lastIndexOf('.') + 1),
+                                        base64string: base64String,
+                                        server_filename: "",
+                                        current_state: 1,
+                                        fileindex: indx
+                                    };
+
+                                    listAttachments.push(attachfile);
+                                    $("#fileNamesContainer").append('<p>' + filename + '</p>');
+                                    base64String = "";
+                                }
+                            })(file);
+
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+        function ViewAccessoriesPo(btn) {
+
+            var po_id = $(btn).attr("po_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/AccessoriesPo/AccessoriesPoView?po_id=" + po_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+
+        function ViewAccessoriesPoSubmitted(btn) {
+
+            var po_id = $(btn).attr("po_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/AccessoriesPo/AccessoriesPoSubmittedView?po_id=" + po_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+            }
+        }
+
+
+
+
+        function SaveAccessoriesPo(btn, isSubmit) {
+
+            $("#modalcontainer #frmAdd").validate({
+
+                rules: {
+                    po_date: "required",
+                    delivery_start_date: "required",
+                    delivery_end_date: "required",
+                    pr_id: "required",
+                    supplier_id: "required",
+                    supplier_concern_person: "required",
+                    ddlTermsAndConditons: "required",
+
+
+                },
+                messages: {
+
+                    po_date: "Please enter Date",
+                    delivery_start_date: "Please Enter Date",
+                    delivery_end_date: "Please Enter Date",
+                    pr_id: "Please enter PR",
+                    supplier_id: "Please enter Supplier",
+                    supplier_concern_person: "Please Select Concern Person",
+                    ddlTermsAndConditons: "Please Add T&C"
+
+                },
+                submitHandler: function (event) {
+                    details = []
+                    var termsAndConditions = [];
+
+                    $.each($("#DTTranAccessoriesDetails #podetailsAcc tr"), function (key, val) {
+
+                        var obj = {
+                            pr_id: $('#pr_id').val(),
+                            item_id: check_textbox_value($(this).find(".item_id")),
+                            item_quantity: check_textbox_value($(this).find(".quantity")),
+                            unit: check_textbox_value($(this).find(".uom")),
+                            unit_price: check_textbox_value($(this).find(".unitPrice")),
+                            total_price: check_textbox_value($(this).find(".totalPrice")),
+                            remarks: check_textbox_value($(this).find(".remarks"))
+
+                        };
+
+                        details.push(obj);
+
+                    });
+
+
+                    $.each($("#DTTermANdConditionDetails tbody tr"), function (key, val) {
+                        var objterm = {
+
+                            gen_term_and_conditions_id: $(this).find("#gen_term_and_conditions_id").text().trim(),
+                            gen_term_and_conditions_details_id: $(this).find("#gen_term_and_conditions_details_id").text().trim(),
+
+                            term_condition_name: $(this).find("#term_condition_name").text().trim(),
+                            description: $(this).find("#description").text().trim(),
+                        }
+
+
+
+                        termsAndConditions.push(objterm);
+
+                    })
+
+
+                    var obj_AccessoriesPo = {
+                        po_date: $('#modalcontent #po_date').val(),
+                        pr_id: $('#pr_id').val(),
+                        delivery_start_date: $('#modalcontent #delivery_start_date').val(),
+                        delivery_end_date: $('#modalcontent #delivery_end_date').val(),
+
+                        event_id: check_value($('#modalcontent #event_id').val()),
+
+                        supplier_id: check_value($('#modalcontent #supplier_id').val()),
+                        //item_structure_group_id: check_value($('#modalcontent #item_structure_group_id').val()),
+                        item_structure_group_id: check_value($('#modalcontent #item_structure_group_id').val()),
+                        delivery_unit: check_value($('#modalcontent #delivery_unit_id1').val()),
+                        delivery_address: check_value($('#modalcontent #delivery_address').val()),
+                        supplier_concern_person: $("#modalcontent #supplier_concern_person option:selected").text(),
+                        supplier_address: $('#modalcontent #supplier_address').val(),
+                        is_submitted: isSubmit,
+                        List_Files: listAttachments,
+                        List_po_details: details,
+                        vat_amount: $('#modalcontent #vat').val(),
+                        discount_amount: $('#modalcontent #discount').val(),
+                        final_amount: $('#modalcontent #finalToPrice').val(),
+                        terms_conditions_list: termsAndConditions,
+                    }
+
+
+                    showLoader("Saving..........");
+
+
+                    ajaxPostObjectHandler("/AccessoriesPo/SaveAccessoriesPo", obj_AccessoriesPo, function (response) {
+
+                        setTimeout(function () {
+                            hideLoader();
+                        }, 0);
+
+                        if (response.status_Code == "200") {
+
+                            LoadAccessoriesPoData();
+
+                            showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                                closePopup(); added_listAccPo = [];
+
+                            });
+                        }
+                        else {
+                            showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                            });
+                        }
+                    }, true, function () { hideLoader(); }, true);
+
+
+
+
+                }
+
+            })
+
+
+
+
+
+
+        }
+
+        function UpdateAccessoriesPo(btn, isSubmit) {
+
+            details = []
+
+            var termsAndConditions = [];
+
+            $.each($("#DTTranAccessoriesDetails #poDetailsEdit tr"), function (key, val) {
+
+                var obj = {
+                    po_details_id: check_textbox_value($(this).find(".po_details_id")),
+                    po_id: $('#po_id').val(),
+                    pr_id: $('#pr_id').val(),
+                    item_id: check_textbox_value($(this).find(".item_id")),
+                    item_quantity: check_textbox_value($(this).find(".quantity")),
+                    unit: check_textbox_value($(this).find(".uom")),
+                    unit_price: check_textbox_value($(this).find(".unitPrice")),
+                    total_price: check_textbox_value($(this).find(".totalPrice")),
+                    remarks: check_textbox_value($(this).find(".remarks")),
+                    current_state: 2
+
+                };
+                details.push(obj);
+
+
+            });
+
+
+            $.each($("#DTTermANdConditionDetailsEdit tbody tr"), function (key, val) {
+                var objterm = {
+
+
+                    gen_term_and_conditions_id: $(this).find(".gen_term_and_conditions_id").text().trim(),
+                    gen_term_and_conditions_details_id: $(this).find(".gen_term_and_conditions_details_id").text().trim(),
+
+                    term_condition_name: $(this).find(".term_condition_name").text().trim(),
+                    description: $(this).find(".description").text().trim(),
+                }
+
+
+
+                termsAndConditions.push(objterm);
+
+            })
+
+
+            var obj_AccessoriesPo = {
+                po_date: $('#modalcontent #po_date').val(),
+                pr_id: $('#pr_id').val(),
+                po_id: $('#po_id').val(),
+                delivery_start_date: $('#modalcontent #delivery_start_date').val(),
+                delivery_end_date: $('#modalcontent #delivery_end_date').val(),
+                supplier_id: check_value($('#modalcontent #supplier_id').val()),
+                delivery_unit: check_value($('#modalcontent #delivery_unit_id1').val()),
+                supplier_concern_person: $("#modalcontent #supplier_concern_person").val(),
+                supplier_address: $('#modalcontent #supplier_address').val(),
+                is_submitted: isSubmit,
+                List_Files: listAttachments,
+                List_po_details: details,
+                DeleteList: DeleteList,
+                vat_amount: $('#modalcontent #vat').val(),
+                discount_amount: $('#modalcontent #discount').val(),
+                final_amount: $('#modalcontent #finalToPrice').val(),
+                terms_conditions_list: termsAndConditions,
+            }
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+
+
+            ajaxPostObjectHandler("/AccessoriesPo/UpdateAccessoriesPo", obj_AccessoriesPo, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+
+                if (response.status_Code == "200") {
+
+                    LoadAccessoriesPoData();
+
+
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup(); listAttachments = []; DeleteList = []; added_listAccPo = [];
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+
+        function DeleteAccessoriesPo(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_AccessoriesPo = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/AccessoriesPo/DeleteAccessoriesPo", obj_AccessoriesPo, function (response) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    if (response.status_Code == "200") {
+
+                        LoadAccessoriesPoData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                }, true);
+
+            });
+        }
+
+        $(function () {
+
+            LoadAccessoriesPoData();
+            BindTabEvents("tab_precostinglanding");
+
+
+            $(document).on('change', '#delivery_start_date', function () {
+                var delivery_start_date = $('#delivery_start_date').val();
+                var po_date = $('#po_date').val();
+                if (delivery_start_date < po_date) {
+
+
+
+
+                    showErrorAlert("Alert", "Delivery start date cannot be earlier than Po Date!!", "OK");
+
+                    $('#delivery_start_date').val('');
+
+                }
+
+
+            })
+
+            $(document).on('change', '#delivery_end_date', function () {
+                var delivery_start_date = $('#delivery_start_date').val();
+                var delivery_end_date = $('#delivery_end_date').val();
+                if (delivery_end_date < delivery_start_date) {
+
+
+                    showErrorAlert("Alert", "Delivery end date cannot be earlier than Delivery start Date!!", "OK");
+
+                    $('#delivery_end_date').val('');
+
+                }
+
+
+            })
+
+            $(document).on('input', '.unitPrice', function () {
+
+                var $row = $(this).closest('tr');
+
+
+                var quantity = parseFloat($row.find('.quantity').val());
+                var unitPrice = parseFloat($(this).val());
+                var totalPrice = quantity * unitPrice;
+                $row.find('.totalPrice').val(totalPrice.toFixed(2));
+
+                var $input = $(this);
+                var value = $input.val();
+                if (value.length > 1 && value.startsWith('0')) {
+                    $input.val(value.substring(1));
+                }
+
+
+                updateTotalUnitPrice();
+
+
+            });
+
+
+            $(document).on('keypress', '.unitPrice', function (e) {
+                
+                if ((e.which < 48 || e.which > 57) && e.which !== 46) {
+                    e.preventDefault();
+                }
+
+            });
+
+
+            $(document).on('keypress', '.vat', function (e) {
+
+                let currentValue = $(this).val();
+
+
+                if (currentValue.length === 0 && e.which === 48) {
+                    e.preventDefault();
+                }
+
+
+                if ((e.which < 48 || e.which > 57) && e.which !== 46) {
+                    e.preventDefault();
+                }
+
+            });
+
+            $(document).on('keypress', '.discount', function (e) {
+
+                let currentValue = $(this).val();
+
+
+                if (currentValue.length === 0 && e.which === 48) {
+                    e.preventDefault();
+                }
+
+
+                if ((e.which < 48 || e.which > 57) && e.which !== 46) {
+                    e.preventDefault();
+                }
+
+            });
+
+            $(document).on('#vat').on('change', calculateFinalTotal);
+            $(document).on('#discount').on('change', calculateFinalTotal);
+
+        });
+
+        function LoadAccessoriesPoData() {
+            var dt_search = {
+
+                dt_search_pending: {
+                    filterId: '#DTAccessoriesPo_filter input[type=search]',
+                    tableId: "#DTAccessoriesPo"
+                },
+                dt_search_submitted: {
+                    filterId: '#DTAccessoriesPoSubmitted_filter input[type=search]',
+                    tableId: "#DTAccessoriesPoSubmitted"
+                },
+
+
+               
+
+            };
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                supplier_id: $("#sup_fil").val(),
+                delivery_unit_id: $("#delivery_unit_id").val()
+
+            };
+
+            var dt = $(dt_search.dt_search_pending.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By PO No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.dt_search_pending.filterId).val('');
+                                    $(dt_search.dt_search_pending.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/AccessoriesPo/GetAccessoriesPoData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("po_id", data.po_id);
+
+                },
+                "columns": [
+
+                    { "data": "po_no", "name": "po_no", "autoWidth": true },
+                    { "data": "pr_no", "name": "pr_no", "autoWidth": true },
+                    { "data": "po_date", "name": "po_date", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+
+                    // { "data": "is_submitted", "name": "is_submitted", "autoWidth": true },
+                    //  { "data": "status", "name": "status", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ],
+                
+            });
+
+            var dt = $(dt_search.dt_search_submitted.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By PO No',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.dt_search_submitted.filterId).val('');
+                                    $(dt_search.dt_search_submitted.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/AccessoriesPo/GetAccessoriesPoSubmittedData", data: input }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 4, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 5, "visible": true, "sortable": false, "className": "text-center" },
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("po_id", data.po_id);
+
+                },
+                "columns": [
+
+                    { "data": "po_no", "name": "po_no", "autoWidth": true },
+                    { "data": "pr_no", "name": "pr_no", "autoWidth": true },
+                    { "data": "po_date", "name": "po_date", "autoWidth": true },
+                    { "data": "event_title", "name": "event_title", "autoWidth": true },
+                    { "data": "supplier_name", "name": "supplier_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+
+                    // { "data": "is_submitted", "name": "is_submitted", "autoWidth": true },
+                    //  { "data": "status", "name": "status", "autoWidth": true },
+
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ],
+                
+            });
+
+
+        }
+
+
+
+        function SendForApproval(btn) {
+
+            details = []
+
+            $.each($("#DTTranAccessoriesDetails tbody tr"), function (key, val) {
+
+                var obj = {
+                    pr_id: $('#pr_id').val(),
+                    item_id: check_textbox_value($(this).find(".item_id")),
+                    item_quantity: check_textbox_value($(this).find(".quantity")),
+                    unit: check_textbox_value($(this).find(".uom")),
+                    unit_price: check_textbox_value($(this).find(".unitPrice")),
+                    total_price: check_textbox_value($(this).find(".totalPrice")),
+                    remarks: check_textbox_value($(this).find(".remarks"))
+
+                };
+                details.push(obj);
+
+
+            });
+
+            var obj_FabricPo = {
+                po_date: $('#modalcontent #po_date').val(),
+                pr_id: $('#pr_id').val(),
+                po_id: $('#po_id').val(),
+                delivery_start_date: $('#modalcontent #delivery_start_date').val(),
+                delivery_end_date: $('#modalcontent #delivery_end_date').val(),
+                supplier_id: check_value($('#modalcontent #supplier_id').val()),
+
+                is_submitted: 2,
+                List_Files: listAttachments,
+                List_po_details: details,
+                DeleteList: DeleteList
+            }
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/AccessoriesPo/SendForApprovalAccessoriesPo", obj_FabricPo, function (response) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+
+                if (response.status_Code == "200") {
+
+                    LoadAccessoriesPoData();
+
+
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup(); listAttachments = []; DeleteList = [];
+
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+
+        }
+
+
+
+
+        function BindSupplierConcernPerson(supplierId) {
+
+            var id = parseInt(supplierId);
+
+            ajaxGetHandler("/AccessoriesPo/GetConcernPersons?supplier_id=" + id, null, function (data) {
+                var concernPersonDropdown = $('#supplier_concern_person');
+                concernPersonDropdown.empty();
+                concernPersonDropdown.append('<option value="">Select Concern Person</option>');
+                var count = 1;
+                data.forEach(function (person) {
+                    concernPersonDropdown.append(
+                        '<option value="' + count + '">' + person.name + '</option>'
+
+                    );
+                    count++;
+                });
+            });
+        }
+
+        function updateTotalUnitPrice() {
+            var totalUnitPrice = 0;
+
+
+            $('#DTTranAccessoriesDetails tbody tr').each(function () {
+
+                var totalPrice = parseFloat($(this).find('.totalPrice').val()) || 0;
+                totalUnitPrice += totalPrice;
+            });
+
+
+            $('#totalUnitPrice').val(totalUnitPrice.toFixed(2));
+        }
+
+
+
+
+        function calculateFinalTotal() {
+
+            var total = parseFloat($('#totalUnitPrice').val()) || 0;
+
+            var vat = parseFloat($('#vat').val()) || 0;
+
+
+            var discount = parseFloat($('#discount').val()) || 0;
+
+
+            var finalTotal = total + vat - discount;
+
+
+            $('#finalToPrice').val(finalTotal.toFixed(2));
+        }
+
+
+
+    </script>
+}
+
+
+
+
+

@@ -1,0 +1,37 @@
+
+
+public class rpc_sp_get_color_detl_size_by_vaplandetlid_DTO_Ext
+    {
+        public String style_item_product_name { get; set; }
+
+        [JsonProperty("style_embellishment_ids")]
+        [JsonConverter(typeof(StyleEmbellishmentConverter))]
+        public List<Select2OptionModel> StyleEmbellishmentIds { get; set; }
+
+        public Int64? tran_va_plan_detl_style_color_size_id { get; set; }
+   }
+
+    public class StyleEmbellishmentConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(List<Select2OptionModel>);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JToken token = JToken.Load(reader);
+
+            if (token.Type == JTokenType.String)
+            {
+                return JsonConvert.DeserializeObject<List<Select2OptionModel>>(token.ToString());
+            }
+
+            return new List<Select2OptionModel>();
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteValue(JsonConvert.SerializeObject(value));
+        }
+    }

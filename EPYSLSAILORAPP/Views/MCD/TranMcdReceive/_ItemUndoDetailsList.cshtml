@@ -1,0 +1,185 @@
+﻿@using Newtonsoft.Json;
+
+@model EPYSLSAILORAPP.Domain.RPC.rpc_tran_scm_po_detail_DTO;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+
+}
+<style>
+    .fa-x {
+        font-size: 1.7em !important;
+    }
+</style>
+
+<form method="POST" id="frmAddFabric" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+    <div class="row" id="purchaseDetrails">
+        <div class="col-md-12">
+            <div class="box">
+
+                <table style="font-size:10px;" id="DTTranFabricDetailsPop" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+
+                            <th><label class="labelNormal" style="font-size:10px !important;">Item Code</label></th>
+                            <th style=""><label class="labelNormal" style="font-size:10px !important;">Item Name</label></th>
+                            <th style="width:200px;"><label class="labelNormal" style="font-size:10px !important;">Item Spec</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">PO Qty</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">UOM</label></th>
+
+                            <th><label class="labelNormal" style="font-size:10px !important;">Already Rec Qty</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">Chalan Qty</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">Receive Qty</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">Random Qty</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">AQL</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">Pass Qty</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">Fail Qty</label></th>
+
+                            <th><label class="labelNormal" style="font-size:10px !important;"> Defect %</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">Reck</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">Remarks</label></th>
+                            <th><label class="labelNormal" style="font-size:10px !important;">Action</label></th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = 1;
+                        }
+                        @foreach (var obj in Model.List_po_details)
+                        {
+                            int already_rec_qty = 0;
+                            int rec_qty = 0;
+
+                            if (obj.receive_quantity == null && obj.receive_quantity == 0)
+                            {
+                                already_rec_qty = 0;
+                                rec_qty = Convert.ToInt32(obj.item_quantity);
+                            }
+                            else
+                            {
+                                already_rec_qty = Convert.ToInt32(obj.receive_quantity);
+                                rec_qty = Convert.ToInt32(obj.item_quantity) - already_rec_qty;
+                            }
+                                //var availableQty = obj.allocate_quantity - obj.challan_quantity;
+                            <tr data-item-id="@obj.item_id">
+                                <td><input disabled type='text' class='form-control item_id' value="@obj.item_id"></td>
+                                @* <td><input type ='button' class='btn btn-primary' onclick='ItemDetailView(this);' value="@obj.sub_group_name"></td> *@
+                                <td><input disabled type='text' class='form-control' value="@obj.item_name"></td>
+                                <td><input disabled type='text' class='form-control' value="@obj.item_spec"></td>
+                                <td><input disabled type='number' class='form-control quantity' value="@obj.item_quantity"></td>
+                                <td><input disabled type='text' class='form-control uom' value="@obj.unit"></td>
+
+                                <td><input disabled type='number' class='form-control alrecQty' value="@already_rec_qty"></td>
+
+                                <td><input disabled type='number' class='form-control chalanQty' value=0></td>
+                                <td><input disabled type='number' class='form-control recQty' value="@rec_qty"></td>
+
+                                <td><input disabled type='number' class='form-control randomQty'></td>
+                                <td><input disabled type='number' class='form-control aql'></td>
+                                <td><input disabled type='number' class='form-control passQty'></td>
+                                <td><input disabled type='number' class='form-control failQty' onchange='updateDefectpercentage(this);'></td>
+                                <td><input disabled type='number' class='form-control defect'></td>
+                                <td><input class='btn btn-primary rackName' type='button' onclick='handleButtonClick(this);' row_index='" + index + "' id='btnRecAdd-" + index + "' aria-hidden='true' value='rack' data-item-id='" + cell1Value + "'></td>
+                                <td><input disabled type='text' class='form-control remarks'></td>
+                                <td><input type="button" value="Add" class="addItemRow addBtn" style="width:50px; background:green;color:#fff;font-weight:600;"></td>
+                                <td style="display:none;"><input type='number' value="@obj.measurement_unit_detail_id" class='form-control measurement_unit_det_id'></td>
+                            </tr>
+
+                            count++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+<script>
+
+    $('#modalcontainer_common_popup').on('shown.bs.modal', function () {
+        $('#DTTranFabricDetailsList .addFabricRow').each(function () {
+            var rowIndex = $(this).closest('tr').index();
+            if (sessionStorage.getItem('row-' + rowIndex + '-disabled') === 'false') {
+                $(this).prop('disabled', true);
+            }
+        });
+    });
+
+    var added_list = [];
+    var index = 1;
+  
+    $(document).on('click', '.addItemRow', function () {
+        
+
+        var itemId = $(this).closest('tr').find('.item_id').val();
+       
+        // Find the last row with the matching item_id
+        var lastRow = $("#DTTranFabricDetailsPop tbody tr[data-item-id='" + itemId + "']:last");
+
+        var newRow = lastRow.clone();
+
+        newRow.find('input, select, textarea').each(function (i) {
+            if (i < 6) {
+                $(this).prop('disabled', true);
+            } else {
+                $(this).prop('disabled', false);
+            }
+        });
+        newRow.find('.addItemRow').replaceWith('<button class="btn btn-danger deleteRow" data-item-id="' + itemId + '" onclick="deleteRowAdd(this)"><i class="fa fa-trash"></i></button>');
+
+        $("#modalcontainer #DTTranFabricDetails tbody").append(newRow);
+        updateRowAttributes(newRow);
+      
+    });
+
+   
+    function updateRowAttributes(newRow) {
+        // Example: update row index or other attributes as needed
+        var rowIndex = $("#modalcontainer #DTTranFabricDetails tbody tr").length;
+        newRow.find('.rackName').attr('row_index', rowIndex);
+        newRow.find('.rackName').attr('id', 'btnRecAdd-' + rowIndex);
+
+    }
+
+
+
+
+    function deleteRow(button) {
+        var row = button.parentNode.parentNode;
+
+        var rowIndex = $(row).closest('tr').index();
+
+        row.parentNode.removeChild(row);
+
+        sessionStorage.removeItem('row-' + rowIndex + '-disabled');
+
+
+        // Re-enable the corresponding "Add" button
+        // $('#DTTranFabricDetailsList .addFabricRow').each(function () {
+        //     var currentRowIndex = $(this).closest('tr').index();
+        //     if (currentRowIndex === rowIndex) {
+        //         $(this).prop('disabled', false);
+        //     }
+        // });
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+</script>

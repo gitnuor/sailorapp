@@ -1,0 +1,107 @@
+﻿@using Newtonsoft.Json;
+
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+    Int32 Index=ViewBag.Index;
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Process</label>
+
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @await Component.InvokeAsync("GenericDropdownList", new
+            {
+            ddlId = "ddl_master_process",
+            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.process_list)),
+            selectedvalue = "",
+            cssclass = "form-control ddl_master_process",
+            enable = true,
+            isRequired = true,
+            placeholder = "Select Process"
+            })
+            
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Measurement Unit</label>
+
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <input style="width:100%" type="number" class="border-gray-200 rounded-sm text-sm " />
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Total Req (Kg/Yrd)</label>
+
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <input style="width:100%" type="number" class="border-gray-200 rounded-sm text-sm " />
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Price (Kg/Yrd)</label>
+
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <input style="width:100%" type="number" class="border-gray-200 rounded-sm text-sm " />
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Cost/Pc</label>
+
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <input style="width:100%" type="number" class="border-gray-200 rounded-sm text-sm " />
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <button type="button" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>&nbsp;&nbsp;Save  </button>
+      
+    </div>
+
+</div>
+
+
+
+
+

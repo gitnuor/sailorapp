@@ -1,0 +1,268 @@
+﻿@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_production_process_define_DTO_exc;
+@{
+    ViewBag.Title = "Production Process Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Production Process</h6>
+        </div>
+        <input type="hidden" id="tran_production_process_id" value="@Model.tran_production_process_id" />
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-8 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Techpack</label>
+                        <input style="width:100%" readonly asp-for="techpack_number" type="text" class="border-#d1cccc-200 form-control " value="@Model.techpack_number"/>
+                      
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-sm-8 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;"> Style Type </label>
+                        <input style="width:100%" readonly asp-for="style_item_product_category" id="style_item_product" type="text" class="border-#d1cccc-200 form-control " value="@Model.style_item_product_category"/>
+                    </div>
+                </div>
+              
+
+                
+
+                <div class="col-md-3">
+                    <div class="form-group1">
+                        <label class="col-sm-8 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Supplier</label>
+                        <input style="width:100%" readonly asp-for="supplier_name" id="styleQty" type="text" class="border-#d1cccc-200 form-control " value="@Model.supplier_name" />
+                    </div>
+                </div>
+
+                
+            </div>
+            <div class="row"></div><div class="row"></div><div class="row"></div>
+
+            <div class="row" id="BatchAdd">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="det1" tabpane_index="1">
+                            <div class="box">
+                                <div class="row" style="">
+
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <table id="DTProductDetailProcess" class="table table-striped table-bordered table-hover table-sm" style="padding:0 !important">
+                                                <thead>
+                                                    <tr><th>SL No</th>
+                                                        <th style="text-align:center"><label class="labelNormal">Color Code</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Color</label> </th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Color Qty</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Production Process</label></th>
+                                                        <th style="text-align:center;"><label class="labelNormal">Production Unit Name</label></th>
+                                                        <th style="text-align:center"><label class="labelNormal">Remarks</label></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        int count = 1;
+                                                    }
+                                                    @foreach (var obj in @Model.details)
+                                                    {
+                                                        <tr>
+
+                                                            <td>@count</td>
+                                                            <td><input disabled="" type="text" class="form-control color_code" value="@obj.color_code"></td>
+                                                            <td style="background-color:@obj.color_code; width: 110px;"></td>
+                                                            <td><input disabled type='text' class='form-control' value="@obj.color_qty"></td>
+                                                            @{
+                                                                var processNames = string.Join(", ", obj.process_name_detail.Select(item => item.process_name));
+                                                            }
+
+                                                            <td><input disabled type='text' class='form-control uom' value="@processNames"></td>
+                                                          
+                                                            <td><input disabled type='text' class='form-control totalPrice' value="@obj.production_process_uit_name"></td>
+                                                            <td><input disabled type='text' class='form-control totalPrice' value="@obj.remarks"></td>
+                                                            
+
+                                                        </tr>
+
+                                                        count++;
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            
+
+        </div>
+    </div>
+
+
+</form>
+
+
+
+
+
+<script>
+
+    var batch_List = [];
+    var batch_no = 0;
+
+    function create(color) {
+        color_code = color;
+        $("#BatchAdd").show();
+    }
+    function AddProcessDetail() {
+        
+        $('#modalcontainer_detl').modal("show");
+        var techpack_id = $("#techpack_id").val();
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/ProductionProcessDefine/GetProductionDetaiils?techpack_id=" + techpack_id, null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 0);
+
+            $('#modalcontent_detl').html(data);
+            $('#modalcontainer_detl').modal({ backdrop: 'static', keyboard: false });
+            $('#modalcontainer_detl').modal("show");
+
+        });
+    }
+
+    function AddChkBoxWiseDetail() {
+        
+        var obj_fabric_List = [];
+
+        $.each($("#DTTranProductionDetailsList tbody tr"), function (key, val) {
+
+            if ($(this).find(".is_select")[0].checked) {
+
+                var techpack_id = $('#techpack_id').val();
+                var colorCode = $(this).find(".color_code").val();
+                var punitname = $('#supplier_id option:selected').text();
+                var punitId = $('#supplier_id option:selected').val();
+                var code = $(val).find(".color_code").val();
+                var colorQnty = $(this).find(".quantity").val();
+
+                var selectedProcess = [];
+                $.each($(val).find(".form-check-input"), function (innerkey, innerval) {
+                    if ($(innerval).prop("checked") == true) {
+
+                        selectedProcess.push($(innerval).val());
+                    }
+
+                });
+
+                var strProcess = $(val).find("td:nth-child(4)").html();//selectedProcess.join(",");
+
+                var trhtml = `<tr>
+                        <td><input disabled="" type="text" class="form-control color_code" value="${colorCode}"></td>
+                            <td style="background-color:${colorCode}; width: 110px;"></td>
+                                <td ><input disabled="" type="text" class="form-control quantity" value="${colorQnty}"></td>
+                                 <td class="process">${strProcess}</td>
+                                <td ><input disabled="" type="text" class="form-control ProductUnitname" value="${punitname}"></td>
+                                <td ><input type="text" class="form-control remarks"></td>
+                              <td ><input type="hidden" hidden class="form-control ProductUnitId" value="${punitId}"></td>
+                           </tr>`;
+
+                var temp = $(trhtml);
+
+                $.each($(val).find(".form-check-input"), function (innerkey, innerval) {
+
+                    var chkid = $(innerval).attr("id");
+
+                    if ($(innerval).prop("checked")) {
+                        $(temp).find(".form-check-input[id=" + chkid + "]").prop("checked", true);
+                    }
+
+                });
+
+                $("#DTProductDetailProcess tbody").append(temp);
+
+            }
+        });
+
+    }
+
+
+    function closePopup_detl() {
+        $('#modalcontent_detl').html("");
+        $('#modalcontainer_detl').modal("hide");
+        $('#modalcontainer_detl').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+    function DeleteBatch(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>

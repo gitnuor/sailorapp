@@ -1,0 +1,520 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_scm_po_DTO;
+@{
+    ViewBag.Title = "Fabric PO Add";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+    #ddlTermsAndConditons {
+        height: 30px;
+        width: 43%;
+    }
+</style>
+
+
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Fabric PO Add</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="row">
+
+            <input type="hidden" id="item_structure_group_id" value="@Model.item_structure_group_id" />
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Po No</label>
+                            <input style="width:100%" readonly placeholder="Auto Generated" asp-for="po_no" type="text" class="border-#d1cccc-200 form-control " />
+                            <span asp-validation-for="po_no" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Po Date</label><span style="color: red; font-weight: bold;">*</span>
+                            <input style="width:100%" asp-for="po_date" type="date" class="border-#d1cccc-200 form-control" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Delivery Start Date</label><span style="color: red; font-weight: bold;">*</span>
+                            <input style="width:100%" asp-for="delivery_start_date" type="date" class="border-#d1cccc-200 form-control" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Delivery End Date</label><span style="color: red; font-weight: bold;">*</span>
+                            <input style="width:100%" asp-for="delivery_end_date" type="date" class="border-#d1cccc-200 form-control" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal" style="margin-bottom:10px!important;font-weight:bold;">Purchase Requisition</label><span style="color: red; font-weight: bold;">*</span>
+                            @await Component.InvokeAsync("S2PRFabric", new
+                                {
+                                    ddlId = "pr_id",
+                                    selectedvalue = "",
+                                    cssclass = "form-control S2TranPurchaseRequisition",
+                                    isRequired = false,
+                                    isReadOnly = false,
+                                    placeholder = "Select PR",
+                                    preloaded = "",
+                                    model_parentid = "modalcontainer"
+                                })
+                            <span asp-validation-for="pr_id" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Techpack</label>
+                            <input style="width:100%" readonly asp-for="techpack_number" type="text" class="border-#d1cccc-200 form-control" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Suggested Supplier</label>
+                            <input style="width:100%" readonly asp-for="suggested_supplier_name" type="text" class="border-#d1cccc-200 form-control" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Delivery Unit</label>
+                            <input style="width:100%" readonly asp-for="delivery_unit_name" type="text" class="border-#d1cccc-200 form-control" />
+
+                            <input type="hidden" id="delivery_unit_id1" value="">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Select Supplier</label><span style="color: red; font-weight: bold;">*</span>
+                            @await Component.InvokeAsync("S2GenSupplier", new
+                                {
+                                    ddlId = "supplier_id",
+                                    selectedvalue = "",
+                                    cssclass = "form-control S2GenSupplier",
+                                    isRequired = false,
+                                    isReadOnly = false,
+                                    placeholder = "Select Supplier",
+                                    preloaded = "",
+                                    model_parentid = "modalcontainer"
+                                })
+                            <span asp-validation-for="supplier_id" class="text-danger"></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <label class="labelNormal" style="margin-bottom: 10px!important;font-weight:bold;">Concern Person</label><span style="color: red; font-weight: bold;">*</span>
+                        <select id="supplier_concern_person" name="supplier_concern_person" class="form-control">
+                            <option value="">Select Concern Person</option>
+                        </select>
+                        <span asp-validation-for="supplier_id" class="text-danger"></span>
+                    </div>
+
+                    @*  <div class="col-md-6">
+                    <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Supplier Concern Person</label>
+                    <input style="width:100%" asp-for="supplier_concern_person" type="text" class="form-control border-#d1cccc-200 rounded-sm text-sm" readonly />
+                    <span asp-validation-for="supplier_concern_person" class="text-danger"></span>
+                    </div>
+                    </div> *@
+
+
+
+
+                </div>
+                <div class="row">
+
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Supplier Address</label>
+                            <input style="width:100%" asp-for="supplier_address" type="text" class="form-control border-#d1cccc-200 rounded-sm text-sm" readonly />
+                            <span asp-validation-for="supplier_address" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    @*  <div class="col-md-6">
+                    <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Supplier Address</label>
+                    <input style="width:100%" asp-for="supplier_address" type="text" class="form-control border-#d1cccc-200 rounded-sm text-sm" readonly />
+                    <span asp-validation-for="supplier_address" class="text-danger"></span>
+                    </div>
+                    </div> *@
+
+                    @*
+                    <div class="col-md-6">
+                    <div class="form-group">
+                    <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Delivery Address</label>
+                    <input style="width:100%" asp-for="delivery_address" type="number" class="border-#d1cccc-200 form-control " />
+                    <span asp-validation-for="delivery_address" class="text-danger"></span>
+                    </div>
+                    </div> *@
+                </div>
+
+
+
+            </div>
+            <div class="col-md-6">
+                <input type="file" style="display:none" id="attachments" multiple />
+
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-danger " id="btnUpload" onclick="uploadFile(this);">
+                                Select File to Upload
+                            </button>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="fileNamesContainer"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+        <div class="row" id="purchaseDetrails" style="display:none">
+            <div class="col-md-12">
+                <div class="box">
+
+                    <table style="font-size:10px;" id="DTTranFabricDetails" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th style="text-align:center;"><label class="labelNormal">Item Code</label></th>
+                                <th style="text-align:center;"><label class="labelNormal">Item Sub Group</label></th>
+                                <th style="text-align:center; width:45%;"><label class="labelNormal">Item Name</label></th>
+                                @* <th style="width:350px; text-align:center;"><label class="labelNormal">Item Spec</label></th> *@
+                                <th style="text-align:center;"><label class="labelNormal">Quantity</label></th>
+                                <th style="text-align:center;"><label class="labelNormal">UOM</label></th>
+                                <th style="text-align:center;"><label class="labelNormal">Unit Price <span style="color: red; font-weight: bold;">*</span></label></th>
+                                <th style="text-align:center;"><label class="labelNormal">Total Price</label></th>
+                                <th style="text-align:center;"><label class="labelNormal">Remarks</label></th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="poDetails">
+                        </tbody>
+                        <tr>
+                            <td colspan="5" rowspan="1"></td>
+                            <td><strong>Total :</strong></td>
+                            <td><input type='number' id='totalUnitPrice' class='form-control' disabled></td>
+                            <td colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" rowspan="1"></td>
+                            <td><strong>Vat :</strong></td>
+                            <td><input type='number' id='vat' class='form-control vat'></td>
+                            <td colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" rowspan="1"></td>
+                            <td><strong>Discount :</strong></td>
+                            <td><input type='number' id='discount' class='form-control discount'></td>
+                            <td colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" rowspan="1"></td>
+                            <td><strong>Final Total :</strong></td>
+                            <td><input type='number' id='finalToPrice' class='form-control' disabled></td>
+                            <td colspan="1"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="labelNormal" style="margin-bottom:10px!important;font-weight:bold;">Terms and Conditions</label>
+                    <span style="color: red; font-weight: bold;">*</span>
+                    @await Component.InvokeAsync("GenericDropdownList", new
+                        {
+                            ddlId = "ddlTermsAndConditons",
+                            strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.termConditionList)),
+                            selectedvalue = "",
+                            cssclass = "form-control",
+                            enable = true,
+                            isRequired = false,
+                            placeholder = "Select",
+                            model_parentid = "modalcontainer_common_popup_term"
+                        })
+
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="box" id="termDetails" style="display:none">
+
+                    <table style="font-size:10px;" id="DTTermANdConditionDetails" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                        <thead>
+                            <tr>
+
+                                <th style="text-align:center;"><label class="labelNormal"> Name</label></th>
+                                <th style="text-align:center;"><label class="labelNormal"> Details</label></th>
+                                <th style="text-align:center;"><label class="labelNormal">Acrion</label></th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                <button type="submit" class="btn btn-success" id="btnSaveFabricPo" onclick="SaveFabricPo(this,1);">
+                    <i class="fa fa-file-open"></i>&nbsp;Save
+                </button>
+
+                <button type="submit" class="btn btn-success " id="btnSaveFabricPo" onclick="SaveFabricPo(this,2);"><i class="fa fa-file-open"></i>&nbsp;Send for Approval</button>
+
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+
+
+
+</form>
+
+
+<div id="modalcontainer_common_popup_term" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width:60% !important; max-width:60% !important; ">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:0px;background-color: #bc7b20;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Terms And Conditon Details
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup_popup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 10px; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent-common_popup_term">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $('#ddlTermsAndConditons').on('change', function () {
+
+        var selectedValue = $(this).val();
+
+        try {
+            ajaxGetHandler("/FabricPo/GetTermsAndConditionsDetails?term_and_conditions_id=" + selectedValue, null, function (data) {
+
+                $('#modalcontent-common_popup_term').html(data);
+                $('#modalcontainer_common_popup_term').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer_common_popup_term').modal("show");
+
+
+
+            }, true);
+
+
+        } catch (e) {
+            hideLoader();
+        }
+    });
+
+    var obj_trem_List = [];
+
+    function closePopup_popup() {
+        $('#modalcontent-common_popup_term').html("");
+        $('#modalcontainer_common_popup_term').modal("hide");
+
+        $('#modalcontainer_common_popup_term').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+    function AddtermAndCon(btn) {
+        var count = 0;
+        $.each($("#DTTermDetailsList tbody tr"), function (key, val) {
+
+            if ($(this).find(".is_select")[0].checked) {
+                var obj = {
+                    description: check_textbox_value($(this).find(".description")),
+                    term_condition_name: check_textbox_value($(this).find(".tremName")),
+                    gen_term_and_conditions_id: check_textbox_value($(this).find(".gen_term_and_conditions_id")),
+                    gen_term_and_conditions_details_id: check_textbox_value($(this).find(".gen_term_and_conditions_details_id")),
+
+
+
+                };
+                $("#termDetails").show();
+                obj_trem_List.push(obj);
+            }
+
+
+
+
+        });
+
+
+
+        if (obj_trem_List) {
+            obj_trem_List.forEach(function (obj) {
+                if (added_listFPo.includes(obj.gen_term_and_conditions_details_id)) {
+                    count++;
+                    return true;
+                }
+                added_listFPo.push(obj.gen_term_and_conditions_details_id);
+
+                var selectedValue = $("#ddlTermsAndConditons").val();
+                var table = document.getElementById("DTTermANdConditionDetails").getElementsByTagName('tbody')[0];
+                var newRow = table.insertRow(table.rows.length);
+
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+
+
+
+                cell1.innerHTML = "<p class='term_condition_name'>" + obj.term_condition_name + "</p>";
+                cell2.innerHTML = "<p class='description'>" + obj.description + "</p>";
+                cell3.innerHTML = "<p class='gen_term_and_conditions_details_id'>" + obj.gen_term_and_conditions_details_id + "</p>";
+                cell4.innerHTML = "<p class='gen_term_and_conditions_id'>" + obj.gen_term_and_conditions_id + "</p>";
+                cell5.innerHTML = "<button class='btn btn-danger' aria-hidden='true' onclick='deleteRow(this," + obj.gen_term_and_conditions_details_id + ")'><i class='fa fa-trash' aria-hidden='true'></i></button>";
+
+                cell3.style.display = "none";
+                cell4.style.display = "none";
+
+            });
+        }
+
+        if (count > 0) {
+
+            showErrorAlert("Alert", "Already Added Items will not be added again", "OK");
+
+        }
+        obj_trem_List = [];
+        $('#modalcontainer_common_popup_term').modal("hide");
+        $('#modalcontainer_common_popup_term').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+        //$('#ddlTermsAndConditons').val('');
+    }
+
+
+    function deleteRow(button, id) {
+
+        var row = button.parentNode.parentNode;
+
+        // added_list = added_list.filter(function (item) {
+        //     return item !== id;
+        // });
+
+        var indexToRemove = added_listFPo.indexOf(id.toString());
+        added_listFPo.splice(indexToRemove, 1);
+
+        row.parentNode.removeChild(row);
+
+
+    }
+
+</script>
+

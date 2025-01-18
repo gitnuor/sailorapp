@@ -1,0 +1,1262 @@
+@model EPYSLSAILORAPP.Domain.DTO.gen_supplier_information_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "GenSupplierInformation List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    .spanClose {
+        position: relative;
+        /* display: unset; */
+        left: -44%;
+        top: -22%;
+        color: #e00909;
+        font-weight: bold;
+        font-size: 17px;
+        border: 1px solid black;
+        background: antiquewhite;
+        width: 41px !important;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 34px;
+        padding: 5px;
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+</style>
+
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Supplier Information</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddGenSupplierInformation(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="DTGenSupplierInformation" class="table table-striped table-bordered" cellspacing="0">
+                                        <thead>
+                                            <tr>
+
+
+                                                <th>name</th>
+
+                                                <th>display code</th>
+
+                                                <th>contact person</th>
+
+                                                <th>active</th>
+
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 75% !important; max-width: 75% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Supplier Information
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        var list_bin_docs = [];
+        var list_tin_docs = [];
+        var list_tradelicence_docs = [];
+
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function AddGenSupplierInformation() {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            ajaxGetHandler("/GenSupplierInformation/GenSupplierInformationNew", null, function (data) {
+
+                setTimeout(function () {
+                    hideLoader();
+                }, 0);
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+                BindTabEvents("tabSuppplier");
+
+                RegisterEvents();
+              
+            });
+
+        }
+      
+        function uploadFile(btnindex) {
+            if (btnindex==1)
+                $("#modalcontent #attachments_vatbindocs").trigger("click");
+            else if (btnindex == 2)
+                $("#modalcontent #attachments_tindocs").trigger("click");
+            else if (btnindex == 3)
+                $("#modalcontent #attachments_tradelicensedocs").trigger("click");
+
+        };
+
+        function RegisterEvents() {
+
+            $(".ddl_bank").change(function () {
+                LoadBranchByBankID(this);
+            });
+
+            $("#modalcontent #attachments_vatbindocs").change(function () {
+
+                var files = this.files;
+
+                var size = $(this)[0].files.length;
+
+                formData = new FormData();
+
+                for (var i = 0; i < size; i++) {
+
+                    var reader = new FileReader();
+
+                    reader.onload = (function (singlefile) {
+
+                        var filename = singlefile.name;
+                        var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                        return function (e) {
+
+                            var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                            var indx = list_bin_docs.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+                            var attachfile = {
+                                filename: filename,
+                                filetype: filetype,
+                                extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                base64string: base64String,
+                                server_filename: "",
+                                current_state: 1,
+                                fileindex: indx
+                            };
+
+                            list_bin_docs.push(attachfile);
+
+                            AddImageHtml(attachfile, indx, 1);
+
+                            base64String = "";
+
+                        }
+
+                    })($(this)[0].files[i]);
+
+                    reader.readAsDataURL($(this)[0].files[i]);
+
+                }
+                //console.log(listAttachments);
+                return;
+            });
+
+            $("#modalcontent #attachments_tindocs").change(function () {
+
+                var files = this.files;
+
+                var size = $(this)[0].files.length;
+
+                formData = new FormData();
+
+                for (var i = 0; i < size; i++) {
+
+                    var reader = new FileReader();
+
+                    reader.onload = (function (singlefile) {
+
+                        var filename = singlefile.name;
+                        var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                        return function (e) {
+
+                            var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                            var indx = list_tin_docs.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+                            var attachfile = {
+                                filename: filename,
+                                filetype: filetype,
+                                extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                base64string: base64String,
+                                server_filename: "",
+                                current_state: 1,
+                                fileindex: indx
+                            };
+
+                            list_tin_docs.push(attachfile);
+
+                            AddImageHtml( attachfile, indx,2);
+
+                            base64String = "";
+
+                        }
+
+                    })($(this)[0].files[i]);
+
+                    reader.readAsDataURL($(this)[0].files[i]);
+
+                }
+                //console.log(listAttachments);
+                return;
+            });
+
+            $("#modalcontent #attachments_tradelicensedocs").change(function () {
+
+                var files = this.files;
+
+                var size = $(this)[0].files.length;
+
+                formData = new FormData();
+
+                for (var i = 0; i < size; i++) {
+
+                    var reader = new FileReader();
+
+                    reader.onload = (function (singlefile) {
+
+                        var filename = singlefile.name;
+                        var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                        return function (e) {
+
+                            var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                            var indx = list_tradelicence_docs.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+                            var attachfile = {
+                                filename: filename,
+                                filetype: filetype,
+                                extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                                base64string: base64String,
+                                server_filename: "",
+                                current_state: 1,
+                                fileindex: indx
+                            };
+
+                            list_tradelicence_docs.push(attachfile);
+
+                            AddImageHtml( attachfile, indx,3);
+
+                            base64String = "";
+
+                        }
+
+                    })($(this)[0].files[i]);
+
+                    reader.readAsDataURL($(this)[0].files[i]);
+
+                }
+                //console.log(listAttachments);
+                return;
+            });
+        }
+
+        function downloadUserFile(index, file_ext, btn_index) {
+            // Convert Base64 to a Blob
+
+            var base64str = "";
+
+            if(btn_index==1)
+            {
+                base64str = list_bin_docs[index].base64string;
+            }
+            else if (btn_index == 2) {
+                base64str = list_tin_docs[index].base64string;
+            }
+            else if (btn_index == 3) {
+                base64str = list_tradelicence_docs[index].base64string;
+            }
+
+            var byteCharacters = atob(base64str);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            var blob = new Blob([byteArray], { type: 'application/octet-stream' });
+
+            // Create a download link
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+
+            link.download = 'downloaded_file.' + file_ext;
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            document.body.removeChild(link);
+        }
+
+        function AddImageHtml(file, index,btn_index) {
+
+            var containerid="";
+
+            if (btn_index == 1)
+                containerid = "vatbin_docs_frames";
+            else if (btn_index == 2)
+                containerid = "tin_docs_frames";
+            else if (btn_index == 3)
+                containerid = "tradelicense_docs_frames";
+
+            var fileextension = getFileExtension(file.filename);
+            var fileicon = getFileIcon(fileextension, index);
+            var base64string = 'data: ' + file.filetype + '; base64, ' + file.base64string;
+
+            var filehtml = "";
+                 
+            // if (fileextension == "jpg" || fileextension == "jpeg" || fileextension == "jfif" || fileextension == "svg" ||
+            //     fileextension == "webp" || fileextension == "png" || fileextension == "gif" || fileextension == "bmp" ||
+            //     fileextension == "ico" || fileextension == "tif" || fileextension == "tiff") {
+
+            //     filehtml = '<img style="width: 180px; height: 200px;" src="' + base64string + '" /> ';
+
+            // }
+            // else {
+            //     filehtml = fileicon;
+            // }
+
+
+            var strhtml = '<div index="' + index + '" class="col-lg-6 dvSingleAttachment">' +
+                fileicon +
+                '<a mailattachmentid="-1" index="' + file.fileindex + '" class="attachmentLink' + index + '" onclick="removeAtachments(this,' + index + ',' + btn_index + ')"><span class="spanClose">X</span></a>' +
+                '<a index="' + index + '" style="padding: 0px;overflow: hidden;max-height: 45px;display:flex;" class="btn" onclick="downloadUserFile(' + index + ',\'' + fileextension.trim() + '\',' + btn_index + '); return false;">' +
+                '<span style="color: blue; text-decoration: underline; display: inline-block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; display: inherit; height: 45px;">' + file.filename + '</span></a></div>';
+
+            $("#modalcontent #" + containerid).append(strhtml);
+
+        }
+
+        function removeAtachments(elem, index,btn_index) {
+
+            if (btn_index == 1) {
+                if (list_bin_docs[index].current_state == 1) {
+                    list_bin_docs = list_bin_docs.filter(p => p.fileindex != index);
+                }
+                else {
+                    list_bin_docs[index].current_state = 3;
+                }
+            }
+            else if (btn_index == 2) {
+                if (list_tin_docs[index].current_state == 1) {
+                    list_tin_docs = list_tin_docs.filter(p => p.fileindex != index);
+                }
+                else {
+                    list_tin_docs[index].current_state = 3;
+                }
+            }
+            else if (btn_index == 3) {
+                if (list_tradelicence_docs[index].current_state == 1) {
+                    list_tradelicence_docs = list_tradelicence_docs.filter(p => p.fileindex != index);
+                }
+                else {
+                    list_tradelicence_docs[index].current_state = 3;
+                }
+            }
+
+            $(elem).closest(".dvSingleAttachment").remove();
+        }
+
+        function LoadBranchByBankID(elem) {
+            var itemList = JSON.parse($(elem).parent().parent().find(".ddl_bank_branch").attr("objectlist"));
+
+            itemList = itemList.filter(p => p.str_other_value == $(elem).val());
+
+            $(elem).parent().parent().find(".ddl_bank_branch").empty();;
+
+            // Loop through the items and append them to the dropdown
+            $.each(itemList, function (index, item) {
+                $(elem).parent().parent().find(".ddl_bank_branch").append($('<option>', {
+                    value: item.Value,
+                    text: item.Text
+                }));
+            });
+        }
+
+        function RemoveRow(btn) {
+
+            $(btn).parent().parent().remove();
+        }
+
+        function AddItemSubGroup() {
+
+            var wholediv = $("#DTItemSubGroup tbody tr:nth-child(1)").clone();
+
+            $(wholediv).removeAttr("style");
+            $(wholediv).addClass("dynrow");
+
+            $("#DTItemSubGroup tbody").append(wholediv);
+
+        }
+
+        function AddNewBranchInfo() {
+
+            if ($('#modalcontent #DTBranchInfo tbody tr').length == 1 &&
+
+                $('#modalcontent #DTBranchInfo tbody tr').find(".dataTables_empty").length > 0)//dataTables_empty
+            {
+                $('#modalcontent #DTBranchInfo tbody tr').remove();
+            }
+
+            var tbl_index = $('#modalcontent #DTBranchInfo tbody tr').length;
+
+            $("#DTBranchInfo tbody").append('<tr class="dynrow">'+
+            //'<td>' +(parseInt($('#modalcontent #DTBranchInfo tbody tr').length) + 1) + '</td>'+
+                '<td><input  type="text" class=" txt_name border-gray-200 form-control"  value="" ></td>' +
+                '<td><input  type="text" class=" txt_address border-gray-200 form-control"  value="" ></td>' +
+
+                '<td><button onclick = "RemoveRow(this);return false;" type = "button" class= "btn btn-danger " >' +
+                'Remove' +
+                '</button></td></tr>');
+        }
+
+        function AddConcernedPerson() {
+
+            if ($('#modalcontent #DTConcernedPerson tbody tr').length == 1 &&
+
+                $('#modalcontent #DTConcernedPerson tbody tr').find(".dataTables_empty").length > 0)//dataTables_empty
+            {
+                $('#modalcontent #DTConcernedPerson tbody tr').remove();
+            }
+
+            var tbl_index = $('#modalcontent #DTConcernedPerson tbody tr').length+1;
+
+            $("#DTConcernedPerson tbody").append('<tr class="dynrow">' +
+
+                '<td><input  type="text" id="txt_name' + tbl_index + '" name="txt_name' + tbl_index + '"  class=" txt_name border-gray-200 form-control"  value="" ></td>' +
+                '<td><input  type="text" id="txt_designation' + tbl_index + '" name="txt_designation' + tbl_index + '" class=" txt_designation border-gray-200 form-control"  value="" ></td>' +
+                '<td><input  type="text" id="txt_phone' + tbl_index + '" name="txt_phone' + tbl_index + '" class=" txt_phone border-gray-200 form-control"  value="" ></td>' +
+                '<td><input  type="email" id="txt_email' + tbl_index + '" name="txt_email' + tbl_index + '" class=" txt_email border-gray-200 form-control"  value="" ></td>' +
+
+                '<td><button  onclick="RemoveRow(this);return false;" type="button" class= "btn btn-danger " >Remove</button></td>'+
+                '</tr>');
+        }
+
+        //
+        function AddNewBankInfo() {
+
+            if ($('#modalcontent #DTBankInfo tbody tr').length == 1 &&
+
+                $('#modalcontent #DTBankInfo tbody tr').find(".dataTables_empty").length > 0)//dataTables_empty
+            {
+                $('#modalcontent #DTBankInfo tbody tr').remove();
+            }
+
+            var tbl_index = $('#modalcontent #DTConcernedPerson tbody tr').length + 1;
+
+            var wholediv = $("#DTBankInfo tbody tr:nth-child(1)").clone();
+           
+            $(wholediv).removeAttr("style");
+            $(wholediv).addClass("dynrow");
+
+            $(wholediv).find(".ddl_bank").attr("id", "ddl_bank" + tbl_index);
+            $(wholediv).find(".ddl_bank").attr("name", "ddl_bank" + tbl_index);
+            $(wholediv).find(".ddl_bank_branch").attr("id", "ddl_bank_branch" + tbl_index);
+            $(wholediv).find(".ddl_bank_branch").attr("name", "ddl_bank_branch" + tbl_index);
+
+             $(wholediv).find(".ddl_bank").attr("id", "ddl_bank" + tbl_index);
+            $(wholediv).find(".ddl_bank").attr("name", "ddl_bank" + tbl_index);
+
+            $(wholediv).find(".txt_acno").attr("id", "txt_acno" + tbl_index);
+            $(wholediv).find(".txt_acno").attr("name", "txt_acno" + tbl_index);
+
+            $(wholediv).find(".txt_routingno").attr("id", "txt_routingno" + tbl_index);
+            $(wholediv).find(".txt_routingno").attr("name", "txt_routingno" + tbl_index);
+
+            $(wholediv).find(".txt_swiftcode").attr("id", "txt_swiftcode" + tbl_index);
+            $(wholediv).find(".txt_swiftcode").attr("name", "txt_swiftcode" + tbl_index);
+
+            $(wholediv).find(".is_default").attr("id", "is_default" + tbl_index);
+            $(wholediv).find(".is_default").attr("name", "is_default" + tbl_index);
+
+            $("#DTBankInfo tbody").append(wholediv);
+
+            $("#modalcontent .ddl_bank").change(function () {
+                LoadBranchByBankID(this);
+            });
+
+            $("#modalcontent .ddl_bank_branch").css("width","200px");
+
+        }
+
+        function EditGenSupplierInformation(btn) {
+
+            var gen_supplier_information_id = $(btn).attr("gen_supplier_information_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/GenSupplierInformation/GenSupplierInformationEdit?gen_supplier_information_id=" + gen_supplier_information_id, null, function (data) {
+
+                    setTimeout(function () {
+                        hideLoader();
+                    }, 0);
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    BindTabEvents("tabSuppplier");
+
+                    RegisterEvents();
+
+                  
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function btnSaveNextClick(btn,forward_backward) {
+
+            var fmrid = $(btn).closest(".frm_add_edit").attr("id");
+
+            if (_cusFormValidate(fmrid) == true) {
+
+                var btnindex = $(btn).closest(".tab-pane").attr("tabpane_index");
+
+                if (forward_backward == 1) {
+
+                    modal_tab_events_click_next_tab($(".nav-tabs").find("li[tab_index=" + btnindex + "]"));
+
+                    if ((parseInt(btnindex) + 1) == $("#tabSuppplier li").length) {
+                        //$(".btnSaveUpdateGenSupplierInformation").removeAttr("disabled");
+                        $(".btn-primarybtnSaveUpdateGenSupplierInformation").removeAttr("disabled");
+                    }
+                    else {
+                        $(".btnSaveUpdateGenSupplierInformation").attr("disabled", "disabled");
+                    }
+                }
+                else
+                {
+                    modal_tab_events_click_previous_tab($(".nav-tabs").find("li[tab_index=" + btnindex + "]"));
+                }
+            }
+        }
+
+        function ViewGenSupplierInformation(btn) {
+
+            var gen_supplier_information_id = $(btn).attr("gen_supplier_information_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/GenSupplierInformation/GenSupplierInformationView?gen_supplier_information_id=" + gen_supplier_information_id, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    BindTabEvents("tabSuppplier");
+
+                    $('#modalcontent input').attr("disabled", "disabled");
+                    $('#modalcontent select').attr("disabled", "disabled");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+
+
+        function SaveGenSupplierInformation(btn) {
+
+            var contact_category = {
+                gen_contact_category_id: check_value($('#modalcontent #ddl_contact_category').val()),
+                contact_category: $("#ddl_contact_category option:selected").text()
+            }
+
+            var geo_location = []; 
+
+            $.each($("#tblgeographical_location input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_geographical_location_id: $(elem).val(),
+                    location_title: $(elem).parent().text(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                geo_location.push(obj);
+            });
+
+            var inco_terms = [];
+
+            $.each($("#tblinco_term input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_inco_term_id: $(elem).val(),
+                    inco_term: $(elem).parent().text().trim(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                inco_terms.push(obj);
+            });
+
+            var payment_term = [];
+
+            $.each($("#tblpayment_term input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_payment_term_id: $(elem).val(),
+                    payment_term: $(elem).parent().text().trim(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                payment_term.push(obj);
+            });
+
+            var payment_method = [];
+
+            $.each($("#tblpayment_method input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_payment_method_id: $(elem).val(),
+                    payment_method: $(elem).parent().text().trim(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                payment_method.push(obj);
+            });
+
+            var mode_of_payment = [];
+
+            $.each($("#tblmode_of_transacton input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_mode_of_transaction_id: $(elem).val(),
+                    mode_of_transaction: $(elem).parent().text().trim(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                mode_of_payment.push(obj);
+            });
+
+            var branch = [];
+
+            $.each($("#DTBranchInfo tbody tr"), function (ey, elem) {
+                if ($(elem).hasClass("dynrow")) {
+                    var obj =
+                    {
+                        branch_name: $(elem).find(".txt_name").val(),
+                        address: $(elem).find(".txt_address").val()
+
+                    };
+
+                    branch.push(obj);
+                }
+            });
+
+            var concern_persons = [];
+
+            $.each($("#DTConcernedPerson tbody tr"), function (ey, elem) {
+
+                if ($(elem).hasClass("dynrow")) {
+                    var obj =
+                    {
+                        name: $(elem).find(".txt_name").val(),
+                        address: $(elem).find(".txt_address").val(),
+                        phone: $(elem).find(".txt_phone").val(),
+                        email: $(elem).find(".txt_email").val(),
+                        designation: $(elem).find(".txt_designation").val(),
+                    };
+
+                    concern_persons.push(obj);
+                }
+            });
+
+            var item_subgroups = [];
+
+            $.each($("#DTItemSubGroup tbody tr"), function (ey, elem) {
+
+                if ($(elem).hasClass("dynrow")) {
+
+                    var objitemsub={
+                        gen_item_structure_group_sub_id: check_value($(elem).find('.ddl_item_sub_group').val()),
+                        sub_group_name: $(elem).find('.ddl_item_sub_group option:selected').text()
+                    }
+
+                    var obj =
+                    {
+                        item_structure_group: objitemsub,
+             
+                        supplier_type: check_value($(elem).find(".supplier_type").val()),
+                        is_active: $(elem).find(".is_active").val()
+                    };
+
+                    item_subgroups.push(obj);
+                }
+            });
+
+            var banks = [];
+
+            $.each($("#DTBankInfo tbody tr"), function (ey, elem) {
+
+                if ($(elem).hasClass("dynrow")) {
+
+                    var objbank = {
+                        gen_bank_id: $(elem).find(".ddl_bank").val(),
+                        bank_name: $(elem).find(".ddl_bank option:selected").text()
+                    }
+
+                    var objbankbranch = {
+                        gen_bank_branch_id: $(elem).find(".ddl_bank_branch").val(),
+                        branch_name: $(elem).find(".ddl_bank_branch option:selected").text()
+                    }
+
+                    var obj =
+                    {
+                        gen_bank: objbank,
+                        gen_bankbranch:objbankbranch,
+                        acno: $(elem).find(".txt_acno").val(),
+                        routingno: $(elem).find(".txt_routingno").val(),
+                        swiftcode: $(elem).find(".txt_swiftcode").val(),
+                        is_default: $(elem).find(".is_default").val(),
+
+                    };
+
+                    banks.push(obj);
+                }
+            });
+
+            var credit_period = {
+                gen_credit_period_id: check_value($('#modalcontent #ddl_credit_period').val()),
+                credit_period: $("#modalcontent #ddl_credit_period option:selected").text()
+            }
+
+            var calculation_of_tenure = {
+                gen_calculation_of_tenure_id: check_value($('#modalcontent #ddl_calculation_of_period').val()),
+                calculation_of_tenure: $("#modalcontent #ddl_calculation_of_period option:selected").text()
+            }
+
+            var obj_GenSupplierInformation = {
+               
+                name: $('#modalcontent #name').val(),
+                short_name: $('#modalcontent #short_name').val(),
+                display_code: $('#modalcontent #display_code').val(),
+                email: $('#modalcontent #email').val(),
+                office_address: $('#modalcontent #office_address').val(),
+                factory_address: $('#modalcontent #factory_address').val(),
+                fax_no: $('#modalcontent #fax_no').val(),
+                contact_person: $('#modalcontent #contact_person').val(),
+                country_id: check_value($('#modalcontent #ddl_country_id').val()),
+                city: $('#modalcontent #city').val(),
+                agent_name: $('#modalcontent #agent_name').val(),
+               // gen_business_type: check_value($('#modalcontent #gen_business_type_id').val())!null?obj_gen_business_type:null,
+                List_geographical_location: geo_location,
+
+                vat_bin_number: $('#modalcontent #vat_bin_number').val(),
+                vat_bin_number_start_date: $('#modalcontent #vat_bin_number_start_date').val()!=''?$('#modalcontent #vat_bin_number_start_date').val():null,
+                vat_bin_number_expire_date: $('#modalcontent #vat_bin_number_expire_date').val()!=''?$('#modalcontent #vat_bin_number_expire_date').val(): null,
+              
+                tin_number: $('#modalcontent #tin_number').val(),
+              
+                trade_license: $('#modalcontent #trade_license').val(),
+                trade_license_start_date: $('#modalcontent #trade_license_start_date').val()!=''? $('#modalcontent #trade_license_start_date').val():null,
+                trade_license_expire_date: $('#modalcontent #trade_license_expire_date').val() != '' ? $('#modalcontent #trade_license_expire_date').val() : null,
+                List_branch: branch.length > 0 ? branch : null,
+                List_concern_person: concern_persons.length>0? concern_persons:null,
+                List_incoterm: inco_terms.length > 0 ? inco_terms : null,
+                List_mode_of_transaction: mode_of_payment.length > 0 ? mode_of_payment : null,
+                List_paymentmethod: payment_method.length > 0 ? payment_method : null,
+                List_paymentterm: payment_term.length > 0 ? payment_term : null,
+                List_bank_account_info: banks.length > 0 ? banks : null,
+
+                List_vat_bin_docs: list_bin_docs.length > 0 ? list_bin_docs : null,
+                List_tin_docs: list_tin_docs.length > 0 ? list_tin_docs : null,
+                List_tradelincense_docs: list_tradelicence_docs.length > 0 ? list_tradelicence_docs : null,
+                List_item_subgroup_info: item_subgroups.length > 0 ? item_subgroups : null,
+
+                obj_contact_category: check_value($('#modalcontent #ddl_contact_category').val()) != null ? contact_category : null,
+                obj_credit_period: check_value($('#modalcontent #ddl_credit_period').val()) != null ? credit_period : null,
+                obj_calculation_of_tenure: check_value($('#modalcontent #ddl_calculation_of_period').val()) != null ? calculation_of_tenure : null,
+
+                active: true,
+
+            }
+
+
+
+            if (_cusFormValidate("frmAdd")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/GenSupplierInformation/SaveGenSupplierInformation", obj_GenSupplierInformation, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenSupplierInformationData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function UpdateGenSupplierInformation(btn) {
+            var contact_category = {
+                gen_contact_category_id: check_value($('#modalcontent #ddl_contact_category').val()),
+                contact_category: $("#ddl_contact_category option:selected").text()
+            }
+
+            var geo_location = [];
+
+            $.each($("#tblgeographical_location input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_geographical_location_id: $(elem).val(),
+                    location_title: $(elem).parent().text(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                geo_location.push(obj);
+            });
+
+            var inco_terms = [];
+
+            $.each($("#tblinco_term input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_inco_term_id: $(elem).val(),
+                    inco_term: $(elem).parent().text().trim(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                inco_terms.push(obj);
+            });
+
+            var payment_term = [];
+
+            $.each($("#tblpayment_term input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_payment_term_id: $(elem).val(),
+                    payment_term: $(elem).parent().text().trim(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                payment_term.push(obj);
+            });
+
+            var payment_method = [];
+
+            $.each($("#tblpayment_method input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_payment_method_id: $(elem).val(),
+                    payment_method: $(elem).parent().text().trim(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                payment_method.push(obj);
+            });
+
+            var mode_of_payment = [];
+
+            $.each($("#tblmode_of_transacton input[type=checkbox]"), function (ey, elem) {
+
+                var obj =
+                {
+                    gen_mode_of_transaction_id: $(elem).val(),
+                    mode_of_transaction: $(elem).parent().text().trim(),
+                    is_checked: $(elem).prop("checked")
+                };
+
+                mode_of_payment.push(obj);
+            });
+
+            var branch = [];
+
+            $.each($("#DTBranchInfo tbody tr"), function (ey, elem) {
+                if ($(elem).hasClass("dynrow")) {
+                    var obj =
+                    {
+                        branch_name: $(elem).find(".txt_name").val(),
+                        address: $(elem).find(".txt_address").val()
+
+                    };
+
+                    branch.push(obj);
+                }
+            });
+
+            var concern_persons = [];
+
+            $.each($("#DTConcernedPerson tbody tr"), function (ey, elem) {
+
+                if ($(elem).hasClass("dynrow")) {
+                    var obj =
+                    {
+                        name: $(elem).find(".txt_name").val(),
+                        address: $(elem).find(".txt_address").val(),
+                        phone: $(elem).find(".txt_phone").val(),
+                        email: $(elem).find(".txt_email").val(),
+                        designation: $(elem).find(".txt_designation").val(),
+                    };
+
+                    concern_persons.push(obj);
+                }
+            });
+
+            var item_subgroups = [];
+
+            $.each($("#DTItemSubGroup tbody tr"), function (ey, elem) {
+
+                if ($(elem).hasClass("dynrow")) {
+
+                    var objitemsub = {
+                        gen_item_structure_group_sub_id: check_value($(elem).find('.ddl_item_sub_group').val()),
+                        sub_group_name: $(elem).find('.ddl_item_sub_group option:selected').text()
+                    }
+
+                    var obj =
+                    {
+                        item_structure_group: objitemsub,
+                     
+                        supplier_type: check_value($(elem).find(".supplier_type").val()),
+                        is_active: $(elem).find(".is_active").val()
+                    };
+
+                    item_subgroups.push(obj);
+                }
+            });
+
+            var banks = [];
+
+            $.each($("#DTBankInfo tbody tr"), function (ey, elem) {
+
+                if ($(elem).hasClass("dynrow")) {
+
+                    var objbank = {
+                        gen_bank_id: $(elem).find(".ddl_bank").val(),
+                        bank_name: $(elem).find(".ddl_bank option:selected").text()
+                    }
+
+                    var objbankbranch = {
+                        gen_bank_branch_id: $(elem).find(".ddl_bank_branch").val(),
+                        branch_name: $(elem).find(".ddl_bank_branch option:selected").text()
+                    }
+
+                    var obj =
+                    {
+                        gen_bank: objbank,
+                        gen_bankbranch: objbankbranch,
+                        acno: $(elem).find(".txt_acno").val(),
+                        routingno: $(elem).find(".txt_routingno").val(),
+                        swiftcode: $(elem).find(".txt_swiftcode").val(),
+                        is_default: $(elem).find(".is_default").val(),
+
+                    };
+
+                    banks.push(obj);
+                }
+            });
+
+            var credit_period = {
+                gen_credit_period_id: check_value($('#modalcontent #ddl_credit_period').val()),
+                credit_period: $("#modalcontent #ddl_credit_period option:selected").text()
+            }
+
+            var calculation_of_tenure = {
+                gen_calculation_of_tenure_id: check_value($('#modalcontent #ddl_calculation_of_period').val()),
+                calculation_of_tenure: $("#modalcontent #ddl_calculation_of_period option:selected").text()
+            }
+
+            var obj_GenSupplierInformation = {
+                gen_supplier_information_id: $('#modalcontent #gen_supplier_information_id').val(),
+                name: $('#modalcontent #name').val(),
+                short_name: $('#modalcontent #short_name').val(),
+                display_code: $('#modalcontent #display_code').val(),
+                email: $('#modalcontent #email').val(),
+                office_address: $('#modalcontent #office_address').val(),
+                factory_address: $('#modalcontent #factory_address').val(),
+                fax_no: $('#modalcontent #fax_no').val(),
+                contact_person: $('#modalcontent #contact_person').val(),
+                country_id: check_value($('#modalcontent #ddl_country_id').val()),
+                city: $('#modalcontent #city').val(),
+                agent_name: $('#modalcontent #agent_name').val(),
+                // gen_business_type: check_value($('#modalcontent #gen_business_type_id').val())!null?obj_gen_business_type:null,
+                List_geographical_location: geo_location,
+
+                vat_bin_number: $('#modalcontent #vat_bin_number').val(),
+                vat_bin_number_start_date: $('#modalcontent #vat_bin_number_start_date').val() != '' ? $('#modalcontent #vat_bin_number_start_date').val() : null,
+                vat_bin_number_expire_date: $('#modalcontent #vat_bin_number_expire_date').val() != '' ? $('#modalcontent #vat_bin_number_expire_date').val() : null,
+
+                tin_number: $('#modalcontent #tin_number').val(),
+
+                trade_license: $('#modalcontent #trade_license').val(),
+                trade_license_start_date: $('#modalcontent #trade_license_start_date').val() != '' ? $('#modalcontent #trade_license_start_date').val() : null,
+                trade_license_expire_date: $('#modalcontent #trade_license_expire_date').val() != '' ? $('#modalcontent #trade_license_expire_date').val() : null,
+                List_branch: branch.length > 0 ? branch : null,
+                List_concern_person: concern_persons.length > 0 ? concern_persons : null,
+                List_incoterm: inco_terms.length > 0 ? inco_terms : null,
+                List_mode_of_transaction: mode_of_payment.length > 0 ? mode_of_payment : null,
+                List_paymentmethod: payment_method.length > 0 ? payment_method : null,
+                List_paymentterm: payment_term.length > 0 ? payment_term : null,
+                List_bank_account_info: banks.length > 0 ? banks : null,
+
+                List_vat_bin_docs: list_bin_docs.length > 0 ? list_bin_docs : null,
+                List_tin_docs: list_tin_docs.length > 0 ? list_tin_docs : null,
+                List_tradelincense_docs: list_tradelicence_docs.length > 0 ? list_tradelicence_docs : null,
+                List_item_subgroup_info: item_subgroups.length > 0 ? item_subgroups : null,
+
+                obj_contact_category: check_value($('#modalcontent #ddl_contact_category').val()) != null ? contact_category : null,
+                obj_credit_period: check_value($('#modalcontent #ddl_credit_period').val()) != null ? credit_period : null,
+                obj_calculation_of_tenure: check_value($('#modalcontent #ddl_calculation_of_period').val()) != null ? calculation_of_tenure : null,
+
+                active: true,
+
+            }
+
+            if (_cusFormValidate("frmEdit")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+
+                ajaxPostObjectHandler("/GenSupplierInformation/UpdateGenSupplierInformation", obj_GenSupplierInformation, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenSupplierInformationData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteGenSupplierInformation(id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_GenSupplierInformation = {
+                    strMasterID: id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/GenSupplierInformation/DeleteGenSupplierInformation", obj_GenSupplierInformation, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadGenSupplierInformationData();
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            });
+        }
+
+        $(function () {
+
+            LoadGenSupplierInformationData();
+
+        });
+
+        function LoadGenSupplierInformationData() {
+
+            var dt_search = {
+
+                filterId: '#DTGenSupplierInformation_filter input[type=search]',
+                tableId: "#DTGenSupplierInformation"
+
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search Supplier',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+
+
+                "ajax": $.fn.dataTable.json({ url: "/GenSupplierInformation/GetGenSupplierInformationData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("gen_supplier_information_id", data.gen_supplier_information_id);
+
+                },
+                "columns": [
+
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "display_code", "name": "display_code", "autoWidth": true },
+                    { "data": "contact_person", "name": "contact_person", "autoWidth": true },
+                    { "data": "active", "name": "active", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+
+

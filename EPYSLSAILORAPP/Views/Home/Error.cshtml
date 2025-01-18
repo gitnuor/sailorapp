@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    .page_404 {
+        padding: 40px 0;
+        background: #fff;
+        font-family: 'Arvo', serif;
+    }
+
+        .page_404 img {
+            width: 100%;
+        }
+
+    .four_zero_four_bg {
+        background-image: url(/Images/dribbble_1.gif);
+        height: 400px;
+        background-position: center;
+    }
+
+
+        .four_zero_four_bg h1 {
+            font-size: 80px;
+        }
+
+        .four_zero_four_bg h3 {
+            font-size: 80px;
+        }
+
+    .link_404 {
+        color: #fff !important;
+        padding: 10px 20px;
+        background: #39ac31;
+        margin: 20px 0;
+        display: inline-block;
+    }
+
+    .contant_box_404 {
+        margin-top: -50px;
+    }
+</style>
+<div class="content-wrapper">
+    <input id="hd_encoded_fiscal_year" type="hidden" value="@ViewBag.encoded_fiscal_year" />
+    <input id="hd_tran_va_plan_event_id" type="hidden" value="@ViewBag.tran_va_plan_event_id" />
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            @* <h6 class="card-title">System Error</h6> *@
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="margin-top: 10px;background-color: aliceblue;">
+                            <div class="row" style="text-align: center;">
+                                <div class="col-sm-12 ">
+                                  
+                                        <div class="four_zero_four_bg" >
+                                            <h1 class="text-center ">404</h1>
+
+
+                                        </div>
+
+                                        <div class="contant_box_404">
+                                            <h3 class="h2" style="color:red;">
+                                            @ViewBag.ExceptionMessage
+                                            </h3>
+
+                                        </div>
+                                  
+                                </div>
+                            </div>
+                        
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+                <!-- /.container-fluid -->
+    </section>
+</div>
+
+

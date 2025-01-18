@@ -1,0 +1,52 @@
+﻿@model EPYSLSAILORAPP.Domain.DTO.gen_outlet_DTO;
+@{
+    Layout = null;
+}
+
+
+<div class="box" style="border-width:0px;">
+  
+    
+        <input type="hidden" style="width:100%" value="@Model.outlet_id" id="outlet_id" />
+   
+        
+    <div class="row">
+        <div class="col-md-12">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Outlet Name</label>
+
+            <div class="form-group">
+                <input type="text" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="outlet_name" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Outlet Address</label>
+
+            <div class="form-group">
+                <input type="text" style="width:100%" class="border-gray-200 rounded-sm text-sm " asp-for="outlet_address" />
+            </div>
+        </div>
+    </div>
+
+    
+
+    <div class="row">
+        <div class="col-md-12">
+               
+            <button type="button" class="btn btn-danger" id="btnCancel"><i class="fa fa-angle-double-left"></i>&nbsp;Cancel</button>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        $(function () {
+           
+
+        });
+    </script>
+}

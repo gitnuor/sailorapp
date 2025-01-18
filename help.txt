@@ -1,0 +1,86 @@
+
+json serealize
+
+    ---create json object
+  select jsonb_agg(jsonb_build_object('unit_name', gisg.unit_name,
+                                         'gen_unit_id', gisg.gen_unit_id
+         ))
+     INTO genunitlist
+     from public.gen_unit gisg;
+
+json parse and join 
+
+
+SELECT
+    tpcd.tran_pre_costing_id,
+    plc.placement,
+    plc.style_placement_information_id
+FROM
+    public.tran_pre_costing_item_detail tpcd
+CROSS JOIN LATERAL
+    jsonb_array_elements(tpcd.placement_info::jsonb) AS placement_element
+JOIN LATERAL
+    json_populate_record(null::style_placement_information, placement_element::json) AS plc
+    ON true
+WHERE
+    tpcd.tran_pre_costing_id = 18;
+
+    
+
+SELECT m.tran_techpack_id,
+       m.techpack_number || '(' || m.teckpack_style_code || ')' as techpack_number,
+       (
+           SELECT string_agg(plc.server_filename, '|')
+           FROM public.tran_plan_allocate pa
+           INNER JOIN public.tran_sample_order so ON so.tran_va_plan_detl_id = pa.tran_va_plan_detl_id
+           INNER JOIN public.tran_pre_costing pc ON pc.tran_sample_order_id = so.tran_sample_order_id
+           INNER JOIN public.tran_designer_review dr ON dr.tran_pre_costing_id = pc.tran_pre_costing_id
+           CROSS JOIN LATERAL
+           jsonb_array_elements(so.sample_photos::jsonb) AS placement_element
+           JOIN LATERAL
+           json_populate_record(null::gen_file_upload, placement_element::json) AS plc ON true
+           WHERE dr.tran_designer_review_id = m.tran_designer_review_id and plc.imagetype='Front'
+       ) AS photos
+FROM public.tran_tech_pack m;
+
+
+2 step deserealize
+
+SELECT
+  plc.color_code,plcc.*
+FROM
+    public.tran_tech_pack tp
+CROSS JOIN LATERAL
+    jsonb_array_elements(tp.color_wise_size_quantity::jsonb) AS sz
+JOIN LATERAL
+    json_populate_record(null::tran_tech_pack_color, sz::json) AS plc
+    ON true
+
+CROSS JOIN LATERAL
+    jsonb_array_elements(plc."List_ColorSize"::jsonb) AS szd
+JOIN LATERAL
+    json_populate_record(null::tran_tech_pack_color_size, szd::json) AS plcc
+    ON true
+inner join style_product_size_group_details spsgd on spsgd.style_product_size_group_detid
+WHERE
+    tp.tran_techpack_id = 30
+
+2. create post trigger to generate auto number 
+
+CREATE OR REPLACE FUNCTION public.generate_fabric_allocation_number()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+BEGIN
+    NEW.allocation_number := 'PR' || LPAD(NEW.tran_fabric_allocation_req_id::TEXT, 10, '0');
+    RETURN NEW;
+END;
+$BODY$;
+
+CREATE OR REPLACE TRIGGER set_techpack_serial_number
+    BEFORE INSERT
+    ON public.tran_tech_pack
+    FOR EACH ROW
+    EXECUTE FUNCTION public.generate_techpack_serial_number();

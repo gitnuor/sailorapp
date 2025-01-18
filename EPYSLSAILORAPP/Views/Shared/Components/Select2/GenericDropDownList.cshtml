@@ -1,0 +1,67 @@
+﻿@using EPYSLSAILORAPP.Application.DTO;
+@using Newtonsoft.Json;
+@{
+    // Layout = "_LayoutViewComponent";
+    Layout = null;
+}
+@{
+    string id = ViewBag.ddlId, cssclass = ViewBag.ddlcss; bool enable = ViewBag.enable; string selectedvalue = ViewBag.selectedvalue; bool isRequired = ViewBag.isRequired; string placeholder = ViewBag.placeholder;
+    bool isBindDataSource=ViewBag.isBindDataSource;
+    var attributes = new System.Collections.Generic.Dictionary<string, object>();
+
+    attributes.Add("id", id);
+    attributes.Add("name", id);
+    attributes.Add("class", cssclass);
+    attributes.Add("style", "height:30px;width:100%;");
+
+    if (!enable)
+    {
+        attributes.Add("disabled", "disabled");
+    }
+
+    if (isRequired)
+    {
+        attributes.Add("data-val", "true");
+        attributes.Add("data-val-required", "Required*");
+    }
+
+    if (!string.IsNullOrEmpty(placeholder))
+    {
+        attributes.Add("placeholder", placeholder);
+    }
+    else
+    {
+        attributes.Add("placeholder", "Select");
+    }
+
+    var List = (List<SelectListItemExtended>)ViewBag.ddlName;
+    if (List.Count > 0 && isBindDataSource==true)
+    {
+        attributes.Add("objectList", JsonConvert.SerializeObject(List));
+    }
+
+
+}
+
+@Html.DropDownList(id, (List<SelectListItemExtended>)ViewBag.ddlName, !string.IsNullOrEmpty(placeholder)?placeholder:"-- Select ---", attributes)
+
+@{
+    if (isRequired)
+    {
+        <span class="field-validation-valid text-danger" data-valmsg-for="@id" data-valmsg-replace="true"></span>
+        <div class="help-block with-errors"></div>
+    }
+}
+
+@if (!string.IsNullOrEmpty(selectedvalue))
+{
+    <script type="text/javascript">
+        function chneckdr() { }
+        $(function () {
+
+            $("#@id").val('@selectedvalue');
+
+        });
+    </script>
+
+}

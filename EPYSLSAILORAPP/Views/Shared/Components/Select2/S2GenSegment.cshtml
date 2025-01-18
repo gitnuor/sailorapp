@@ -1,0 +1,86 @@
+a@{
+
+    Layout = null;
+}
+@{
+    string selectid = ViewBag.selectid;
+    int delay = 2;
+    int minimumInputLength = 0;
+    bool isReadOnly = ViewBag.isReadOnly;
+
+    string strisReadOnly = isReadOnly.ToString().ToLower();
+
+    bool isRequired = ViewBag.isRequired;
+
+
+    string placeholder = ViewBag.placeholder;
+    string ddlcss = ViewBag.ddlcss;
+
+
+    if (isRequired == true)
+    {
+            <select name="@selectid" id="@selectid" objdata='@Html.Raw(ViewBag.data)' class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box"
+                    data-val="true" data-val-required="Please Select">
+                <option>@placeholder</option>
+            </select>
+            <span class="field-validation-valid text-danger" data-valmsg-for="@selectid" data-valmsg-replace="true"></span>
+    }
+    else
+    {
+            <select name="@selectid" id="@selectid" objdata='@Html.Raw(ViewBag.data)' class="form-control @selectid @ddlcss" style="width:100%;display:block;box-sizing:border-box">
+                <option>@placeholder</option>
+            </select>
+    }
+}
+
+
+
+<script type="text/javascript">
+
+
+    $(function () {
+
+        var select2Options = returnSelect2Options();
+        select2Options.placeholder = '@Html.Raw(ViewBag.placeholder)'.length > 0 ? '@Html.Raw(ViewBag.placeholder)' : 'All Master Category';
+        select2Options.minimumInputLength = @minimumInputLength;
+        select2Options.multiple = true;
+        select2Options.dropdownParent = '@ViewBag.model_parentid'.length > 0 ? $('#' + '@ViewBag.model_parentid') : null;
+
+        select2Options.disabled = @strisReadOnly.ToLower();
+        select2Options.ajax.url = '/Select2/GenSegmentList', select2Options.ajax.type = 'GET';
+        select2Options.ajax.data = function (params) {
+            return {
+
+                pageSize: 10,
+                pageNum: params.page || 1,
+                searchTerm: params.term || null
+            };
+        };
+
+        $('#@selectid').select2(
+            select2Options
+        );
+
+        $('#@selectid').val("").trigger("change");
+        $('#@selectid').trigger("change");
+
+        var objdata = $('#@selectid').attr("objdata");
+
+        if (objdata.length > 0) {
+
+            var data = JSON.parse(objdata);
+            $('#@selectid').empty();
+
+            for (var i = 0; i < data.length; i++) {
+
+                $('#@selectid').append('<option value="' + data[i].gen_segment_id + '" selected="selected"">' + data[i].segment_text + '</option>');
+
+            }
+            $('#@selectid').select2(select2Options);
+            $('#@selectid').trigger('change');
+        }
+    });
+
+</script>
+
+

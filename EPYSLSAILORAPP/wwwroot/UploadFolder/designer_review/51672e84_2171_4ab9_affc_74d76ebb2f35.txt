@@ -1,0 +1,47 @@
+1. Copy the "AspNetZero Core 10.3.0" for any new project
+2. Run the "AspNetZero Renamer 2.11" and provide the path
+3. After Rename,  
+
+Now
+a) open the file "config.json" from the project location "~/aspnet-core\AspNetZeroRadTool"
+change these two
+"ProjectType": "Angular",
+"ProjectVersion":"10.3.0",
+
+b) copy "angular.json" and "package.json"  from the original source as these are corrupted by the renaming tool.
+
+
+**** Before installing the "ASP.NET Zero Power Tools 2.3", open VS and 
+uncheck Automatically check for updates from Tools/Extensions
+
+After using Extension and Generating any Entity, in the angular, entity's ts file, 
+replace "import { LazyLoadEvent } from 'primeng/public_api';" by  import { LazyLoadEvent } from 'primeng/api';
+replace  momentFormat:'L' in view by  date:"dd-MMM-yyyy"
+
+replace in ts date variable ttype moment.Moment by DateTime 
+
+in ts 
+import { DateTime } from 'luxon';
+import { DateTimeService } from '@app/shared/common/timing/date-time.service';
+
+for html date input field
+ <input class="form-control m-input" type="datetime" bsDatepicker datePickerLuxonModifier 
+									 [(date)]="studentBasicProfile.joinDateBD" id="StudentBasicProfile_JoinDateBD" name="StudentBasicProfile_JoinDateBD">
+								
+
+
+for node...
+
+1. install nodejs
+2. install yarn from command
+3. from vs code terminal, run yarn
+
+run project : npm run hmr
+
+**if this error occured during entity framwork update-database, then run command "dotnet tool install --global dotnet-ef --version 6.*"
+Running migrator...
+Could not execute because the specified command or file was not found.
+Possible reasons for this include:
+  * You misspelled a built-in dotnet command.
+  * You intended to execute a .NET program, but dotnet-ef does not exist.
+  * You intended to run a global tool, but a dotnet-prefixed executable with this name could not be found on the PATH.

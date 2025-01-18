@@ -1,0 +1,390 @@
+﻿@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.style_item_product_DTO
+
+@{
+    Layout = null;
+}
+
+@* <style>
+    [type='text'] {
+        padding-top: 0.15rem !important;
+        padding-right: 0.15rem !important;
+        padding-bottom: 0.15rem !important;
+        padding-left: 0.45rem !important;
+        line-height: 0.5rem !important;
+    }
+</style>
+ *@
+<style>
+    input, button {
+        line-height: 0.75rem !important;
+        height: 30px;
+        font-size: 12px;
+    }
+</style>
+<div class="box" style="border-width:0px;">
+
+    <div class="row">
+       @*  <input type="hidden" asp-for="style_item_product_id" /> *@
+        <input type="hidden" id="style_item_product_id" value="@Model.style_item_product_id" />
+
+
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Name</label>
+
+                <input style="width:100%" type="text" asp-for="style_item_product_name" class="border-gray-200 form-control" />
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Master Category</label>
+
+                @await Component.InvokeAsync("S2MasterCategory", new
+                {
+                ddlId = "style_master_category_id1",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_master_category_List)),
+                selectedvalue = "",
+                cssclass = "form-control",
+                isRequired = false,
+                isReadOnly = false,
+                placeholder = "Select Master Category",
+                model_parentid = "modalcontainer_common",
+                preloaded = JsonConvert.SerializeObject(Model.style_master_category_List),
+
+                })
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Item Type</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_item_type_id1",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_item_type_List)),
+                selectedvalue =Model.style_item_type_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Item Type"
+                })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Type</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_product_type_id1",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_product_type_List)),
+                        selectedvalue = Model.style_product_type_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Product Type"
+                })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Gender</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_gender_id1",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_gender_List)),
+                        selectedvalue = Model.style_gender_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Gender"
+                })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Origin</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_item_origin_id1",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_item_origin_List)),
+                        selectedvalue = Model.style_item_origin_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Origin"
+                })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Size Group</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_product_size_group_id1",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_product_size_group_List)),
+                        selectedvalue = Model.style_product_size_group_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Size"
+                })
+            </div>
+
+            <div class="col-md-6">
+
+                <button id="btnaddRow" class="btn btn-primary" onclick="AddNewRow();">Add Row</button>
+
+            </div>
+        </div>
+    </div>
+
+    
+
+    <div class="col-md-12">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table id="DTSubCategory_Delt" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        <th><label class="labelNormal">SL</label></th>
+                        <th><label class="labelNormal">Sub Category Name</label></th>
+                        <th><label class="labelNormal">Remove</label></th>
+
+                    </tr>
+                </thead>
+                <tbody style="text-align:center">
+                    @foreach (var obj in Model.DetList)
+                    {
+                        <tr>
+                            <td style="width:10%">
+                                @obj.RowNumber.ToString()
+                            </td>
+                            <td style="width:60%">
+                                <input style_item_product_id="@obj.style_item_product_id.ToString()" style_item_product_sub_category_id="@obj.style_item_product_sub_category_id.ToString()" type="text" class=" txt_segment_value border-gray-200 rounded-sm text-sm" style="width:100%" value="@obj.sub_category_name">
+
+
+
+
+                            </td>
+                            <td style="width:30%">
+                                <button style_item_product_id="@obj.style_item_product_id.ToString()" style_item_product_sub_category_id="@obj.style_item_product_sub_category_id.ToString()" onclick="RemoveRow(this)" type="button" class="btn btn-danger btn-sm" style="width:70px;height: 25px;">
+                                    Remove
+                                </button>
+
+
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+       
+    </div>
+
+</div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+        <button type="button" class="btn btn-primary" id="btnUpdateProduct"><i class="fa fa-save"></i>&nbsp;&nbsp;Update </button>
+            <button type="button" class="btn btn-danger" id="btnCancel"><i class="fa fa-angle-double-left"></i>&nbsp;Cancel</button>
+
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+        $(function () {
+
+
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="box" style="border-width:0px;">
+
+    <div class="row">
+        <input type="hidden" asp-for="style_item_product_id" />
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year *</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "ddl_fiscal_year_id",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.gen_fiscal_year_List)),
+                selectedvalue = Model.fiscal_year_id.ToString(),
+                cssclass = "form-control",
+                enable = false,
+                isRequired = true,
+                placeholder = "Select Fiscal Year"
+                })
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Name</label>
+
+                <input style="width:100%" type="text" asp-for="style_item_product_name" class="border-gray-200 form-control" />
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Master Category</label>
+
+                @await Component.InvokeAsync("S2MasterCategory", new
+                {
+                ddlId = "style_master_category_id",
+                selectedvalue = "",
+                cssclass = "form-control",
+                isRequired = false,
+                isReadOnly = false,
+                placeholder = "Select Master Category",
+                preloaded = JsonConvert.SerializeObject(Model.style_master_category_List),
+                model_parentid = "modalcontainer_common"
+                })
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Item Type</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_item_type_id",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_item_type_List)),
+                selectedvalue = Model.style_item_type_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Item Type"
+                })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Type</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_product_type_id",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_product_type_List)),
+                selectedvalue = Model.style_product_type_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Product Type"
+                })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Gender</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_gender_id",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_gender_List)),
+                selectedvalue = Model.style_gender_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Gender"
+                })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Origin</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_item_origin_id",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_item_origin_List)),
+                selectedvalue = Model.style_item_origin_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Origin"
+                })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Size Group</label>
+
+                @await Component.InvokeAsync("GenericDropdownList", new
+                {
+                ddlId = "style_product_size_group_id",
+                strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)Model.style_product_size_group_List)),
+                selectedvalue = Model.style_product_size_group_id.ToString(),
+                cssclass = "form-control",
+                enable = true,
+                isRequired = true,
+                placeholder = "Select Size"
+                })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-primary" id="btnSaveProduct"><i class="fa fa-save"></i>&nbsp;&nbsp;Update </button>
+            <button type="button" class="btn btn-danger" id="btnCancel"><i class="fa fa-angle-double-left"></i>&nbsp;Cancel</button>
+
+        </div>
+
+    </div>
+</div>*@

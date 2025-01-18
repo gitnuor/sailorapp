@@ -1,0 +1,289 @@
+@using EPYSLSAILORAPP.Application.DTO;
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.gen_team_department_group_DTO;
+@{
+    ViewBag.Title = "GenTeamDepartmentGroup Edit";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+
+
+    <input type="hidden" id="hdd_group_id" value="@Model.team_group_id">
+    <input type="hidden" id="group_id" value="@Model.group_id">
+
+
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">GenTeamDepartmentGroup Edit</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Department</label>
+
+                        @await Component.InvokeAsync("S2GenTeamGroup", new
+                        {
+
+                        ddlId = "team_group_id",
+                        selectedvalue= "",
+                        cssclass = "form-control S2GenTeamGroup",
+                        isRequired = true,
+                        isReadOnly = false,
+                        placeholder = "Select Department",
+                        preloaded =Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.Department)),
+                        model_parentid = "modalcontainer"
+                        })
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Team Group Name</label>
+                        <input style="width:100%" asp-for="team_group_name" type="text" class="border-#d1cccc-200 form-control" />
+                        <span asp-validation-for="team_group_name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Team Head </label>
+                        @await Component.InvokeAsync("S2TeamMemberList", new
+                        {
+                        team_group_id= "0",
+                        ddlId = "team_head_user_id",
+                        selectedvalue ="",
+                        cssclass = "form-control S2TeamMemberList",
+                        isRequired = false,
+                        isReadOnly = false,
+                        isMultiple=false,
+                        placeholder = "Select Member",
+                        preloaded =Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.TeamHead)),
+                        model_parentid = "modalcontainer"
+                        })
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Team Members </label>
+                        @await Component.InvokeAsync("S2TeamMemberList", new
+                        {
+                        team_group_id= "0",
+                        ddlId = "ddl_team_members",
+                        selectedvalue ="",
+                        cssclass = "form-control S2TeamMemberList",
+                        isRequired = false,
+                        isReadOnly = false,
+                        isMultiple=true,
+                        placeholder = "Select Member",
+                        preloaded =Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItemExtended>)ViewBag.MemberList)),
+                        model_parentid = "modalcontainer"
+                        })
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="dvTeamMemberList">
+            </div>
+
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button style="width:300px;" type="button" class="btn btn-success " id="btnUpdateGenTeamDepartmentGroup" onclick="UpdateGenTeamDepartmentGroup(this);"><i class="fa fa-file-open"></i>&nbsp;Update</button>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+
+
+</form>
+
+
+<script>
+
+    var ListSaved = [];
+
+    function LoadData() {
+
+        LoadTeamMemberByDepartmentID("team_head_user_id", false, $("#hdd_group_id").val());
+
+        LoadTeamMemberByDepartmentID("ddl_team_members", true, $("#hdd_group_id").val());
+
+    }
+
+    function LoadUserList() {
+
+        $("#dvTeamMemberList").html("");
+
+        $.each($("#ddl_team_members").select2("data"), function (key, val) {
+
+            if ($("#team_head_user_id").val() != val.id) {
+
+                if (val.new_emp_pic) {
+
+
+                    var chk = "<label>Is Active   </label><input type='checkbox' checked class='chkIsActive' />";
+
+                    var signle = `<div class='col col-md-2 userid='${val.id}' style='text-align: center;'><span>${chk}</span> ${val.new_emp_pic}</div>`;
+
+                    $("#dvTeamMemberList").append($(signle));
+                }
+                else if (ListSaved.filter(p => p.Value == val.id).length > 0) {
+
+                    var emppic = ListSaved.filter(p => p.Value == val.id)[0].str_other_value;
+
+                    var isactive = ListSaved.filter(p => p.Value == val.id)[0].str_other_value2 == "1" ? "checked" : "";
+
+                    var chk = "<label>Is Active   </label><input type='checkbox' " + isactive + " class='chkIsActive' />";
+
+                    var signle = `<div class='col col-md-2' userid='${val.id}' style='text-align: center;'> <span>${chk}</span> ${emppic}</div>`;
+
+                    $("#dvTeamMemberList").append($(signle));
+                }
+            }
+        });
+    }
+
+
+    $(function () {
+
+        $("#team_group_id").change(function () {
+
+            $("#dvTeamMemberList").html("");
+
+            LoadData();
+
+        });
+
+        $("#ddl_team_members").change(function () {
+
+            LoadUserList();
+
+        });
+
+        // $('#ddl_team_members').on('select2:selecting', function (e) {
+
+        //     try {
+
+
+        //         if ($("#team_head_user_id").val() == e.params.args.data.id) {
+
+        //             showErrorAlert("Alert", "User is the head of the Team ", "OK", function () {
+
+        //             });
+
+        //             $('#ddl_team_members option[value=' + e.params.args.data.id + ']').remove();
+
+        //             e.preventDefault();
+        //         }
+        //         else {
+
+        //             ajaxGetHandler("/GenTeamDepartmentGroup/CheckTeamMember?userid=" + e.params.args.data.id + "&groupid=" + $("#group_id").val(), null, function (data) {
+
+        //                 if (data) {
+
+        //                     e.preventDefault();
+
+        //                     var removeid = e.params.args.data.id;
+
+        //                     $('#ddl_team_members option[value=' + e.params.args.data.id + ']').remove();
+
+
+        //                     showErrorAlert("Alert", "User is Active on another group named " + data, "OK", function () {
+        //                         $('#dvTeamMemberList div[userid=' + removeid + ']').remove();
+        //                     });
+        //                 }
+
+
+        //             });
+        //         }
+
+        //     } catch (e) {
+
+        //     }
+
+        // });
+
+        LoadData();
+
+        ListSaved = JSON.parse($("#ddl_team_members").attr("selectedvalue"));
+
+        $("#ddl_team_members").removeAttr("selectedvalue");
+
+        LoadUserList();
+
+    });
+
+</script>
+
+
+
+

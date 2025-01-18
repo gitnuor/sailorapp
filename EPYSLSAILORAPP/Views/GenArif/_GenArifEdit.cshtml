@@ -1,0 +1,98 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.gen_arif_DTO;
+@{
+    ViewBag.Title = "GenArif Edit";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+</style>
+
+
+
+<form method="POST" id="frmEdit" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+
+    
+    <input type="hidden" id="gen_arif_id" value="@Model.gen_arif_id">
+
+  
+
+     <div class="card">
+         <div class="card-header">
+               <h6 class="card-title">GenArif Edit</h6> 
+         </div>
+         <!-- /.card-header -->
+         <div class="card-body">
+        
+
+                 
+
+           
+             <div class="row">
+                <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                    <button style="width:300px;" type="button" class="btn btn-primary" id="btnUpdateGenArif" onclick="UpdateGenArif(this);"><i class="fa fa-file-open"></i>&nbsp;Update</button>
+
+                </div>
+            </div>
+
+         </div>
+         <!-- /.card-body -->
+     </div>
+
+
+    
+</form>
+
+
+
+
+

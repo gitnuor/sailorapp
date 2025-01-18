@@ -1,0 +1,122 @@
+@using BDO.Core.Base;
+@using System.Security.Claims;
+@using EPYSLSAILORAPP.Domain.Security;
+@using Newtonsoft.Json;
+@using Microsoft.AspNetCore.Http
+@inject EPYSLSAILORAPP.Application.Interface.IMenuService _menuService
+@inject EPYSLSAILORAPP.Application.Interface.IOwinRolePermissionService _OwinRolePermissionService
+@inject IHttpContextAccessor Accessor
+
+@{
+    List<Menu> list = new List<Menu>();
+    SecurityCapsule sec_object = new SecurityCapsule();
+
+    var claim = Accessor.HttpContext.User.Identity as ClaimsIdentity;
+
+    List<Claim> listClaims = (List<Claim>)claim.Claims;
+
+    if (listClaims.Exists(c => c.Type == "secobject"))
+    {
+        var strsecobject = listClaims.Find(c => c.Type == "secobject").Value;
+
+        sec_object = JsonConvert.DeserializeObject<SecurityCapsule>(strsecobject);
+
+        string UserMenu = this.Accessor.HttpContext.Request.Cookies["UserMenu"];
+
+        list = _menuService.GetMenusAsync(Convert.ToInt32(sec_object.userid.Value), 0, 0).GetAwaiter().GetResult();
+
+
+    }
+    else
+    {
+        Accessor.HttpContext.Response.Redirect("/account/LogOff");
+    }
+
+}
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/Dashboard/Index" class="brand-link">
+        <img src="/images/logo.png" alt="AdminLTE Logo" class="brand-image  elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">&nbsp;</span>
+    </a>
+
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="/images/user.png" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">@Accessor.HttpContext.Session.GetString("LoginUserName")</a>
+            </div>
+        </div>
+
+        <!-- SidebarSearch Form -->
+        <div class="form-inline">
+            <div class="input-group" data-widget="sidebar-search">
+                <input id="txtmenusearch" class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-sidebar" onclick="ClearMenuSearch();">
+                        <i class="fas fa-search fa-fw"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2" id="dv_menu">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                     with font-awesome or any other icon font library -->
+                @{
+                    var i = 0;
+                    foreach (var objsinglemenu in list)
+                    {
+                        if (objsinglemenu.Childs.Count > 0)
+                        {
+                            string menuopen = "";
+
+                            if(i<=2)
+                            {
+                                menuopen = " menu-open ";
+                            }
+
+                            <li class="main_menu nav-item @menuopen">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-edit"></i>
+                                        <p>
+                                            @objsinglemenu.menu_caption
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        @foreach (var objdetail in objsinglemenu.Childs)
+                                    {
+                                            <li class="nav-item">
+                                                <a href="~/@objdetail.navigate_url" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>@objdetail.menu_caption</p>
+                                                </a>
+                                            </li>
+                                    }
+                                    </ul>
+                            </li>
+                            i++;
+                        }
+                        
+                    }
+                  
+                }
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
+@* <script>
+   
+    localStorage.setItem('DynamicMenu-@sec_object.userid.Value', '@JsonConvert.SerializeObject(list)');
+</script> *@

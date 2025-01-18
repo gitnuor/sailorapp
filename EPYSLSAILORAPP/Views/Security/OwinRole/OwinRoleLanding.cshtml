@@ -1,0 +1,429 @@
+﻿@model EPYSLSAILORAPP.Domain.DTO.owin_role_DTO
+
+@using Microsoft.Extensions.Options
+@{
+    ViewBag.Title = "Role List";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<div class="content-wrapper">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                             <h6 class="card-title">Role</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary" onclick="AddOwinRole(this);" style="margin-left: 0px;width:150px;"><i class="fa fa-save"></i>&nbsp;&nbsp;Add </button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card">
+                      
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="DTOwinRole" class="table table-striped table-bordered" cellspacing="0">
+                                <thead>
+                                    <tr>
+
+                                        <th><label class="labelNormal  "> Role</label></th>
+
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+                  
+
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width:70% !important; max-width: 70% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Role
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+
+        function LoadEvents() {
+            $('#modalcontent .checkAll').change(function (event) {
+
+                if ($(this).is(':checked')) {
+                    //var t = $(this).parent().parent().parent().parent().parent();
+                    $(this).parent().parent().parent().parent().parent().find('input[type="checkbox"]').each(function () {
+                        $(this).prop('checked', true);
+                    })
+                }
+                else {
+                    $(this).parent().parent().parent().parent().parent().find('input[type="checkbox"]').each(function () {
+                        $(this).prop('checked', false);
+                    })
+
+                }
+            });
+
+
+            $('#modalcontent .checkAllActions').change(function (event) {
+
+                if ($(this).is(':checked')) {
+                    $(".checkAll").prop('checked', true);
+                    $(".actionid").prop('checked', true);
+                }
+                else {
+                    $(".checkAll").prop('checked', false);
+                    $(".actionid").prop('checked', false);
+                }
+            });
+
+            //
+        }
+
+        function AddOwinRole() {
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+
+            ajaxGetHandler("/OwinRole/OwinRoleNew", null, function (data) {
+
+                hideLoader();
+
+                $('#modalcontent').html(data);
+                $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                $('#modalcontainer').modal("show");
+
+
+                LoadEvents();
+
+            });
+
+
+        }
+
+        function EditOwinRole(btn) {
+
+            var owin_role_id = $(btn).attr("owin_role_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+
+            try {
+                ajaxGetHandler("/OwinRole/OwinRoleEdit?owin_role_id=" + owin_role_id, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+
+                    LoadEvents();
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function ViewOwinRole(btn) {
+
+            var owin_role_id = $(btn).attr("owin_role_id");
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            try {
+                ajaxGetHandler("/OwinRole/OwinRoleView?owin_role_id=" + owin_role_id, null, function (data) {
+
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+        }
+
+        function SaveOwinRole(btn) {
+
+            var actionlist = [];
+
+            $.each($("#modalcontent .actionid"), function (key, val) {
+
+                var obj_action = {
+                    role_id: null,
+                    menu_action_id: $(val).val(),
+                    menu_id: $(val).attr("menu_id"),
+                    is_permitted: $(val).prop("checked"),
+                }
+
+                actionlist.push(obj_action);
+            });
+
+            var obj_OwinRole = {
+                owin_role_id: null,
+                role_name: $('#modalcontent #role_name').val(),
+                Role_Permission_List: actionlist
+            }
+
+
+            if (_cusFormValidate("frmAdd")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/OwinRole/SaveOwinRole", obj_OwinRole, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadOwinRoleData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function UpdateOwinRole(btn) {
+            var actionlist = [];
+
+            $.each($("#modalcontent .actionid"), function (key, val) {
+
+                var obj_action = {
+                    menu_action_id: $(val).val(),
+                    role_id: check_value($('#modalcontent #owin_role_id').val()),
+                    menu_id: $(val).attr("menu_id"),
+                    is_permitted: $(val).prop("checked"),
+                }
+
+                actionlist.push(obj_action);
+            });
+
+            var obj_OwinRole = {
+
+                owin_role_id: check_value($('#modalcontent #owin_role_id').val()),
+                role_name: $('#modalcontent #role_name').val(),
+                Role_Permission_List: actionlist
+            }
+
+            if (_cusFormValidate("frmAdd")) {
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+
+                ajaxPostObjectHandler("/OwinRole/UpdateOwinRole", obj_OwinRole, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadOwinRoleData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            }
+        }
+
+        function DeleteOwinRole(owin_role_id) {
+
+            showConfirmationAlert("Alert", "Do You Want to Delete??", "Yes", function () {
+
+                var obj_OwinRole = {
+                    strMasterID: owin_role_id
+                }
+
+                setTimeout(function () {
+                    showLoader("Saving..........");
+                }, 0);
+
+                ajaxPostObjectHandler("/OwinRole/DeleteOwinRole", obj_OwinRole, function (response) {
+
+                    hideLoader();
+
+                    if (response.status_Code == "200") {
+
+                        LoadOwinRoleData();
+
+
+
+                        showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                            closePopup();
+
+                        });
+                    }
+                    else {
+                        showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                        });
+                    }
+                }, true, function () { hideLoader(); }, true);
+
+            });
+
+
+
+        }
+
+        $(function () {
+
+            LoadOwinRoleData();
+
+        });
+
+        function LoadOwinRoleData() {
+
+            var dt_search = {
+
+                filterId: '#DTOwinRole_filter input[type=search]',
+                tableId: "#DTOwinRole"
+
+            };
+
+            var dt = $(dt_search.tableId).DataTable({
+
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search Role',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/OwinRole/GetOwinRoleData" }),
+
+                columnDefs: [
+                    { targets: 0, "visible": true, "sortable": true },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" }
+                ],
+                createdRow: function (row, data, dataIndex) {//
+
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).attr("owin_role_id", data.owin_role_id);
+
+                },
+                "columns": [
+
+                    { "data": "role_name", "name": "role_name", "autoWidth": true },
+                    { "data": "datatablebuttonscode", "name": "datatablebuttonscode", "autoWidth": true },
+
+                ]
+            });
+        }
+
+    </script>
+}
+
+
+
+

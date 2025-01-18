@@ -1,0 +1,32 @@
+using EPYSLSAILORAPP.Application.DTO;
+using EPYSLSAILORAPP.Application.DTO.BusinessPlanning;
+using EPYSLSAILORAPP.Domain.Entity.BusinessPlanning;
+using EPYSLSAILORAPP.Domain.Statics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using EPYSLSAILORAPP.Domain.Entity;
+using EPYSLSAILORAPP.Domain.DTO;
+using EPYSLSAILORAPP.Domain.RPC;
+
+namespace EPYSLSAILORAPP.Application.Interface
+{
+    public interface I{TableName}Service
+    {
+       Task<bool> SaveAsync({EntityName}_entity entity);
+
+		Task<bool> UpdateAsync({EntityName}_entity entity);
+
+		Task<List<{EntityName}_entity>> GetAllAsync();
+
+        Task<List<{EntityName}_entity>> GetAllPagedDataAsync(DtParameters request);
+
+		Task<{EntityName}_entity> GetSingleAsync(Int64 Id);
+
+        Task<bool> DeleteAsync(Int64? Id);
+
+        {ExtendedFunctions}
+    }
+}

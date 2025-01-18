@@ -1,0 +1,140 @@
+﻿@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.RPC.va_plan_get_designer_assign_details_DTO_master;
+@{
+    ViewBag.Title = "Range Plan";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    #DTTranVADesignerDistribution th {
+        background-color: #5b93d7;
+        color: white;
+        vertical-align: middle;
+    }
+
+    .custom-class {
+        z-index: 1029
+    }
+
+</style>
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+@{
+    var SLIndex = 1;
+}
+<div class="box">
+    <div class="row">
+        <table style="font-size:12px;" id="DTTranVADesignerDistribution" class=" table dataTable table-striped table-bordered" cellspacing="0">
+            <thead>
+
+                <tr>
+
+                    <th colspan="4" style="background-color:white;"></th>
+
+
+
+                    @foreach (var single_designer in Model.List_Unique_Designer)
+                    {
+                        <th colspan="2" style="text-align:center;"><label class="labelNormal ">@single_designer.team_member_marketing_name</label></th>
+
+                    }
+
+                </tr>
+                <tr>
+
+                    <th style="text-align:center;"><label class="labelNormal">SL</label></th>
+                    <th style="width:200px;"><label class="labelNormal">Gender-Master Category-Product</label></th>
+                    <th style="text-align:right;"><label class="labelNormal ">RP Qty</label></th>
+
+                    <th style="text-align:right;"><label class="labelNormal ">No. of Style</label></th>
+
+
+
+                    @foreach (var single_designer in Model.List_Unique_Designer)
+                    {
+                        <th style="text-align:right;"><label class="labelNormal ">TP Qty</label></th>
+                        <th style="text-align:right;"><label class="labelNormal ">Ord Qty</label></th>
+                    }
+
+                </tr>
+            </thead>
+
+            @foreach (var single_prod in Model.List_Products)
+            {
+                <tr>
+                    <td style="text-align:center;">@SLIndex</td>
+                    <td style="font-size:12px;">@single_prod.style_gender_name-@single_prod.master_category_name-@single_prod.style_item_product_name</td>
+                    <td style="text-align:center;">@single_prod.range_plan_quantity</td>
+
+                    <td style="text-align:center;">@single_prod.no_of_style</td>
+
+                    @foreach (var single_designer in Model.List_Unique_Designer)
+                    {//
+                        var singledesignerData = Model.List_Designer_Assign.
+                        Where(p => p.style_item_product_id == single_prod.style_item_product_id
+                        && p.designer_member_id == single_designer.designer_member_id).ToList();
+
+                        var data = singledesignerData.Select(p => new
+                        {
+                            p.designer_member_id,
+                            p.team_member_marketing_name,
+                            p.no_of_style,
+                            p.total_style_quantity,
+
+                        })
+                        .GroupBy(q => new
+                        {
+                            q.designer_member_id,
+                            q.team_member_marketing_name,
+                            q.no_of_style,
+                            q.total_style_quantity,
+                        })
+                        .Select(r => new EPYSLSAILORAPP.Domain.RPC.rpc_va_plan_get_designer_assign_details_det_DTO
+                    {
+                        designer_member_id = r.Key.designer_member_id,
+                        team_member_marketing_name = r.Key.team_member_marketing_name,
+                        sum_no_of_style = r.Sum(x => Convert.ToInt64(r.Key.no_of_style)),
+                        sum_total_style_quantity = r.Sum(x => Convert.ToInt64(r.Key.total_style_quantity)),
+
+                    }).ToList().FirstOrDefault();
+
+                        if (data != null)
+                        {
+
+                            <td style="text-align:right;"><label class="labelNormal ">@data.sum_no_of_style</label></td>
+                            <td style="text-align:right;"> <label class="labelNormal ">@data.sum_total_style_quantity</label></td>
+                        }
+                        else
+                        {
+                            <td style="text-align:right;"><label class="labelNormal ">0</label></td>
+                            <td style="text-align:right;"><label class="labelNormal ">0</label></td>
+                        }
+                    }
+                </tr>
+                SLIndex++;
+            }
+            <tr>
+
+                <th colspan="2">Total</th>
+                <th style="text-align:center;">@Model.List_Products.Sum(p=>p.range_plan_quantity)</th>
+
+                <th style="text-align:center;">@Model.List_Products.Sum(p=>p.no_of_style)</th>
+
+                @foreach (var single_designer in Model.List_Unique_Designer)
+                {
+                    var singledesignerData = Model.List_Designer_Assign.
+                    Where(p => p.designer_member_id == single_designer.designer_member_id).ToList();
+
+                    <th style="text-align:right;"><label class="labelNormal ">@singledesignerData.Sum(p=>p.no_of_style).ToString()</label></th>
+                    <th style="text-align:right;"><label class="labelNormal ">@singledesignerData.Sum(p=>p.total_style_quantity).ToString()</label></th>
+
+                }
+
+            </tr>
+        </table>
+    </div>
+</div>

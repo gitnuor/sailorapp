@@ -1,0 +1,1383 @@
+﻿@using EPYSLSAILORAPP.Domain;
+@model EPYSLSAILORAPP.Domain.DTO.tran_va_plan_DTO;
+@{
+    ViewBag.Title = "Tech Pack";
+    Layout = "~/Views/Shared/_Layout_Dashboard.cshtml";
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .text-sm, select {
+        font-size: 11px !important;
+        line-height: 0.5rem;
+    }
+
+    .carousel-caption {
+        color: black;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .spanClose {
+        position: relative;
+        /* display: unset; */
+        /*  left: -36%!important;
+                top: -6% !important; */
+    }
+
+    .carousel-control-next, .carousel-control-prev {
+        position: absolute;
+        /* top: 0; */
+        /* bottom: 0; */
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 6%;
+        padding: 0;
+        color: #fff;
+        text-align: center;
+        background: 0 0;
+        border: 0;
+        /* opacity: .5; */
+        transition: opacity .15s ease;
+        vertical-align: baseline;
+        margin-left: 5%;
+        width: 200px;
+        height: 30px;
+        color: white;
+    }
+
+</style>
+
+<div class="content-wrapper">
+    <input id="hd_encoded_fiscal_year" type="hidden" value="@ViewBag.encoded_fiscal_year" />
+    <input id="hd_tran_va_plan_event_id" type="hidden" value="@ViewBag.tran_va_plan_event_id" />
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Tech Pack</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="margin-top: 10px;background-color: aliceblue;">
+                            <div class="row">
+
+                                <div class="col-md-2" style="width:20%">
+                                    <div class="form-group">
+                                        <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Fiscal Year *</label>
+
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                        {
+                                        ddlId = "fiscal_year_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.fiscal_year_list)),
+                                        selectedvalue = ViewBag.fiscal_year_id,
+                                        cssclass = "form-control",
+                                        enable = false,
+                                        isRequired = true,
+                                        placeholder = "Select Fiscal Year"
+                                        })
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%">
+
+                                    <label class="labelNormal required" style="margin-bottom: 10px!important;font-weight:bold;">Season Events *</label>
+
+                                    @await Component.InvokeAsync("GenericDropdownList", new
+                                    {
+                                    ddlId = "event_id",
+                                    strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.event_list)),
+                                    selectedvalue = ViewBag.event_id,
+                                    cssclass = "form-control",
+                                    enable = false,
+                                    isRequired = true,
+                                    placeholder = "Select Fiscal Year"
+                                    })
+
+                                </div>
+                                <div class="col-md-2" style="width:20%;display:none;">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Filter Option</label>
+
+                                        <select class="form-control" data-val="true" id="ddlFilterOption" name="ddlFilterOption" placeholder="Select Fiscal Year">
+                                            <option value="">- All Data -</option>
+                                            <option value="1">Not Added</option>
+                                            <option value="2">Already Added</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%">
+                                    <div class="form-group">
+                                        <button style="margin-top:30px;" type="button" class="btn btn-primary" id="btnLoadData"><i class="fa fa-plus"></i>&nbsp;Load Data</button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2" style="width:20%">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Item Type</label>
+
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                        {
+                                        ddlId = "style_item_type_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.item_type_list)),
+                                        selectedvalue = "",
+                                        cssclass = "form-control",
+                                        enable = true,
+                                        isRequired = true,
+                                        placeholder = "All Item Type"
+                                        })
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Product Type</label>
+
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                        {
+                                        ddlId = "style_product_type_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.product_type_list)),
+                                        selectedvalue = "",
+                                        cssclass = "form-control",
+                                        enable = true,
+                                        isRequired = true,
+                                        placeholder = "All Product Type"
+                                        })
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Gender</label>
+
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                        {
+                                        ddlId = "style_gender_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.gender_list)),
+                                        selectedvalue = "",
+                                        cssclass = "form-control",
+                                        enable = true,
+                                        isRequired = true,
+                                        placeholder = "All Gender"
+                                        })
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Origin</label>
+
+                                        @await Component.InvokeAsync("GenericDropdownList", new
+                                        {
+                                        ddlId = "style_item_origin_id",
+                                        strobjlist = Newtonsoft.Json.JsonConvert.SerializeObject(((List<SelectListItem>)ViewBag.origin_list)),
+                                        selectedvalue = "",
+                                        cssclass = "form-control",
+                                        enable = true,
+                                        isRequired = true,
+                                        placeholder = "All Origin"
+                                        })
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="width:20%">
+                                    <div class="form-group">
+                                        <label class="labelNormal " style="margin-bottom: 10px!important;font-weight:bold;">Master Category</label>
+
+                                        @await Component.InvokeAsync("S2MasterCategory", new
+                                        {
+                                        ddlId = "style_master_category_id",
+                                        selectedvalue = "",
+                                        cssclass = "form-control",
+                                        isRequired = false,
+                                        isReadOnly = false,
+                                        placeholder = "All Master Category"
+                                        })
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                   
+                    <div class="row">
+                        <div class="col-md-12" id="tab_bar_style">
+                            <ul id="tab_techpacklanding" class="nav nav-tabs">
+                                <li class="active" tab_index="1">
+                                    <a href="#det1" style="text-decoration: unset;" class="active tab_link  " data-toggle="tab">Pending List</a>
+                                </li>
+
+                                <li class="" tab_index="2">
+                                    <a href="#det2" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Approved List</a>
+                                </li>
+                                <li class="" tab_index="3">
+                                    <a href="#det3" style="text-decoration: unset;" class=" tab_link  " data-toggle="tab">Rejected List</a>
+                                </li>
+                              
+
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="det1" tabpane_index="1">
+                                    <div class="card">
+
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <table style="font-size:10px;" id="DTTranTechPack" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead style="text-align:center;">
+                                                    <tr>
+
+                                                        <th><label class="labelNormal">SL</label></th>
+                                                        <th><label class="labelNormal">Techpack No.</label></th>
+                                                        <th><label class="labelNormal">Techpack Date</label></th>
+                                                        <th><label class="labelNormal">Sample Order No.</label></th>
+                                                        <th style="width:250px;"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:150px;"><label class="labelNormal  ">Product</label></th>
+                                                        <th><label class="labelNormal">Delivery Unit</label></th>
+                                                        <th><label class="labelNormal">Style Code</label></th>
+                                                        <th><label class="labelNormal">Style Qty</label></th>
+
+                                                        <th><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                              
+                                <div class="tab-pane " id="det2" tabpane_index="4">
+                                    <div class="card">
+
+                                        <div class="card-body">
+                                            <table style="font-size:10px;" id="DTTranTechPackApproved" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead style="text-align:center">
+                                                    <tr>
+
+                                                        <th><label class="labelNormal">SL</label></th>
+                                                        <th><label class="labelNormal">Techpack No.</label></th>
+                                                        <th><label class="labelNormal">Techpack Date</label></th>
+                                                        <th><label class="labelNormal">Sample Order No.</label></th>
+                                                        <th style="width:250px;"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:150px;"><label class="labelNormal  ">Product</label></th>
+                                                        <th><label class="labelNormal">Delivery Unit</label></th>
+                                                        <th><label class="labelNormal">Style Code</label></th>
+                                                        <th><label class="labelNormal">Style Qty</label></th>
+
+                                                        <th><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane " id="det3" tabpane_index="5">
+                                    <div class="card">
+
+                                        <div class="card-body">
+
+                                            <table style="font-size:10px;" id="DTTranTechPackRejected" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                                                <thead style="text-align:center">
+                                                    <tr>
+
+                                                        <th><label class="labelNormal">SL</label></th>
+                                                        <th><label class="labelNormal">Techpack No.</label></th>
+                                                        <th><label class="labelNormal">Techpack Date</label></th>
+                                                        <th><label class="labelNormal">Sample Order No.</label></th>
+                                                        <th style="width:250px;"><label class="labelNormal">Product Details</label></th>
+                                                        <th style="width:150px;"><label class="labelNormal  ">Product</label></th>
+                                                        <th><label class="labelNormal">Delivery Unit</label></th>
+                                                        <th><label class="labelNormal">Style Code</label></th>
+                                                        <th><label class="labelNormal">Style Qty</label></th>
+
+                                                        <th><label class="labelNormal "> Action</label></th>
+
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+
+                              
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</div>
+
+
+
+<div id="modalcontainer" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 90% !important; max-width: 90% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding:0px;background-color: #318db6;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            New Tech Pack
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+        var dt_source;
+        var dt_source_draft;
+        var dt_source_send_for_approval;
+        var dt_source_approved;
+        var dt_source_reject;
+        var obj_fabric_List = [];
+        var obj_subcontract_List = [];
+        var obj_embellish_List = [];
+
+        var obj_fabric_List_removed = [];
+        var obj_subcontract_List_removed = [];
+        var obj_embellish_List_removed = [];
+
+        var tran_va_plan_id = 0;
+        var tran_va_plan_event_id = 0;
+
+        var listAttachments = [];
+        var IsNotDesigner = '@ViewBag.IsNotDesigner';
+
+
+        function jsdatatableloaded() {
+
+            // $("#txtTotalBusinessPlan").val(dt_source.rows().data()[0].bp_yearly_gross_sales);
+            // $("#txtTotalEventPlan").val(dt_source.rows().data()[0].event_gross_sales);
+            // $("#txtTotalRangeQuantity").val(dt_source.rows().data()[0].total_rangeplan_quantity);
+
+            // $("#txtTotalAddedQntity").val(dt_source.rows().data()[0].totaladded);
+            // $("#txtTotalNotAddedQntity").val(dt_source.rows().data()[0].totalnotadded);
+
+        }
+
+        function ColorSizeQuantityChanged(elem) {
+
+            var current_element = $(elem);
+
+            var total = getTotalByClassInsideTableObject($(elem).closest(".dtcolorcodestyle"), "txtColorSizeQuantity");
+
+            $("#style_quantity").val(total);
+        }
+
+        function btnAddColorClick(btn) {
+
+            var dtable = $("#dtcolorcodestyle");
+
+            var colorcode = "Color-";
+
+            var current_row_count = $(dtable).find("tbody tr").length;
+
+            var row_html = $(dtable).find("tbody tr:eq(0)").clone().removeAttr("id");
+
+            $(row_html).find("input").val("0");
+            $(row_html).find("input").attr("tran_va_plan_detl_style_color_id", "0");
+            $(row_html).find("input").attr("tran_va_plan_detl_style_color_size_id", "0");
+
+            $(dtable).find("tbody").append(row_html);
+
+            var rowindex = 1;
+
+            $(dtable).find("tbody tr").each(function (index, element) {
+                $(element).find("td:eq(0)").text(rowindex);
+                //$(element).find(".txtColorCode").val(colorcode + rowindex);
+                rowindex++;
+            });
+
+        }
+        function uploadFile(btn) {
+            $("#modalcontent #attachments").attr("imagetype", $(btn).attr("imagetype"));
+            $("#modalcontent #attachments").trigger("click");
+        };
+        function LoadColorFromBox(txt) {
+            $(txt).parent().find(".txtColorCode").val($(txt).val());
+        }
+
+        function AddSubProcessHtml(btn) {
+            var embellid = $(btn).attr("embellishment_id");
+
+            var temphtml = $(btn).parent().parent().parent().find(".subprocess[embellishment_id=" + embellid + "]:eq(0)").clone();
+
+            $(temphtml).css("display", "table-row");
+            // $(temphtml).removeAttr("embellishment_id");
+            $(temphtml).removeClass("subprocess");
+            $(temphtml).addClass("addedsubprocess");
+            if ($(btn).parent().parent().parent().find(".addedsubprocess[embellishment_id=" + embellid + "]").length == 0) {
+                $(btn).parent().parent().after(temphtml);
+            }
+            else {
+                $(btn).parent().parent().parent().find(".addedsubprocess[embellishment_id=" + embellid + "]").last().after(temphtml);
+            }
+        }
+
+        function RemoveSubProcess(btn) {
+            $(btn).closest(".addedsubprocess").remove();
+        }
+
+        function EditTechPack(btn) {
+
+            var rowindex = $(btn).closest(".master_table_row").attr("row_index");
+
+            var dt_temp;
+
+            var tableid = $(btn).closest(".dataTable").attr("id");
+
+            if (tableid == "DTTranTechPackDraft") {
+                dt_tmp = dt_source_draft;
+            }
+            else if (tableid == "DTTranTechPack") { //pending
+                dt_tmp = dt_source;
+            }
+            else if (tableid == "DTTranTechPackProposed") {
+                dt_tmp = dt_source_send_for_approval;
+            }
+            else if (tableid == "DTTranTechPackApproved") {
+                dt_tmp = dt_source_approved;
+            }
+            else if (tableid == "DTTranTechPackRejected") {
+                dt_tmp = dt_source_reject;
+            }
+          
+
+            var objStyle = {
+                row_index: rowindex,
+                tran_techpack_id: dt_tmp.rows().data()[rowindex].tran_techpack_id,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                tran_designer_review_id: dt_tmp.rows().data()[rowindex].tran_designer_review_id,
+                style_code: dt_tmp.rows().data()[rowindex].style_code,
+                tran_va_plan_detl_style_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_item_product_id: dt_tmp.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                style_product: dt_tmp.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_tmp.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_tmp.rows().data()[rowindex].style_product_size_group_id,
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                range_plan_detail_id: dt_tmp.rows().data()[rowindex].range_plan_detail_id,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                range_plan_id: dt_tmp.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_tmp.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_tmp.rows().data()[rowindex].style_master_category_id,
+
+                delivery_date: new Date(dt_tmp.rows().data()[rowindex].delivery_date),
+                delivery_unit_id: dt_tmp.rows().data()[rowindex].delivery_unit_id,
+
+                tran_va_plan_id: dt_tmp.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_tmp.rows().data()[rowindex].tran_va_plan_event_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            $("#modalcontainer").addClass("custom-class");
+
+            try {
+                ajaxGetHandler("/TechPack/TechPackEdit?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    $("#DTTranSampleOrderSize input,#DTTranSampleOrderSize select").attr("disabled", "disabled");
+
+                    $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+
+                    $("#modalcontent #attachments").change(function () {
+
+                        AttachmentClickEvent(this);
+
+                    });
+
+                    BindTabEvents("tab_techpack");
+                    $('.flexslider').flexslider({
+                        animation: "slide"
+                    });
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function LoadTechPackApprove(btn) {
+
+            var rowindex = $(btn).closest(".master_table_row").attr("row_index");
+
+            var dt_temp;
+
+            var tableid = $(btn).closest(".dataTable").attr("id");
+
+            if (tableid == "DTTranTechPack") { //pending
+                dt_tmp = dt_source;
+            }
+           
+            else if (tableid == "DTTranTechPackApproved") {
+                dt_tmp = dt_source_approved;
+            }
+            else if (tableid == "DTTranTechPackRejected") {
+                dt_tmp = dt_source_reject;
+            }
+
+
+            var objStyle = {
+                row_index: rowindex,
+                tran_techpack_id: dt_tmp.rows().data()[rowindex].tran_techpack_id,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                tran_designer_review_id: dt_tmp.rows().data()[rowindex].tran_designer_review_id,
+                style_code: dt_tmp.rows().data()[rowindex].style_code,
+                tran_va_plan_detl_style_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_item_product_id: dt_tmp.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                style_product: dt_tmp.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_tmp.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_tmp.rows().data()[rowindex].style_product_size_group_id,
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                range_plan_detail_id: dt_tmp.rows().data()[rowindex].range_plan_detail_id,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                range_plan_id: dt_tmp.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_tmp.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_tmp.rows().data()[rowindex].style_master_category_id,
+
+                delivery_date: new Date(dt_tmp.rows().data()[rowindex].delivery_date),
+                delivery_unit_id: dt_tmp.rows().data()[rowindex].delivery_unit_id,
+
+                tran_va_plan_id: dt_tmp.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_tmp.rows().data()[rowindex].tran_va_plan_event_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            $("#modalcontainer").addClass("custom-class");
+
+            try {
+                ajaxGetHandler("/TechPack/TechPackApprove?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    $("#DTTranSampleOrderSize input,#DTTranSampleOrderSize select").attr("disabled", "disabled");
+
+                   
+
+                    $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+
+                    $("#modalcontent #attachments").change(function () {
+
+                        AttachmentClickEvent(this);
+
+                    });
+
+                    BindTabEvents("tab_techpack");
+
+                    MakePopupReadOnly("modalcontent", "btnModalClose");
+
+                    $("#txtapprove_remarks,.ApproveRejectTechPack").removeAttr("disabled");
+
+                    $('.flexslider').flexslider({
+                        animation: "slide"
+                    });
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function ViewTechPack(btn) {
+
+            var rowindex = $(btn).closest(".master_table_row").attr("row_index");
+
+            var dt_temp;
+
+            var tableid = $(btn).closest(".dataTable").attr("id");
+
+            if (tableid == "DTTranTechPackDraft") {
+                dt_tmp = dt_source_draft;
+            }
+            else if (tableid == "DTTranTechPack") { //pending
+                dt_tmp = dt_source;
+            }
+            else if (tableid == "DTTranTechPackProposed") {
+                dt_tmp = dt_source_send_for_approval;
+            }
+            else if (tableid == "DTTranTechPackApproved") {
+                dt_tmp = dt_source_approved;
+            }
+            else if (tableid == "DTTranTechPackRejected") {
+                dt_tmp = dt_source_reject;
+            }
+
+
+            var objStyle = {
+                row_index: rowindex,
+                tran_techpack_id: dt_tmp.rows().data()[rowindex].tran_techpack_id,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                tran_designer_review_id: dt_tmp.rows().data()[rowindex].tran_designer_review_id,
+                style_code: dt_tmp.rows().data()[rowindex].style_code,
+                tran_va_plan_detl_style_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_item_product_id: dt_tmp.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                style_product: dt_tmp.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_tmp.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_tmp.rows().data()[rowindex].style_product_size_group_id,
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                range_plan_detail_id: dt_tmp.rows().data()[rowindex].range_plan_detail_id,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                range_plan_id: dt_tmp.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_tmp.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_tmp.rows().data()[rowindex].style_master_category_id,
+
+                delivery_date: new Date(dt_tmp.rows().data()[rowindex].delivery_date),
+                delivery_unit_id: dt_tmp.rows().data()[rowindex].delivery_unit_id,
+
+                tran_va_plan_id: dt_tmp.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_tmp.rows().data()[rowindex].tran_va_plan_event_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            $("#modalcontainer").addClass("custom-class");
+
+            try {
+                ajaxGetHandler("/TechPack/TechPackEdit?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    $("#DTTranSampleOrderSize input,#DTTranSampleOrderSize select").attr("disabled", "disabled");
+                  
+                    $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+
+                    $("#modalcontent #attachments").change(function () {
+
+                        AttachmentClickEvent(this);
+
+                    });
+
+                    BindTabEvents("tab_techpack");
+
+                    MakePopupReadOnly("modalcontent", "btnModalClose");
+
+                    $(".btnSaveNext").removeAttr("disabled");
+
+                    $(".allbtn").remove();
+
+                    $('.flexslider').flexslider({
+                        animation: "slide"
+                    });
+
+                    $("#merchandiser_id").prop("disabled", true);
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+        
+        function AttachmentClickEvent(elem) {
+            var files = elem.files;
+
+            var imagetype = $(elem).attr("imagetype");
+
+            var size = $(elem)[0].files.length;
+
+            formData = new FormData();
+
+            for (var i = 0; i < size; i++) {
+
+                var reader = new FileReader();
+
+                reader.onload = (function (singlefile) {
+
+                    var filename = singlefile.name;
+                    var filetype = singlefile.name.indexOf(".rar") > -1 ? ".rar" : singlefile.type;
+
+                    return function (e) {
+
+                        var base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
+
+                        var indx = listAttachments.length; //getMaxFileIndex();//$("#frames .spanClose").length;
+
+                        var attachfile = {
+                            filename: filename,
+                            filetype: filetype,
+                            extension: filetype.substring(filetype.lastIndexOf('.') + 1),
+                            base64string: base64String,
+                            server_filename: "",
+                            current_state: 1,
+                            fileindex: indx,
+                            imagetype: imagetype
+                        };
+
+                        listAttachments.push(attachfile);
+
+                        AddImageHtml(attachfile);
+
+                        base64String = "";
+
+                    }
+
+
+                })($(elem)[0].files[i]);
+
+                reader.readAsDataURL($(elem)[0].files[i]);
+
+
+            }
+            console.log(listAttachments);
+            return;
+        }
+
+        function AddTechPack(btn) {
+
+            var rowindex = $(btn).closest(".master_table_row").attr("row_index");
+
+            var dt_temp;
+
+            var tableid = $(btn).closest(".dataTable").attr("id");
+
+            if (tableid == "DTTranTechPackDraft") {
+                dt_tmp = dt_source_draft;
+            }
+            else if (tableid == "DTTranTechPack") { //pending
+                dt_tmp = dt_source;
+            }
+            else if (tableid == "DTTranTechPackProposed") {
+                dt_tmp = dt_source_send_for_approval;
+            }
+            else if (tableid == "DTTranTechPackApproved") {
+                dt_tmp = dt_source_approved;
+            }
+            else if (tableid == "DTTranTechPackRejected") {
+                dt_tmp = dt_source_reject;
+            }
+
+
+            var objStyle = {
+                row_index: rowindex,
+
+                tran_sample_order_id: $(btn).attr("tran_sample_order_id"),
+                tran_designer_review_id: dt_tmp.rows().data()[rowindex].tran_designer_review_id,
+                style_code: dt_tmp.rows().data()[rowindex].style_code,
+                tran_va_plan_detl_style_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_style_id,
+                style_item_product_id: dt_tmp.rows().data()[rowindex].style_item_product_id,
+                //range_plan_qnty: $(btn).parent().parent().find("td:eq(3)").text(),
+                style_product: dt_tmp.rows().data()[rowindex].style_item_product_name,
+                style_product_detail: dt_tmp.rows().data()[rowindex].product_details,
+                style_product_size_group_id: dt_tmp.rows().data()[rowindex].style_product_size_group_id,
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                range_plan_detail_id: dt_tmp.rows().data()[rowindex].range_plan_detail_id,
+                tran_pre_costing_id: dt_tmp.rows().data()[rowindex].tran_pre_costing_id,
+                range_plan_id: dt_tmp.rows().data()[rowindex].range_plan_id,
+                tran_range_plan_event_id: dt_tmp.rows().data()[rowindex].tran_range_plan_event_id,
+                style_master_category_id: dt_tmp.rows().data()[rowindex].style_master_category_id,
+
+                delivery_date: new Date(dt_tmp.rows().data()[rowindex].delivery_date),
+                delivery_unit_id: dt_tmp.rows().data()[rowindex].delivery_unit_id,
+
+                tran_va_plan_id: dt_tmp.rows().data()[rowindex].tran_va_plan_id,
+                tran_va_plan_detl_id: dt_tmp.rows().data()[rowindex].tran_va_plan_detl_id,
+                tran_va_plan_event_id: dt_tmp.rows().data()[rowindex].tran_va_plan_event_id,
+                style_quantity: $(btn).attr("style_quantity")
+
+            }
+
+            setTimeout(function () {
+                showLoader("Loading..........");
+            }, 0);
+
+            $("#modalcontainer").addClass("custom-class");
+
+            try {
+                ajaxGetHandler("/TechPack/TechPackAdd?input=" + JSON.stringify(objStyle), null, function (data) {
+                    hideLoader();
+
+                    $('#modalcontent').html(data);
+                    $('#modalcontainer').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalcontainer').modal("show");
+
+                    $("#DTTranSampleOrderSize input,#DTTranSampleOrderSize select").attr("disabled", "disabled");
+
+                   
+
+                    $("#modalcontent .S2GenSupplier").val(null).trigger('change.select2');
+
+                    $("#modalcontent #attachments").change(function () {
+
+                        AttachmentClickEvent(this);
+                    });
+
+                    BindTabEvents("tab_techpack");
+                });
+
+
+            } catch (e) {
+                hideLoader();
+            }
+
+        }
+
+        function AddImageHtml(file) {
+            var fileextension = getFileExtension(file.filename);
+            //var fileicon = getFileIcon(fileextension, index);
+            var base64string = 'data: ' + file.filetype + '; base64, ' + file.base64string;
+            var strhtml = '<div index="' + file.fileindex + '"  class="col-lg-6 dvSingleAttachment" >' +
+
+                '<img style="width: 180px; height: 200px;" src="' + base64string + '" /> ' +
+                '<a  mailattachmentid="-1" index="' + file.fileindex + '" class=" attachmentLink' + file.fileindex + '" onclick="removeAtachments(this,' + file.fileindex + ')" > <span class="spanClose">X</span></a>' +
+                '<span style="color:blue;text-decoration:underline; display:inline-block;  white-space:nowrap;text-overflow: ellipsis;overflow: hidden;display: inherit;height: 45px;">' + file.filename + '</span></div>';
+            //$("#modalcontent-common #frames_" + file.imagetype).append(strhtml);
+            $("#modalcontent #techpackframes_" + file.imagetype).append(strhtml);
+
+        }
+
+        function LoadTechPackData() {
+
+            LoadTechPackDataPending();
+            LoadTechPackDataApproved();
+            LoadTechPackDataRejected();
+        }
+
+        function LoadTechPackDataRejected() {
+            var dt_search = {
+
+                filterId: '#DTTranTechPackRejected_filter input[type=search]',
+                tableId: "#DTTranTechPackRejected"
+
+            };
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                filter_option: @Convert.ToInt64(Enum_Approval_Status.Rejected),
+
+                   style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+
+                                                    };
+
+            dt_source_reject = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Techpack',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+               
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/TechPack/GetTechPackData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                scrollCollapse: true,
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 8, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 9, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).addClass("master_table_row");
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "10px");
+                    $(row).find("td:eq(2)").css("font-size", "10px");
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "strtechpack_date", "name": "strtechpack_date", "autoWidth": true },
+
+                    { "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+                    { "data": "sample_photos_html", "name": "sample_photos_html", "autoWidth": true },
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+
+                    { "data": "btnView", "name": "btnView", "autoWidth": true },
+
+                ],
+               
+
+            });
+
+        }
+
+        function LoadTechPackDataApproved() {
+            var dt_search = {
+
+                filterId: '#DTTranTechPackApproved_filter input[type=search]',
+                tableId: "#DTTranTechPackApproved"
+
+            };
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                filter_option: @Convert.ToInt64(Enum_Approval_Status.Approved),
+
+                   style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+
+                                            };
+
+            dt_source_approved = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Techpack',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/TechPack/GetTechPackData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                scrollCollapse: true,
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 8, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 9, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).addClass("master_table_row");
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "10px");
+                    $(row).find("td:eq(2)").css("font-size", "10px");
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "strtechpack_date", "name": "strtechpack_date", "autoWidth": true },
+
+                    { "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+                    { "data": "sample_photos_html", "name": "sample_photos_html", "autoWidth": true },
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+
+                    { "data": "btnView", "name": "btnView", "autoWidth": true },
+
+                ],
+              
+            });
+
+        }
+
+        function LoadTechPackDataPending() {
+            var dt_search = {
+
+                filterId: '#DTTranTechPack_filter input[type=search]',
+                tableId: "#DTTranTechPack"
+
+            };
+            var input = {
+                fiscal_year_id: $("#fiscal_year_id").val(),
+                event_id: $("#event_id").val(),
+                range_plan_id: $("#hd_range_plan_id").val(),
+                tran_va_plan_event_id: $("#hd_tran_va_plan_event_id").val(),
+                filter_option: @Convert.ToInt64(Enum_Approval_Status.SendForApproval),
+
+                   style_gender_id: $("#style_gender_id").val(),
+                style_item_origin_id: $("#style_item_origin_id").val(),
+                style_item_type_id: $("#style_item_type_id").val(),
+                style_product_type_id: $("#style_product_type_id").val(),
+                style_master_category_id: $("#style_master_category_id").val(),
+
+                    };
+
+            dt_source = $(dt_search.tableId).DataTable({
+                layout: {
+
+                    top2End: {
+                        search: {
+                            placeholder: 'Search By Techpack',
+
+                        },
+
+                        buttons: [
+                            {
+                                text: 'Clear Search',
+                                className: 'btn btn-custom',
+                                action: function (e, dt, node, config) {
+
+                                    $(dt_search.filterId).val('');
+                                    $(dt_search.tableId).DataTable().search('').draw();
+                                }
+                            }
+                        ]
+                    },
+
+
+                    topEnd: null,
+
+                },
+                
+                search: {
+                    return: true
+                },
+                "ajax": $.fn.dataTable.json({ url: "/TechPack/GetTechPackData", data: input }),
+
+                // "bLengthChange": false,
+                // "bPaginate": false,
+                // "bInfo": false,
+                scrollCollapse: true,
+                responsive: true,
+                "jQueryUI": true,
+                columnDefs: [
+                    // { targets: 0, "visible": true, "sortable": true },
+                    { targets: 0, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 1, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 2, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 3, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 7, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 8, "visible": true, "sortable": false, "className": "text-center" },
+                    { targets: 9, "visible": true, "sortable": false, "className": "text-center" },
+
+                ],
+                createdRow: function (row, data, dataIndex) {//
+                    $(row).attr('row_index', parseInt(data.row_index) - 1);
+                    $(row).addClass("master_table_row");
+                    $(row).find("td:eq(3)").css("text-align", "center");
+                    $(row).find("td:eq(4)").css("text-align", "center");
+                    $(row).find("td:eq(5)").css("text-align", "center");
+                    $(row).find("td:eq(6)").css("text-align", "center");
+                    $(row).find("td:eq(1)").css("font-size", "10px");
+                    $(row).find("td:eq(2)").css("font-size", "10px");
+                    $.each($(row).find(".grid_img"), function (key, val) {
+                        LoadImage($(val));
+                    });
+                },
+                "columns": [ //,strBtnSizev
+
+                    { "data": "row_index", "name": "row_index", "autoWidth": true },
+                    { "data": "techpack_number", "name": "techpack_number", "autoWidth": true },
+                    { "data": "strtechpack_date", "name": "strtechpack_date", "autoWidth": true },
+
+                    { "data": "tran_sample_order_number", "name": "tran_sample_order_number", "autoWidth": true },
+                    { "data": "product_details", "name": "product_details", "autoWidth": true },
+                    { "data": "style_item_product_name", "name": "style_item_product_name", "autoWidth": true },
+                    { "data": "unit_name", "name": "unit_name", "autoWidth": true },
+
+                    { "data": "sample_photos_html", "name": "sample_photos_html", "autoWidth": true },
+                    { "data": "style_quantity", "name": "style_quantity", "autoWidth": true },
+
+                    { "data": "btnApprove", "name": "btnApprove", "autoWidth": true },
+
+                ],
+              
+            });
+        
+        }
+
+        function btnSaveNextClick(btn) {
+
+            if (_cusFormValidate("frmAdd") == true) {
+
+                var btnindex = $(btn).closest(".tab-pane").attr("tabpane_index");
+
+                modal_tab_events_click_next_tab($(".nav-tabs").find("li[tab_index=" + btnindex + "]"));
+
+                if ((parseInt(btnindex) + 1) == $("#tab_techpack li").length) {
+                    $("#btnSaveTechPack").removeAttr("disabled");
+                }
+                else {
+                    $("#btnSaveTechPack").attr("disabled", "disabled");
+                }
+
+                if (btnindex == 3) {
+
+                    var strHtml = "";
+
+                    $.each($("#dtcolorcodestyle .txtColorCode"), function (key,val) {
+
+                        strHtml+= "<div class='col-md-1'>" +
+                                    "<input type='checkbox' style='margin-top:10px;' checked = 'checked' class='chkColor' tran_va_plan_detl_style_color_id = '" + $(val).attr("tran_va_plan_detl_style_color_id") + "' value = '" + $(val).val() + "' > " +
+                                    "<input type='color' style = 'height:21px;width:22px;' disabled = '' class='border-gray-200 rounded-sm txtColorPicker' value = '" + $(val).val() + "' > " +
+                            " </div>"+
+                           
+                            "      <div class='col-md-2' style='text-align:left;'>" +
+                            "       <input disabled='' value = '" + $(val).val() + "' pattern = '^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$' type = 'text' class='border-gray-200 rounded-sm txtColorCode' style = 'width:70px;line-height:0.5rem;font-size:0.5rem;margin-top:6px;' > " +
+                                "        </div>";
+                    });
+
+                    $(".dvSubProcessColor").html(strHtml);
+                }
+            }
+
+        }
+
+        function closePopup() {
+            $('#modalcontent').html("");
+            $('#modalcontainer').modal("hide");
+        }
+        $(function () {
+
+            if (IsNotDesigner.length > 0) {
+                showErrorAlert("Alert", IsNotDesigner, "OK", function () {
+
+                    document.location = "/Dashboard/Index";
+
+                });
+            }
+
+            LoadTechPackData();
+
+            BindTabEvents("tab_techpacklanding");
+
+            $("#btnLoadData").click(function () {
+                if ($("#fiscal_year_id").val() == '') {
+                    $("#fiscal_year_id").focus();
+                    $("#fiscal_year_id").css("border", "1px solid red");
+                }
+                else if ($("#event_id").val() == '') {
+                    $("#event_id").focus();
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "1px solid red");
+
+                }
+                else {
+
+                    $("#fiscal_year_id").css("border", "");
+                    $("#event_id").parent().find(".select2-selection--single").css("border", "");
+
+                    LoadTechPackData();
+
+                }
+
+            });
+
+
+            $(".filterOption").hide();
+
+            $("#btnBack").click(function () {
+                document.location = "/TechPack/SampleOrderCreateLanding?fiscal_year_id=" + getUrlVars("fiscal_year_id");
+            });
+
+        });
+
+        function ColorSizeQuantityChanged(elem) {
+
+            var current_element = $(elem);
+
+
+            var total = getTotalByClassInsideTableObject($(elem).closest(".dtcolorcodestyle"), "txtColorSizeQuantity");
+
+            $("#style_quantity").val(total);
+            $("#pre_costing_quantity").val(total);
+
+        }
+
+        function LoadColorFromBox(txt) {
+            $(txt).parent().find(".txtColorCode").val($(txt).val());
+
+        }
+
+
+        function ApproveRejectTechPack(btn) {
+
+            var objData = {
+
+                tran_techpack_id: $('#modalcontent #tran_techpack_id').val(),
+                is_submitted: $(btn).attr("is_approved") == "2" ? null : 2,//set is_submit=null when rejected...
+                is_approved: $(btn).attr("is_approved"),
+                approve_remarks: $("#txtapprove_remarks").val()
+
+            }
+
+            setTimeout(function () {
+                showLoader("Saving..........");
+            }, 0);
+
+            ajaxPostObjectHandler("/TechPack/ApproveRejectTechPack", objData, function (response) {
+
+                hideLoader();
+
+                if (response.status_Code == "200") {
+
+                    showSuccessAlert("Success", response.status_Result, "OK", function () {
+
+                        closePopup();
+
+                        LoadTechPackData();
+                    });
+                }
+                else {
+                    showErrorAlert("Alert", response.status_Result, "OK", function () {
+
+                    });
+                }
+            }, true, function () { hideLoader(); }, true);
+
+        }
+
+    </script>
+
+ }

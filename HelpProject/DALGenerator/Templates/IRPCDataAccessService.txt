@@ -1,0 +1,19 @@
+using EPYSLSAILORAPP.Application.DTO.BusinessPlanning;
+using EPYSLSAILORAPP.Domain.Entity.BusinessPlanning;
+using EPYSLSAILORAPP.Domain.Statics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using EPYSLSAILORAPP.Domain.Entity;
+
+namespace EPYSLSAILORAPP.Application.Interface
+{
+    public interface IRPC{TableName}Service
+    {
+       
+		Task<List<rpc_{EntityName}_DTO>> GetAll{EntityName}Async({all_param_declaration});
+
+    }
+}

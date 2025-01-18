@@ -1,0 +1,374 @@
+@using EPYSLSAILORAPP.Domain.DTO;
+@using EPYSLSAILORAPP.Domain.Entity;
+@using EPYSLSAILORAPP.Domain.RPC;
+@using Newtonsoft.Json;
+@model EPYSLSAILORAPP.Domain.DTO.tran_service_work_order_DTO;
+@{
+    ViewBag.Title = "Embellishment Receive";
+    Layout = null;
+}
+<style>
+    #toolbarId select {
+        font-size: 11px !important;
+    }
+
+    .btninnerClose {
+        color: #a52711;
+        width: 26px;
+        border: 1px solid #6f2d23;
+        font-size: 22px;
+        margin-top: 6px;
+    }
+
+    .dataTables_wrapper {
+        margin-top: -40px;
+    }
+
+    .select_style {
+        height: 30px;
+    }
+
+    .dataTable select {
+        height: 25px !important;
+        font-size: 10px !important;
+    }
+
+    .card-body {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        padding: 0rem 0rem;
+    }
+
+    .box {
+        margin-bottom: 0.5rem;
+    }
+
+    .box-header {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .box-title {
+        font-size: 12px;
+        line-height: 1rem;
+    }
+
+    .form-group1 {
+        margin-bottom: 3px !important;
+        padding: 0.1rem !important;
+        font-size: 12px !important;
+    }
+
+    #fileNamesContainer p {
+        margin-bottom: 0;
+    }
+</style>
+
+<form method="POST" id="frmAdd" class="my-login-validation" novalidate="" enctype="multipart/form-data" autocomplete="off">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">Embellishment Receive</h6>
+        </div>
+        <!-- /.card-header -->
+        <input type="hidden" id="supplierId" value="">
+
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Receive No</label>
+                            <input style="width:100%" readonly placeholder="Auto Generated" type="text" class="border-#d1cccc-200 form-control " />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group1" style="margin-bottom: 0.3rem;">
+                            <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Receive Date</label>
+                            <input style="width:100%" id="ReceiveDate" type="date" class="border-#d1cccc-200 form-control " />
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Service Provider</label>
+                            <input style="width:100%" type="text" id="serviceProvider" asp-for="@Model.name" class="border-#d1cccc-200 form-control " readonly />
+                            <input type="hidden" id="supplier_id" value="@Model.supplier_id">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Work Order No</label>
+                            <input style="width:100%" id="WorkOrderNo" asp-for="@Model.service_work_order_no" type="text" class="border-#d1cccc-200 form-control " readonly />
+                            <input type="hidden" id="WorkOrderId" value="@Model.service_work_order_id">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Challan No</label>
+                            <input style="width:100%" id="chalanNo" type="text" class="border-#d1cccc-200 form-control " />
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group1" style="margin-bottom: 0.3rem;">
+                            <label class="col-sm-4 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Challan Date</label>
+                            <input style="width:100%" id="chalanDate" type="date" class="border-#d1cccc-200 form-control " />
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Techpack No</label>
+                            <input style="width:100%" id="TechpackNo" asp-for="@Model.techpack_number" type="text" class="border-#d1cccc-200 form-control " readonly />
+                            <input type="hidden" id="techpack_id" value="@Model.techpack_id">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Emblishment Process</label>
+                            <input style="width:100%" id="embProcess" asp-for="@Model.process_name" type="text" class="border-#d1cccc-200 form-control " readonly />
+                            <input type="hidden" id="gen_process_master_id" value="@Model.gen_process_master_id">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Total Bundle</label>
+                            <input style="width:100%" type="text" id="totalBundle" class="border-#d1cccc-200 form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Total Qty</label>
+                            <input style="width:100%" type="text" id="totalQty" asp-for="@Model.order_quantity" class="border-#d1cccc-200 form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <label class="col-sm-6 col-form-label-sm text-left" style="font-size:12px;margin-bottom: 0; padding: 0;">Note</label>
+                            <input style="width:100%" type="text" id="note" class="border-#d1cccc-200 form-control" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <div class="form-group1">
+                            <button style="width:152px;margin-top: 15px;" type="button" class="btn btn-success" onclick="AddReceiveDetailTable();"><i class="fa fa-file-open"></i>&nbsp;Add Detail</button>&nbsp;&nbsp;&nbsp;
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row" id="purchaseDetrails" style="">
+            <div class="col-md-12">
+                <div class="box">
+
+                    <table style="font-size:10px;" id="DTBatchDetailReceive" class=" table dataTable table-striped table-bordered" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><label class="labelNormal" style="width:35px">SL No</label></th>
+                                <th><label class="labelNormal">Color</label></th>
+                                <th><label class="labelNormal">Batch No</label></th>
+                                <th><label class="labelNormal">size</label></th>
+                                <th><label class="labelNormal">Part Name</label></th>
+                                <th><label class="labelNormal">Bundle No</label></th>
+                                <th><label class="labelNormal">Bundle Qty</label></th>
+                                <th><label class="labelNormal">Receive Qty </label></th>
+                                <th><label class="labelNormal">Physical Qty </label></th>
+                                <th><label class="labelNormal">Short Qty </label></th>
+                                <th><label class="labelNormal">Repairable Qty </label></th>
+                                <th style="display:none"><label class="labelNormal">Batch Id</label></th>
+                                <th style="display:none"><label class="labelNormal">Bundle Id</label></th>
+                                <th style="display:none"><label class="labelNormal">Part Id</label></th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="tableBodywork">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-12" style="margin-bottom: 5px;text-align:right;">
+
+                <button style="width:150px;" type="button" class="btn btn-success " id="btnSaveFabricPo1" onclick="SaveEmbReceiveChallan(this,1);"><i class="fa fa-file-open"></i>&nbsp;Save Draft</button>&nbsp;&nbsp;&nbsp;
+
+                <button style="width:180px;" type="button" class="btn btn-success " id="btnSaveFabricPo" onclick="SaveEmbReceiveChallan(this,2);"><i class="fa fa-file-open"></i>&nbsp;Proposed For Approve</button>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.card-body -->
+</form>
+
+
+<div id="modalcontainer_detl" class="modal fade hidden-print" role="dialog" tabindex="-1">
+    <div class="modal-dialog" style="width: 50% !important; max-width: 50% !important; font-size: 14px; ">
+        <div class="modal-content" style="overflow-y: scroll;">
+
+            <div class="modal-header" style="padding:0px;background-color: #c9b426;color: white;">
+
+                <div class="row" style="width:100%;">
+                    <div class="col-md-6">
+                        <h3 class="modal-title" style="line-height: 1.5; font-size: 19px;">
+                            Add Receive Detail
+                        </h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+
+                        <button type="button" id="btnModalClose_detl" class="btn btn-danger btn-md cancel" onclick="closePopup();">X</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display:block;">
+                <div class="card-body" style="padding-bottom: 0px; padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12" id="modalcontent_detl">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function AddReceiveDetailTable(btn) {
+
+
+        var service_work_order_id = $("#WorkOrderId").val();
+        setTimeout(function () {
+            showLoader("Loading..........");
+        }, 0);
+
+        ajaxGetHandler("/EmbellishmentReceive/AddreceiveDetailNew?service_work_order_id=" + service_work_order_id, null, function (data) {
+
+            setTimeout(function () {
+                hideLoader();
+            }, 0);
+
+            $('#modalcontent_detl').html(data);
+            $('#modalcontainer_detl').modal({ backdrop: 'static', keyboard: false });
+            $('#modalcontainer_detl').modal("show");
+            $("#btnOk").hide();
+
+        });
+    }
+
+
+    function closePopup() {
+
+        $('#modalcontent_detl').html("");
+        $('#modalcontainer_detl').modal("hide");
+        $('#modalcontainer_detl').on('hidden.bs.modal', function () {
+            $('body').addClass('modal-open');
+        });
+    }
+
+</script>
+
+<script>
+    var batch_List = [];
+    var batchno = 0;
+
+    function AddBatchDetails(btn) {
+        
+        $.each($("#DTReceiveOutput tbody tr"), function (key, val) {
+            if ($(this).find(".is_select")[0].checked) {
+                var batch_id = check_textbox_value($(this).find(".tran_cutting_color_batch_id"));
+                var genGarmentPartId = $('#ddl_part').val();
+                var colorCode = $('#ddl_color').val();
+
+                ajaxGetHandler("/EmbellishmentReceive/GetBatchWiseBundleDetaiilsReceive?batch_id=" + batch_id + "&colorCode=" + encodeURIComponent(colorCode) + "&genGarmentPartId=" + genGarmentPartId, null, function (data) {
+                    var table = document.getElementById("DTBatchDetailReceive").getElementsByTagName('tbody')[0];
+                    var serialNo = table.rows.length + 1;
+                    var existingBatchIds = [];
+
+                    var isDuplicate = false;
+                    var duplicateBatchNo = '';
+                    // Check for duplicates
+                    $('#DTBatchDetailReceive tbody tr').each(function () {
+                        var existingBatchId = $(this).find('.batchIdhidden').val();
+                        if (existingBatchId == batch_id) {
+                            isDuplicate = true;
+                            duplicateBatchNo = $(this).find('.batch_no').val(); // Store the batch number
+                            return false; // Exit the loop if duplicate is found
+                        }
+                    });
+
+                    if (!isDuplicate) {
+                        data.data.forEach(function (obj, index) {
+
+
+                            var newRow = table.insertRow(table.rows.length);
+
+                            var serialCell = newRow.insertCell(0);
+                            serialCell.innerHTML = serialNo;
+                            serialNo++; // Increment the serial number
+
+                            var cell1 = newRow.insertCell(1);
+                            var cell2 = newRow.insertCell(2);
+                            var cell3 = newRow.insertCell(3);
+                            var cell4 = newRow.insertCell(4);
+                            var cell5 = newRow.insertCell(5);
+                            var cell6 = newRow.insertCell(6);
+                            var cell7 = newRow.insertCell(7);
+                            var cell8 = newRow.insertCell(8);
+                            var cell9 = newRow.insertCell(9);
+                            var cell10 = newRow.insertCell(10);
+                            var cell11 = newRow.insertCell(11);
+                            var cell12 = newRow.insertCell(12);
+                            var cell13 = newRow.insertCell(13);
+
+
+
+                            cell1.innerHTML = "<input disabled type='text'   class='form-control color_code'  value=" + obj.color_code + " >";
+                            cell2.innerHTML = "<input disabled type='text'   class='form-control batch_no'          value=" + obj.batch_no + " >";
+                            cell3.innerHTML = "<input disabled type='text'   class='form-control style_size'             value=" + obj.style_size + ">";
+                            cell4.innerHTML = "<input disabled type='text'   class='form-control  garment_part_name'  value=" + obj.garment_part_name + ">";
+                            cell5.innerHTML = "<input disabled type='text'   class='form-control bundle_number'       value=" + obj.bundle_number + " >";
+                            cell6.innerHTML = "<input disabled type='text'   class='form-control bundle_quantity'   value=" + obj.bundle_quantity + ">";
+                            cell7.innerHTML = "<input  type='number'           class='form-control rec_quantity'  >";
+                            cell8.innerHTML = "<input  type='number'           class='form-control physical_quantity'     >";
+                            cell9.innerHTML = "<input  type='number'           class='form-control short_quantity'   >";
+                            cell10.innerHTML = "<input  type='number'          class='form-control repair_quantity'    >";
+
+                            cell11.innerHTML = "<input disabled style='display:none;' type='text'   class='form-control batchIdhidden'     value=" + obj.tran_cutting_color_batch_id + ">";
+                            cell12.innerHTML = "<input disabled style='display:none;' type='text'   class='form-control bundleId'          value=" + obj.tran_cutting_color_batch_garment_part_bundle_id + ">";
+                            cell13.innerHTML = "<input disabled style='display:none;' type='text'   class='form-control partId'            value=" + obj.gen_garment_part_id + ">";
+                        });
+                    }
+                    else {
+
+                        alert(duplicateBatchNo + " " + "already added!");
+                    }
+
+                });
+
+            }
+        });
+    }
+
+
+</script>
+
